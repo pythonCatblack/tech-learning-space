@@ -1,0 +1,171 @@
+<section id="ch11">
+<div class="hero">
+<div class="chapter-tag">Chapter 11 · 融合算法</div>
+<h1>视觉惯性融合(VIO)：<br>IMU+Camera的黄金组合</h1>
+<p class="sub">从MSCKF到VINS-Mono/OKVIS，系统解析视觉惯性里程计的滤波与优化两大技术路线。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约45分钟</span><span class="hero-meta-item">👁️ VIO系统</span></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 5（IMU误差模型与预积分）、Chapter 9（KF/EKF）、Chapter 10（因子图优化）。本章是前5章数学知识的综合应用——也是第12章多传感器融合和第13章完整SLAM系统的基础。</div></div>
+
+<p class="lead">VIO（Visual-Inertial Odometry）是传感器融合在无人机领域最成功的应用之一。它利用IMU的高频采样（1kHz）和相机的视觉特征（30Hz），在无GPS环境下实现精确的六自由度位姿估计。几乎所有室内无人机和大部分室外无人机的自主飞行都依赖VIO。</p>
+
+<h2 class="section-h2">11.1 为什么VIO是黄金组合？</h2>
+<p class="p">IMU和相机各自弥补了对方的缺陷：</p>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">⚙️</div><h4>IMU的优势</h4><p>高频（1kHz+）、瞬时精确、不受视觉特征影响（黑暗/白墙也能工作）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📷</div><h4>相机的优势</h4><p>提供绝对尺度参考（融合IMU后）、丰富的纹理/特征信息、无漂移累积。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fce4ec">⚠️</div><h4>各自的缺陷</h4><p>IMU单独使用会漂移（积分误差累积）；单目相机缺少绝对尺度。</p></div>
+</div>
+<p class="p"><strong>融合后：</strong>IMU解决单目尺度问题，视觉修正IMU漂移。两者形成互补——这是为什么VIO是室内无人机定位的事实标准。</p>
+
+<h2 class="section-h2">11.2 VIO的两大技术路线</h2>
+<h3 class="section-h3">11.2.1 滤波方法：MSCKF</h3>
+<p class="p"><span class="kw">MSCKF</span>（Multi-State Constraint Kalman Filter）是滤波路线VIO的代表，由NASA JPL开发（2007年）。它的核心思想：<strong>不在滤波器状态中保存3D特征点</strong>，而是保存一系列相机位姿状态，特征点只用来在更新步构造约束。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 MSCKF工作原理</div><p>1. <strong>状态向量：</strong>包含当前和过去 N 个相机位姿（位置+姿态+速度+IMU偏差），不含3D特征点<br>
+2. <strong>IMU传播：</strong>高频更新状态向量和协方差（每收到一个IMU数据就传播一次）<br>
+3. <strong>特征点三角化：</strong>当一个特征点在多个位姿上被观测到时，三角化得到其3D位置<br>
+4. <strong>状态更新：</strong>用三角化的3D点构造对历史位姿的约束，通过EKF更新所有相关状态<br>
+5. <strong>滑动窗口：</strong>旧位姿移出窗口时，"边缘化"其约束到先验中<br><br>
+<strong>MSCKF的优势：</strong>不把特征点放入状态向量，所以状态维度固定（通常15-21维），计算量可控。<br>
+<strong>MSCKF的劣势：</strong>特征点只在三角化成功后才被利用——如果特征点被跟踪的时间很短（快速运动时），三角化精度很差，导致精度不如优化方法。
+</p></div>
+
+<h3 class="section-h3">11.2.2 优化方法：VINS-Mono</h3>
+<p class="p"><span class="kw">VINS-Mono</span>（港科大，2017）是优化路线VIO的代表作，也是当前最广泛使用的开源VIO系统之一。它采用因子图优化，精度和鲁棒性都优于滤波方法。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🔗</div><h4>IMU预积分因子</h4><p>两帧之间所有IMU数据预积分为相对运动约束（详见第5章5.5.2节）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">👁️</div><h4>视觉特征因子</h4><p>每个特征在滑动窗口内的多次观测，构造重投影误差约束。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🔄</div><h4>边缘化</h4><p>旧帧移出窗口时，边缘化处理以保持优化问题的稀疏性。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🔁</div><h4>回环检测</h4><p>使用词袋模型（DBoW2）检测回环，触发全局优化修正漂移。</p></div>
+</div>
+
+<div class="hlbox"><div class="hlbox-title">🔑 MSCKF vs VINS-Mono 完整对比</div><p><strong>计算复杂度：</strong>MSCKF为O(N²)（N为状态维度，固定），VINS-Mono为O(N³)（N为窗口大小，典型5-10，但每步需批量优化）。<br><br>
+<strong>精度：</strong>VINS-Mono通常精度更高，尤其在慢速运动和特征丰富的场景。<br><br>
+<strong>鲁棒性：</strong>MSCKF在快速运动时可能丢失更多特征，但计算更稳定；VINS-Mono的回环检测让它在长期运行中更鲁棒。<br><br>
+<strong>工程选择：</strong>对于计算资源受限的机载平台，MSCKF（OpenVINS）可能更合适；对于精度优先的场景，VINS-Mono是首选。
+</p></div>
+
+<h2 class="section-h2">11.3 VIO系统数据流全景图</h2>
+
+<p class="p">理解VIO的最佳方式是追踪一条数据从"传感器原始数据"到"优化后位姿"的完整路径：</p>
+
+<div class="flow">
+<div class="flow-box"><div class="flow-box-title">IMU原始数据</div><div class="flow-box-desc">500-2000Hz<br>角速度+加速度</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">IMU预积分</div><div class="flow-box-desc">帧间相对运动<br>预积分因子</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">状态传播</div><div class="flow-box-desc">高频位姿更新<br>（无全局优化）</div></div>
+</div>
+
+<div class="flow">
+<div class="flow-box"><div class="flow-box-title">相机图像</div><div class="flow-box-desc">30Hz<br>原始帧</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">特征提取</div><div class="flow-box-desc">ORB/FAST角点<br>100-300点/帧</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">特征跟踪</div><div class="flow-box-desc">光流/KLT<br>跨帧匹配</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">三角化</div><div class="flow-box-desc">3D特征点<br>深度估计</div></div>
+</div>
+
+<div class="flow">
+<div class="flow-box" style="background:#e8f5e9"><div class="flow-box-title">因子图优化</div><div class="flow-box-desc">滑动窗口<br>批量优化</div></div>
+<div class="flow-arrow">←</div>
+<div class="flow-box"><div class="flow-box-title">IMU因子</div><div class="flow-box-desc">预积分约束<br>高频运动</div></div>
+<div class="flow-arrow">←</div>
+<div class="flow-box"><div class="flow-box-title">视觉因子</div><div class="flow-box-desc">重投影误差<br>尺度/重力约束</div></div>
+</div>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">⚙️</div><h4>IMU数据流（高频路径）</h4><p>每收到一个IMU数据就更新状态——这个路径不需要优化，速度极快（1kHz+），但只有相对信息。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">👁️</div><h4>视觉数据流（修正路径）</h4><p>每收到一帧图像就提取特征并跟踪——这个路径计算量大，但提供绝对尺度约束，修正IMU漂移。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🔗</div><h4>融合（优化路径）</h4><p>两种数据在因子图中相遇——IMU因子+视觉因子共同优化，得到全局一致的位姿估计。</p></div>
+</div>
+
+<h2 class="section-h2">11.3 关键技术细节</h2>
+<h3 class="section-h3">11.3.1 IMU预积分（完整版）</h3>
+<p class="p">两帧之间（假设30fps，两帧间隔33ms）有约33000个IMU采样点。如果每次优化都从头积分这些点，计算量巨大。<span class="kw">IMU预积分</span>将这段时间内的所有IMU数据预先积分为一个相对运动约束（相对位姿、相对速度），优化时直接使用这个约束，避免重复积分。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 IMU预积分的数学</div><p>设IMU角速度和加速度测量为 $\hat{\omega}(t) = \omega(t) + b_\omega(t) + n_\omega$ 和 $\hat{a}(t) = a(t) + b_a(t) + n_a$。<br><br>
+预积分在IMU体坐标系下计算相对运动（不依赖世界坐标系）：<br><br>
+<strong>$$\Delta R_{ij} = \iint R(t) \cdot \hat{\omega}(t) \, dt \quad \text{（相对旋转）}$$</strong><br><br>
+<strong>$$\Delta v_{ij} = \iint R(t) \cdot \hat{a}(t) \, dt \quad \text{（相对速度）}$$</strong><br><br>
+<strong>$$\Delta p_{ij} = \iint R(t) \cdot \hat{a}(t) \, dt \quad \text{（相对位置）}$$</strong><br><br>
+实践中使用中点积分或RK4积分，并对零偏做一阶近似修正。<br><br>
+<strong>关键性质：</strong>预积分结果 $\Delta R$, $\Delta v$, $\Delta p$ 只依赖于 $[t_i, t_j]$ 时间段内的IMU测量，与世界坐标系下的绝对位姿无关——这正是预积分的核心价值：在优化过程中改变位姿时，不需要重新积分。
+</p></div>
+
+<h3 class="section-h3">11.3.2 滑动窗口与边缘化</h3>
+<p class="p">为了控制计算量，VIO只保留最近 N 帧（滑动窗口）参与优化。超出窗口的帧被<span class="kw">边缘化</span>（Marginalization）——它们的信息以先验约束的形式保留，而不是完全丢弃。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🪟</div><h4>边缘化的信息损失</h4><p>如果边缘化策略不当（Schur补计算错误），会导致信息损失——先验约束不能完整代表被边缘化状态对当前状态的影响。这是很多VIO系统发散的根源。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📉</div><h4>正确边缘化的原则</h4><p>保留被边缘化变量与保留变量之间的约束关系（通过Schur补）。iSAM2使用贝叶斯树数据结构，可以正确地增量维护这个先验信息。</p></div>
+</div>
+
+<h3 class="section-h3">11.3.3 初始化</h3>
+<p class="p">VIO需要初始估计（重力方向、尺度、IMU偏差）。常用方法：静止初始化（假设无人机静止，利用多帧平均消除IMU噪声）或动态初始化（无人机开始飞行后，通过视觉约束同时估计所有参数）。</p>
+
+<div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>初始化失败是VIO最常见的问题：</strong>如果初始重力方向估计错误，整个轨迹会向一个方向倾斜。通常的检查方法：在初始化后让无人机悬停，验证估计的"下"方向是否与加速度计读数的反方向一致。如果不一致，说明初始化出了问题。</div></div>
+
+<h2 class="section-h2">11.4 主流VIO系统对比</h2>
+<table class="tbl">
+<thead><tr><th>系统</th><th>机构</th><th>方法</th><th>特点</th><th>GitHub</th></tr></thead>
+<tbody>
+<tr><td class="hl">VINS-Mono</td><td>港科大</td><td>优化</td><td>最流行，回环强</td><td>HKUST-Aerial-Robotics/VINS-Mono</td></tr>
+<tr><td class="hl">OKVIS</td><td>ETHZ</td><td>优化</td><td>多目支持，精度高</td><td>ethz-asl/okvis</td></tr>
+<tr><td class="hl">MSCKF</td><td>NASA JPL</td><td>滤波</td><td>计算量小，实时性好</td><td>ethz-asl/msckf</td></tr>
+<tr><td class="hl">ROVIO</td><td>ETHZ</td><td>滤波</td><td>鲁棒性好</td><td>ethz-asl/rovio</td></tr>
+<tr><td class="hl">OpenVINS</td><td>UT Austin</td><td>滤波+扩展</td><td>模块化，可扩展</td><td>rpng/open_vins</td></tr>
+</tbody>
+</table>
+
+<h3 class="section-h3">11.4.1 VINS-Mono关键参数调优指南</h3>
+<p class="p">实际部署中，默认参数往往不是最优的。以下是VINS-Mono最关键的调参项：</p>
+
+<table class="tbl">
+<thead><tr><th>参数</th><th>默认值</th><th>调优范围</th><th>调大/调小的效果</th><th>适用场景</th></tr></thead>
+<tbody>
+<tr><td class="hl">max_cnt</td><td>150</td><td>50-300</td><td>调大→更多特征点，更鲁棒但更慢</td><td>纹理丰富环境可调大</td></tr>
+<tr><td class="hl">min_dist</td><td>0.1</td><td>0.05-0.3</td><td>调大→特征分布更均匀，减少聚集</td><td>避免特征扎堆时调大</td></tr>
+<tr><td class="hl">freq</td><td>10</td><td>5-20</td><td>影响特征跟踪连贯性</td><td>高速运动时提高频率</td></tr>
+<tr><td class="hl">window_size</td><td>10</td><td>5-20</td><td>调大→更多历史约束，精度高但慢</td><td>计算资源充足时调大</td></tr>
+<tr><td class="hl">max_solver_time</td><td>0.02</td><td>0.01-0.05</td><td>调大→单次优化更充分，但可能实时性差</td><td>精度不够时调大</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-warn"><div class="callout-icon">💡</div><div class="callout-text"><strong>调参实战经验：</strong><br>
+• 如果轨迹在转弯处漂移 → 减小 <code>min_dist</code>，让特征分布更均匀<br>
+• 如果快速运动时丢特征 → 提高 <code>freq</code> 或减小 <code>min_dist</code><br>
+• 如果优化迭代次数经常达到上限 → 增大 <code>max_solver_time</code><br>
+• 如果机载算力不足 → 减小 <code>window_size</code> 到 5</div></div>
+
+<!-- ===== 🛠️ 动手实践 ===== -->
+<div class="card green" style="margin-bottom:16px"><div class="card-label">🛠️ 动手实践</div><h3>运行VINS-Mono（EuRoC数据集）</h3><p><strong>目标：</strong>在仿真中运行VINS-Mono，观察因子图和输出轨迹。<br><br>
+<strong>步骤：</strong><br>
+<strong>①</strong> 下载 EuRoC MAV 数据集（MH_01_easy.bag）：<br>
+<code>wget http://robotics.ethz.ch/~asl-datasets/px4/2021_02_complete_euroc/MH_01_easy.bag</code><br><br>
+<strong>②</strong> 编译 VINS-Mono：<br>
+<code>cd ~/catkin_ws/src/VINS-Mono/camera_model && cmake . && make<br>
+cd ~/catkin_ws && catkin_make</code><br><br>
+<strong>③</strong> 运行：<br>
+<code>roslaunch vins_estimator euroc.launch<br>
+rosbag play MH_01_easy.bag</code><br><br>
+<strong>观察重点：</strong><br>
+• 终端输出中的优化迭代次数和LM阻尼参数 λ<br>
+• 估计轨迹与真值（Vicon）的误差<br>
+• 回环检测触发时，系统行为的变化
+</p></div>
+
+<!-- ===== ⚠️ 常见陷阱 ===== -->
+<div class="callout callout-warn" style="margin-bottom:16px"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>常见陷阱① - 特征点数量不足：</strong>VINS-Mono默认要求每帧至少100个特征点。如果场景纹理不足（如白墙、天空），特征点会急剧减少，导致视觉约束失效。解决：在室内环境贴纹理丰富的海报；或在代码中降低特征点阈值。<br><br>
+<strong>常见陷阱② - 相机-IMU外参标定错误：</strong>如果相机到IMU的外参 [R|t] 标定错误，VIO在初始化后就会产生系统性漂移。建议用Kalibr工具箱做精确标定（见第7章）。<br><br>
+<strong>常见陷阱③ - 高速运动时快门模糊：</strong>相机的卷帘快门（Rolling Shutter）在高速运动时会产生运动模糊（每行像素对应不同时间），导致特征点位置不准确。解决：使用全局快门相机（Global Shutter），或在代码中建模快门延迟。</div></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第12章 · Lidar-视觉融合）：</strong>VIO使用相机作为主要几何传感器，但相机在低光、低纹理场景性能下降。激光雷达提供精确的深度几何——但它是稀疏和无纹理的。将Lidar加入融合系统，可以显著提升定位精度和鲁棒性。LIO-SAM是当前最流行的Lidar-IMU融合系统，理解它的因子图结构需要本章的因子图基础。</div></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>VIO：IMU+Camera的最优融合</h3><p><strong>① IMU预积分：</strong>将高频IMU数据压缩为帧间相对运动约束，避免重复积分。<br><strong>② MSCKF：</strong>滤波路线代表，状态向量保存多个历史位姿而非特征点，EKF更新。<br><strong>③ VINS-Mono：</strong>优化路线代表，因子图优化，回环检测修正漂移。<br><strong>④ 滑动窗口：</strong>限制优化规模，旧数据边缘化为先验约束。<br><strong>⑤ 初始化：</strong>静止初始化或动态初始化，解决尺度/重力/偏差的初始估计问题。</p></div>
+
+</section>

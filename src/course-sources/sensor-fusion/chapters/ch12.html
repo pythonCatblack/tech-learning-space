@@ -1,0 +1,116 @@
+<section id="ch12">
+<div class="hero">
+<div class="chapter-tag">Chapter 12 · 融合算法</div>
+<h1>激光雷达与视觉融合：<br>几何与语义的深度协同</h1>
+<p class="sub">理解LIO-SAM、LVIO等系统的激光雷达-相机融合策略，从数据层到特征层的多种融合范式。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约40分钟</span><span class="hero-meta-item">💨 Lidar融合</span></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 4（Lidar原理与点云）、Chapter 10（因子图优化）、Chapter 11（VIO）。本章将相机引入Lidar-IMU融合系统，构建更完整的多传感器感知方案。</div></div>
+
+<p class="lead">激光雷达提供精确的深度几何信息，相机提供丰富的纹理和语义信息。两者融合可以构建<span class="kw">稠密、带颜色、精确几何</strong>的三维地图。LIO-SAM（发表于IROS 2020）是当前最流行的开源激光雷达-IMU-视觉融合系统之一，被广泛应用于户外巡检、测绘和自动驾驶研究。</p>
+
+<h2 class="section-h2">12.1 融合的三种层次</h2>
+<h3 class="section-h3">12.1.1 原始数据层融合</h3>
+<p class="p">将Lidar点云投影到图像平面，获得每个点的颜色信息（RGB-D融合）。优点是信息最完整，缺点是数据量大、时间同步精度要求高、标定复杂。</p>
+
+<h3 class="section-h3">12.1.2 特征层融合（最常用）</h3>
+<p class="p">分别从Lidar和图像中提取特征，在特征层面进行关联和融合。例如：VIO提供视觉特征点，LIO-SAM提供Lidar特征线/面，两者在因子图中作为独立的观测因子。</p>
+
+<h3 class="section-h3">12.1.3 决策层融合</h3>
+<p class="p">Lidar和相机分别做独立的语义感知（目标检测、分割），在决策层面融合。例如：Lidar检测到前方有障碍物，相机识别出障碍物类型（行人/车辆），两者结合给出更丰富的环境描述。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📊</div><h4>原始数据层</h4><p>信息最完整，但标定复杂，计算量大。适合离线处理。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🎯</div><h4>特征层（主流）</h4><p>信息量与计算量平衡好，因子图天然支持特征层融合。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🧠</div><h4>决策层</h4><p>容错性最强，但信息损失最大。</p></div>
+</div>
+
+<h2 class="section-h2">12.2 LIO-SAM：因子图激光雷达-IMU融合</h2>
+<h3 class="section-h3">12.2.1 LIO-SAM的因子图结构</h3>
+<p class="p"><span class="kw">LIO-SAM</span>（LIO-SAM: Tightly-coupled Lidar Inertial Odometry via Smoothing and Mapping）是Tixiao Shan等人提出的基于因子图的激光雷达-IMU紧耦合系统。它的因子图包含以下因子：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">⚙️</div><h4>IMU预积分因子</h4><p>连接相邻帧，提供高频运动约束（与VIO中相同）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📐</div><h4>Lidar里程计因子</h4><p>利用当前帧与前一帧的点云匹配（ICP/NDT），估计相对运动。这是LIO-SAM的核心创新之一——通过因子图融合多种里程计源。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🗺️</div><h4>GPS因子</h4><p>绝对位置约束，当GPS信号好时引入。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🔁</div><h4>回环因子</h4><p>检测到回环时，通过scan context等方法识别已访问区域，引入全局约束。</p></div>
+</div>
+
+<h3 class="section-h3">12.2.2 激光雷达里程计算法：LOAM的遗产</h3>
+<p class="p">LIO-SAM的Lidar里程计借鉴了<span class="kw">LOAM</strong>（Lidar Odometry and Mapping）的思路：从点云中提取边缘点（位于物体边缘的锐利点）和平面点（位于地面或平面的点），通过点-线匹配和点-面匹配估计Lidar的运动。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 LOAM/LIO-SAM的边缘线和平面点匹配</div><p>对于边缘点：在上一帧点云中找到最近的两点（构成一条线），当前边缘点到这条线的距离应最小化。<br><br>
+对于平面点：在上一帧点云中找到最近的三个不共线点（构成一个面），当前平面点到该平面的距离应最小化。<br><br>
+通过迭代优化（ICP），可以同时估计Lidar的旋转和平移。<br><br>
+<strong>数学形式：</strong><br>
+边缘点残差：$r_{edge} = (p - p_1) \times (p - p_2) / |(p_2 - p_1) \times (p - p_1)|$<br>
+平面点残差：$r_{plane} = (p - p_1) \cdot ((p_2 - p_1) \times (p_3 - p_1)) / |(p_2 - p_1) \times (p_3 - p_1)|$<br><br>
+最小化所有点的残差平方和，即得到当前帧相对于上一帧的相对位姿变换。
+</p></div>
+
+<h2 class="section-h2">12.3 LVI-SAM：激光雷达+视觉+IMU全融合</h2>
+<p class="p"><span class="kw">LVI-SAM</span>（Lidar-Visual-Inertial SLAM）在LIO-SAM基础上增加了视觉因子，实现了Lidar、相机、IMU三者的紧耦合融合。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">💨</div><h4>Lidar-IMU紧耦合</h4><p>基于LIO-SAM框架，IMU预积分+Lidar里程计因子。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">👁️</div><h4>Visual-IMU紧耦合</h4><p>基于VINS-Mono框架，视觉因子+IMU预积分因子。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🔗</div><h4>跨模态约束</h4><p>Lidar和视觉里程计之间的相对位姿约束，确保两个子系统的一致性。</p></div>
+</div>
+
+<h2 class="section-h2">12.4 Scan Context：Lidar专属回环检测</h2>
+<p class="p">传统视觉SLAM用词袋模型（DBoW2）做回环检测。Lidar点云无法直接用DBoW——Scan Context是一种专为Lidar设计的回环检测方法，利用点云的俯视图（Bird's Eye View）做全局地点识别。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 Scan Context的原理</div><p><strong>步骤1 - 俯视图编码：</strong>将360°水平FOV的Lidar点云投影到极坐标网格（类似雷达显示屏）。每个扇区记录最高点的Z坐标。<br><br>
+<strong>步骤2 - 行方向循环对齐：</strong>由于传感器顺时针扫描，同一地点不同时间采集的点云可能在角度上有一个偏移。用循环位移（circular shift）找到最佳对齐位置。<br><br>
+<strong>步骤3 - 列方向相似度：</strong>用余弦相似度比较两帧的Scan Context描述子，相似度超过阈值的判定为回环候选。<br><br>
+<strong>关键优势：</strong>Scan Context直接处理原始点云，不需要特征提取或词袋训练，计算速度快，对点云密度变化鲁棒。
+</p></div>
+
+<!-- ===== 🛠️ 动手实践 ===== -->
+<div class="card green" style="margin-bottom:16px"><div class="card-label">🛠️ 动手实践</div><h3>运行LIO-SAM（户外数据集）</h3><p><strong>目标：</strong>在仿真中运行LIO-SAM，处理户外激光雷达数据。<br><br>
+<strong>①</strong> 下载ULH数据集（Livox Horizon户外数据）：<br>
+<code>wget https://github.com/LeiShi337/LIO-SAM_ULH/releases/download/v1.0/lio_sam_uli.tar.gz<br>
+tar -xzf lio_sam_uli.tar.gz</code><br><br>
+<strong>②</strong> 编译并运行：<br>
+<code>cd ~/lio_sam_ws/src/LIO-SAM<br>
+mkdir -p ../build && cd ../build && cmake .. && make<br>
+roslaunch lio_sam run.launch<br>
+rosbag play uli_ground_truth.bag</code><br><br>
+<strong>观察重点：</strong><br>
+• 每帧点云的边缘点/平面点提取结果（可视化cloudExtractedTopic）<br>
+• 因子图可视化（用rtabmap或G2OViewer）<br>
+• GPS因子何时被引入（当信号质量好时）<br>
+• Scan Context匹配到的回环候选帧
+</p></div>
+
+<h3 class="section-h3">12.5 LIO-SAM关键参数调优指南</h3>
+<p class="p">LIO-SAM的参数分为两类：感知参数（影响点云处理）和优化参数（影响因子图求解）。</p>
+
+<table class="tbl">
+<thead><tr><th>参数</th><th>默认值</th><th>调优建议</th><th>适用场景</th></tr></thead>
+<tbody>
+<tr><td class="hl">segmentTheta</td><td>1.047 rad (60°)</td><td>减小→更多地面点被分割为可行驶区域</td><td>复杂地形调小</td></tr>
+<tr><td class="hl">segmentOccupancyThreshold</td><td>0.1</td><td>增大→更严格的占据判定，减少误分割</td><td>噪声多时调大</td></tr>
+<tr><td class="hl">mapFilterResolution</td><td>0.2m</td><td>增大→地图更稀疏，计算更快但精度下降</td><td>机载算力受限时调大</td></tr>
+<tr><td class="hl">imaxCornerRate</td><td>0.3</td><td>边缘点占点云比例上限，防止误提取</td><td>走廊等简单场景可调小</td></tr>
+<tr><td class="hl">imaxSurfaceRate</td><td>0.6</td><td>平面点占点云比例上限，防止误提取</td><td>户外地形复杂时调大</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-warn"><div class="callout-icon">💡</div><div class="callout-text"><strong>LIO-SAM实战经验：</strong><br>
+• 如果地图中出现大量"鬼影"（不存在的障碍物）→ 减小 <code>segmentOccupancyThreshold</code><br>
+• 如果地面被错误分割为障碍物 → 减小 <code>segmentTheta</code><br>
+• 如果机载电脑内存不足（点云地图过大）→ 增大 <code>mapFilterResolution</code><br>
+• 如果无人机在走廊等低特征环境漂移 → 检查边缘点/平面点提取是否正确，降低 <code>imaxCornerRate</code></div></div>
+
+<!-- ===== ⚠️ 常见陷阱 ===== -->
+<div class="callout callout-warn" style="margin-bottom:16px"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>常见陷阱① - Lidar-相机外参随振动漂移：</strong>Lidar和相机刚性连接，但长期高强度振动会导致安装角度缓慢漂移。在无人机这种高振动平台上，建议每次飞行前用标定板快速验证外参是否还准确。<br><br>
+<strong>常见陷阱② - Lidar点云与图像时间同步：</strong>如果时间同步误差超过5ms（无人机高速运动时），投影到图像上的点会出现明显错位（点不在对应的物体上）。这会导致基于图像特征和Lidar几何的融合算法产生错误的约束。<br><br>
+<strong>常见陷阱③ - 室外强阳光下的Lidar失效：</strong>某些消费级Lidar（如早期Livox AVIA）在强阳光下信噪比严重下降，部分扫描线可能完全失效。需要在融合系统中检测这种"弱扫描帧"并降低其权重。</div></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第13章 · 融合定位与建图）：</strong>VIO和LIO-SAM解决了局部里程计问题，但累积误差仍然存在。回环检测（检测"回到已访问区域"）是消除累积误差的关键——第13章将把这些知识串联为完整的SLAM系统。</div></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>激光雷达与视觉的协同</h3><p><strong>① 特征层融合：</strong>最常用——Lidar提几何约束（线/面/边缘点），相机提语义/纹理信息。<br><strong>② LIO-SAM：</strong>因子图框架，IMU预积分 + Lidar里程计 + GPS + 回环，ISAM2求解器。<br><strong>③ LOAM边缘线匹配：</strong>点-线距离最小化，用于Lidar运动估计。<br><strong>④ LVI-SAM：</strong>在LIO-SAM基础上增加视觉因子，增强低特征环境鲁棒性。<br><strong>⑤ Scan Context：</strong>基于点云整体形状的回环检测方法，对Lidar点云特别有效。</p></div>
+
+</section>

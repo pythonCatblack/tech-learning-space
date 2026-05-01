@@ -1,0 +1,184 @@
+<section id="ch13">
+<div class="hero">
+<div class="chapter-tag">Chapter 13 · 应用与部署</div>
+<h1>融合定位与建图：<br>从里程计到完整SLAM系统</h1>
+<p class="sub">理解完整的多传感器融合定位系统架构——里程计→SLAM→重定位，以及地图构建与长期导航的工程细节。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约40分钟</span><span class="hero-meta-item">🎯 定位应用</span></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 11（VIO）、Chapter 12（Lidar视觉融合）。本章是前12章知识的综合应用——将所有传感器的预处理和融合模块串联为一个完整的SLAM系统。</div></div>
+
+<p class="lead">单传感器里程计（VO/VIO/LIO）只能给出相邻帧之间的相对运动估计，会产生累积误差。完整的定位系统需要<span class="kw">SLAM</strong>（同时定位与地图构建）——不仅要估计轨迹，还要构建环境地图，并通过回环检测和重定位消除累积误差。这是所有商用无人机定位系统的标配。</p>
+
+<h2 class="section-h2">13.1 SLAM系统状态机：无人机的"生死观"</h2>
+
+<p class="p">SLAM系统在不同状态下有不同的行为模式，理解这个状态机是调试SLAM的基础：</p>
+
+<div class="flow">
+<div class="flow-box" style="background:#e8f5e9"><div class="flow-box-title">初始化</div><div class="flow-box-desc">传感器标定<br>初始参数</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">跟踪中</div><div class="flow-box-desc">实时里程计<br>前端处理</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box" style="background:#fff3e0"><div class="flow-box-title">丢失检测</div><div class="flow-box-desc">特征不足<br>运动模糊</div></div>
+</div>
+
+<div class="flow">
+<div class="flow-box" style="background:#fce4ec"><div class="flow-box-title">重定位</div><div class="flow-box-desc">地图匹配<br>姿态恢复</div></div>
+<div class="flow-arrow">↔</div>
+<div class="flow-box" style="background:#e3f2fd"><div class="flow-box-title">回环检测</div><div class="flow-box-desc">地点识别<br>全局优化</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">建图</div><div class="flow-box-desc">地图更新<br>管理维护</div></div>
+</div>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">✅</div><h4>跟踪正常</h4><p>特征点充足，跟踪稳定，因子图持续优化，轨迹误差在容忍范围内。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">⚠️</div><h4>跟踪丢失</h4><p>特征点不足（白墙/黑暗）或运动过快导致跟踪失败。需要重定位恢复。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fce4ec">🔄</div><h4>重定位成功</h4><p>找到与历史地图的匹配，位姿恢复，跟踪继续。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🔁</div><h4>回环触发</h4><p>检测到回到已访问区域，引入全局约束，修正累积漂移。</p></div>
+</div>
+
+<h2 class="section-h2">13.1 里程计 vs SLAM：累积误差的处理</h2>
+<h3 class="section-h3">13.1.1 里程计的局限性：误差如何复合增长</h3>
+<p class="p"><span class="kw">里程计</strong>通过积分相邻帧之间的相对运动来估计轨迹——每一步都有微小误差，这些误差会累积。</p>
+
+<div class="card orange"><div class="card-label">误差累积的数学</div><h3>为什么走100步后误差达到63%？</h3><p>设每步相对位姿估计的误差率为 $\epsilon$（如每步1%的误差）。<br><br>
+<strong>独立误差叠加（RSS）：</strong>总误差 $\approx \sqrt{N} \cdot \epsilon$ （$N$为步数）<br>
+$N=100$步：$\sqrt{100} \cdot 1\% = 10\%$？<br><br>
+不对，实际更严重——因为每步误差是方向性的：<br>
+<strong>真实情况：</strong>每步误差是平移+旋转的6自由度耦合误差，会在空间中形成"随机游走"路径。<br>
+对于VIO：60秒飞行后，通常累积0.5-2m的漂移（取决于特征质量）。<br>
+对于LIO-SAM：同样条件下通常累积0.1-0.5m。<br>
+解决这个问题的唯一方法是回环检测。
+</p></div>
+
+<h3 class="section-h3">13.1.2 SLAM的解决方案：回环与全局优化</h3>
+<p class="p"><span class="kw">SLAM</strong>的核心是检测"回到之前到过的地方"（回环），并将这个信息加入因子图约束，从而修正所有累积误差。回环检测成功后，系统将之前积累的漂移"分摊"到整条轨迹上，实现全局一致。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 SLAM的"鸡生蛋"悖论</div><p>SLAM有一个根本矛盾：<strong>要精确建图需要准确定位，要准确定位需要精确地图</strong>。<br><br>
+这就是为什么SLAM需要迭代求解：先有一个初始地图（哪怕很粗糙），估计初始轨迹；再用这个轨迹优化地图；再用优化后的地图重新估计轨迹……如此迭代，直到收敛。<br><br>
+在因子图框架下，这个问题天然被解决：所有变量（轨迹节点+地图节点）同时优化，互相约束，共同收敛。
+</p></div>
+
+<h2 class="section-h2">13.2 完整SLAM系统架构</h2>
+<h3 class="section-h3">13.2.1 系统分层架构</h3>
+<p class="p">一个完整的无人机SLAM系统分为三层：</p>
+
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h4>传感器预处理层</h4>
+<p>IMU → 预积分 | 相机 → 特征检测+匹配 | Lidar → 运动畸变校正+特征提取 | GPS → 位置解算</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h4>前端里程计层（局部）</h4>
+<p>基于IMU预积分 + 视觉/Lidar里程计，实时估计相邻帧相对运动。输出给融合层。</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h4>后端优化层（全局）</h4>
+<p>因子图构建与优化、回环检测、重定位、地图管理。输出全局一致的轨迹和地图。</p></div></div>
+</div>
+
+<h3 class="section-h3">13.2.2 融合策略：如何动态选择传感器组合</h3>
+<p class="p">现代无人机SLAM系统根据环境条件动态选择融合策略：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">✅</div><h4>户外开阔地带（GPS信号好）</h4><p>GPS + IMU 融合为主（EKF），视觉/Lidar作为里程计微调。GPS提供绝对位置锚定，抑制漂移。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🌆</div><h4>城市峡谷/树林（GPS信号差）</h4><p>切换到VIO模式（IMU+相机）或LIO-SAM模式（IMU+Lidar）。视觉/Lidar接管定位。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🔄</div><h4>检测到回环</h4><p>触发全局优化。因子图中的回环因子引入长期约束，修正所有历史累积误差。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fce4ec">⚠️</div><h4>GPS短期失效（隧道/天桥下）</h4><p>IMU继续传播姿态，VIO/LIO接管。失效结束时，GPS恢复后逐步增加其融合权重（平滑过渡，避免位置跳变）。</p></div>
+</div>
+
+<h2 class="section-h2">13.3 回环检测：识别"回到原点"</h2>
+<h3 class="section-h3">13.3.1 视觉回环：词袋模型（DBoW2）</h3>
+<p class="p">视觉SLAM用<span class="kw">词袋模型</strong>（Bag of Words）检测回环。核心思想：将每帧图像表示为一个稀疏向量（词袋），比较两帧的词袋相似度，超过阈值则判定为回环候选。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 DBoW2回环检测三步</div><p><strong>步骤1 - 词袋训练：</strong>从大量图像中提取ORB特征，通过K-means聚类得到视觉词典（通常500-1000个视觉单词）。<br><br>
+<strong>步骤2 - 图像编码：</strong>每帧图像提取ORB特征，统计每个单词的出现次数（词频），编码为稀疏向量 v。<br><br>
+<strong>步骤3 - 相似度评分：</strong>比较当前帧与历史帧的词袋向量：<br>
+<strong>$score(v_1, v_2) = 2 \cdot |v_1 \cap v_2| / (|v_1| + |v_2|)$</strong><br>
+接近1.0表示高度相似（可能是回环）。<br><br>
+<strong>几何验证：</strong>相似度高的候选帧还需经过2D-2D对极几何检验（RANSAC），剔除外观相似但视角完全不同的误检。
+</p></div>
+
+<h3 class="section-h3">13.3.2 Lidar回环：Scan Context</h3>
+<p class="p">Lidar点云无法直接用词袋模型。Scan Context专为Lidar设计，利用点云的俯视图几何特征做全局地点识别。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 Scan Context的俯视图编码</div><p><strong>步骤1 - 极坐标网格划分：</strong>将360°水平FOV划分为N个扇区（如30个），每个扇区再细分为M个径向环（如60个）。<br><br>
+<strong>步骤2 - 高度编码：</strong>每个格子记录该区域内的最大Z坐标值（高度）。这样就将3D点云编码为N×M的2D"图像"。<br><br>
+<strong>步骤3 - 循环对齐搜索：</strong>由于顺时针扫描，同一地点不同时间的扫描结果在角度上有一个偏移。用循环位移（circular shift）找到最小化差异的方向，即为两帧之间的角度偏移。<br><br>
+<strong>步骤4 - 相似度比较：</strong>用余弦相似度比较两帧的Scan Context，相似度最高的候选触发几何验证（ICP）。
+</p></div>
+
+<h2 class="section-h2">13.4 重定位：从丢失到恢复</h2>
+<h3 class="section-h3">13.4.1 为什么需要重定位？</h3>
+<p class="p">无人机可能因遮挡、剧烈运动或算法失效而丢失定位（如VIO跟踪失败）。重定位技术让无人机在已有地图中快速找到自己的位置，无需从零开始建图。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🗺️</div><h4>基于词袋的图像检索</h4><p>用当前帧的词袋向量在历史关键帧数据库中检索，找到最相似的关键帧，用其位姿作为初始估计。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📍</div><h4>基于特征的ICP</h4><p>将当前帧的特征点与地图中的3D特征点匹配，用PnP/ICP估计初始位姿。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🤖</div><h4>基于深度学习的重定位</h4><p>NetVLAD、AnyLoc等方法用深度学习特征做全局地点识别，对视角/外观变化更鲁棒。</p></div>
+</div>
+
+<h2 class="section-h2">13.5 地图构建与地图类型</h2>
+<h3 class="section-h3">13.5.1 三种地图对比</h3>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📦</div><h4>稠密点云地图</h4><p>保留所有或降采样后的3D点（PCL点云、TSDF体素网格）。用于可视化、建图精度评估、三维重建。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🗺️</div><h4>栅格占据地图</h4><p>二维/三维网格，每个格子记录是否可通行（占据/空闲/未知）。用于路径规划。OctoMap支持三维栅格地图。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🏗️</div><h4>语义地图</h4><p>带语义标签（建筑/道路/树木/电线杆）的地图。用于高层决策（如"绕开建筑物"而不是"绕开这些具体的3D点"）。</p></div>
+</div>
+
+<!-- ===== 🛠️ 动手实践 ===== -->
+<div class="card green" style="margin-bottom:16px"><div class="card-label">🛠️ 动手实践</div><h3>用RTAB-Map可视化构建稠密点云地图</h3><p><strong>目标：</strong>用RTAB-Map（Real-Time Appearance-Based Mapping）实际运行SLAM，生成稠密点云地图。<br><br>
+<pre style="background:#f5f5f7;padding:12px;border-radius:8px;overflow-x:auto;font-size:13px">
+# RTAB-Map安装（Ubuntu 20.04）
+sudo apt install ros-noetic-rtabmap-ros
+
+# 启动RTAB-Map（配合RGB-D相机，如Intel RealSense）
+roslaunch rtabmap_examples rgbd_sync.launch
+# 或者配合激光雷达：
+roslaunch rtabmap_examples lidar_3d.launch
+
+# 录制rosbag并建图
+rosbag record /camera/rgb/image_raw /camera/depth/camera_info /tf
+rosbag play your_recording.bag
+
+# 导出点云地图
+rosrun rtabmap_util rtabmap_util \
+  -memory_db ~/.ros/rtabmap.db \
+  -export_point_cloud_output cloud.pcd
+</pre>
+<strong>观察重点：</strong><br>
+• 地图逐步扩展（前端里程计实时添加节点）<br>
+• 回环检测触发时，因子图优化的效果（地图突然对齐）<br>
+• 重定位：用手遮挡相机5秒后恢复，观察系统能否重新定位
+</p></div>
+
+<h2 class="section-h2">13.5 完整SLAM系统选型指南</h2>
+<p class="p">根据不同的应用场景和硬件配置，选择最合适的SLAM系统：</p>
+
+<table class="tbl">
+<thead><tr><th>场景</th><th>推荐系统</th><th>传感器配置</th><th>关键指标</th><th>不推荐</th></tr></thead>
+<tbody>
+<tr><td class="hl">室内无人机</td><td>VINS-Mono</td><td>单目相机 + IMU</td><td>精度<0.5m/100m</td><td>需要GPU的深度学习方案</td></tr>
+<tr><td class="hl">户外巡检（GPS可用）</td><td>LIO-SAM</td><td>Lidar + IMU + GPS</td><td>精度<1m/km</td><td>纯视觉（光照变化大）</td></tr>
+<tr><td class="hl">地下/山洞</td><td>LVI-SAM</td><td>Lidar + 相机 + IMU</td><td>精度<2m/km，无GPS环境</td><td>仅Lidar（纹理不足）</td></tr>
+<tr><td class="hl">低速机器人（室内）</td><td>Cartographer</td><td>2D Lidar + IMU</td><td>地图分辨率2cm</td><td>需要3D地图时</td></tr>
+<tr><td class="hl">高速无人机</td><td>Fast-LIO2</td><td>Lidar + IMU</td><td>延迟<5ms，频率40Hz</td><td>需要纹理信息时</td></tr>
+</tbody>
+</table>
+
+<div class="card orange"><div class="card-label">选型决策树</div><h3>如何快速选择？</h3>
+<p><strong>① 有Lidar吗？</strong><br>
+→ 有 → 进入②<br>
+→ 无 → 进入③<br><br>
+<strong>② 户外还是室内？</strong><br>
+→ 户外（有GPS）→ LIO-SAM（GPS因子提升绝对精度）<br>
+→ 室内/地下 → LVI-SAM（视觉弥补Lidar纹理不足）<br><br>
+<strong>③ 室内低功耗？</strong><br>
+→ 是（无人机）→ VINS-Mono（计算量小，精度够用）<br>
+→ 否（计算资源充足）→ 考虑深度学习方案（DeepVIO等）</p></div>
+
+<!-- ===== ⚠️ 常见陷阱 ===== -->
+<div class="callout callout-warn" style="margin-bottom:16px"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>常见陷阱① - 回环误检（感知混淆）：</strong>在视觉特征重复的场景（走廊、森林、地下车库），不同位置的特征描述子可能非常相似，导致误检为回环。后果是地图完全错位。解决：加入几何验证（对极约束）+ 位置先验（GPS或IMU约束）。<br><br>
+<strong>常见陷阱② - 长期运行时地图过大：</strong>SLAM地图随运行时间线性增长，导致内存耗尽和优化变慢。解决：工作内存管理（WM）——将早期数据压缩为低分辨率子图（"次级地图"）。<br><br>
+<strong>常见陷阱③ - 重定位失败后的"幽灵轨迹"：</strong>如果重定位失败但算法没有正确检测，会出现两条轨迹同时存在的情况（"幽灵轨迹"）。必须在重定位模块加入置信度检查（Mahalanobis距离验证）。</div></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第14章 · 路径规划）：</strong>有了全局一致的地图和精确的定位，无人机就能规划从当前位置到目标的路径。第14章将讲解A*/RRT*等全局路径规划算法，以及DWA/MPC等局部避障算法。</div></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>完整SLAM系统的设计</h3><p><strong>① 累积误差：</strong>里程计积分误差复合增长，需要回环检测来修正。<br><strong>② 回环检测：</strong>视觉用DBoW2词袋模型；Lidar用Scan Context。都需要几何验证防止误检。<br><strong>③ 因子图全局优化：</strong>回环因子加入因子图，所有历史轨迹节点同时优化，误差分摊。<br><strong>④ 重定位：</strong>在已有地图中恢复当前位姿，是长期自主导航的关键能力。<br><strong>⑤ 动态融合策略：</strong>根据GPS信号质量动态选择GPS+IMU vs VIO/LIO-SAM模式。</p></div>
+
+</section>

@@ -1,0 +1,130 @@
+<section id="ch4">
+<div class="hero">
+<div class="chapter-tag">Chapter 4 · 设计架构</div>
+<h1>逻辑门与数字电路：<br>晶体管如何变成 0 和 1</h1>
+<p class="sub">从 NOT 到 NAND，从组合逻辑到时序逻辑——理解芯片如何用晶体管构建出整个数字世界。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约40分钟</span><span class="hero-meta-item">🔲 数字基础</span></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>回顾 Chapter 3：</strong>上一章我们深入理解了 MOSFET 的工作原理——栅极电压通过电场效应控制沟道的导通与截止，CMOS 的互补设计让静态功耗趋近于零。本章将展示：如何用这些晶体管构建出逻辑门——芯片的"字母表"——以及如何用这些"字母"拼出"单词"和"句子"。</div></div>
+
+<p class="lead">逻辑门是数字电路的"字母"。就像26个英文字母可以组成莎士比亚的全部著作，7个基本逻辑门可以构建出从计算器到超级计算机的一切。本章将带你从晶体管层面理解每一个逻辑门，然后展示它们如何组合成寄存器、ALU、乃至整个 CPU。</p>
+
+<h2 class="section-h2">4.1 布尔代数：数字世界的数学基础</h2>
+<p class="p">在深入逻辑门之前，我们需要理解<span class="kw">布尔代数</span>（Boolean Algebra）——由乔治·布尔（George Boole）在1847年创立的一套代数系统。布尔代数只有两个值：<strong>真（1）</strong>和<strong>假（0）</strong>，以及三种基本运算：<strong>与（AND）</strong>、<strong>或（OR）</strong>、<strong>非（NOT）</strong>。</p>
+
+
+<!-- 学习路线与资源 -->
+<div class="card green" style="margin-bottom:16px"><div class="card-label">📚 本章学习路线</div><h3>数字电路学习路径</h3><p><strong>第1步：布尔代数基础（15分钟）</strong>——4.1节。不需要数学基础，记住AND/OR/NOT三个运算即可。4.1.2节"卡诺图"是后续化简逻辑的实用工具，值得动手练习3-5道题。<br><strong>第2步：组合逻辑（25分钟）</strong>——4.2节。理解半加器→全加器→多位数加法器的递进关系，这是ALU的最小单元。重点理解"进位"是怎么产生的。<br><strong>第3步：时序逻辑（30分钟）</strong>——4.4节。触发器（Flip-Flop）是现代数字电路的"记忆细胞"。理解"上升沿触发"为什么比"电平敏感"更好，这是时序电路可控性的关键。<br><strong>第4步：时钟与同步（15分钟）</strong>——4.5节。建立/保持时间是芯片时序分析的起点，理解"信号必须在时钟边沿前后稳定"的物理约束。</p></div>
+
+<div class="card orange" style="margin-bottom:16px"><div class="card-label">🔗 推荐课程与学习资源</div><h3>优质免费资源</h3><p><strong>🎓 数字电路课程：</strong><br>• <a href="https://www.coursera.org/learn/digital-systems" target="_blank" rel="noopener">Coursera: Digital Systems: From Logic Gates to Processors</a> — 从逻辑门到处理器的完整课程，推荐配合第4章学习<br>• <a href="https://www.nandland.com/" target="_blank" rel="noopener">Nandland.com</a> — 免费数字电路教程网站，有大量FPGA/Verilog入门示例<br>• <a href="https://hdlbits.01xz.net/" target="_blank" rel="noopener">HDLBits</a> — 在线Verilog练习平台，共200+道题，做完相当于完成Chapter 4-5的实践部分<br><br><strong>📖 推荐阅读：</strong><br>• 《数字设计：系统方法》(William J. Dally) — 斯坦福教材，强调"系统思维"，比传统数电教材更接近工业实践<br>• 《数字电子技术基础》(阎石) — 国内大学经典教材，第4-8章覆盖本章全部知识点，习题丰富<br><br><strong>🛠️ 动手实践：</strong><br>• <a href="https://www.digitalelectronicsdeoted.com/" target="_blank" rel="noopener">Digital Electronics Deoted</a> — 在线逻辑门仿真器，可以拖拽搭建电路，实时观察输出<br>• 用 Logisim（开源软件）设计一个4位加法器，动手实践比看书快10倍</p></div>
+
+<div class="card blue"><div class="card-label">布尔代数三定律</div><h3>一切数字逻辑的基础</h3><p><strong>交换律：</strong>A AND B = B AND A；A OR B = B OR A<br><strong>结合律：</strong>(A AND B) AND C = A AND (B AND C)<br><strong>分配律：</strong>A AND (B OR C) = (A AND B) OR (A AND C)<br><br>这些看似简单的定律，实际上是芯片中数十亿晶体管协作的数学保证。任何复杂的数字电路，最终都可以分解为这三种基本运算的组合。</p></div>
+
+<h2 class="section-h2">4.2 基本逻辑门：从晶体管到功能模块</h2>
+<p class="p">每个逻辑门都是若干晶体管的特定连接方式。理解晶体管层面的实现，才能真正理解为什么某些门比另一些更"好"（更快、更省面积、更省电）。</p>
+
+<h3 class="section-h3">4.2.1 NOT 门（反相器）：最简单的逻辑门</h3>
+<p class="p">NOT 门只有一个输入和一个输出：输入是"1"，输出就是"0"；输入是"0"，输出就是"1"。在 CMOS 中，NOT 门只需要两个晶体管——一个 N 管和一个 P 管。</p>
+<div class="hlbox"><div class="hlbox-title">🔑 CMOS NOT 门的工作原理</div><p>• 输入 = "0"（低电压，接近0V）：P 管导通，N 管截止 → 输出通过 P 管连到电源（VDD，高电压）→ 输出 = "1"<br>• 输入 = "1"（高电压，接近VDD）：N 管导通，P 管截止 → 输出通过 N 管连到地（GND，0V）→ 输出 = "0"<br><br>注意：无论输入是"0"还是"1"，从电源到地之间都没有直流通路——静态功耗为零。</p></div>
+
+<h3 class="section-h3">4.2.2 NAND 门：数字电路的"万能门"</h3>
+<p class="p"><span class="kw">NAND</span>（NOT-AND，与非门）是数字电路中最重要的门。它的逻辑是：只有当所有输入都是"1"时，输出才是"0"；否则输出是"1"。</p>
+<p class="p">NAND 门之所以被称为"万能门"，是因为<strong>任何其他逻辑门都可以用 NAND 门组合出来</strong>。这意味着理论上，你只用 NAND 门就能构建出整个计算机。在 CMOS 中，一个二输入 NAND 门需要4个晶体管（2个 P 管并联 + 2个 N 管串联）。</p>
+
+<h3 class="section-h3">4.2.3 NOR 门：NAND 的"镜像"</h3>
+<p class="p"><span class="kw">NOR</span>（NOT-OR，或非门）的逻辑是：只要有一个输入是"1"，输出就是"0"；只有所有输入都是"0"时，输出才是"1"。NOR 门同样具有"万能性"——任何逻辑门也可以用 NOR 门组合出来。在 CMOS 中，一个二输入 NOR 门需要4个晶体管（2个 P 管串联 + 2个 N 管并联）。</p>
+
+<h3 class="section-h3">4.2.4 AND 门与 OR 门：NAND/NOR + NOT</h3>
+<p class="p">AND 门和 OR 门在 CMOS 中不是"原生"实现的——它们由 NAND/NOR 后面接一个 NOT 门组成。这意味着一个二输入 AND 门需要6个晶体管（4个 NAND + 2个 NOT）。这就是为什么在芯片设计中，工程师更倾向于直接使用 NAND 和 NOR——它们更省晶体管、更快、功耗更低。</p>
+
+<div class="card orange"><div class="card-label">设计智慧</div><h3>为什么 NAND 比 AND 更常用？</h3><p>在 CMOS 中，NAND 门只需要4个晶体管，而 AND 门需要6个。对于一颗有500亿晶体管的芯片，每个门少用2个晶体管意味着节省数百亿个晶体管——直接转化为更小的芯片面积、更低的功耗、更低的制造成本。这就是为什么数字电路设计以 NAND/NOR 为核心，AND/OR 只在必要时使用。</p></div>
+
+<h2 class="section-h2">4.3 组合逻辑：没有记忆的"即时计算"</h2>
+<p class="p"><span class="kw">组合逻辑</span>（Combinational Logic）是指输出仅取决于当前输入、与历史状态无关的电路。加法器、比较器、编码器、译码器都属于组合逻辑。</p>
+
+<h3 class="section-h3">4.3.1 半加器与全加器：芯片如何算加法</h3>
+<p class="p">加法器是 CPU 的核心组件之一。<span class="kw">半加器</span>（Half Adder）有两个输入（A、B）和两个输出（和 S、进位 C）：S = A XOR B，C = A AND B。但它不能处理来自低位的进位。</p>
+<p class="p"><span class="kw">全加器</span>（Full Adder）有三个输入（A、B、进位 Cin）和两个输出（和 S、进位 Cout）。它由两个半加器和一个 OR 门组成。把32个全加器串联起来，就得到了一个32位加法器——这是 CPU 中 ALU 的核心。</p>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>跨章关联：</strong>全加器的进位链（Cin → Cout）是 CPU 中"关键路径"（Critical Path）的典型例子。在 Chapter 6（芯片架构设计）中，你将看到工程师如何通过<span class="kw">超前进位加法器</span>（Carry-Lookahead Adder）来打破这个串行瓶颈，让32位加法从32个门延迟缩短到约6个门延迟。</div></div>
+
+<h3 class="section-h3">4.3.2 多路选择器 (MUX)：数据路由</h3>
+<p class="p"><span class="kw">多路选择器</span>（Multiplexer）根据选择信号从多个输入中选择一个输出。一个2选1 MUX只需要几个 NAND 门，但它在芯片中无处不在——CPU 的寄存器文件、ALU 的输入选择、缓存的地址译码，都依赖 MUX。</p>
+
+<h2 class="section-h2">4.4 时序逻辑：给电路"记忆"</h2>
+<p class="p">组合逻辑没有记忆——同样的输入永远产生同样的输出。但计算机需要"记住"东西：当前执行到哪条指令、变量的值是多少、屏幕上的像素是什么颜色。<span class="kw">时序逻辑</span>（Sequential Logic）通过引入<span class="kw">时钟</span>（Clock）和<span class="kw">存储元件</span>，让电路具有记忆能力。</p>
+
+<h3 class="section-h3">4.4.1 锁存器 (Latch)：电平敏感的存储</h3>
+<p class="p"><span class="kw">锁存器</span>是最简单的存储元件。当"使能"信号为高电平时，输入直接传到输出；当"使能"信号为低电平时，输出保持之前的值不变。锁存器的优点是结构简单（只需几个 NAND 门），缺点是时序分析困难——因为"使能"信号为高期间，输入的任何变化都会直接影响输出。</p>
+
+<h3 class="section-h3">4.4.2 触发器 (Flip-Flop)：边沿触发的存储</h3>
+<p class="p"><span class="kw">触发器</span>是锁存器的改进版——它只在时钟的<span class="kw">上升沿</span>（或下降沿）采样输入，其他时间输出保持不变。这个"只在瞬间采样"的特性让时序分析变得简单可控，是现代数字电路的标准存储元件。</p>
+<div class="hlbox"><div class="hlbox-title">🔑 为什么触发器比锁存器更好？</div><p>想象你在拍一张照片：锁存器像"录像"——只要镜头开着，画面就实时变化；触发器像"拍照"——只在按下快门的瞬间定格画面。在芯片中，"拍照"（边沿触发）让工程师可以精确知道每个信号在什么时候稳定，从而确保整个电路的正确性。</p></div>
+
+<h3 class="section-h3">4.4.3 寄存器 (Register)：多位数据的"抽屉"</h3>
+<p class="p">一个<span class="kw">寄存器</span>就是一组并排的触发器——每个触发器存储1位，8个触发器组成8位寄存器，32个组成32位寄存器。CPU 中的寄存器文件（Register File）就是几十个这样的"抽屉"，用来临时存放运算数据和地址。</p>
+
+<h2 class="section-h2">4.5 时钟与同步：芯片的"心跳"</h2>
+<p class="p">时钟是数字电路的"心跳"——一个周期性的方波信号，所有触发器都在时钟边沿同步更新。时钟频率直接决定了芯片的运算速度：1 GHz 的时钟意味着每秒10亿次心跳，每次心跳可以完成一次基本运算。</p>
+
+<h3 class="section-h3">4.5.1 建立时间与保持时间</h3>
+<p class="p">为了让触发器正确采样，输入信号必须在时钟边沿前后保持稳定一段时间：</p>
+<div class="tags">
+<span class="tag t-blue">建立时间 (Setup Time)：时钟边沿前，输入必须稳定的最短时间</span>
+<span class="tag t-orange">保持时间 (Hold Time)：时钟边沿后，输入必须稳定的最短时间</span>
+</div>
+<p class="p">如果信号在建立时间或保持时间内发生变化，触发器可能采样到错误值——这就是<span class="kw">时序违规</span>（Timing Violation），会导致芯片功能错误。在 Chapter 8（制造流程）中，你将看到芯片制造完成后必须进行"时序签核"（Timing Sign-off），确保所有路径都满足建立时间和保持时间。</p>
+
+<h3 class="section-h3">4.5.2 时钟域与跨时钟域</h3>
+<p class="p">复杂芯片（如 SoC）通常有多个时钟域——CPU 核可能运行在 3GHz，而 USB 控制器只运行在 48MHz。当信号从一个时钟域传到另一个时钟域时，必须使用<span class="kw">同步器</span>（Synchronizer，通常由两级触发器组成）来避免亚稳态（Metastability）——一种触发器输出在"0"和"1"之间悬停的不确定状态。</p>
+
+<h3 class="section-h3">4.5.3 数字电路设计层次全景图</h3>
+<p class="p">从晶体管到完整芯片，设计经历了多个层次的抽象：</p>
+
+<div class="flow">
+<div class="flow-box"><div class="flow-box-title">晶体管</div><div class="flow-box-desc">NMOS/PMOS<br>开关特性</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">逻辑门</div><div class="flow-box-desc">NOT/NAND/NOR/AND/OR<br>基本单元</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">组合逻辑</div><div class="flow-box-desc">加法器/比较器/MUX<br>无记忆</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">时序逻辑</div><div class="flow-box-desc">触发器/寄存器/计数器<br>有时钟</div></div>
+</div>
+
+<div class="flow">
+<div class="flow-box"><div class="flow-box-title">功能模块</div><div class="flow-box-desc">ALU/寄存器文件/FSM<br>中等规模</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">微架构</div><div class="flow-box-desc">流水线/缓存/分支预测<br>处理器核</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">系统芯片</div><div class="flow-box-desc">CPU/GPU/NPU/ISP<br>完整SoC</div></div>
+</div>
+
+<h3 class="section-h3">4.5.4 主流逻辑门特性对比</h3>
+<p class="p">不同逻辑门在晶体管数量、传播延迟和功耗上各有优劣：</p>
+
+<table class="tbl">
+<thead><tr><th>逻辑门</th><th>晶体管数</th><th>典型延迟</th><th>主要用途</th><th>设计优势</th></tr></thead>
+<tbody>
+<tr><td class="hl">NOT</td><td>2</td><td>~1x</td><td>信号反相</td><td>最简单，最快</td></tr>
+<tr><td class="hl">NAND</td><td>4</td><td>~1.5x</td><td>通用逻辑，存储器单元</td><td>万能门，面积小</td></tr>
+<tr><td class="hl">NOR</td><td>4</td><td>~1.5x</td><td>通用逻辑</td><td>万能门，面积小</td></tr>
+<tr><td class="hl">AND</td><td>6</td><td>~2x</td><td>逻辑运算</td><td>直观，易读</td></tr>
+<tr><td class="hl">OR</td><td>6</td><td>~2x</td><td>逻辑运算</td><td>直观，易读</td></tr>
+<tr><td class="hl">XOR</td><td>6-12</td><td>~2-3x</td><td>奇偶校验，加法器</td><td>算术运算必备</td></tr>
+<tr><td class="hl">MUX (2:1)</td><td>6</td><td>~2x</td><td>数据选择，寄存器</td><td>路由控制</td></tr>
+</tbody>
+</table>
+
+<div class="divider"></div>
+
+<!-- 学习路线与资源 -->
+<div class="card green" style="margin-bottom:16px"><div class="card-label">📚 本章学习路线</div><h3>数字电路学习路径</h3><p><strong>第1步：布尔代数基础（15分钟）</strong>——4.1节。不需要数学基础，记住AND/OR/NOT三个运算即可。4.1.2节"卡诺图"是后续化简逻辑的实用工具，值得动手练习3-5道题。<br><strong>第2步：组合逻辑（25分钟）</strong>——4.2节。理解半加器→全加器→多位数加法器的递进关系，这是ALU的最小单元。重点理解"进位"是怎么产生的。<br><strong>第3步：时序逻辑（30分钟）</strong>——4.4节。触发器（Flip-Flop）是现代数字电路的"记忆细胞"。理解"上升沿触发"为什么比"电平敏感"更好，这是时序电路可控性的关键。<br><strong>第4步：时钟与同步（15分钟）</strong>——4.5节。建立/保持时间是芯片时序分析的起点，理解"信号必须在时钟边沿前后稳定"的物理约束。</p></div>
+
+<div class="card orange" style="margin-bottom:16px"><div class="card-label">🔗 推荐课程与学习资源</div><h3>优质免费资源</h3><p><strong>🎓 数字电路课程：</strong><br>• <a href="https://www.coursera.org/learn/digital-systems" target="_blank" rel="noopener">Coursera: Digital Systems: From Logic Gates to Processors</a> — 从逻辑门到处理器的完整课程，推荐配合第4章学习<br>• <a href="https://www.nandland.com/" target="_blank" rel="noopener">Nandland.com</a> — 免费数字电路教程网站，有大量FPGA/Verilog入门示例<br>• <a href="https://hdlbits.01xz.net/" target="_blank" rel="noopener">HDLBits</a> — 在线Verilog练习平台，共200+道题，做完相当于完成Chapter 4-5的实践部分<br><br><strong>📖 推荐阅读：</strong><br>• 《数字设计：系统方法》(William J. Dally) — 斯坦福教材，强调"系统思维"，比传统数电教材更接近工业实践<br>• 《数字电子技术基础》(阎石) — 国内大学经典教材，第4-8章覆盖本章全部知识点，习题丰富<br><br><strong>🛠️ 动手实践：</strong><br>• <a href="https://www.digitalelectronicsdeoted.com/" target="_blank" rel="noopener">Digital Electronics Deoted</a> — 在线逻辑门仿真器，可以拖拽搭建电路，实时观察输出<br>• 用 Logisim（开源软件）设计一个4位加法器，动手实践比看书快10倍</p></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>从晶体管到数字电路</h3><p><strong>① 布尔代数</strong>：AND、OR、NOT 三种运算构成一切数字逻辑。<br><strong>② NAND/NOR 是万能门</strong>：任何逻辑门都可以用它们组合出来，且 CMOS 实现更省晶体管。<br><strong>③ 组合逻辑</strong>：输出仅取决于当前输入（加法器、MUX、译码器）。<br><strong>④ 时序逻辑</strong>：引入时钟和存储元件，让电路具有记忆（触发器、寄存器）。<br><strong>⑤ 建立/保持时间</strong>：时序分析的核心约束，违反会导致功能错误。<br><strong>⑥ 时钟域</strong>：复杂芯片有多个时钟，跨域传输需要同步器防止亚稳态。</p></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>预告 Chapter 5：</strong>现在你已经掌握了逻辑门和时序电路。下一步是把这些"积木"搭建成更大的结构——<strong>数字电路模块</strong>：ALU（算术逻辑单元）、寄存器文件、状态机。这些模块是 Chapter 6（芯片架构设计）中构建 CPU 和 SoC 的"预制件"。</div></div>
+
+</section>

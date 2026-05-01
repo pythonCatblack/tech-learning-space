@@ -1,0 +1,88 @@
+<section id="ch15">
+<div class="hero">
+<div class="chapter-tag">Chapter 15 · 应用与部署</div>
+<h1>集群协同感知：<br>从单机智能到群体智能</h1>
+<p class="sub">理解多无人机协同定位、分布式地图构建与集群编队控制——从单机智能到群体智能。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约30分钟</span><span class="hero-meta-item">👥 集群系统</span></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 13（SLAM系统）、Chapter 14（路径规划）。单机感知范围受限于单平台传感器FOV，集群通过多机协同扩大感知基线，实现单机无法完成的全局任务。</div></div>
+
+<p class="lead">单无人机的感知范围受限于传感器视场和物理位置。多无人机集群通过共享感知信息，可以实现<span class="kw">扩大感知范围、增强鲁棒性、完成单机无法完成的任务</strong>（如大型建筑三维重建、协同搜索救援）。集群系统的核心挑战是：在通信延迟、丢包、有限带宽的约束下，如何高效协调多机的感知与决策。</p>
+
+<h2 class="section-h2">15.1 集群协同的基本模式</h2>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🔗</div><h4>协同定位</h4><p>多架无人机共享相对位置估计，相互校正每架无人机的定位精度。例如：无人机间通过UWB（超宽带）或视觉相互测距。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🗺️</div><h4>分布式建图</h4><p>每架无人机构建局部地图，通过通信链路融合为全局一致地图（类似分布式SLAM）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🛡️</div><h4>冗余感知</h4><p>同一区域由多架无人机同时观测，提高感知鲁棒性和数据完整性。</p></div>
+</div>
+
+<h2 class="section-h2">15.2 通信拓扑与一致性</h2>
+<h3 class="section-h3">15.2.1 通信拓扑</h3>
+<p class="p">集群中无人机之间的通信网络拓扑决定了信息传播效率和鲁棒性：</p>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">⭐</div><h4>星型拓扑</h4><p>所有无人机与中央基站通信，适合小规模集群（<10架）。通信效率高，但基站是单点故障。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🔄</div><h4>网状拓扑</h4><p>每架无人机与邻居通信，无中心节点，适合大规模集群。信息传播延迟更高，但鲁棒性强。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🌐</div><h4>混合拓扑</h4><p>骨干网络用网状拓扑保证鲁棒性，局部信息汇聚用星型拓扑提高效率。</p></div>
+</div>
+
+<h3 class="section-h3">15.2.2 一致性算法</h3>
+<p class="p"><span class="kw">一致性算法</strong>（Consensus Algorithm）解决多机状态协调问题——在通信延迟和丢包存在的情况下，如何让所有无人机最终达到一致的状态估计。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 一致性算法的核心</div><p>设第 $i$ 架无人机的状态为 $x_i$，所有无人机通过通信交换状态。一致性算法迭代：<br><br>
+<strong>$x_i(k+1) = x_i(k) + \epsilon \cdot \sum_{j \in \mathcal{N}_i} (x_j(k) - x_i(k))$</strong><br><br>
+其中 $\epsilon$ 是耦合增益，$\mathcal{N}_i$ 是无人机 $i$ 的通信邻居。<br><br>
+直觉：如果每个邻居的状态都比自己大，就向邻居方向移动；如果比自己小，也向邻居方向移动。最终，所有无人机会收敛到相同的状态（一致）。<br><br>
+<strong>收敛条件：</strong>通信拓扑必须是连通的（从任何无人机可以经过多跳到达其他无人机），且耦合增益 $\epsilon$ 满足一定条件。
+</p></div>
+
+<h2 class="section-h2">15.3 编队控制</h2>
+<p class="p">编队控制（Formation Control）是集群飞行的核心——多架无人机在保持相对位置的同时整体移动。典型方法：</p>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🎯</div><h4>Leader-Follower</h4><p>一架无人机作为领导者，其他无人机跟踪其位置。实现最简单，但领导者故障整个编队失效。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🤝</div><h4>虚拟结构</h4><p>将编队视为一个虚拟刚体，每架无人机保持相对于虚拟结构的位置。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">⚙️</div><h4>分布式一致性</h4><p>每架无人机只与邻居通信，编队形状通过一致性算法自发涌现。鲁棒性最强，但收敛需要时间。</p></div>
+</div>
+
+<h2 class="section-h2">15.4 分布式建图</h2>
+<h3 class="section-h3">15.4.1 核心挑战：地图融合</h3>
+<p class="p">每架无人机在本地坐标系下建图。如何把这些局部地图融合为一个全局一致的地图？关键问题是坐标系对齐。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 分布式建图的两大挑战</div><p><strong>挑战1：坐标系对齐</strong><br>
+每架无人机的局部地图原点不同（各自的机体初始位置），需要找到它们之间的相对变换。<br>
+解法：用共同观测到的特征（如同一栋建筑、同一片森林）估计相对变换。<br><br>
+<strong>挑战2：带宽约束</strong><br>
+三维稠密点云地图数据量巨大（每秒可能数十MB），无线传输不现实。<br>
+解法：只传输关键帧（关键帧的位姿+稀疏特征点），而非全量点云。</p></div>
+
+<h3 class="section-h3">15.4.2 通信协议对比</h3>
+<p class="p">多无人机集群的通信协议选择直接影响系统实时性和鲁棒性：</p>
+
+<table class="tbl">
+<thead><tr><th>协议</th><th>频段</th><th>典型速率</th><th>延迟</th><th>通信距离</th><th>适用场景</th></tr></thead>
+<tbody>
+<tr><td class="hl">WiFi (802.11n/ac)</td><td>2.4/5 GHz</td><td>50-500 Mbps</td><td>5-20 ms</td><td>100-300m</td><td>小规模集群（<10架）实验室仿真</td></tr>
+<tr><td class="hl">MAVLink</td><td>915 MHz</td><td>0.5-2 Mbps</td><td>10-50 ms</td><td>1-5 km</td><td>PX4飞控通信事实标准</td></tr>
+<tr><td class="hl">LTE/4G</td><td>蜂窝频段</td><td>10-100 Mbps</td><td>20-100 ms</td><td>基站覆盖</td><td>户外长距离大范围集群</td></tr>
+<tr><td class="hl">UWB</td><td>3.1-10.6 GHz</td><td>110-675 Mbps</td><td>< 5 ms</td><td>50-200m</td><td>室内精确定位协同</td></tr>
+<tr><td class="hl">光通信 (Li-Fi)</td><td>可见光</td><td>10-100 Mbps</td><td>< 1 ms</td><td>10-50m</td><td>无电磁干扰环境</td></tr>
+</tbody>
+</table>
+
+<h3 class="section-h3">15.4.3 协同感知任务分配算法</h3>
+<p class="p">当多架无人机需要协同完成感知任务时（如搜索一片区域），任务分配算法决定每架无人机的目标区域：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🎯</div><h4>贪心分配</h4><p>每架无人机选择距离自己最近的未覆盖区域。实现简单，但可能不均衡。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📊</div><h4>匈牙利算法</h4><p>给定代价矩阵，求最优分配。适用于小规模静态任务分配（目标数量固定）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🤖</div><h4>市场拍卖算法</h4><p>每架无人机"竞拍"任务，价高者得。分布式实现，适合大规模动态任务分配。</p></div>
+</div>
+
+<!-- ===== ⚠️ 常见陷阱 ===== -->
+<div class="callout callout-warn" style="margin-bottom:16px"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>常见陷阱① - 通信延迟导致编队不稳定：</strong>一致性算法的收敛性分析通常假设通信是即时的。实际无线通信延迟10-100ms会导致编队振荡甚至发散。解决：在控制器中加入延迟补偿（Smith预测器）。<br><br>
+<strong>常见陷阱② - 只传位置不传协方差：</strong>只传输无人机的估计位置而不传输协方差矩阵，会导致融合时信任权重分配不当。正确做法：每架无人机同时传输 {位置, 协方差}。<br><br>
+<strong>常见陷阱③ - 编队规模超过通信容量：</strong>N架无人机的全连通拓扑需要N(N-1)/2条通信链路。10架全连通=45条！实践中用k近邻拓扑（每架只与最近的k架通信）以保证可扩展性。</div></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>群体智能</h3><p><strong>① 协同定位：</strong>多机共享相对位置信息，扩大感知基线，提高定位精度。<br><strong>② 分布式建图：</strong>各机构建局部地图，共同特征点估计相对变换，通信融合为全局地图。<br><strong>③ 一致性算法：</strong>xᵢ(k+1) = xᵢ(k) + εΣⱼ(xⱼ(k)-xᵢ(k))，处理通信延迟和丢包。<br><strong>④ Leader-Follower / 虚拟结构：</strong>两种主要编队控制方法，各有权衡。</p></div>
+
+</section>

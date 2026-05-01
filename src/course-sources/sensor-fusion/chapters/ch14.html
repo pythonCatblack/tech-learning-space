@@ -1,0 +1,195 @@
+<section id="ch14">
+<div class="hero">
+<div class="chapter-tag">Chapter 14 · 应用与部署</div>
+<h1>路径规划与避障：<br>从感知到决策的最后一公里</h1>
+<p class="sub">A*/RRT*/RRT*、DWA/MPC等规划算法详解，以及传感器驱动的实时避障策略。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约35分钟</span><span class="hero-meta-item">🗺️ 规划算法</span></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 13（融合定位与建图）。有了精确的定位和环境地图，才能规划路径。路径规划是整个感知-决策-控制链路的最后一环。</div></div>
+
+<p class="lead">传感器融合告诉无人机"周围有什么"（感知），路径规划解决"如何到达目标"（决策）。从原始传感器数据到电机指令，路径规划是整个感知-决策-控制链路的最后一环。</p>
+
+<h2 class="section-h2">14.1 路径规划基础</h2>
+<h3 class="section-h3">14.1.1 全局规划 vs 局部规划</h3>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🌍</div><h4>全局规划（Global）</h4><p>基于已知地图，从起点到终点找到最优路径。典型算法：A*、RRT、RRT*。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">⚡</div><h4>局部规划（Local）</h4><p>基于实时感知（传感器融合输出），在全局路径附近实时避障。典型算法：DWA、TEB、MPC。</p></div>
+</div>
+
+<h2 class="section-h2">14.2 A*算法：全局最优的启发式搜索</h2>
+<h3 class="section-h3">14.2.1 算法原理</h3>
+<p class="p"><span class="kw">A*</strong>是全局路径规划的经典算法，通过启发式搜索找到最短路径。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 A*评估函数</div><p>A*的评估函数：<strong>f(n) = g(n) + h(n)</strong><br><br>
+• g(n)：从起点到当前节点 n 的实际代价（已走距离）<br>
+• h(n)：从 n 到目标的估计代价（启发函数，必须是<u>可采纳的</u>——即永远不高估真实代价）<br>
+• f(n)：综合评估，优先扩展 f(n) 最小的节点<br><br>
+<strong>可采纳启发函数的选择：</strong><br>
+• 欧几里得距离（直线距离）：$h(n) = \sqrt{(x_n - x_g)^2 + (y_n - y_g)^2}$ —— 始终可采纳<br>
+• 曼哈顿距离：$h(n) = |x_n - x_g| + |y_n - y_g|$ —— 只能用于4方向运动网格<br>
+• 对角线距离：允许斜向移动时更准确<br><br>
+<strong>定理：</strong>若 h(n) 是可采纳的，则 A* 一定找到最优路径。
+</p></div>
+
+<h3 class="section-h3">14.2.2 A*的Python实现</h3>
+
+<div class="card green"><div class="card-label">🛠️ 动手实践</div><h3>A*算法完整Python实现</h3><pre style="background:#f5f5f7;padding:12px;border-radius:8px;overflow-x:auto;font-size:13px">
+import heapq
+import numpy as np
+
+def astar(grid, start, goal):
+    """A*路径规划器
+    grid: 2D array, 0=可通行, 1=障碍
+    start/goal: (row, col) 元组
+    """
+    rows, cols = grid.shape
+    dirs = [(0,1),(1,0),(-1,0),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)]
+
+    # 启发函数：欧几里得距离
+    def heuristic(a, b):
+        return np.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2)
+
+    # 优先队列：(f_score, counter, node)
+    counter = 0
+    open_set = [(heuristic(start, goal), counter, start)]
+    came_from = {}
+    g_score = {start: 0}
+
+    while open_set:
+        f, _, current = heapq.heappop(open_set)
+
+        if current == goal:
+            # 重建路径
+            path = [current]
+            while current in came_from:
+                current = came_from[current]
+                path.append(current)
+            return path[::-1]
+
+        for dr, dc in dirs:
+            neighbor = (current[0]+dr, current[1]+dc)
+            if 0 <= neighbor[0] < rows and 0 <= neighbor[1] < cols and grid[neighbor] == 0:
+                # 对角线移动代价为√2，直线代价为1
+                move_cost = np.sqrt(2) if dr != 0 and dc != 0 else 1
+                tentative_g = g_score[current] + move_cost
+
+                if neighbor not in g_score or tentative_g < g_score[neighbor]:
+                    came_from[neighbor] = current
+                    g_score[neighbor] = tentative_g
+                    f_score = tentative_g + heuristic(neighbor, goal)
+                    counter += 1
+                    heapq.heappush(open_set, (f_score, counter, neighbor))
+
+    return None  # 无路径
+
+# ============ 测试：障碍栅格地图 ============
+np.random.seed(7)
+grid = np.zeros((30, 30))
+grid[5:20, 10:12] = 1   # 竖墙
+grid[8:20, 18] = 1      # 另一堵墙
+start, goal = (2, 2), (27, 27)
+path = astar(grid, start, goal)
+if path:
+    print(f"路径长度: {len(path)} 步")
+    print(f"起点: {path[0]}, 终点: {path[-1]}")
+    # 可视化
+    import matplotlib.pyplot as plt
+    grid_vis = grid.copy()
+    for r, c in path: grid_vis[r, c] = 0.5
+    grid_vis[start] = 0.8; grid_vis[goal] = 0.8
+    plt.figure(figsize=(7,7))
+    plt.imshow(grid_vis, cmap='gray_r', origin='lower')
+    plt.plot([p[1] for p in path], [p[0] for p in path], 'b-', lw=2)
+    plt.scatter([start[1]], [start[0]], color='green', s=100, zorder=5)
+    plt.scatter([goal[1]], [goal[0]], color='red', s=100, zorder=5)
+    plt.title('A* 路径规划结果')
+    plt.show()
+</pre></div>
+
+<h2 class="section-h2">14.3 RRT与RRT*：高维空间的随机采样规划</h2>
+<h3 class="section-h3">14.3.1 为什么A*在高维/连续空间不够用？</h3>
+<p class="p">A*在栅格地图上表现良好，但有两个致命问题：① 内存随栅格数量指数增长（30×30=900节点可接受，1000×1000=100万节点则不可行）；② 栅格地图离散化了连续空间，路径不光滑。</p>
+
+<h3 class="section-h3">14.3.2 RRT算法原理</h3>
+<p class="p"><span class="kw">RRT</strong>（Rapidly-exploring Random Tree）通过随机采样快速探索连续状态空间，适合高维空间和非完整约束。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 RRT算法步骤</div><p><strong>输入：</strong>起点 x_init，障碍物空间，采样次数 N，最大步长 δ<br>
+<strong>输出：</strong>从 x_init 出发的随机树<br><br>
+<strong>①</strong> 树初始化：T = {x_init}<br>
+<strong>②</strong> 随机采样：在配置空间随机采样点 x_rand<br>
+<strong>③</strong> 最近邻搜索：在 T 中找到离 x_rand 最近的节点 x_near<br>
+<strong>④</strong> 生长：从 x_near 向 x_rand 方向移动 δ，得到 x_new。如果 x_new → x_near 线段不与障碍物相交，则将 x_new 加入 T<br>
+<strong>⑤</strong> 重复步骤②-④ N 次或找到目标区域<br><br>
+<strong>关键性质：</strong>RRT的搜索概率性地覆盖整个空间——不需要栅格化，因此可以处理任意维度的连续空间（无人机3D飞行、6D关节空间等）。
+</p></div>
+
+<h3 class="section-h3">14.3.3 RRT*：渐近最优版本</h3>
+<p class="p">普通RRT找到的路径只是"可行"，不一定是"最优"。<span class="kw">RRT*</strong>在RRT基础上增加了两个关键改进：①重连（rewire）——每次采样后，尝试将其与树中其他节点连接，选择父节点使总代价最小；②邻近节点重连——与 x_new 一定半径内的所有邻近节点比较，若经过 x_new 可以降低代价，则重连。</p>
+
+<div class="card orange"><div class="card-label">🎯 规划算法选型</div><h3>何时用A*，何时用RRT*？</h3><p><strong>A*：</strong>低维空间（2D/3D）、栅格地图可用、需要最优路径、实时性要求不高。<br>
+<strong>RRT*：</strong>高维空间（6D+）、连续空间、有动力学约束（如无人机不能瞬间转向）、计算资源充足。<br>
+<strong>Informed RRT*：</strong>找到初始解后，采样空间被限制在椭圆内（起点→目标为长轴），收敛速度大幅提升。<br>
+<strong>跳点搜索（Jump Point Search）：</strong>A*的稀疏版，适合大型开放空间的快速搜索。</p></div>
+
+<h3 class="section-h3">14.3.4 规划算法综合对比</h3>
+<p class="p">不同规划算法在空间类型、最优性、计算复杂度和适用场景上差异显著：</p>
+
+<table class="tbl">
+<thead><tr><th>算法</th><th>空间类型</th><th>最优性</th><th>计算复杂度</th><th>实时性</th><th>典型应用</th></tr></thead>
+<tbody>
+<tr><td class="hl">Dijkstra</td><td>离散栅格</td><td>全局最优</td><td>$O(V^2)$ 或 $O(E \log V)$</td><td>差（大型地图慢）</td><td>最短路径基础算法</td></tr>
+<tr><td class="hl">A*</td><td>离散栅格</td><td>全局最优（可采纳h）</td><td>$O(b^d)$，b为分支因子</td><td>中等</td><td>游戏导航、机器人2D导航</td></tr>
+<tr><td class="hl">Jump Point Search</td><td>大型开放栅格</td><td>全局最优</td><td>显著低于A*</td><td>良好</td><td>大型开放空间快速搜索</td></tr>
+<tr><td class="hl">RRT</td><td>连续高维</td><td>可行解（非最优）</td><td>$O(N \log N)$</td><td>良好</td><td>6D机械臂、高维空间探索</td></tr>
+<tr><td class="hl">RRT*</td><td>连续高维</td><td>渐近最优</td><td>$O(N \log N + N \cdot r^d)$</td><td>中等</td><td>无人机3D航迹规划</td></tr>
+<tr><td class="hl">Informed RRT*</td><td>连续高维</td><td>渐近最优（更快收敛）</td><td>低于RRT*</td><td>良好</td><td>有明确目标的任务规划</td></tr>
+<tr><td class="hl">DWA</td><td>速度空间</td><td>局部最优</td><td>$O(V \cdot W)$，V×W速度采样</td><td>优秀</td><td>实时局部避障</td></tr>
+<tr><td class="hl">TEB</td><td>时间-空间</td><td>局部最优</td><td>依赖于图优化迭代</td><td>良好</td><td>复杂地形机器人导航</td></tr>
+<tr><td class="hl">MPC</td><td>连续状态</td><td>有限时域最优</td><td>$O(N^3)$ 优化求解</td><td>优秀（滚动执行）</td><td>无人机姿态/轨迹跟踪控制</td></tr>
+</tbody>
+</table>
+
+<div class="card green"><div class="card-label">选型决策树</div><h3>快速选择规划算法</h3><p><strong>① 维度多少？</strong><br>
+→ 2D栅格 → A*（需要最优）或 Dijkstra（简单场景）<br>
+→ 3D连续空间 → RRT* 或 Informed RRT*<br>
+→ 6D+高维 → RRT*（必须，否则维数灾难）<br><br>
+<strong>② 需要实时避障？</strong><br>
+→ 是 → 分层规划：A*全局方向 + DWA/TEB局部执行<br>
+→ 否 → 纯全局规划即可<br><br>
+<strong>③ 有动力学约束？</strong><br>
+→ 是 → MPC 或 RRT*（加动力学采样）<br>
+→ 否 → A* 或 RRT* 均可</p></div>
+
+<h2 class="section-h2">14.4 模型预测控制（MPC）：滚动时域优化</h2>
+<h3 class="section-h3">14.4.1 为什么MPC是无人机控制的主流方法？</h3>
+<p class="p"><span class="kw">MPC</strong>（Model Predictive Control）在每个控制周期，求解一个有限时域内的优化问题，得到当前时刻的最优控制输入。</p>
+
+<div class="card orange"><div class="card-label">MPC的核心思想</div><h3>滚动时域优化</h3><p>MPC不是一次性计算全局最优控制序列，而是在每个时刻 solve(N步未来)，只执行第一步，然后滚动到下一个时刻重新求解。<br><br>
+这样做的三大优势：<br>
+① <strong>处理约束</strong>：避障边界、控制限幅（电机最大转速）可以硬编码进优化问题<br>
+② <strong>处理非线性动力学</strong>：无人机动力学是非线性的，MPC通过数值优化求解非线性最优控制<br>
+③ <strong>应对环境变化</strong>：每个时刻重新计算，动态障碍物出现时可以快速重新规划<br><br>
+<strong>典型参数：</strong>预测时域 N=10-20步，每步时长 dt=0.1-0.2s，故 MPC 预测 1-4秒的未来。
+</p></div>
+
+<h2 class="section-h2">14.5 实时避障策略</h2>
+<h3 class="section-h3">14.5.1 传感器融合驱动的避障</h3>
+<p class="p">避障的核心是：传感器融合系统实时输出障碍物位置（以机体坐标系表示），规划器在路径上检测即将发生的碰撞并重新规划。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🛡️</div><h4>栅格法</h4><p>将三维空间划分为网格，每个格子标记是否可通行（来自传感器融合的占用概率）。规划算法在可通行格子中搜索路径。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📏</div><h4>速度障碍法（VO）</h4><p>根据障碍物的相对速度和位置，计算"碰撞锥"——如果无人机保持当前速度将进入碰撞区域，则需要改变速度。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🤖</div><h4>ESDF地图</h4><p>欧几里得符号距离场地图。无人机实时更新每个位置到最近障碍物的距离，用于快速判断安全裕度。</p></div>
+</div>
+
+<!-- ===== ⚠️ 常见陷阱 ===== -->
+<div class="callout callout-warn" style="margin-bottom:16px"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>常见陷阱① - 栅格分辨率与实时性的矛盾：</strong>栅格越小（精度越高）→ 地图越大 → 搜索越慢。10cm分辨率的3D栅格在50m×50m×10m范围内需要50万×50万×100万=12.5亿个格子——不可能实时搜索。解决：用八叉树（OctoMap）或分层规划（粗分辨率全局+精分辨率局部）。<br><br>
+<strong>常见陷阱② - DWA的局部最优陷阱：</strong>DWA（动态窗口法）在速度空间搜索，非常高效，但容易陷入局部最优（如在U形障碍物中振荡）。解决：先用全局A*规划粗略方向，再用DWA执行。<br><br>
+<strong>常见陷阱③ - 高速飞行时的感知延迟致命：</strong>规划系统假设"当前感知=真实环境"，但高速飞行时传感器延迟（100ms的Lidar扫描周期+50ms处理延迟=150ms）可能导致感知到的障碍物位置已经偏离实际50cm（10m/s飞行速度下）。必须在规划时考虑感知延迟，膨胀障碍物边界。</div></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第15章 · 集群协同感知）：</strong>单机智能终有极限——多架无人机协同可以扩大感知范围、增强鲁棒性。第15章讲解多机集群的协同定位、分布式建图和编队控制。</div></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>感知→决策→控制</h3><p><strong>① A*算法：</strong>全局最优启发式搜索，f(n)=g(n)+h(n)，h必须可采纳。<br><strong>② RRT*：</strong>随机采样高维空间规划，渐近最优（时间越长路径越优）。<br><strong>③ MPC：</strong>滚动时域优化，处理非线性约束，是无人机控制的主流方法。<br><strong>④ 栅格/VO/ESDF：</strong>三种实时避障策略，权衡精度与速度。<br><strong>⑤ 分层规划：</strong>A*全局方向 + DWA局部执行，避免各自缺点。</p></div>
+
+</section>

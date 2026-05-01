@@ -1,0 +1,130 @@
+<section id="ch6">
+<div class="hero">
+<div class="chapter-tag">Chapter 6 · 设计架构</div>
+<h1>芯片架构设计：<br>从流水线到乱序执行</h1>
+<p class="sub">理解现代 CPU 如何让性能提升数十倍：流水线、超标量、乱序执行、分支预测、缓存一致性。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约50分钟</span><span class="hero-meta-item">🧠 架构设计</span></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>回顾 Chapter 5：</strong>上一章我们构建了 ALU、寄存器文件、FSM 和总线——这些是芯片的"器官"。本章将展示如何把这些器官组装成一个高性能的"身体"：从简单的单周期 CPU 到现代的多核乱序超标量处理器。</div></div>
+
+<p class="lead">如果你把晶体管比作砖块，逻辑门比作门窗，那么芯片架构就是整栋大楼的设计图。同样的砖块和门窗，不同的设计可以造出茅草屋，也可以造出摩天大楼。本章将揭示现代 CPU 性能提升数十倍的核心秘密。</p>
+
+<h2 class="section-h2">6.1 指令周期：CPU 的"呼吸节奏"</h2>
+<p class="p">任何 CPU 执行一条指令，都必须经过五个基本阶段：</p>
+<div class="flow">
+<div class="flow-box"><div class="flow-box-title">取指 (IF)</div><div class="flow-box-desc">从内存读取指令</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">译码 (ID)</div><div class="flow-box-desc">解析指令含义</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">执行 (EX)</div><div class="flow-box-desc">ALU 运算</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">访存 (MEM)</div><div class="flow-box-desc">读写内存</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">写回 (WB)</div><div class="flow-box-desc">结果写回寄存器</div></div>
+</div>
+
+<h3 class="section-h3">6.1.1 单周期 CPU：简单但低效</h3>
+<p class="p">最简单的 CPU 设计是<span class="kw">单周期</span>（Single-Cycle）：每个时钟周期完成一条指令的全部五个阶段。时钟周期必须足够长，以容纳最慢的指令（通常是访存指令）。这意味着简单的加法指令也要等访存指令的"慢节奏"——大量时间被浪费。</p>
+
+<h2 class="section-h2">6.2 流水线：让 CPU "同时做多件事"</h2>
+<p class="p"><span class="kw">流水线</span>（Pipelining）是 CPU 设计的第一大革命。它的核心思想来自工厂流水线：不要把整个产品做完再做下一个，而是把生产过程分成若干阶段，每个阶段同时处理不同产品。</p>
+
+<h3 class="section-h3">6.2.1 五级流水线的工作方式</h3>
+<p class="p">在五级流水线中，每个时钟周期，五个阶段各自处理不同的指令：</p>
+<div class="card green"><div class="card-label">流水线示例（时钟周期 T1-T5）</div><h3>指令1：IF → ID → EX → MEM → WB</h3><p>• T1：指令1在 IF 阶段取指<br>• T2：指令1在 ID 阶段译码，指令2在 IF 阶段取指<br>• T3：指令1在 EX 阶段执行，指令2在 ID 阶段译码，指令3在 IF 阶段取指<br>• T4：指令1在 MEM 阶段访存，指令2在 EX 阶段执行，指令3在 ID 阶段译码，指令4在 IF 阶段取指<br>• T5：指令1在 WB 阶段写回，指令2在 MEM 阶段访存，指令3在 EX 阶段执行，指令4在 ID 阶段译码，指令5在 IF 阶段取指<br><br>理想情况下，流水线填满后，<strong>每个时钟周期完成一条指令</strong>——吞吐量是单周期 CPU 的5倍！</p></div>
+
+<h3 class="section-h3">6.2.2 流水线冒险：当"流水线"卡住</h3>
+<p class="p">流水线不是万能的。有三种情况会让流水线"卡住"：</p>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#fce4ec">🔄</div><h4>数据冒险</h4><p>指令B需要指令A的结果，但A还没算完。解决：数据前递（Forwarding）——把ALU结果直接传给下一条指令，不等待写回。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🌿</div><h4>控制冒险</h4><p>遇到分支指令（if/else），不知道下一条该取哪条指令。解决：分支预测（见6.4节）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">⏳</div><h4>结构冒险</h4><p>两条指令同时需要同一个硬件资源。解决：资源复制或流水线停顿（Stall）。</p></div>
+</div>
+
+<h2 class="section-h2">6.3 超标量：每个周期执行多条指令</h2>
+<p class="p"><span class="kw">超标量</span>（Superscalar）是 CPU 设计的第二大革命。流水线的极限是"每个周期一条指令"，但超标量 CPU 可以在一个周期内同时发射和执行多条指令——前提是这些指令之间没有数据依赖。</p>
+
+<h3 class="section-h3">6.3.1 发射宽度与执行单元</h3>
+<p class="p">超标量 CPU 有一个<span class="kw">发射宽度</span>（Issue Width）——每个周期最多可以同时发射的指令数。现代 CPU 的发射宽度通常是4-8条指令。为了支持这个宽度，CPU 需要多个并行的执行单元：</p>
+<div class="tags">
+<span class="tag t-blue">整数 ALU × 4：并行执行4个整数运算</span>
+<span class="tag t-green">浮点单元 × 2：并行执行2个浮点运算</span>
+<span class="tag t-orange">Load/Store 单元 × 2：并行执行2个内存访问</span>
+<span class="tag t-purple">分支单元 × 1：处理分支指令</span>
+</div>
+<p class="p">苹果 M 系列芯片的发射宽度达到8条指令/周期，配合大量执行单元，单核 IPC（每周期指令数）可以达到6以上——这是它性能超越 x86 的关键原因之一。</p>
+
+<h3 class="section-h3">6.3.2 主流处理器架构代际对比</h3>
+<p class="p">从学术理论到工业产品，CPU架构经历了多次革命性变化：</p>
+
+<table class="tbl">
+<thead><tr><th>架构代际</th><th>代表处理器</th><th>流水线深度</th><th>发射宽度</th><th>关键创新</th></tr></thead>
+<tbody>
+<tr><td class="hl">单周期</td><td>MIPS 2000</td><td>无流水线</td><td>1</td><td>最简单架构，效率最低</td></tr>
+<tr><td class="hl">五级流水</td><td>Intel Pentium</td><td>5级</td><td>2</td><td>流水线化，效率提升5倍</td></tr>
+<tr><td class="hl">超标量</td><td>Intel P6</td><td>12级</td><td>3-4</td><td>乱序执行，多发射</td></tr>
+<tr><td class="hl">超长指令字</td><td>Intel Itanium</td><td>10-15级</td><td>6</td><td>VLIW理念，编译器负责调度</td></tr>
+<tr><td class="hl">深度流水线</td><td>Intel Pentium 4</td><td>20-31级</td><td>3</td><td>高频率，但效率低，已废弃</td></tr>
+<tr><td class="hl">现代超标量</td><td>Apple M3, AMD Zen4</td><td>10-15级</td><td>6-8</td><td>AVX512, AES-NI, AI加速</td></tr>
+</tbody>
+</table>
+
+<h2 class="section-h2">6.4 分支预测：猜对就赢，猜错就罚</h2>
+<p class="p">程序中约有15-25%的指令是分支（if/else、for/while）。分支指令的问题是：在译码阶段，CPU 还不知道该走哪条路——必须等到分支条件计算完成才能确定。如果不采取任何措施，流水线就会"空转"等待，严重降低性能。</p>
+
+<h3 class="section-h3">6.4.1 分支预测器：CPU 的"算命先生"</h3>
+<p class="p"><span class="kw">分支预测器</span>（Branch Predictor）在分支条件计算完成之前，"猜测"分支会走哪条路，然后继续取指和执行。如果猜对了，流水线满载运行；如果猜错了，已经执行的指令全部作废（Flush），重新从正确路径取指——这个惩罚通常是10-20个时钟周期。</p>
+
+<h3 class="section-h3">6.4.2 预测算法的发展</h3>
+<table class="tbl">
+<thead><tr><th>算法</th><th>原理</th><th>准确率</th><th>硬件成本</th></tr></thead>
+<tbody>
+<tr><td class="hl">静态预测</td><td>总是预测"不跳转"</td><td>~50%</td><td>零</td></tr>
+<tr><td class="hl">1位饱和计数器</td><td>记录上次结果，重复预测</td><td>~80%</td><td>极低</td></tr>
+<tr><td class="hl">2位饱和计数器</td><td>需要连续两次猜错才改变预测</td><td>~90%</td><td>低</td></tr>
+<tr><td class="hl">两级自适应</td><td>用分支历史选择计数器</td><td>~95%</td><td>中</td></tr>
+<tr><td class="hl">TAGE</td><td>多表几何长度预测</td><td>~97%</td><td>高</td></tr>
+</tbody>
+</table>
+<p class="p">现代 CPU（如 Intel Golden Cove、苹果 Firestorm）使用<span class="kw">TAGE</span>（TAgged GEometric history length）预测器——目前最先进的分支预测算法，准确率超过97%。这意味着每100个分支中，只有不到3个会预测错误。</p>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>跨章关联：</strong>分支预测对 AI 芯片（如 Taalas HC1）来说不是问题——因为 AI 推理是数据流驱动的，没有条件分支。数据从输入层流到输出层，路径完全固定。这就是为什么 ASIC 可以达到比 CPU 高得多的效率：它不需要分支预测、不需要乱序执行、不需要缓存一致性——所有这些都是通用 CPU 为了处理"不可预测的程序"而付出的代价。</div></div>
+
+<h2 class="section-h2">6.5 乱序执行：打破指令的"先后顺序"</h2>
+<p class="p"><span class="kw">乱序执行</span>（Out-of-Order Execution, OoO）是 CPU 设计的第三大革命。它的核心思想是：只要指令之间没有数据依赖，就可以不按程序顺序执行——先执行快的、后执行慢的，最大化硬件利用率。</p>
+
+<h3 class="section-h3">6.5.1 乱序执行的三个关键结构</h3>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h4>重排序缓冲区 (ROB)</h4><p>一个环形缓冲区，按程序顺序记录所有已发射但未提交的指令。即使指令乱序执行，结果也按程序顺序提交——保证程序的正确性。</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h4>保留站 (Reservation Station)</h4><p>指令发射后进入保留站等待。当指令的所有操作数都就绪时，保留站将其发送到对应的执行单元。这实现了"数据就绪即执行"的乱序调度。</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h4>重命名寄存器 (Register Renaming)</h4><p>解决"假依赖"（WAR 和 WAW）。例如：指令A写R1，指令B读R1，指令C写R1——B和C之间没有真实依赖，但如果不重命名，C必须等B完成。重命名把R1映射到不同的物理寄存器，让B和C并行执行。</p></div></div>
+</div>
+
+<h2 class="section-h2">6.6 缓存一致性：多核 CPU 的"协作协议"</h2>
+<p class="p">现代 CPU 有多个核心，每个核心有自己的 L1/L2 缓存。如果核心A修改了缓存中的某个数据，核心B的缓存中可能还有旧值——这就是<span class="kw">缓存不一致</span>问题。</p>
+
+<h3 class="section-h3">6.6.1 MESI 协议：四种状态</h3>
+<p class="p"><span class="kw">MESI</span> 是最经典的缓存一致性协议，每个缓存行有四种状态：</p>
+<div class="tags">
+<span class="tag t-blue">M (Modified)：已修改，与内存不一致，独占</span>
+<span class="tag t-green">E (Exclusive)：与内存一致，独占</span>
+<span class="tag t-orange">S (Shared)：与内存一致，多核共享</span>
+<span class="tag t-gray">I (Invalid)：无效，不能使用</span>
+</div>
+<p class="p">当核心A要写入一个 Shared 状态的缓存行时，必须通知其他核心将该行置为 Invalid——这个过程叫<span class="kw">缓存失效</span>（Cache Invalidation）。MESI 协议通过总线监听（Snooping）实现这一点，但会带来性能开销。</p>
+
+<div class="card orange"><div class="card-label">性能陷阱</div><h3>伪共享 (False Sharing)</h3><p>如果两个核心频繁修改位于同一缓存行（通常64字节）的不同变量，它们会不断让对方缓存失效——即使它们修改的是完全不同的数据。这个性能杀手在并行编程中非常常见，也是 Chapter 12 中无人机多核飞控设计需要特别注意的问题。</p></div>
+
+<div class="divider"></div>
+
+<!-- 学习路线与资源 -->
+<div class="card green" style="margin-bottom:16px"><div class="card-label">📚 本章学习路线</div><h3>CPU架构学习路径</h3><p><strong>第1步：流水线基础（25分钟）</strong>——6.1-6.2节是理解现代CPU的关键。用洗衣机的"洗-烘-叠"流水线类比，理解"同时执行多条指令"为什么能提升吞吐率。重点：CPI计算。<br><strong>第2步：流水线冒险（20分钟）</strong>——6.3节。结构冒险→数据冒险→控制冒险，三种冒险的解决方案是理解CPU设计复杂度的核心。<br><strong>第3步：分支预测与缓存（25分钟）</strong>——6.4-6.5节。分支预测的历史演进表值得反复看，理解从1位饱和计数器到2位饱和计数器再到全局历史预测器的演进逻辑。<br><strong>第4步：缓存一致性（15分钟）</strong>——6.6节。MESI协议是理解多核CPU数据一致性的标准起点。</p></div>
+
+<div class="card orange" style="margin-bottom:16px"><div class="card-label">🔗 推荐课程与学习资源</div><h3>优质免费资源</h3><p><strong>🎓 CPU架构课程：</strong><br>• <a href="https://www.coursera.org/learn/computer-architecture" target="_blank" rel="noopener">Coursera: Computer Architecture (Princeton)</a> — 第5-10讲覆盖流水线、缓存、多核，必学<br>• <a href="https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/" target="_blank" rel="noopener">MIT 6.004 L21-L27</a> — 流水线专项，MIT教授Chris Terman讲授，配合教材是业界公认最好的流水线入门<br>• <a href="https://edu.csdn.net/skill/computer_architecture" target="_blank" rel="noopener">CSDN: 计算机体系结构</a> — 中文社区，有大量Cache、MESI等图解文章<br><br><strong>📖 推荐阅读：</strong><br>• Hennessy &amp; Patterson《计算机体系结构：量化研究方法》第5版 — 体系结构领域的"圣经"，被誉为"从业者必读"，建议购买纸质版作为长期参考<br>• 《超标量处理器设计》(姚永斌) — 国内少有的超标量CPU设计专著，覆盖乱序执行、分支预测、缓存等高级主题<br><br><strong>🔬 仿真实验：</strong><br>• <a href="http://geofftromp.com/mipstutor/" target="_blank" rel="noopener">MIPS指令模拟器</a> — 在线运行MIPS汇编，观察流水线每一步的状态<br>• <a href="https://github.com/SamAinsworth/cpu-sim" target="_blank" rel="noopener">GitHub: CPU Pipeline Simulator</a> — 开源流水线仿真器，支持观察每级流水线的寄存器值变化</p></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>现代 CPU 的性能密码</h3><p><strong>① 流水线</strong>：把指令执行分成多个阶段，每个周期完成一条指令。<br><strong>② 超标量</strong>：每个周期发射多条指令，需要多个并行执行单元。<br><strong>③ 分支预测</strong>：猜测分支走向，猜对满载运行，猜错清空流水线。<br><strong>④ 乱序执行</strong>：打破指令顺序，数据就绪即执行，最大化硬件利用率。<br><strong>⑤ 缓存一致性</strong>：MESI 协议保证多核缓存数据一致，但有性能开销。</p></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>预告 Chapter 7：</strong>现在你已经理解了现代 CPU 的复杂架构。但 CPU 只是芯片家族的一员——GPU 用完全不同的架构哲学处理图形和并行计算，ASIC 把专用任务做到极致效率。下一章将对比 CPU、GPU、FPGA、ASIC 的架构差异，并解释为什么无人机最终需要 ASIC。</div></div>
+
+</section>

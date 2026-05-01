@@ -1,0 +1,302 @@
+﻿<section id="ch5">
+<div class="hero">
+<div class="chapter-tag">Chapter 5 · 单传感器深度</div>
+<h1>IMU与惯性导航：<br>无人机的"前庭系统"</h1>
+<p class="sub">理解MEMS IMU的工作原理、误差特性，以及惯性导航方程——理解为什么IMU是所有飞控融合系统的"时间基准"。</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约45分钟</span>
+<span class="hero-meta-item">⚙️ 惯性导航</span>
+</div>
+<!-- ===== 四元数交互学习模块 ===== -->
+<div class="calc-card" style="margin:20px 0">
+<div class="calc-title">
+<div class="calc-title-icon">🎯</div>
+<div><h3>四元数交互学习场</h3><p style="font-size:12px;color:#86868b">拖动滑块观察四元数如何控制3D旋转，理解四元数的物理含义</p></div>
+</div>
+
+<div class="calc-row">
+<div class="calc-inputs">
+<div class="calc-slider"><div class="calc-label"><span>绕X轴旋转 θ<sub>x</sub></span><span id="q-x-val" style="color:var(--accent);font-weight:700">0°</span></div><input type="range" id="q-slider-x" min="-180" max="180" step="1" value="0"></div>
+<div class="calc-slider"><div class="calc-label"><span>绕Y轴旋转 θ<sub>y</sub></span><span id="q-y-val" style="color:var(--accent);font-weight:700">0°</span></div><input type="range" id="q-slider-y" min="-180" max="180" step="1" value="0"></div>
+<div class="calc-slider"><div class="calc-label"><span>绕Z轴旋转 θ<sub>z</sub></span><span id="q-z-val" style="color:var(--accent);font-weight:700">0°</span></div><input type="range" id="q-slider-z" min="-180" max="180" step="1" value="0"></div>
+<div style="margin-top:14px;font-size:12.5px;color:#86868b">
+<div style="display:flex;justify-content:space-between"><span>q = [q₀, q₁, q₂, q₃]</span><span id="q-display" style="font-family:monospace;color:var(--accent);font-weight:600">[1.00, 0.00, 0.00, 0.00]</span></div>
+<div style="display:flex;justify-content:space-between;margin-top:4px"><span>旋转矩阵（行1）</span><span id="rm-display" style="font-family:monospace;font-size:11px;color:var(--text)">[[1, 0, 0],</span></div>
+<div style="display:flex;justify-content:space-between;margin-top:4px"><span>→ (°/rad)</span><span id="deg-display" style="color:var(--text2)">Roll=0°, Pitch=0°, Yaw=0°</span></div>
+</div>
+</div>
+
+<div style="flex:1;min-width:200px">
+<canvas id="q3d-canvas" style="width:100%;max-height:260px;border-radius:12px;border:1px solid var(--border);display:block;background:#0d1117"></canvas>
+<div style="text-align:center;font-size:11.5px;color:#86868b;margin-top:6px">蓝色=世界坐标系 | 红色=机体坐标系（随四元数旋转）</div>
+</div>
+</div>
+
+<!-- 四元数乘法演练场 -->
+<div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+<h4 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px">🧮 四元数乘法演练场</h4>
+<p style="font-size:13.5px;color:#86868b;margin-bottom:14px">输入两个四元数，观察乘积结果。四元数乘法不满足交换律（q₁ ⊗ q₂ ≠ q₂ ⊗ q₁）！</p>
+<div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:center;margin-bottom:16px">
+<div>
+<label style="font-size:12px;color:#86868b;display:block;margin-bottom:4px">q₁ = [q₀, q₁, q₂, q₃]</label>
+<div style="display:flex;gap:4px">
+<input type="number" id="qm-q0a" value="1" step="0.1" style="width:60px;padding:5px;border-radius:6px;border:1px solid var(--border);font-size:13px">
+<input type="number" id="qm-q1a" value="0" step="0.1" style="width:60px;padding:5px;border-radius:6px;border:1px solid var(--border);font-size:13px">
+<input type="number" id="qm-q2a" value="0" step="0.1" style="width:60px;padding:5px;border-radius:6px;border:1px solid var(--border);font-size:13px">
+<input type="number" id="qm-q3a" value="0" step="0.1" style="width:60px;padding:5px;border-radius:6px;border:1px solid var(--border);font-size:13px">
+</div>
+</div>
+<div style="text-align:center;font-size:22px;color:var(--accent);font-weight:700">⊗</div>
+<div>
+<label style="font-size:12px;color:#86868b;display:block;margin-bottom:4px">q₂ = [q₀, q₁, q₂, q₃]</label>
+<div style="display:flex;gap:4px">
+<input type="number" id="qm-q0b" value="0.707" step="0.1" style="width:60px;padding:5px;border-radius:6px;border:1px solid var(--border);font-size:13px">
+<input type="number" id="qm-q1b" value="0.707" step="0.1" style="width:60px;padding:5px;border-radius:6px;border:1px solid var(--border);font-size:13px">
+<input type="number" id="qm-q2b" value="0" step="0.1" style="width:60px;padding:5px;border-radius:6px;border:1px solid var(--border);font-size:13px">
+<input type="number" id="qm-q3b" value="0" step="0.1" style="width:60px;padding:5px;border-radius:6px;border:1px solid var(--border);font-size:13px">
+</div>
+</div>
+<div style="text-align:center;font-size:22px;color:var(--accent);font-weight:700">=</div>
+<div>
+<label style="font-size:12px;color:#86868b;display:block;margin-bottom:4px">q₁ ⊗ q₂ =</label>
+<div id="qm-result" style="background:#f0f7ff;border:1px solid rgba(0,113,227,0.2);border-radius:8px;padding:10px;font-family:monospace;font-size:14px;color:var(--accent);min-width:160px;text-align:center">[?]</div>
+</div>
+</div>
+<button id="qm-calc" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:14px;cursor:pointer;font-weight:600;margin-bottom:14px">计算 q₁⊗q₂</button>
+<button id="qm-calc2" style="background:#34c759;color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:14px;cursor:pointer;font-weight:600;margin-left:8px">计算 q₂⊗q₁（验证交换律）</button>
+<div id="qm-note" style="font-size:13px;color:#86868b;margin-top:10px;line-height:1.6"></div>
+</div>
+
+<!-- 欧拉角 ↔ 四元数 ↔ 旋转矩阵 互转 -->
+<div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+<h4 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px">🔄 三种姿态表示互转计算器</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div style="background:#f5f5f7;border-radius:10px;padding:16px">
+<h5 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">🎯 欧拉角 → 四元数</h5>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+<div><label style="font-size:11px;color:#86868b">Roll (°)</label><input type="number" id="e2q-r" value="0" step="1" style="width:100%;padding:6px;border-radius:6px;border:1px solid var(--border);font-size:13px"></div>
+<div><label style="font-size:11px;color:#86868b">Pitch (°)</label><input type="number" id="e2q-p" value="0" step="1" style="width:100%;padding:6px;border-radius:6px;border:1px solid var(--border);font-size:13px"></div>
+<div><label style="font-size:11px;color:#86868b">Yaw (°)</label><input type="number" id="e2q-y" value="0" step="1" style="width:100%;padding:6px;border-radius:6px;border:1px solid var(--border);font-size:13px"></div>
+</div>
+<button id="e2q-btn" style="background:var(--accent);color:#fff;border:none;border-radius:7px;padding:7px 16px;font-size:13px;cursor:pointer">→ 四元数</button>
+<div id="e2q-out" style="margin-top:10px;font-family:monospace;font-size:12px;background:#fff;border-radius:6px;padding:8px;line-height:1.8"></div>
+</div>
+<div style="background:#f5f5f7;border-radius:10px;padding:16px">
+<h5 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">🔄 四元数 → 旋转矩阵</h5>
+<label style="font-size:11px;color:#86868b;display:block;margin-bottom:4px">q = [q₀, q₁, q₂, q₃]（单位四元数）</label>
+<div style="display:flex;gap:6px;margin-bottom:10px">
+<input type="number" id="q2r-q0" value="1" step="0.01" style="width:60px;padding:6px;border-radius:6px;border:1px solid var(--border);font-size:12px">
+<input type="number" id="q2r-q1" value="0" step="0.01" style="width:60px;padding:6px;border-radius:6px;border:1px solid var(--border);font-size:12px">
+<input type="number" id="q2r-q2" value="0" step="0.01" style="width:60px;padding:6px;border-radius:6px;border:1px solid var(--border);font-size:12px">
+<input type="number" id="q2r-q3" value="0" step="0.01" style="width:60px;padding:6px;border-radius:6px;border:1px solid var(--border);font-size:12px">
+</div>
+<button id="q2r-btn" style="background:var(--accent);color:#fff;border:none;border-radius:7px;padding:7px 16px;font-size:13px;cursor:pointer">→ 旋转矩阵</button>
+<div id="q2r-out" style="margin-top:10px;font-family:monospace;font-size:11px;background:#fff;border-radius:6px;padding:8px;line-height:1.8"></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 3（旋转表示）和 Chapter 4（Lidar数据处理）可帮助理解坐标变换。本章建立的<span class="kw">四元数</span>和<span class="kw">IMU随机误差模型</span>是第9章卡尔曼滤波、第10章因子图、第11章VIO的核心数学基础。建议完全掌握四元数和误差模型后再进入融合算法部分。</div></div>
+
+<p class="lead">IMU（Inertial Measurement Unit，惯性测量单元）是飞控系统中最重要的单一传感器。它由<span class="kw">加速度计</span>（测三轴加速度）和<span class="kw">陀螺仪</span>（测三轴角速度）组成，以最高频率持续采样，直接测量机体相对于惯性空间的运动状态。IMU的核心价值在于：<span class="kw">极高频率、极低延迟、全自由度</span>——但代价是误差会随时间快速累积（漂移）。理解IMU的物理和误差特性，是设计传感器融合系统的第一步。</p>
+
+<h2 class="section-h2">5.1 IMU的工作原理：MEMS微机电系统</h2>
+
+<h3 class="section-h3">5.1.1 机械弹簧与传感电容</h3>
+<p class="p">MEMS IMU的核心结构是<span class="kw">微型机械振子</span>——一个在硅片上刻蚀出来的微型弹簧质量块系统。当机体加速时，质量块因惯性保持相对静止，与外壳产生相对位移；这个位移改变固定电极与质量块之间的电容，通过测量电容变化推算出加速度。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 MEMS加速度计工作原理</div><p>质量块通过弹簧悬挂在硅腔内。沿某一轴加速时，质量块因惯性移动距离 d，电容变化 ΔC 与 d 成正比，通过电路转换为电压输出：<br><br>
+<strong>V_out ∝ ΔC ∝ a（加速度）</strong><br><br>
+陀螺仪的原理类似但更复杂：利用<span class="kw">科里奥利力</span>（Coriolis Force）——当质量块在某个方向振动时，旋转运动会改变振动方向，通过检测振动方向的改变推算角速度。<br><br>
+<strong>物理直觉：</strong>想象你坐在旋转木马上，向前推动一个摆锤。旋转产生的科里奥利力会让摆锤向侧面偏移——这个力与旋转角速度成正比。MEMS陀螺仪就是用微型"摆锤"来测量角速度。
+</p></div>
+
+<h3 class="section-h3">5.1.2 IMU的关键参数</h3>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📏</div><h4>加速度计量程</h4><p>常见量程：±2g（无人机悬停）、±8g（高速飞行）、±16g或±40g（特殊情况）。超出量程会饱和，产生非线性误差。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🔄</div><h4>角速度量程</h4><p>常见量程：±250°/s（常规姿态）、±1000°/s（特技飞行）、±2000°/s（高速无人机）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">📈</div><h4>采样率</h4><p>飞控IMU通常1-8kHz，数据输出率通常1kHz。采样率越高，积分精度越高，但计算负担也越大。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🧊</div><h4>零偏稳定性</h4><p>衡量陀螺仪漂移的关键指标，单位°/h（度/小时）。军用光纤陀螺仪<0.001°/h，MEMS IMU通常1-100°/h。</p></div>
+</div>
+
+<div class="stats">
+<div class="stat"><div class="stat-val">1-8kHz</div><div class="stat-lbl">IMU采样率</div></div>
+<div class="stat"><div class="stat-val">±2-40g</div><div class="stat-lbl">加速度计量程</div></div>
+<div class="stat"><div class="stat-val">1-100°/h</div><div class="stat-lbl">MEMS零偏稳定性</div></div>
+<div class="stat"><div class="stat-val">0.1-5°</div><div class="stat-lbl">角度随机游走（ARW）</div></div>
+</div>
+
+<h2 class="section-h2">5.2 惯性导航方程</h2>
+
+<h3 class="section-h3">5.2.1 连续时间积分：速度与位置的计算</h3>
+<p class="p">IMU测量的<span class="kw">比力</span>（specific force）需要经过积分才能得到速度和位置。比力是加速度计读数减去重力加速度后的值。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 惯性导航基本方程</div><p>设机体在惯性空间的速度为 v，加速度为 a，重力加速度为 g（方向向下，约为9.81 m/s²），则：<br><br>
+<strong>dv/dt = a_measured - g</strong>（加速度积分得到速度）<br>
+<strong>dp/dt = v</strong>（速度积分得到位置）<br><br>
+从位置 p(0) 和速度 v(0) 的初始值出发，对加速度积分一次得到速度，积分两次得到位置。<br><br>
+<strong>离散化形式（欧拉积分）：</strong><br>
+vₖ = vₖ₋₁ + (aₖ₋₁ - g) · Δt<br>
+pₖ = pₖ₋₁ + vₖ₋₁ · Δt + 0.5 · (aₖ₋₁ - g) · Δt²
+</p></div>
+
+<h3 class="section-h3">5.2.2 为什么积分会累积误差？</h3>
+<p class="p">关键问题：<span class="kw">加速度测量存在偏差</span>。假设加速度偏差为 δa（哪怕只有 0.01 m/s²），积分两次后：</p>
+
+<div class="card orange"><div class="card-label">误差累积的数学</div><h3>积分两次，误差变成二次方增长</h3><p>• t秒后速度误差 = δa · t<br>
+• t秒后位置误差 = ½ · δa · t²<br><br>
+举例：加速度偏差 δa = 0.01 m/s²（0.1%的量程误差）<br>
+• 1秒后：速度误差 0.01 m/s，位置误差 0.005m（5mm）<br>
+• 10秒后：速度误差 0.1 m/s，位置误差 0.5m（半米）<br>
+• 60秒后：位置误差达到 18m！<br><br>
+这就是为什么纯惯性导航在60秒内就会产生十几米的定位误差——<strong>IMU只能作为短时参考，必须融合其他传感器（GPS/视觉/Lidar）来修正累积误差</strong>。这也是第9章卡尔曼滤波和第10章因子图优化的核心动机。
+</p></div>
+
+<h2 class="section-h2">5.3 IMU误差模型</h2>
+
+<h3 class="section-h3">5.3.1 确定性误差</h3>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">⚖️</div><h4>零偏 (Bias)</h4><p>加速度计或陀螺仪在零输入时的输出偏移。常温下通常稳定，高低温切换时会有变化（零偏温漂）。消费级MEMS的零偏通常在 ±5-100 mg / ±1-10 °/s。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📐</div><h4>比例因子误差 (Scale Factor)</h4><p>输出与真实值之间的比例系数偏差。通常以ppm（百万分之一）为单位。MEMS比例因子误差约 ±500-2000 ppm。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🔀</div><h4>轴对齐误差 (Misalignment)</h4><p>三轴加速度计和陀螺仪的敏感轴不完全正交，存在微小角度偏差。通常 < 0.1°。</p></div>
+</div>
+
+<h3 class="section-h3">5.3.2 随机性误差：艾伦方差（Allan Variance）</h3>
+<p class="p">IMU随机误差的频域特性通常用<span class="kw">艾伦方差</span>（Allan Variance）来分析。艾伦方差图揭示了IMU噪声的不同来源——这是选型IMU和配置滤波器Q/R矩阵的必读数据表。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📉</div><h4>角度随机游走 (ARW)</h4><p>噪声密度与 1/√τ 成正比。来源于白噪声积分，高频噪声主导。陀螺仪典型值：0.1-5°/√h。<br><br>
+<strong>物理含义：</strong>如果你的陀螺仪ARW=0.3°/√h，意味着飞行1小时后，仅由角度随机游走导致的角度误差标准差约为0.3°。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🔄</div><h4>零偏不稳定性 (Bias Instability)</h4><p>低频噪声，与 1/τ 相关。代表陀螺仪长期漂移特性。陀螺仪典型值：1-100°/h。<br><br>
+<strong>物理含义：</strong>如果你的陀螺仪零偏不稳定性=10°/h，意味着即使在静止条件下，陀螺仪的零偏也会在小时内漂移10°。</p></div>
+</div>
+
+<div class="hlbox"><div class="hlbox-title">🔑 如何解读艾伦方差图</div><p>艾伦方差图的读取方法（以典型MEMS陀螺仪为例）：<br><br>
+<strong>斜率 -0.5（高频区）：</strong>对应角度随机游走（ARW），曲线的截距即ARW系数。<br>
+<strong>斜率 +0.5（中频区）：</strong>对应零偏不稳定性，曲线最低点即零偏不稳定性值。<br>
+<strong>斜率 +1（低频区）：</strong>对应随机游走偏差（Walk Random）。<br><br>
+<strong>实战应用：</strong>从艾伦方差图可以读出每个噪声源的幅度，直接用于配置Kalman滤波器的Q矩阵（过程噪声协方差）。例如：ARW=0.3°/√h 意味着在1秒的积分中，角度误差的标准差 = 0.3°/√h × √1h = 0.3°（仅1秒就产生0.3°的角度误差！）。这就是为什么VIO不能纯靠IMU积分。
+</p></div>
+
+<h3 class="section-h3">5.3.3 IMU随机游走误差的数学表示</h3>
+<p class="p">在传感器融合算法中，IMU的连续时间随机误差模型通常表示为：</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 IMU随机误差模型</div><p>陀螺仪随机游走（角度随机游走）：<br>
+<strong>ω(t) = ω_true(t) + b(t) + n(t)</strong><br>
+其中 b(t) 是随机游走过程（ḃ = n_b，n_b 是高斯白噪声），n(t) 是角度随机游走（白噪声）。<br><br>
+加速度计：<br>
+<strong>a(t) = a_true(t) + b_acc(t) + n_acc(t)</strong><br><br>
+这个模型直接决定了 Kalman滤波中IMU噪声协方差矩阵的设置——如果你不理解这个模型，就不知道如何正确配置滤波器的噪声参数。实践中，很多VIO系统的定位精度差，根源就是Q/R矩阵配置不当（见第9章9.4节）。</p></div>
+
+<h2 class="section-h2">5.4 机体坐标系与导航坐标系</h2>
+
+<h3 class="section-h3">5.4.1 坐标系定义</h3>
+<p class="p">飞控系统涉及多个坐标系，清晰地区分它们至关重要：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">✈️</div><h4>机体坐标系 (Body Frame)</h4><p>原点位于无人机重心，X轴指向前方，Y轴指向右方，Z轴指向下方（飞控行业常用）。相对于导航坐标系旋转。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🌍</div><h4>导航坐标系 (Nav Frame)</h4><p>通常取当地北-东-地（NED）或东-北-天（ENU）坐标系。绝对参考系，位置和速度在此坐标系下定义。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">💨</div><h4>IMU坐标系</h4><p>IMU芯片的本地坐标系。由于制造公差，IMU坐标轴与机体坐标轴存在微小偏差（misalignment），需要标定。</p></div>
+</div>
+
+<h3 class="section-h3">5.4.2 姿态表示：欧拉角、四元数与旋转矩阵</h3>
+<p class="p">描述机体相对于导航坐标系的姿态（方向），有三种等价的数学表示：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🔄</div><h4>欧拉角</h4><p>(Roll, Pitch, Yaw) 最直观，人类可读。但存在万向锁（Gimbal Lock）问题，不适合插值和滤波。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🎯</div><h4>四元数 (Quaternion)</h4><p>q = [q₀, q₁, q₂, q₃]，四个参数，无万向锁，适合插值和滤波。飞控融合算法中的标准姿态表示。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">📊</div><h4>旋转矩阵 (Rotation Matrix)</h4><p>3×3正交矩阵 R，满足 RRᵀ = I，det(R) = 1。冗余度最高（9个参数），但计算最直接。</p></div>
+</div>
+
+<div class="hlbox"><div class="hlbox-title">🔑 四元数基础运算</div><p><strong>四元数乘法（用于合成旋转）：</strong><br>
+设 q = [q₀, qᵥ], p = [p₀, pᵥ]，其中 qᵥ 和 pᵥ 是向量部分。<br>
+q ⊗ p = [q₀p₀ - qᵥ·pᵥ,  q₀pᵥ + p₀qᵥ + qᵥ×pᵥ]<br><br>
+<strong>旋转矩阵转四元数：</strong><br>
+q₀ = 0.5 × √(1 + tr(R))<br>
+q₁ = (R₃₂ - R₂₃) / (4q₀)<br>
+q₂ = (R₁₃ - R₃₁) / (4q₀)<br>
+q₃ = (R₂₁ - R₁₂) / (4q₀)<br><br>
+<strong>用四元数旋转向量：</strong><br>
+v' = q ⊗ [0, v] ⊗ q⁻¹<br>
+其中 q⁻¹ = [q₀, -qᵥ] / ||q||（共轭除以模长）
+</p></div>
+
+<div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>四元数是飞控融合的核心：</strong>所有主流飞控（PX4、ArduPilot）和VIO系统（OKVIS、VINS-Mono）内部都用四元数表示姿态。四元数的优势：存储效率高（4个浮点数）、插值平滑、不存在万向锁、乘法运算高效。务必理解四元数的乘法规则和旋转变换——这是第9章EKF和第10章因子图的基础数学工具。</div></div>
+<!-- ===== 四元数交互学习模块 ===== -->
+<div class="exp" style="margin:20px 0">
+<div class="exp-hd"><div class="exp-tt"><span class="exp-icon">▼</span>📐 深度：艾伦方差图的正确解读方法</div></div>
+<div class="exp-bd">
+<p style="font-size:14.5px;color:var(--text2);line-height:1.8">艾伦方差（Allan Variance, AVAR）是分析IMU随机噪声频谱特性的标准方法。本节详解如何从AVAR图中提取关键噪声参数。</p>
+
+<p style="font-size:14.5px;color:var(--text2);line-height:1.8"><strong>艾伦方差的定义：</strong></p>
+<pre style="background:#1d1d1f;color:#f5f5f7;padding:14px;border-radius:8px;font-size:13px;line-height:1.7;overflow-x:auto;margin:10px 0">
+σ²(τ) = ½ · E[(O(t+τ) - O(t))²]
+
+其中 O(t) 是传感器输出，τ 是簇持续时间。
+对静止数据分组，取不同τ值计算方差，画在对数坐标上 → AVAR曲线。
+</pre>
+
+<p style="font-size:14.5px;color:var(--text2);line-height:1.8"><strong>AVAR曲线各段的物理含义：</strong></p>
+<div style="overflow-x:auto">
+<table class="tbl" style="font-size:13px">
+<thead><tr><th>斜率</th><th>对应噪声源</th><th>可读取的参数</th></tr></thead>
+<tbody>
+<tr><td>-½</td><td>角度随机游走（ARW）</td><td>噪声密度 N（°/√h）</td></tr>
+<tr><td>0</td><td>零偏不稳定性</td><td>B（°/h，最低谷值）</td></tr>
+<tr><td>+½</td><td>随机游走偏差</td><td>K（°/h³/²）</td></tr>
+<tr><td>+1</td><td>速率斜坡</td><td>R（°/h²）</td></tr>
+</tbody>
+</table>
+</div>
+
+<p style="font-size:14.5px;color:var(--text2);line-height:1.8"><strong>实战解读步骤：</strong></p>
+<pre style="background:#1d1d1f;color:#f5f5f7;padding:14px;border-radius:8px;font-size:13px;line-height:1.7;overflow-x:auto;margin:10px 0">
+1. 在AVAR图上找到斜率=-½（高频段）的直线
+2. 外推该直线到τ=1h，与AVAR曲线的交点 → ARW系数 N（单位：°/√h）
+3. 找到曲线的最低点 → 零偏不稳定性 B（°/h）
+
+示例：某MEMS陀螺仪的AVAR图：
+  τ=1s时：σ(1s) ≈ 0.01°/s（角度随机游走主导）
+  τ=1000s时：σ(1000s) ≈ 0.5°/h（零偏不稳定性主导）
+
+使用：将N代入Kalman滤波Q矩阵：
+  Q_gyro = N² · Δt （离散时间噪声方差）
+</pre>
+</div>
+</div><div class="card blue"><div class="card-label">本章关键概念</div><h3>IMU是融合系统的"时间基准"</h3><p><strong>① MEMS IMU原理：</strong>利用惯性力和科里奥利力，通过电容变化测量加速度和角速度。<br><strong>② 惯性导航方程：</strong>速度是加速度的时间积分，位置是速度的时间积分，积分两次后误差随时间二次方增长。<br><strong>③ 艾伦方差：</strong>分析IMU噪声频谱特性的标准方法，揭示角度随机游走和零偏不稳定性。<br><strong>④ 四元数：</strong>飞控融合系统的标准姿态表示，无万向锁、适合插值和优化。<br><strong>⑤ IMU预积分：</strong>VIO系统中将高频IMU数据压缩为两帧间的相对运动约束，避免重复积分。</p></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第6章 · GPS）：</strong>IMU误差会累积，视觉和Lidar有尺度问题——那么有没有传感器可以提供"不漂移的绝对位置"？答案是GPS/GNSS。但GPS信号在室内、城市峡谷、隧道中都不可靠，而且更新率只有1-10Hz。</div></div>
+
+<!-- 四元数练习测验 -->
+<div class="quiz" style="margin:20px 0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:20px;padding:24px;color:#fff">
+<h4 style="font-size:15px;font-weight:600;margin-bottom:10px">🧠 四元数理解小测验</h4>
+<div class="quiz-q">1. 单位四元数的模长必须等于多少？</div>
+<div class="quiz-opt" data-correct="1" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">A. 1（归一化）</div>
+<div class="quiz-opt" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">B. 任意值都可以</div>
+<div class="quiz-opt" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">C. 0</div>
+<div class="quiz-opt" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">D. 2</div>
+<div class="quiz-fb" data-good="正确！单位四元数的模长必须为1，否则需要归一化。" style="margin-top:8px;padding:10px;background:rgba(0,0,0,0.2);border-radius:8px;font-size:13px"></div>
+
+<div class="quiz-q" style="margin-top:14px">2. 四元数乘法为什么不满足交换律？</div>
+<div class="quiz-opt" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">A. 硬件有bug</div>
+<div class="quiz-opt" data-correct="1" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">B. 旋转的顺序会影响最终结果</div>
+<div class="quiz-opt" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">C. 因为旋转是非交换的物理操作</div>
+<div class="quiz-opt" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">D. 因为四元数是四维数学</div>
+<div class="quiz-fb" data-good="正确！先绕X转再绕Y ≠ 先绕Y再绕X，旋转的物理本质决定了非交换性。" style="margin-top:8px;padding:10px;background:rgba(0,0,0,0.2);border-radius:8px;font-size:13px"></div>
+
+<div class="quiz-q" style="margin-top:14px">3. 欧拉角的"万向锁"问题，四元数如何解决？</div>
+<div class="quiz-opt" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">A. 四元数有更多参数</div>
+<div class="quiz-opt" data-correct="1" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">B. 四元数用四维球面参数化，无奇点</div>
+<div class="quiz-opt" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">C. 四元数无法表示万向锁</div>
+<div class="quiz-opt" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">D. 四元数只存储欧拉角</div>
+<div class="quiz-fb" data-good="正确！四元数参数化在S³球面上，所有三维旋转都可以无奇异地表示。" style="margin-top:8px;padding:10px;background:rgba(0,0,0,0.2);border-radius:8px;font-size:13px"></div>
+
+<div class="quiz-q" style="margin-top:14px">4. 旋转向量 [0, v] 用四元数旋转后应表示为？</div>
+<div class="quiz-opt" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">A. q ⊗ v ⊗ q</div>
+<div class="quiz-opt" data-correct="1" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">B. q ⊗ [0, v] ⊗ q⁻¹</div>
+<div class="quiz-opt" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">C. q ⊗ [1, v] ⊗ q⁻¹</div>
+<div class="quiz-opt" style="padding:9px 14px;background:rgba(255,255,255,0.15);border-radius:8px;margin:7px 0;cursor:pointer;font-size:13.5px">D. [0, v] ⊗ q</div>
+<div class="quiz-fb" data-good="正确！旋转向量用纯四元数表示，通过 q⊗[0,v]⊗q⁻¹ 进行旋转变换。" style="margin-top:8px;padding:10px;background:rgba(0,0,0,0.2);border-radius:8px;font-size:13px"></div>
+</div>
+</section>

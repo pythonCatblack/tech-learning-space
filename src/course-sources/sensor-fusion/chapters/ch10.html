@@ -1,0 +1,95 @@
+<section id="ch10">
+<div class="hero">
+<div class="chapter-tag">Chapter 10 · 融合算法</div>
+<h1>因子图与非线性优化：<br>批量全局最优的融合范式</h1>
+<p class="sub">从滤波到优化的范式转变——因子图如何将传感器融合问题转化为最小二乘优化，并实现全局最优解。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约40分钟</span><span class="hero-meta-item">🔗 优化基础</span></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 8（贝叶斯滤波）、Chapter 9（KF/EKF）。本章是现代融合系统的核心技术——VINS-Mono、LIO-SAM、Cartographer 都采用因子图框架。建议在完全掌握 KF 五公式后再进入本章。</div></div>
+
+<p class="lead">因子图（Factor Graph）是一种<span class="kw">图表示方法</span>——它把传感器融合问题画成一张图：圆圈是变量（状态节点），方块是因子（约束/观测）。这种表示法优雅而强大：它让复杂的多传感器融合问题变得直观可见，也让优化求解器可以高效地找到全局最优解。</p>
+
+<h2 class="section-h2">10.1 从滤波到优化：范式的转变</h2>
+<h3 class="section-h3">10.1.1 滤波的局限：递归估计与线性化误差</h3>
+<p class="p">EKF等递归滤波器只依赖上一时刻的估计——这既是优势（内存占用低）也是劣势（误差无法被后续观测修正）。想象一下：如果某个时刻的IMU读数突然跳变，EKF会在那个时刻产生一个错误估计，之后所有估计都会基于这个错误积累下去。</p>
+
+<h3 class="section-h3">10.1.2 优化的优势：批量全局求解</h3>
+<p class="p"><span class="kw">批量优化</span>（Batch Optimization）收集一段时间内的所有观测数据，同时优化所有时刻的状态。例如：VIO系统在飞行结束后，可以对整条轨迹做一次全局优化，把每一帧的视觉约束和IMU约束一起求解，获得精度最高的轨迹。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🔁</div><h4>滤波器</h4><p>递归，每步只用前一步。内存低，但无法修正历史误差。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">📦</div><h4>优化器</h4><p>批量，同时优化所有状态。可获得全局最优，但计算量随时间增长。</p></div>
+</div>
+
+<h2 class="section-h2">10.2 因子图：优雅的问题表示</h2>
+<h3 class="section-h3">10.2.1 因子图的构成</h3>
+<p class="p"><span class="kw">因子图</span>是一种二分图，包含两类节点：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">⚪</div><h4>变量节点（Variable）</h4><p>圆形节点，代表要估计的状态（如 t 时刻的位姿 [R|t]）。每个变量节点连接多个因子。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🟦</div><h4>因子节点（Factor）</h4><p>方形节点，代表一个约束/观测（如视觉特征观测因子、IMU预积分因子、GPS因子）。每个因子连接它所涉及的变量节点。</p></div>
+</div>
+
+<h3 class="section-h3">10.2.2 典型VIO因子图</h3>
+<p class="p">一个典型VIO系统的因子图包含以下因子——这是理解VINS-Mono和OKVIS内部工作机制的核心：</p>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🔄</div><h4>IMU预积分因子</h4><p>连接相邻两个位姿节点，约束两者之间的相对运动（来自预积分）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">👁️</div><h4>视觉残差因子</h4><p>连接相机位姿和3D特征点，约束重投影误差。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">⚓</div><h4>边缘化先验因子</h4><p>固定滑动窗口外的变量，防止变量数量无限增长。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🌍</div><h4>GPS因子</h4><p>绝对位置约束，直接连接到世界坐标系下的位姿节点。</p></div>
+</div>
+
+<div class="hlbox"><div class="hlbox-title">🔑 因子图的阅读方法</div><p>在因子图中，信息流动遵循"从因子到变量"的规则：<br><br>
+<strong>IMU预积分因子</strong>连接位姿节点 Tᵢ 和 Tᵢ₊₁ → 表达了"这两个位姿之间应该满足IMU预积分给出的相对运动约束"<br><br>
+<strong>视觉残差因子</strong>连接位姿节点 Tᵢ 和3D特征点 Fⱼ → 表达了"如果位姿是Tᵢ，特征点Fⱼ应该投影到图像的哪个位置，这个投影位置与实际观测的差应该很小"<br><br>
+优化求解器的工作是：找到一个状态序列 (T₀, T₁, ..., Tₙ)，使得所有因子的约束都被尽量满足（残差平方和最小）。
+</p></div>
+
+<h2 class="section-h2">10.3 非线性最小二乘：因子图的求解</h2>
+<h3 class="section-h3">10.3.1 目标函数</h3>
+<p class="p">因子图优化最终转化为一个<span class="kw">非线性最小二乘</span>问题：</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 非线性最小二乘目标函数</div><p><strong>min_x Σᵢ ‖rᵢ(x)‖²</strong><br><br>
+其中 rᵢ(x) 是第 i 个因子的残差函数，衡量当前状态 x 满足该约束的程度。<br><br>
+残差越小，说明估计越符合观测约束。<br><br>
+<strong>每个因子的残差函数设计：</strong><br>
+• IMU因子：IMU预积分的相对运动 vs 优化变量给出的相对运动之差<br>
+• 视觉因子：特征点的重投影误差（二维图像距离）<br>
+• GPS因子：估计位置 vs GPS观测位置之差<br><br>
+<strong>为什么是平方？</strong>因为噪声被假设为高斯分布，对数似然最大化等价于残差平方和最小化——这就是第8章贝叶斯后验最大化的具体形式。
+</p></div>
+
+<h3 class="section-h3">10.3.2 高斯-牛顿与LM算法</h3>
+<p class="p">非线性最小二乘没有闭式解，需要迭代求解。两种最常用的方法：</p>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📐</div><h4>高斯-牛顿（Gauss-Newton）</h4><p>对残差做一阶近似，构建线性最小二乘求解。快但可能发散。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🔧</div><h4>Levenberg-Marquardt (LM)</h4><p>在高斯-牛顿和梯度下降之间自适应插值。VINS-Mono、OKVIS等主流系统均使用LM。</p></div>
+</div>
+
+<div class="hlbox"><div class="hlbox-title">🔑 LM算法的直观理解</div><p>LM算法可以被理解为"带阻尼的高斯-牛顿"：<br><br>
+<strong>$(J^T J + \lambda \cdot \text{diag}(J^T J)) \cdot \Delta x = -J^T r$</strong><br><br>
+其中 $J$ 是残差的雅可比矩阵，$\lambda$ 是阻尼因子。<br><br>
+<strong>$\lambda$ 很大时：</strong>$\approx$ 梯度下降，步长小但稳定，保证收敛<br>
+<strong>$\lambda$ 很小时：</strong>$\approx$ 高斯-牛顿，步长大但可能发散<br><br>
+LM的自适应策略：如果某次迭代使目标函数下降，则增大 $\lambda$（更激进）；如果某次迭代使目标函数上升，则减小 $\lambda$（更保守）。<br><br>
+这就是为什么VINS-Mono等系统在优化日志中会看到 $\lambda$ 值在迭代过程中不断变化。
+</p></div>
+
+<h2 class="section-h2">10.4 增量平滑：iSAM2</h2>
+<p class="p">批量优化的问题是：每新增一个观测，都要重新优化整张图，计算量随时间无限增长。<span class="kw">增量平滑（Incremental Smoothing）</span>解决了这个问题——iSAM2（Incremental Smoothing and Mapping 2）只更新受新观测影响的变量，而非重新优化整个图。</p>
+
+<div class="card green"><div class="card-label">iSAM2的应用</div><h3>Google Cartographer和LIO-SAM的核心</h3><p>Google Cartographer（Google开源的SLAM系统）和LIO-SAM都采用了类似iSAM2的增量平滑策略：<strong>局部子图优化 + 全局回环检测</strong>。当新增一帧Lidar扫描时，只优化当前子图（通常最近几秒的数据），检测到回环（回到之前到过的地方）时再触发全局优化。<br><br>
+这种"局部+全局"的策略在工程上极其重要：它让系统可以在资源受限的机载平台上实时运行，同时在需要时获得全局最优解。
+</p></div>
+
+<!-- ===== ⚠️ 常见陷阱 ===== -->
+<div class="callout callout-warn" style="margin-bottom:16px"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>常见陷阱① - 残差函数设计错误：</strong>残差的物理单位必须一致！不要把角度残差（弧度）和位置残差（米）直接相加——它们的量纲不同。正确做法：角度残差用角度单位，位置残差用米，或者在构建目标函数时给不同类型的残差加权。<br><br>
+<strong>常见陷阱② - 边缘化顺序影响结果：</strong>滑动窗口边缘化时，被边缘化的因子信息必须正确转换为先验因子。如果边缘化策略不对，会导致信息损失（严重时导致滤波发散）。<br><br>
+<strong>常见陷阱③ - LM阻尼参数初始值：</strong>λ 的初始值会影响收敛速度。如果目标函数值很大（优化刚开始），λ 应该设大一些（更保守）；如果已经接近最优，λ 应该设小一些（更激进）。</div></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第11章 · VIO）：</strong>现在你有了因子图的基础，就可以理解VINS-Mono和OKVIS的完整工作流程了。VIO = IMU预积分因子 + 视觉残差因子 + 滑动窗口边缘化 + 回环检测——这就是现代视觉惯性融合系统的全部要素。</div></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>因子图优化范式</h3><p><strong>① 因子图表示：</strong>圆形=变量节点（状态），方形=因子节点（约束），二分图结构。<br><strong>② 典型因子：</strong>IMU预积分因子（连接相邻位姿）、视觉残差因子（连接位姿+3D点）、GPS绝对因子。<br><strong>③ 非线性最小二乘：</strong>因子图优化转化为 min Σ‖rᵢ(x)‖²，用LM或高斯-牛顿迭代求解。<br><strong>④ 增量平滑iSAM2：</strong>只更新受影响变量而非全局重新优化，解决计算量随时间增长的问题。<br><strong>⑤ 局部+全局策略：</strong>局部实时优化 + 全局回环优化，是LIO-SAM等工程系统的标准做法。</p></div>
+
+</section>

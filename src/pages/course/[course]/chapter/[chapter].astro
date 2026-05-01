@@ -1,0 +1,66 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import CourseLayout from '../../../../layouts/CourseLayout.astro';
+import RawHtml from '../../../../components/RawHtml.astro';
+import { getCourseBySlug } from '../../../../courses';
+
+export async function getStaticPaths() {
+  const courses = ['chip', 'sensor-fusion'].map((slug) => getCourseBySlug(slug)).filter(Boolean);
+
+  return courses.flatMap((course) =>
+    course!.chapters.map((chapter) => ({
+      params: { course: course!.slug, chapter: chapter.id },
+      props: { course: course!, chapter },
+    })),
+  );
+}
+
+const { course, chapter } = Astro.props as { course: NonNullable<ReturnType<typeof getCourseBySlug>>; chapter: NonNullable<ReturnType<typeof getCourseBySlug>>['chapters'][number] };
+const htmlPath = path.join(course.sourceRoot, chapter.sourceFile);
+const rawHtml = fs.readFileSync(htmlPath, 'utf-8');
+const currentIndex = course.chapters.findIndex((item) => item.id === chapter.id);
+const previousChapter = currentIndex > 0 ? course.chapters[currentIndex - 1] : undefined;
+const nextChapter = currentIndex >= 0 && currentIndex < course.chapters.length - 1 ? course.chapters[currentIndex + 1] : undefined;
+---
+
+<CourseLayout course={course} activeChapterId={chapter.id} backHref={`/course/${course.slug}/`}>
+  <section class="page-hero">
+    <div class="chapter-tag">{course.title}</div>
+    <h1>{chapter.title}</h1>
+    <p class="page-subtitle">{chapter.summary}</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">{chapter.readTime}</span>
+      <span class="hero-meta-item">Chapter {chapter.id}</span>
+      <span class="hero-meta-item">独立进度同步</span>
+    </div>
+  </section>
+
+  <RawHtml html={rawHtml} />
+
+  <div class="nav-foot">
+    {previousChapter ? (
+      <a class="nav-btn" href={`/course/${course.slug}/chapter/${previousChapter.id}/`}>
+        <span class="nav-btn-icon">←</span>
+        <div>
+          <div class="nav-btn-lbl">Previous</div>
+          <div class="nav-btn-ttl">{previousChapter.navLabel}</div>
+        </div>
+      </a>
+    ) : (
+      <div></div>
+    )}
+
+    {nextChapter ? (
+      <a class="nav-btn next" href={`/course/${course.slug}/chapter/${nextChapter.id}/`}>
+        <span class="nav-btn-icon">→</span>
+        <div>
+          <div class="nav-btn-lbl">Next</div>
+          <div class="nav-btn-ttl">{nextChapter.navLabel}</div>
+        </div>
+      </a>
+    ) : (
+      <div></div>
+    )}
+  </div>
+</CourseLayout>

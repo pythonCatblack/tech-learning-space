@@ -1,0 +1,81 @@
+---
+import CourseLayout from '../../../layouts/CourseLayout.astro';
+import { chapterPath, getCourseBySlug } from '../../../courses';
+
+export async function getStaticPaths() {
+  return ['chip', 'sensor-fusion'].map((course) => ({ params: { course } }));
+}
+
+const { course: courseSlug } = Astro.params;
+const course = getCourseBySlug(courseSlug);
+
+if (!course) {
+  throw new Error(`Unknown course: ${courseSlug}`);
+}
+
+const firstChapter = course.chapters[0];
+const lastChapter = course.chapters[course.chapters.length - 1];
+---
+
+<CourseLayout course={course} backHref="/">
+  <section class="page-hero">
+    <div class="chapter-tag">Course</div>
+    <h1>{course.title}</h1>
+    <p class="page-subtitle">{course.description}</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">{course.chapters.length} 个章节</span>
+      <span class="hero-meta-item">{course.subtitle}</span>
+      <span class="hero-meta-item">共享 Astro 框架</span>
+    </div>
+    <div class="hero-actions">
+      {firstChapter && (
+        <a class="button" href={chapterPath(course.slug, firstChapter.id)}>
+          从第一章开始
+        </a>
+      )}
+      {lastChapter && lastChapter.id !== firstChapter?.id && (
+        <a class="button secondary" href={chapterPath(course.slug, lastChapter.id)}>
+          直达最后一章
+        </a>
+      )}
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-val">{course.chapters.length}</div>
+        <div class="stat-lbl">章节</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">{course.groups.length}</div>
+        <div class="stat-lbl">章节组</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">{course.slug}</div>
+        <div class="stat-lbl">课程目录</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">独立</div>
+        <div class="stat-lbl">进度</div>
+      </div>
+    </div>
+  </section>
+
+  {course.groups.map((group) => (
+    <section class="section">
+      <h2 class="section-h2">{group.label}</h2>
+      <div class="chapter-grid">
+        {group.chapters.map((chapter) => (
+          <a class="chapter-card" href={`/course/${course.slug}/chapter/${chapter.id}/`}>
+            <div class="chapter-card-top">
+              <span class={`side-link-icon ${chapter.badgeClass}`}>{chapter.icon}</span>
+              <div>
+                <div class="chapter-card-title">{chapter.navLabel}</div>
+                <div class="chapter-card-meta">{chapter.readTime}</div>
+              </div>
+            </div>
+            <p class="chapter-card-summary">{chapter.summary}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</CourseLayout>

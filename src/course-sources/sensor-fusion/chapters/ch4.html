@@ -1,0 +1,173 @@
+<section id="ch4">
+<div class="hero">
+<div class="chapter-tag">Chapter 4 · 单传感器深度</div>
+<h1>激光雷达原理与点云处理：<br>无人机的"精准触角"</h1>
+<p class="sub">从ToF物理原理到点云分割算法，理解激光雷达如何为无人机提供精确的三维几何感知能力。</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约40分钟阅读</span>
+<span class="hero-meta-item">💨 Lidar技术</span>
+</div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 3（相机模型）帮助理解投影几何，本章的<span class="kw">点云-图像联合处理</span>思想是第12章 Lidar-视觉融合的基础。建议完全掌握相机内参和外参概念后再进入本章。</div></div>
+
+<p class="lead">激光雷达（Lidar = Light Detection and Ranging）是目前最精确的距离传感器——在有效范围内，测距精度可达±2cm，远超相机（双目在远距离时误差可达米级）。它直接输出<span class="kw">稠密的三维点云</span>（Point Cloud），每个点包含精确的 XYZ 坐标和反射强度（Intensity）。但Lidar也有明显弱点：无法获取颜色/纹理信息、对恶劣天气敏感、成本较高。理解Lidar的物理特性，是设计鲁棒感知系统的前提。</p>
+
+<h2 class="section-h2">4.1 激光雷达的物理原理</h2>
+
+<h3 class="section-h3">4.1.1 飞行时间法（ToF）：光速测量距离</h3>
+<p class="p">最常见的Lidar测距原理是<span class="kw">飞行时间法</span>（Time of Flight，ToF）。工作流程：</p>
+
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h4>发射激光脉冲</h4><p>发射器向目标方向发射一束近红外激光脉冲（波长通常905nm或1550nm）。</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h4>光子飞行与反射</h4><p>光以光速 c ≈ 3×10⁸ m/s 飞行，遇到目标表面后反射。</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h4>接收返回光子</h4><p>接收器检测返回的光子，记录发射和返回的时间差 Δt。</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h4>计算距离</h4><p>距离 R = c · Δt / 2（往返，除以2）。</p></div></div>
+</div>
+
+<div class="hlbox"><div class="hlbox-title">🔑 测距精度与光速的关系</div><p>光速约 3×10⁸ m/s，意味着：<br>
+• 1纳秒（10⁻⁹s）对应距离约 15cm<br>
+• 1皮秒（10⁻¹²s）对应距离约 0.15mm<br><br>
+高端Lidar使用时间数字转换器（TDC）可以达到皮秒级精度，对应毫米级测距精度。但消费级Lidar通常只能达到厘米级——不是因为光速不够快，而是计时精度不够高。工程上，Livox Horizon的测距精度为 ±2cm@1σ（1 sigma）。</p></div>
+
+<h3 class="section-h3">4.1.2 FMCW调频连续波法</h3>
+<p class="p"><span class="kw">FMCW</span>（Frequency Modulated Continuous Wave）是另一种测距原理——不是测量光飞行时间，而是测量<span class="kw">频率差</span>。发射一束线性调频的激光，返回光与发射光产生干涉，测量频差即可得到距离。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📊</div><h4>ToF优势</h4><p>技术成熟、成本较低；峰值功率高，适合远距离探测。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📈</div><h4>FMCW优势</h4><p>可同时测速（多普勒效应）；抗干扰能力强（相干接收）；人眼安全功率更低（1550nm）。</p></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">💡</div><div class="callout-text"><strong>关键洞察 - FMCW的多普勒测速：</strong>FMCW激光雷达不仅可以测距，还能通过多普勒效应直接测量每个点的径向速度。这意味着一个点就能同时告诉你"距离多远"和"速度多少"——这对动态障碍物跟踪非常有价值。Mobileye的下一代车载Lidar采用FMCW正是基于此原因。对无人机而言，这项能力在高速飞行时的避障决策中至关重要。</div></div>
+
+<h2 class="section-h2">4.2 激光雷达的类型</h2>
+
+<h3 class="section-h3">4.2.1 机械旋转式Lidar</h3>
+<p class="p"><span class="kw">机械旋转式Lidar</span>通过电机带动整个光学扫描结构旋转，实现360°水平视场（FOV）。这是最成熟的Lidar形态。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🔄</div><h4>Velodyne系列</h4><p>64线/32线/16线，机械旋转，2010年代自动驾驶研究的标准配置。重量大（~1.2kg）、功耗高（60W+）、成本高（数万美元）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🛢️</div><h4>Ouster OS0/OS1/OS2</h4><p>数字Lidar，采用CMOS SPAD探测器，128/64/32线可选，更紧凑可靠。</p></div>
+</div>
+
+<h3 class="section-h3">4.2.2 固态/半固态Lidar</h3>
+<p class="p"><span class="kw">固态Lidar</span>（Solid-State Lidar）没有机械旋转部件，通过相控阵或微振镜实现扫描，可靠性更高、体积更小、成本有望大幅降低。</p>
+
+<div class="tags">
+<span class="tag t-blue">微振镜Lidar：用一个或两个微振镜实现水平+垂直扫描，如Livox Horizon</span>
+<span class="tag t-green">相控阵Lidar：用电信号控制光束方向，无机械移动部件（仍在研发阶段）</span>
+<span class="tag t-orange">Flash Lidar：一次照射整个视场，探测器同时接收，无扫描机制</span>
+</div>
+
+<h3 class="section-h3">4.2.3 面向无人机的Lidar选型</h3>
+<table class="tbl">
+<thead><tr><th>Lidar型号</th><th>类型</th><th>范围</th><th>FOV</th><th>重量</th><th>功耗</th><th>典型应用</th></tr></thead>
+<tbody>
+<tr><td class="hl">Velodyne VLP-16</td><td>机械</td><td>100m</td><td>360°×30°</td><td>830g</td><td>8W</td><td>科研/测绘</td></tr>
+<tr><td class="hl">Livox Horizon</td><td>半固态</td><td>260m</td><td>81.7°×25°</td><td>716g</td><td>12W</td><td>机器人/无人机</td></tr>
+<tr><td class="hl">Livox AVIA</td><td>半固态</td><td>320m</td><td>70.4°×77.2°</td><td>480g</td><td>8W</td><td>无人机测绘</td></tr>
+<tr><td class="hl">Ouster OS0-128</td><td>数字机械</td><td>55m</td><td>360°×90°</td><td>445g</td><td>21W</td><td>室内机器人</td></tr>
+<tr><td class="hl">Robosense RS-LiDAR-M1</td><td>半固态</td><td>200m</td><td>120°×25°</td><td>约1kg</td><td>15W</td><td>车载/无人机</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>Livox 非等距扫描的特殊性：</strong>Livox Horizon和AVIA使用棰状扫描模式——光束在中心区域停留时间更长，导致点云<span class="kw">非均匀分布</span>。这对传统LOAM/LIO-SAM算法是个挑战（它们通常假设均匀扫描），需要针对性调整。Livox官方提供了专门的建图工具包（Livox_horizon_ros_toolbox）。如果你的应用场景需要均匀密度的点云（如精确测量），Livox可能不是最佳选择。</div></div>
+
+<h2 class="section-h2">4.3 点云数据结构与特性</h2>
+
+<h3 class="section-h3">4.3.1 点云的基本属性</h3>
+<p class="p">Lidar输出的每个点（Point）包含以下属性：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📍</div><h4>XYZ（坐标）</h4><p>相对于Lidar坐标系的三维位置。通常以Lidar安装位置为原点，单位通常是米（m）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">💡</div><h4>Intensity（反射强度）</h4><p>返回光子的强度，与目标表面材质和入射角相关。金属/白色表面反射强，黑色/吸光表面反射弱（可能是安全服的反光条！）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">⏱️</div><h4>Timestamp（时间戳）</h4><p>每个点的时间戳，对于动态校正和与IMU同步至关重要。机械Lidar一个扫描周期内不同角度的点对应不同时间戳。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🌈</div><h4>Line/Scan ID（某些型号）</h4><p>多线Lidar中，每个点属于哪一条扫描线。</p></div>
+</div>
+
+<h3 class="section-h3">4.3.2 点云的特征与挑战</h3>
+<p class="p">与图像相比，点云有独特的性质：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">✅</div><h4>优势</h4><p>精确的XYZ坐标（直接3D几何）；主动光源，不受光照影响；不需标定（自带坐标）；每个点有时间戳。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fce4ec">❌</div><h4>劣势</h4><p>稀疏性（64线Lidar在100m处，每平方米可能只有几个点）；无颜色/纹理信息；动态物体上点云会有运动畸变（见4.5节）。</p></div>
+</div>
+
+<h2 class="section-h2">4.4 点云处理算法</h2>
+
+<h3 class="section-h3">4.4.1 点云滤波：去除噪声与下采样</h3>
+<p class="p">原始点云通常包含噪声和离群点。常用滤波方法：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📉</div><h4>体素滤波 (Voxel Filter)</h4><p>将空间划分为等体积的体素网格，每个体素内只保留一个代表点。是最常用的点云下采样方法，保留几何结构的同时大幅减少点数。<strong>实战参数：</strong>体素大小通常选 0.1-0.5m，对于室内场景用0.05m，室外用0.2-1.0m。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🔄</div><h4>统计离群点移除</h4><p>对每个点的邻域做统计分析，距离邻域均值过远的点判定为离群点并移除。<strong>实战参数：</strong>K近邻数通常取20-50，标准差阈值取1.0-2.0（超过即判定为离群点）。</p></div>
+</div>
+
+<h3 class="section-h3">4.4.2 地面提取：无人机感知的"第一刀"</h3>
+<p class="p">对于无人机避障和定位，最重要的一步是从点云中<span class="kw">提取地面</span>。地面将空间划分为"可飞行区域"和"障碍物区域"。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📐</div><h4>基于高度差的方法</h4><p>计算每个点与局部平面的高度差，超过阈值的点归类为障碍物。简单高效，但坡道场景会失效。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🔢</div><h4>基于拟合的方法</h4><p>用RANSAC或多项式拟合地面点云，再将剩余点分类为障碍物。对不平坦地形更鲁棒。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🗺️</div><h4>基于栅格地图的方法</h4><p>将空间划分为二维网格，每个格子记录最低点高度，高于地面阈值的点视为障碍物。广泛应用于无人机路径规划。</p></div>
+</div>
+
+<h3 class="section-h3">4.4.3 点云分割：从原始数据到语义物体</h3>
+<p class="p">地面提取后，需要将剩余点云分割为独立物体（树干、电线杆、车辆、人）：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📊</div><h4>传统分割</h4><p>欧式聚类（基于距离）、区域生长法、法向量聚类。对规则场景效果好，计算快。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🤖</div><h4>深度学习分割</h4><p>PointNet++、PointPillars、SqueezeSeg——直接从原始点云预测语义类别。精度高但需要GPU实时推理。</p></div>
+</div>
+
+<h2 class="section-h2">4.5 运动畸变校正</h2>
+<p class="p">机械旋转式Lidar在扫描一整圈（通常100ms-1s）期间，无人机本身在移动。这会导致点云产生<span class="kw">运动畸变</span>——同一条扫描线上，远离无人机的地方畸变更大。例如：无人机以5m/s向前飞行，100ms扫描周期内无人机前进了50cm——这意味着扫描起始点和结束点之间有50cm的位置差异，在高速飞行时这是不可忽略的。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 运动畸变校正的核心思想</div><p>利用IMU或里程计提供的<span class="kw">短时姿态信息</span>，对每个点的扫描时刻做逆向变换：<br><br>
+<strong>步骤1：</strong>记录每个点的精确时间戳（来自Lidar数据包）<br>
+<strong>步骤2：</strong>用IMU数据插值出该时刻的无人机姿态<br>
+<strong>步骤3：</strong>将该点投影到扫描结束时刻的坐标系下<br><br>
+设扫描起始时刻为 t₀，结束时刻为 t₁，某点扫描时刻为 t，其对应的无人机姿态为 R(t)，平移为 p(t)。校正后的点坐标：<br>
+<strong>P_corrected = R(t₁) · R(t)⁻¹ · (P_raw - p(t) + p(t₁))</strong><br><br>
+校正后的点云消除了运动模糊，几何精度显著提升。这是Lidar SLAM预处理的标准步骤，不做校正会导致建图精度下降和里程计漂移。
+</p></div>
+
+<!-- ===== 🛠️ 动手实践 ===== -->
+<div class="card green" style="margin-bottom:16px"><div class="card-label">🛠️ 动手实践</div><h3>用PCL可视化点云并实现体素滤波</h3><p><strong>目标：</strong>用Python (open3d或pypcl) 读取Lidar点云数据，可视化并实现体素滤波下采样。<br><br>
+<pre style="background:#f5f5f7;padding:12px;border-radius:8px;overflow-x:auto;font-size:13px">
+# 安装 open3d
+pip install open3d
+
+import open3d as o3d
+import numpy as np
+
+# 读取点云（支持 PCD/PLY/TXT格式）
+pcd = o3d.io.read_point_cloud("lidar_scan.pcd")
+print(f"原始点数: {len(pcd.points)}")
+
+# 体素滤波下采样
+voxel_size = 0.2  # 20cm 体素大小
+pcd_down = pcd.voxel_down_sample(voxel_size)
+print(f"下采样后: {len(pcd_down.points)}")
+
+# 统计离群点移除
+cl, ind = pcd_down.remove_statistical_outlier(nb_neighbors=20, std_ratio=1.0)
+pcd_clean = pcd_down.select_by_index(ind)
+
+# 可视化
+o3d.visualization.draw_geometries([pcd_clean])
+</pre>
+<strong>进阶：</strong>实现地面提取——计算每个点与 Z=地面高度 的差值，低于阈值的点标记为地面点，剩余点为障碍物。<br>
+<strong>数据集推荐：</strong>下载 NCLT 数据集（密歇根大学自动驾驶数据集，含Velodyne 32线Lidar和IMU数据），用上面的代码读取一帧并可视化。
+</p></div>
+
+<!-- ===== ⚠️ 常见陷阱 ===== -->
+<div class="callout callout-warn" style="margin-bottom:16px"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>常见陷阱① - 忽视运动畸变：</strong>很多初学者直接用原始点云做建图，发现轨迹在高速飞行时严重扭曲。必须先用IMU数据做运动畸变校正（4.5节），再送入LOAM/LIO-SAM。<br><br>
+<strong>常见陷阱② - Livox点云密度不均匀：</strong>Livox中心区域点密度远高于边缘，如果直接用于需要均匀点云的算法（如某些欧式聚类方法），效果会差很多。先用非均匀加权采样处理。<br><br>
+<strong>常见陷阱③ - 黑色吸光表面：</strong>深色衣服、深色车辆、树木在Lidar上几乎没有回波——它们不会出现在点云中，但你不能假设"没有点的地方就是空的"。这对安全至关重要：穿黑色衣服的人在Lidar眼里可能是"透明的"。</div></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第5章 · IMU）：</strong>本章我们看到了Lidar的几何优势（精确XYZ）和劣势（稀疏、无纹理）。IMU——惯性测量单元——提供了完全不同的感知维度：以1kHz以上的高频采样，直接测量机体的旋转和加速度。但IMU的积分误差会随时间二次方增长，这就是为什么需要融合。本章的IMU预积分理论是第11章 VIO 和第10章 因子图优化的核心数学工具。</div></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>Lidar感知的技术栈</h3><p><strong>① ToF测距原理：</strong>R = c·Δt/2，光速×时间差/2。<br><strong>② FMCW：</strong>调频连续波，同时测距和测速，抗干扰强，是下一代Lidar方向。<br><strong>③ 固态Lidar：</strong>无机械旋转，可靠性高、成本低，但视场角和分辨率受限。<br><strong>④ 点云特性：</strong>精确XYZ+Intensity，但稀疏无纹理，有运动畸变。<br><strong>⑤ 运动畸变校正：</strong>用IMU插值姿态，逆向投影到统一时刻，是Lidar SLAM的关键预处理。</p></div>
+
+</section>

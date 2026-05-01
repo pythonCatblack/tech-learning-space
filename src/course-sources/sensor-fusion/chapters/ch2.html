@@ -1,0 +1,149 @@
+<section id="ch2">
+<div class="hero">
+<div class="chapter-tag">Chapter 2 · 基础概念</div>
+<h1>无人机平台与传感器<br>系统架构</h1>
+<p class="sub">从飞控架构到传感器选型，理解无人机的"身体"如何决定感知系统的设计约束。</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约30分钟阅读</span>
+<span class="hero-meta-item">🛸 平台入门</span>
+</div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>回顾 Chapter 1：</strong>上一章我们建立了传感器融合的宏观认知——三种融合范式（互补/竞争/协同）和三个融合层次（数据/特征/决策）。本章将把这些概念落到无人机平台上，理解"平台约束"如何决定传感器配置和融合方案。</div></div>
+
+<p class="lead">一架无人机不是传感器的简单堆叠。飞控架构决定了传感器如何接入系统，机体结构限制了传感器安装位置和视野（FOV），有效载荷决定了总算力预算。理解这些物理约束，才能理解为什么大疆用双目视觉而不是激光雷达做消费级避障——不是因为双目"更好"，而是因为它更轻、更便宜、更适合消费级产品的约束。</p>
+
+<h2 class="section-h2">2.1 无人机平台类型与感知需求</h2>
+<p class="p">不同类型的无人机平台，对感知系统的需求差异巨大。选型之前，必须先理解平台特性。</p>
+
+<h3 class="section-h3">2.1.1 多旋翼（Multirotor）——最灵活的空中机器人</h3>
+<p class="p"><span class="kw">多旋翼</span>（四旋翼/六旋翼/八旋翼）是最常见的无人机平台形态。它能悬停、垂直起降、任意方向飞行——但也因此<span class="kw">全方向运动都会产生姿态变化</span>，对感知系统的动态范围要求极高。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">⬆️</div><h4>垂直起降（VTOL）</h4><p>不需要跑道，室内外均可操作，适合精密任务。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🔄</div><h4>全向机动</h4><p>可以横滚、俯仰、偏航同时发生，导致感知坐标系快速旋转。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">⚖️</div><h4>有效载荷受限</h4><p>通常1-10kg，传感器总重不宜超过10%起飞重量。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🔋</div><h4>续航有限</h4><p>通常20-60分钟，要求感知系统功耗 < 10-20W。</p></div>
+</div>
+
+<h3 class="section-h3">2.1.2 固定翼（Fixed-Wing）——远程续航之王</h3>
+<p class="p"><span class="kw">固定翼无人机</span>需要跑道或弹射起飞，靠机翼产生升力，滑翔时能以极低功耗巡航数小时。它们适合测绘、巡检等需要长续航的任务，但<span class="kw">无法悬停</span>，对着陆点要求苛刻。</p>
+
+<div class="tags">
+<span class="tag t-blue">长续航：2-8小时（燃油型可达16小时+）</span>
+<span class="tag t-green">高速度：通常70-120km/h</span>
+<span class="tag t-orange">大载荷：可达数十公斤</span>
+<span class="tag t-red">无法悬停：降落需要开阔场地或 parachute</span>
+</div>
+
+<h3 class="section-h3">2.1.3 垂直起降固定翼（VTOL）——两全其美</h3>
+<p class="p">固定翼和多旋翼的结合——典型如<span class="kw">DJI V-Tail</span>或<span class="kw">Autel EVO Max</span>。既能像固定翼那样高效巡航，又能在需要时悬停。代价是结构更复杂、重量更大、价格更高。</p>
+
+<!-- ===== 2.2 飞控系统架构 ===== -->
+<h2 class="section-h2">2.2 飞控系统架构：感知数据如何变成飞行指令？</h2>
+<p class="p">理解传感器融合，必须理解数据在飞控系统中的流动路径。现代飞控系统通常采用<span class="kw">分层架构</span>——每一层有明确的职责边界。</p>
+
+<div class="flow">
+<div class="flow-box"><div class="flow-box-title">环境</div><div class="flow-box-desc">物理世界</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">传感器层</div><div class="flow-box-desc">IMU/Camera/Lidar<br>GPS/Barometer</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">感知层</div><div class="flow-box-desc">融合/定位<br>目标检测</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">决策层</div><div class="flow-box-desc">路径规划<br>避障策略</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">控制层</div><div class="flow-box-desc">PID/ MPC<br>姿态控制</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">执行器</div><div class="flow-box-desc">电机/PWM<br>动力系统</div></div>
+</div>
+
+<h3 class="section-h3">2.2.1 传感器层：数据从哪里来？</h3>
+<p class="p">飞控的传感器层通常包含一组<span class="kw">惯性测量单元</span>（IMU），这是飞控最核心的传感器——它以1kHz以上的频率采样，在GPS和视觉融合失效时提供姿态参考。</p>
+
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h4>IMU（惯性测量单元）</h4><p>以最高频率采样（1-8kHz），直接测量三轴加速度和三轴角速度。是姿态估计的最快数据源，也是所有融合算法的时间基准。</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h4>GPS / 双天线定向</h4><p>提供绝对位置（NMEA格式）和航向角。更新率低（1-10Hz），但无累积误差。RTK版本可达到厘米级精度。</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h4>视觉 / 激光雷达</h4><p>提供相对位移动估计（里程计），在GPS失效时（室内、峡谷）接管定位。通常通过USB/以太网接入飞控。</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h4>气压计 / 超声波 / ToF</h4><p>提供高度参考。气压计测绝对高度（但有漂移），超声波/ToF测相对高度（精确但范围有限）。</p></div></div>
+</div>
+
+<h3 class="section-h3">2.2.2 感知层：传感器融合的核心战场</h3>
+<p class="p">感知层是传感器融合算法运行的层次。它接收传感器层的原始数据，通过融合算法输出：<span class="kw">机体六自由度姿态</span>（位置+姿态）、<span class="kw">速度</span>（ENU系下）、<span class="kw">周围环境地图</span>（栅格或点云）以及<span class="kw">障碍物位置</span>。</p>
+
+<div class="card orange"><div class="card-label">关键约束：实时性</div><h3>感知延迟是飞控的"生死线"</h3><p>飞控的内环控制周期通常在100-1000Hz（1-10ms）。如果感知层的输出延迟超过50ms，姿态控制的稳定性会显著下降。这意味着：感知算法必须在有限时间内完成，算法复杂度必须与硬件算力匹配。很多"学术state-of-the-art"算法因为延迟过高而无法实际飞。</p></div>
+
+<!-- ===== 2.3 典型传感器配置 ===== -->
+<h2 class="section-h2">2.3 典型传感器配置与选型</h2>
+<p class="p">不同应用场景的无人机，传感器配置差异极大。以下是典型场景的配置方案：</p>
+
+<table class="tbl">
+<thead><tr><th>应用场景</th><th>核心传感器</th><th>选型要点</th><th>典型重量</th><th>总算力预算</th></tr></thead>
+<tbody>
+<tr><td class="hl">室内悬停/竞速</td><td>IMU + 单目相机 + 光流</td><td>高速快门、高动态范围</td><td>无额外重量</td><td>< 2W（飞控芯片）</td></tr>
+<tr><td class="hl">消费级航拍</td><td>IMU + 双目相机 + GPS + 气压计</td><td>体积小、功耗低、成品模组</td><td>50-150g</td><td>3-8W</td></tr>
+<tr><td class="hl">工业测绘</td><td>IMU + RTK GPS + 正射相机/多光谱</td><td>高精度定位、payload能力强</td><td>500g-2kg</td><td>5-15W</td></tr>
+<tr><td class="hl">自主避障巡检</td><td>IMU + Lidar + 双目 + GPS + 热成像</td><td>360°避障、全天候</td><td>300-800g</td><td>15-50W</td></tr>
+<tr><td class="hl">科研/SLAM研究</td><td>多Lidar + 双目 + IMU + Optitrack</td><td>灵活性、精确真值</td><td>可定制</td><td>无限制</td></tr>
+</tbody>
+</table>
+
+<!-- ===== 2.4 算力平台 ===== -->
+<h2 class="section-h2">2.4 算力平台：从STM32到NVIDIA Jetson</h2>
+<p class="p">传感器融合算法的算力需求差异巨大。选型需要在"算得够快"和"功耗够低"之间找到平衡。</p>
+
+<h3 class="section-h3">2.4.1 微控制器层（MCU）</h3>
+<p class="p">飞控核心芯片，通常是<span class="kw">STM32H7</span>或类似MCU，负责IMU数据读取、姿态控制（EKF）、电机控制。基本不运行感知融合算法，功耗< 1W。</p>
+
+<h3 class="section-h3">2.4.2 单芯片计算机层（SBC）</h3>
+<p class="p">独立计算模块，运行高级感知算法。常见选型：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">💚</div><h4>Jetson Orin Nano</h4><p>40-60 TOPS算力，15-40W功耗，支持CUDA。运行VIO/LIO-SAM级别算法的主力平台。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🧡</div><h4>Qualcomm RB5/RB6</h4><p>15 TOPS，5-7.5W，专为机器人设计，内置5G。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">💜</div><h4>Google Edge TPU</h4><p>4 TOPS，2W，适合神经网络推理，但通用计算能力弱。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">💙</div><h4>Intel RealSense NUC</h4><p>集成深度相机模组，适合原型验证。</p></div>
+</div>
+
+<h3 class="section-h3">2.4.3 算力需求对照表</h3>
+<table class="tbl">
+<thead><tr><th>算法</th><th>算力需求</th><th>典型硬件</th><th>功耗</th><th>延迟</th></tr></thead>
+<tbody>
+<tr><td class="hl">EKF姿态估计</td><td>< 0.1 GFLOPS</td><td>STM32H7</td><td>< 1W</td><td>< 1ms</td></tr>
+<tr><td class="hl">光流 + 特征点</td><td>1-5 GFLOPS</td><td>STM32H7 / ESP32</td><td>1-2W</td><td>5-20ms</td></tr>
+<tr><td class="hl">VIO (OKSIS/VINS)</td><td>5-20 GFLOPS</td><td>Jetson Nano</td><td>5-10W</td><td>20-50ms</td></tr>
+<tr><td class="hl">LIO-SAM (Lidar+IMU)</td><td>20-50 GFLOPS</td><td>Jetson Orin Nano</td><td>10-20W</td><td>50-100ms</td></tr>
+<tr><td class="hl">语义分割 + 深度</td><td>100-500 GFLOPS</td><td>Jetson Orin NX</td><td>15-30W</td><td>100-300ms</td></tr>
+<tr><td class="hl">端到端神经网络</td><td>1-10 TOPS</td><td>Edge TPU / 昇腾</td><td>3-10W</td><td>可变</td></tr>
+</tbody>
+</table>
+
+<!-- ===== 2.5 总线与时间同步 ===== -->
+<h2 class="section-h2">2.5 总线架构与时间同步</h2>
+<p class="p">传感器数据如何传到计算单元？不同总线技术在带宽、延迟和可靠性上有显著差异：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🔌</div><h4>CAN Bus</h4><p>高可靠性，实时性好，带宽有限（1Mbps）。飞控与电机ESC之间的标准协议。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🌐</div><h4>Ethernet (100BASE-T)</h4><p>千兆以太网：高速Lidar（如Ouster OS1-128）的标准接口，带宽充足。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🖥️</div><h4>MIPI CSI-2</h4><p>摄像头专用接口，低功耗，高带宽。Jetson平台的标准摄像头接口。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">⏱️</div><h4>PTP / NTP / 硬件触发</h4><p>时间同步协议。PTP（IEEE 1588）可实现亚微秒级同步，是多传感器时间对齐的标准。</p></div>
+</div>
+
+<h3 class="section-h3">2.5.1 主流无人机通信总线对比</h3>
+<table class="tbl">
+<thead><tr><th>总线</th><th>带宽</th><th>延迟</th><th>典型应用</th><th>成本</th></tr></thead>
+<tbody>
+<tr><td class="hl">CAN Bus</td><td>1 Mbps</td><td>< 1ms</td><td>飞控→ESC电机控制</td><td>低</td></tr>
+<tr><td class="hl">I2C</td><td>400 kbps - 3.4 Mbps</td><td>1-10ms</td><td>IMU/气压计传感器</td><td>极低</td></tr>
+<tr><td class="hl">SPI</td><td>1-100 Mbps</td><td>< 1ms</td><td>高速传感器（IMU 8kHz采样）</td><td>低</td></tr>
+<tr><td class="hl">UART/MAVLink</td><td>0.5-2 Mbps</td><td>10-50ms</td><td>飞控与机载计算单元通信</td><td>低</td></tr>
+<tr><td class="hl">Ethernet (GigE)</td><td>1 Gbps</td><td>< 1ms</td><td>高速Lidar、全景相机</td><td>中</td></tr>
+<tr><td class="hl">USB 3.0</td><td>5 Gbps</td><td>< 1ms</td><td>深度相机、存储</td><td>中</td></tr>
+<tr><td class="hl">PCIe</td><td>8-32 GT/s</td><td>< 0.1ms</td><td>Jetson与加速模块</td><td>高</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>预告 Chapter 3-6：</strong>接下来四章我们将逐一深入每种核心传感器的物理原理、数据特性和算法基础——相机（第3章）、激光雷达（第4章）、IMU（第5章）、GPS与毫米波雷达（第6章）。这些是传感器融合的"原材料"，理解它们才能理解融合算法。</div></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>平台约束决定融合方案</h3><p><strong>① 多旋翼全向机动</strong>：所有方向运动都会产生姿态变化，对感知动态范围要求极高。<br><strong>② 分层飞控架构</strong>：传感器层→感知层→决策层→控制层，每层有明确职责。<br><strong>③ 实时性是生死线</strong>：感知延迟超过50ms会直接影响飞行稳定性。<br><strong>④ 算力-功耗权衡</strong>：Jetson Orin Nano是当前最流行的VIO/LIO-SAM运行平台，15-40W功耗。<br><strong>⑤ PTP时间同步</strong>：亚微秒级同步是多传感器数据对齐的标准方案。</p></div>
+
+</section>

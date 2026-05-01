@@ -1,0 +1,620 @@
+---
+import { courses, coursePath } from '../courses';
+import '../styles/global.css';
+
+const totalCourses = courses.length;
+const totalChapters = courses.reduce((sum, course) => sum + course.chapters.length, 0);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>学习空间 | 芯片设计与无人机传感器融合</title>
+    <meta
+      name="description"
+      content="同一套 Astro 框架下的多课程学习空间，包含芯片设计与制造、无人机传感器融合等课程。"
+    />
+    <style is:global>
+      body { margin: 0; }
+    </style>
+  </head>
+  <body>
+    <main class="home">
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-bg">
+          <div class="hero-glow glow-1"></div>
+          <div class="hero-glow glow-2"></div>
+          <div class="hero-grid-overlay"></div>
+        </div>
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            Learning Workspace
+          </div>
+          <h1 class="hero-title">
+            构建你的<br><span class="gradient-text">技术知识体系</span>
+          </h1>
+          <p class="hero-desc">
+            从晶体管到芯片架构，从传感器融合到SLAM系统——两门深度课程，30+章节，带你从入门到精通。
+          </p>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <span class="hero-stat-num">{totalCourses}</span>
+              <span class="hero-stat-label">门课程</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+              <span class="hero-stat-num">{totalChapters}</span>
+              <span class="hero-stat-label">章节</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+              <span class="hero-stat-num">30+</span>
+              <span class="hero-stat-label">小时内容</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Course Cards -->
+      <section class="courses-section">
+        <div class="courses-grid">
+          {courses.map((course) => (
+            <a class="course-card" href={coursePath(course.slug)}>
+              <div class="course-card-accent"></div>
+              <div class="course-card-icon-wrap">
+                <span class="course-card-icon">{course.icon}</span>
+              </div>
+              <div class="course-card-body">
+                <h2 class="course-card-title">{course.title}</h2>
+                <p class="course-card-sub">{course.subtitle}</p>
+                <p class="course-card-desc">{course.description}</p>
+              </div>
+              <div class="course-card-footer">
+                <div class="course-card-chapters">
+                  <span class="ch-num">{course.chapters.length}</span>
+                  <span class="ch-label">章节</span>
+                </div>
+                <div class="course-card-cta">
+                  开始学习
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="features-section">
+        <div class="features-header">
+          <h2 class="features-title">为什么选择这里？</h2>
+          <p class="features-sub">两门课程相辅相成，构建完整的智能硬件知识图谱</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <h3 class="feature-name">系统化知识</h3>
+            <p class="feature-desc">从底层物理到顶层应用，每章环环相扣，形成完整知识体系</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3 class="feature-name">聚焦工业实践</h3>
+            <p class="feature-desc">不是学术教科书，而是真实的芯片设计与无人机开发经验</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🧩</div>
+            <h3 class="feature-name">独立进度追踪</h3>
+            <p class="feature-desc">每门课程独立记录学习进度，从头开始或随时继续都由你决定</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3 class="feature-name">共享框架</h3>
+            <p class="feature-desc">两门课程共享同一布局与导航，在不同知识领域间无缝切换</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Path Section -->
+      <section class="path-section">
+        <div class="path-card">
+          <div class="path-visual">
+            <div class="path-node">
+              <div class="path-node-icon">⚡</div>
+              <div class="path-node-label">芯片设计</div>
+            </div>
+            <div class="path-line"></div>
+            <div class="path-node">
+              <div class="path-node-icon">🚀</div>
+              <div class="path-node-label">传感器融合</div>
+            </div>
+          </div>
+          <div class="path-text">
+            <h3 class="path-title">学习路径推荐</h3>
+            <p class="path-desc">先学芯片设计理解硬件基础，再学传感器融合掌握无人机智能——或按需选择感兴趣的方向。</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <style>
+      .home {
+        min-height: 100vh;
+        background: var(--bg);
+      }
+
+      /* Hero */
+      .hero {
+        position: relative;
+        padding: 80px 48px 72px;
+        overflow: hidden;
+      }
+
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .hero-glow {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.5;
+      }
+
+      .glow-1 {
+        width: 500px;
+        height: 500px;
+        top: -150px;
+        left: -100px;
+        background: radial-gradient(circle, rgba(15, 111, 255, 0.25), transparent 70%);
+      }
+
+      .glow-2 {
+        width: 400px;
+        height: 400px;
+        top: -50px;
+        right: 0;
+        background: radial-gradient(circle, rgba(131, 71, 255, 0.2), transparent 70%);
+      }
+
+      .hero-grid-overlay {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(15, 111, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(15, 111, 255, 0.03) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: radial-gradient(ellipse at 60% 0%, black 0%, transparent 70%);
+      }
+
+      .hero-content {
+        position: relative;
+        max-width: 720px;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(15, 111, 255, 0.08);
+        border: 1px solid rgba(15, 111, 255, 0.16);
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--accent);
+        letter-spacing: 0.04em;
+        margin-bottom: 24px;
+      }
+
+      .badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+      }
+
+      .hero-title {
+        font-size: clamp(2.4rem, 5vw, 3.8rem);
+        font-weight: 800;
+        line-height: 1.08;
+        letter-spacing: -0.04em;
+        margin: 0 0 20px;
+        color: var(--text);
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero-desc {
+        font-size: clamp(1rem, 1.4vw, 1.2rem);
+        line-height: 1.7;
+        color: var(--text-2);
+        max-width: 56ch;
+        margin: 0 0 32px;
+      }
+
+      .hero-stats {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .hero-stat {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .hero-stat-num {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text);
+        line-height: 1;
+      }
+
+      .hero-stat-label {
+        font-size: 12px;
+        color: var(--text-3);
+        letter-spacing: 0.04em;
+      }
+
+      .hero-stat-divider {
+        width: 1px;
+        height: 36px;
+        background: var(--border);
+      }
+
+      /* Courses Section */
+      .courses-section {
+        padding: 0 48px 64px;
+      }
+
+      .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        max-width: 1100px;
+      }
+
+      .course-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: 28px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        box-shadow: 0 8px 32px rgba(15, 20, 34, 0.06);
+        overflow: hidden;
+        transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .course-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(15, 111, 255, 0.3);
+        box-shadow: 0 20px 48px rgba(15, 20, 34, 0.12);
+      }
+
+      .course-card-accent {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        border-radius: 20px 20px 0 0;
+      }
+
+      .course-card:first-child .course-card-accent {
+        background: linear-gradient(90deg, #0f6fff, #8347ff);
+      }
+
+      .course-card:last-child .course-card-accent {
+        background: linear-gradient(90deg, #1f9d55, #0f6fff);
+      }
+
+      .course-card-icon-wrap {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 18px;
+        font-size: 26px;
+      }
+
+      .course-card:first-child .course-card-icon-wrap {
+        background: linear-gradient(135deg, rgba(15, 111, 255, 0.12), rgba(131, 71, 255, 0.1));
+      }
+
+      .course-card:last-child .course-card-icon-wrap {
+        background: linear-gradient(135deg, rgba(31, 157, 85, 0.12), rgba(15, 111, 255, 0.1));
+      }
+
+      .course-card-icon {
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .course-card-body {
+        flex: 1;
+        margin-bottom: 20px;
+      }
+
+      .course-card-title {
+        font-size: 1.3rem;
+        font-weight: 800;
+        margin: 0 0 6px;
+        letter-spacing: -0.02em;
+        color: var(--text);
+      }
+
+      .course-card-sub {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--accent);
+        margin: 0 0 12px;
+        letter-spacing: 0.02em;
+      }
+
+      .course-card-desc {
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--text-2);
+        margin: 0;
+      }
+
+      .course-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+
+      .course-card-chapters {
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+      }
+
+      .ch-num {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--text);
+      }
+
+      .ch-label {
+        font-size: 12px;
+        color: var(--text-3);
+      }
+
+      .course-card-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .course-card:hover .course-card-cta {
+        transform: translateX(2px);
+        box-shadow: 0 8px 20px rgba(15, 111, 255, 0.25);
+      }
+
+      .course-card-cta svg {
+        transition: transform 0.18s ease;
+      }
+
+      .course-card:hover .course-card-cta svg {
+        transform: translateX(3px);
+      }
+
+      /* Features */
+      .features-section {
+        padding: 48px 48px 72px;
+        background: linear-gradient(180deg, transparent, rgba(15, 111, 255, 0.03));
+      }
+
+      .features-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .features-title {
+        font-size: clamp(1.5rem, 2.5vw, 2rem);
+        font-weight: 800;
+        margin: 0 0 8px;
+        letter-spacing: -0.03em;
+        color: var(--text);
+      }
+
+      .features-sub {
+        font-size: 1rem;
+        color: var(--text-2);
+        margin: 0;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        max-width: 1100px;
+      }
+
+      .feature-card {
+        padding: 24px 20px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        text-align: center;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(15, 20, 34, 0.06);
+      }
+
+      .feature-icon {
+        font-size: 32px;
+        margin-bottom: 14px;
+      }
+
+      .feature-name {
+        font-size: 15px;
+        font-weight: 800;
+        margin: 0 0 8px;
+        color: var(--text);
+      }
+
+      .feature-desc {
+        font-size: 13px;
+        line-height: 1.65;
+        color: var(--text-2);
+        margin: 0;
+      }
+
+      /* Path */
+      .path-section {
+        padding: 0 48px 80px;
+      }
+
+      .path-card {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        max-width: 1100px;
+        padding: 32px 36px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: linear-gradient(135deg, rgba(15, 111, 255, 0.05), rgba(131, 71, 255, 0.03));
+      }
+
+      .path-visual {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-shrink: 0;
+      }
+
+      .path-node {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .path-node-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        font-size: 28px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 16px rgba(15, 20, 34, 0.06);
+      }
+
+      .path-node-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-2);
+      }
+
+      .path-line {
+        width: 48px;
+        height: 2px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        border-radius: 999px;
+      }
+
+      .path-text {
+        flex: 1;
+      }
+
+      .path-title {
+        font-size: 1.1rem;
+        font-weight: 800;
+        margin: 0 0 6px;
+        color: var(--text);
+      }
+
+      .path-desc {
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--text-2);
+        margin: 0;
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          padding: 56px 24px 48px;
+        }
+
+        .courses-section,
+        .features-section,
+        .path-section {
+          padding-left: 24px;
+          padding-right: 24px;
+        }
+
+        .courses-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .features-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .path-card {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .hero-stats {
+          flex-wrap: wrap;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-stats {
+          gap: 16px;
+        }
+
+        .hero-stat-divider {
+          display: none;
+        }
+      }
+    </style>
+  </body>
+</html>

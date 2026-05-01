@@ -1,0 +1,49 @@
+{
+  "$ref": "#/definitions/chapters",
+  "definitions": {
+    "chapters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "sidebarTitle": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "readTime": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string"
+        },
+        "groupLabel": {
+          "type": "string"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "sidebarTitle",
+        "summary",
+        "readTime",
+        "icon",
+        "group",
+        "groupLabel"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

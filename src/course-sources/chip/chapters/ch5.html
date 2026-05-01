@@ -1,0 +1,108 @@
+<section id="ch5">
+<div class="hero">
+<div class="chapter-tag">Chapter 5 · 设计架构</div>
+<h1>数字电路基础：<br>从模块到子系统</h1>
+<p class="sub">ALU、寄存器文件、状态机、总线——理解芯片内部的"器官"如何协同工作。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约40分钟</span><span class="hero-meta-item">📐 电路设计</span></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>回顾 Chapter 4：</strong>上一章我们掌握了逻辑门（NOT、NAND、NOR）和时序电路（触发器、寄存器、时钟）。本章将把这些"积木"组装成更大的"器官"——ALU、寄存器文件、状态机——这些模块是构建 CPU 和 SoC 的"预制件"。</div></div>
+
+<p class="lead">如果把芯片比作人体，晶体管是"细胞"，逻辑门是"组织"，那么 ALU、寄存器文件、状态机就是"器官"。本章将深入理解这些"器官"的结构和工作原理，为 Chapter 6 的芯片架构设计打下坚实基础。</p>
+
+<h2 class="section-h2">5.1 算术逻辑单元 (ALU)：芯片的"计算器"</h2>
+<p class="p"><span class="kw">ALU</span>（Arithmetic Logic Unit，算术逻辑单元）是 CPU 的核心执行单元——它负责执行所有的算术运算（加、减、乘、除）和逻辑运算（与、或、非、异或）。</p>
+
+<h3 class="section-h3">5.1.1 ALU 的内部结构</h3>
+<p class="p">一个典型的32位 ALU 包含以下组件：</p>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h4>算术单元</h4><p>包含加法器、减法器（通过补码把减法变成加法）、乘法器（ Booth 算法或阵列乘法器）。32位加法通常使用<span class="kw">超前进位加法器</span>（CLA）来减少延迟。</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h4>逻辑单元</h4><p>包含 AND、OR、XOR、NOT 等逻辑运算电路。这些运算可以并行执行，由选择信号决定输出哪一个。</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h4>移位单元</h4><p>实现左移、右移、循环移位。移位在二进制中相当于乘/除以2的幂，是极高效的运算。</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h4>比较单元</h4><p>比较两个数的大小，输出零标志（Zero Flag）、进位标志（Carry Flag）、溢出标志（Overflow Flag）等状态位。</p></div></div>
+</div>
+
+<h3 class="section-h3">5.1.2 超前进位加法器 (CLA)：打破串行瓶颈</h3>
+<p class="p">简单的行波进位加法器（Ripple-Carry Adder）把32个全加器串起来——第1位的进位输出连接到第2位的进位输入，依此类推。这种结构的延迟是32个门延迟，太慢了。</p>
+<p class="p"><span class="kw">超前进位加法器</span>（Carry-Lookahead Adder, CLA）通过"预测"进位来打破串行依赖：它同时计算所有位的"生成信号"（G = A AND B）和"传播信号"（P = A XOR B），然后用树状结构并行计算所有进位。32位 CLA 的延迟从32个门降低到约6个门——这是 CPU 能运行在 GHz 频率的关键之一。</p>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>跨章关联：</strong>CLA 的"树状并行"思想在芯片设计中无处不在——Chapter 6 中的缓存 Tag 比较、Chapter 7 中 GPU 的并行计算单元、Chapter 13 中 AI 加速器的脉动阵列，本质上都是这种"把串行变成并行"的优化策略。</div></div>
+
+<h2 class="section-h2">5.2 寄存器文件：CPU 的"工作台"</h2>
+<p class="p"><span class="kw">寄存器文件</span>（Register File）是 CPU 内部的一组高速存储单元——比内存快100倍以上，但容量极小（通常只有32个或64个32位寄存器）。它是 ALU 的"工作台"：运算数据从寄存器来，运算结果回寄存器去。</p>
+
+<h3 class="section-h3">5.2.1 寄存器文件的物理实现</h3>
+<p class="p">寄存器文件本质上是一个小型 SRAM（静态随机存取存储器）阵列：</p>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📍</div><h4>译码器</h4><p>把寄存器编号（如 R5）译码为字线（Word Line），选中对应的寄存器行。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📤</div><h4>读出电路</h4><p>通过位线（Bit Line）将选中寄存器的值读出，经过灵敏放大器（Sense Amplifier）放大后输出。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">📥</div><h4>写入电路</h4><p>通过写驱动器将新值写入选中寄存器的存储单元（通常是6晶体管 SRAM 单元）。</p></div>
+</div>
+
+<h3 class="section-h3">5.2.2 为什么寄存器比内存快100倍？</h3>
+<p class="p">寄存器文件和内存（DRAM）都是存储器，但速度差异巨大，原因有三：</p>
+<div class="tags">
+<span class="tag t-blue">距离近：寄存器在 CPU 核心内部，信号只需走几微米</span>
+<span class="tag t-green">电路简单：SRAM 单元只需6个晶体管，读出无需刷新</span>
+<span class="tag t-orange">并行访问：寄存器文件支持同时读2个、写1个寄存器</span>
+</div>
+<p class="p">相比之下，DRAM 单元只有1个晶体管+1个电容，但需要定期刷新（电容漏电），且位于 CPU 外部的独立芯片上，信号要穿过 PCB 走线和封装引脚——距离远了几个数量级。</p>
+
+<h2 class="section-h2">5.3 有限状态机 (FSM)：芯片的"决策大脑"</h2>
+<p class="p"><span class="kw">有限状态机</span>（Finite State Machine, FSM）是数字电路中实现"决策逻辑"的核心结构。它由三部分组成：当前状态（存储在寄存器中）、下一状态逻辑（组合逻辑）、输出逻辑（组合逻辑）。</p>
+
+<h3 class="section-h3">5.3.1 FSM 的两种类型</h3>
+<table class="tbl">
+<thead><tr><th>类型</th><th>输出依赖</th><th>特点</th><th>典型应用</th></tr></thead>
+<tbody>
+<tr><td class="hl">Mealy 型</td><td>当前状态 + 输入</td><td>输出响应更快，但可能产生毛刺</td><td>通信协议控制器</td></tr>
+<tr><td class="hl">Moore 型</td><td>仅当前状态</td><td>输出稳定，时序分析更简单</td><td>CPU 控制单元</td></tr>
+</tbody>
+</table>
+
+<h3 class="section-h3">5.3.2 CPU 控制单元：最大的 FSM</h3>
+<p class="p">CPU 的<span class="kw">控制单元</span>（Control Unit）本质上就是一个巨大的 FSM。它根据当前指令（状态）和时钟节拍，生成控制信号：ALU 做什么运算、寄存器文件读哪个地址、数据往哪里送、内存读还是写……</p>
+<p class="p">现代 CPU 的控制单元极其复杂——一条指令可能需要几十个时钟周期来完成（取指、译码、执行、访存、写回），每个周期控制单元都要输出数十个控制信号。这就是为什么 CPU 设计是芯片设计中最具挑战性的领域之一。</p>
+
+<h2 class="section-h2">5.4 总线：芯片内部的"高速公路"</h2>
+<p class="p">芯片内部有数十个模块需要相互通信——CPU、GPU、内存控制器、USB 控制器、显示引擎……它们通过<span class="kw">总线</span>（Bus）连接。总线是芯片内部的"高速公路系统"。</p>
+
+<h3 class="section-h3">5.4.1 总线的三个组成部分</h3>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🛣️</div><h4>地址总线</h4><p>指明"和谁通信"——发送目标模块的地址编号。宽度决定可寻址空间（32位→4GB，64位→16EB）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📦</div><h4>数据总线</h4><p>传输实际数据。宽度决定单次传输的数据量（64位总线一次传8字节）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🚦</div><h4>控制总线</h4><p>协调通信时序——读/写信号、就绪信号、中断请求等。</p></div>
+</div>
+
+<h3 class="section-h3">5.4.2 总线仲裁：谁先用"高速公路"？</h3>
+<p class="p">当多个模块同时想使用总线时，需要<span class="kw">总线仲裁</span>（Bus Arbitration）来决定优先级。常见的仲裁策略：</p>
+<div class="tags">
+<span class="tag t-blue">固定优先级：CPU 永远优先，DMA 次之</span>
+<span class="tag t-green">轮询：每个模块轮流使用，公平但效率低</span>
+<span class="tag t-orange">最小剩余时间优先：快完成的模块优先，减少等待</span>
+</div>
+
+<h2 class="section-h2">5.5 存储器层次：金字塔结构</h2>
+<p class="p">芯片需要存储器来保存程序和数据，但"快"和"大"是矛盾的——最快的存储器（寄存器）最小，最大的存储器（硬盘/SSD）最慢。解决方案是<span class="kw">存储器层次结构</span>（Memory Hierarchy）——用金字塔结构平衡速度、容量和成本。</p>
+
+<div class="pyramid">
+<div class="pyr p1">寄存器 (Register) — 最快、最小、最贵 — ~1KB, ~1ns</div>
+<div class="pyr p2">L1 缓存 — 32-64KB, ~2ns</div>
+<div class="pyr p3">L2/L3 缓存 — 256KB-64MB, ~5-20ns</div>
+<div class="pyr p4">主内存 (DRAM) — 8-128GB, ~100ns</div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>跨章关联：</strong>这个存储器层次结构是理解 Chapter 6（芯片架构）和 Chapter 7（CPU vs GPU vs ASIC）的关键。CPU 的设计哲学是"让缓存命中率达到99%"；GPU 的设计哲学是"用海量并行掩盖内存延迟"；而 ASIC（如 Taalas HC1）的设计哲学是"把数据流固定死，彻底消除缓存未命中的可能"。三种哲学，三种硬件形态。</div></div>
+
+<div class="divider"></div>
+
+<!-- 学习路线与资源 -->
+<div class="card green" style="margin-bottom:16px"><div class="card-label">📚 本章学习路线</div><h3>数字电路模块学习路径</h3><p><strong>第1步：ALU设计（20分钟）</strong>——5.1节是数字电路模块的核心。理解ALU如何用选择信号在"加/减/与/或"之间切换，这是CPU执行指令的基础单元。重点：进位链的物理实现。<br><strong>第2步：寄存器与存储器（20分钟）</strong>——5.2节寄存器文件是多端口SRAM，理解"读/写端口分离"的必要性。重点：为什么寄存器文件是"哈佛架构"的典型代表。<br><strong>第3步：状态机（20分钟）</strong>——5.3节FSM。CPU的控制单元本质上是最大的状态机。用"自动贩卖机"的例子理解Mealy型和Moore型的区别。<br><strong>第4步：总线与存储层次（20分钟）</strong>——5.4-5.5节。总线仲裁解决竞争问题；存储金字塔理解为什么要有缓存（Cache）。</p></div>
+
+<div class="card orange" style="margin-bottom:16px"><div class="card-label">🔗 推荐课程与学习资源</div><h3>优质免费资源</h3><p><strong>🎓 计算机体系结构课程：</strong><br>• <a href="https://www.coursera.org/learn/computer-architecture" target="_blank" rel="noopener">Coursera: Computer Architecture (Princeton)</a> — 普林斯顿计算机体系结构基础课，第3-4讲ALU和寄存器，第5讲总线和存储<br>• <a href="https://www.youtube.com/playlist?list=PLrdd97i7LSpRE8yD1pMJCBqLdThaL7B4d" target="_blank" rel="noopener">YouTube: Computer Architecture playlist</a> — 美国空军学院出品，配合课程学习<br><br><strong>📖 推荐阅读：</strong><br>• 《计算机组成与设计：硬件/软件接口》(Patterson &amp; Hennessy) 第3版 — RISC-V版新增了现代体系结构内容，第2-4章对应本章<br>• 《自己动手写CPU》(雷思磊) — 国内作者用Verilog实现MIPS处理器，实践性极强，适合作为本章的实战项目<br><br><strong>🛠️ 动手实践：</strong><br>• 在 Logisim 中实现一个简易ALU（支持加减与或），约2-3小时即可完成<br>• 在 HDLBits 做 <a href="https://hdlbits.01xz.net/wiki/Always_ff2" target="_blank" rel="noopener">FSM练习题</a> — 状态机专项</p></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>数字电路的"器官"</h3><p><strong>① ALU</strong>：执行算术和逻辑运算，核心组件是超前进位加法器（CLA）。<br><strong>② 寄存器文件</strong>：CPU 的高速工作台，基于 SRAM，支持同时读写。<br><strong>③ FSM</strong>：有限状态机，实现决策逻辑，CPU 控制单元是最大的 FSM。<br><strong>④ 总线</strong>：芯片内部通信的"高速公路"，包含地址、数据、控制三组信号。<br><strong>⑤ 存储器层次</strong>：寄存器→L1→L2→L3→DRAM 的金字塔结构，平衡速度、容量、成本。</p></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>预告 Chapter 6：</strong>现在你已经理解了 ALU、寄存器、FSM、总线和存储器层次。下一步是把这些"器官"组合成一个完整的"身体"——<strong>芯片架构设计</strong>。你将看到流水线、超标量、乱序执行、分支预测等高级技术如何让 CPU 的性能提升数十倍。</div></div>
+
+</section>

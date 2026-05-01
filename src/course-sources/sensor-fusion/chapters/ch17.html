@@ -1,0 +1,93 @@
+<section id="ch17">
+<div class="hero">
+<div class="chapter-tag">Chapter 17 · 附录</div>
+<h1>开源项目与工具链：<br>站在巨人的肩膀上</h1>
+<p class="sub">从ROS/ROS2到Gazebo/AirSim，从VINS-Mono到LIO-SAM——构建你的第一套无人机感知系统。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约25分钟</span><span class="hero-meta-item">🛠️ 实践资源</span></div>
+</div>
+<p class="lead">无人机传感器融合是一个工程性极强的领域——纸上谈兵不如动手实践。本章整理了最实用的开源项目、仿真工具和数据集，帮助你快速搭建实验环境。</p>
+
+<h2 class="section-h2">17.1 机器人操作系统：ROS/ROS2</h2>
+<p class="p"><span class="kw">ROS</strong>（Robot Operating System）是机器人软件开发的事实标准——它不是操作系统，而是一套消息传递中间件（基于发布-订阅模式）和工具链。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🔴</div><h4>ROS1 (Noetic)</h4><p>最成熟，社区资源最丰富，但实时性差、单master架构有单点故障问题。新项目不推荐使用ROS1。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#4CAF50">🟢</div><h4>ROS2 (Humble/Foxy)</h4><p>新一代ROS，支持实时性、分布式、多平台。是当前和未来的主流选择。PX4、Cartographer等均已支持ROS2。</p></div>
+</div>
+
+<h2 class="section-h2">17.2 仿真平台</h2>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🏗️</div><h4>Gazebo</h4><p>最流行的开源机器人仿真器，支持物理引擎和传感器仿真。ROS1/ROS2原生集成。PX4 SITL（软件在环仿真）基于Gazebo。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🚁</div><h4>AirSim</h4><p>微软开源，基于Unreal Engine，视觉效果逼真。支持Lidar、相机、IMU等多种传感器仿真，适合感知算法测试。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🎮</div><h4>RotorS</h4><p>ETHZ开发的Gazebo插件，专为多旋翼设计。PX4官方推荐仿真工具。</p></div>
+</div>
+
+<h2 class="section-h2">17.3 开源融合算法</h2>
+<table class="tbl">
+<thead><tr><th>项目</th><th>语言</th><th>平台</th><th>特点</th><th>GitHub</th></tr></thead>
+<tbody>
+<tr><td class="hl">VINS-Mono</td><td>C++</td><td>ROS1</td><td>最流行VIO，回环强</td><td>HKUST-Aerial-Robotics/VINS-Mono</td></tr>
+<tr><td class="hl">VINS-Fusion</td><td>C++</td><td>ROS1</td><td>VINS-Mono多相机版</td><td>HKUST-Aerial-Robotics/VINS-Fusion</td></tr>
+<tr><td class="hl">OKVIS</td><td>C++</td><td>ROS1</td><td>多目VIO，精度高</td><td>ethz-asl/okvis</td></tr>
+<tr><td class="hl">LIO-SAM</td><td>C++</td><td>ROS1</td><td>Lidar+IMU融合</td><td>TixiaoShan/LIO-SAM</td></tr>
+<tr><td class="hl">LVI-SAM</td><td>C++</td><td>ROS1</td><td>Lidar+Visual+IMU</td><td>Jaeyoung-Lim/LVI-SAM</td></tr>
+<tr><td class="hl">Fast-LIO2</td><td>C++</td><td>ROS1/ROS2</td><td>iEKF，紧耦合，超快</td><td>hku-mars/fast_lio</td></tr>
+</tbody>
+</table>
+
+<h2 class="section-h2">17.4 数据集</h2>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📂</div><h4>EuRoC MAV</h4><p>ETHZ经典VIO数据集，配备Vicon动作捕捉系统提供真值。室内场景，包含机器视觉（Machine Hall）和走廊（Vicon Room）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🛰️</div><h4>UALA/UAV datasets</h4><p>多个户外大规模UAV数据集，包含RTK GPS真值，适合测试LIO-SAM等户外算法。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🚁</div><h4>KITTI Vision</h4><p>自动驾驶最权威数据集（汽车平台，但Lidar数据对无人机也有参考价值）。包含城市道路、乡村公路等场景。</p></div>
+</div>
+
+<h2 class="section-h2">17.5 行业动态与最新进展（2024-2025）</h2>
+<p class="p">无人机传感器融合领域正在快速演进，以下是关键趋势：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🤖</div><h4>Transformer融入VIO</h4><p>DIFT等Transformer-based方法开始替代传统CNN用于特征匹配，精度提升约15%，但计算量增加3-5倍。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📡</div><h4>4D毫米波雷达</h4><p>新一代4D成像雷达（Arbe、华为）开始量产，提供点云+速度+高度信息，有效弥补视觉/Lidar在雨雾天的不足。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🧠</div><h4>神经辐射场（NeRF）辅助SLAM</h4><p>NeRF用于稠密建图和语义标注，但计算量巨大，目前主要处于研究阶段。</p></div>
+</div>
+
+<table class="tbl">
+<thead><tr><th>技术方向</th><th>成熟度</th><th>代表成果</th><th>2025年预测</th></tr></thead>
+<tbody>
+<tr><td class="hl">VIO（LIO-SAM/VINS）</td><td class="hl">⭐⭐⭐⭐⭐ 成熟</td><td>LIO-SAM已成为户外标配</td><td>边缘芯片固化成为趋势</td></tr>
+<tr><td class="hl">多机协同SLAM</td><td class="hl">⭐⭐⭐ 发展中</td><td>ETH的MapLab2</td><td>达到10机以上规模</td></tr>
+<tr><td class="hl">端到端感知规划</td><td class="hl">⭐⭐ 研究中</td><td>UC Berkeley的DON</td><td>部分商业落地</td></tr>
+<tr><td class="hl">事件相机融合</td><td class="hl">⭐⭐ 研究中</td><td>Dynamic Vision Sensor</td><td>高动态场景成为标配</td></tr>
+</tbody>
+</table>
+
+<h2 class="section-h2">17.6 学习路线建议</h2>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h4>搭建仿真环境（1周）</h4><p>安装ROS2 + Gazebo + PX4 SITL，在仿真中飞行第一架无人机。体验完整的感知-控制链路。</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h4>运行VIO（1周）</h4><p>下载EuRoC MAV数据集，运行VINS-Mono。观察因子图、优化过程和输出轨迹。</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h4>运行LIO-SAM（1周）</h4><p>用ULH等户外Lidar数据集运行LIO-SAM。理解因子图构建、回环检测、全局优化。</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h4>部署到真机（持续）</h4><p>将算法部署到Jetson Orin+无人机平台。调参、标定、实测——这是真正的挑战。</p></div></div>
+</div>
+
+<div class="card orange"><div class="card-label">🔗 核心资源汇总</div><h3>必收藏的链接</h3><p>
+<strong>📦 仿真：</strong><br>
+• PX4 Dev Guide: <a href="https://docs.px4.io/" target="_blank" rel="noopener">docs.px4.io</a><br>
+• Gazebo: <a href="https://gazebosim.org" target="_blank" rel="noopener">gazebosim.org</a><br>
+<strong>🛠️ 开源算法：</strong><br>
+• VINS-Mono: <a href="https://github.com/HKUST-Aerial-Robotics/VINS-Mono" target="_blank" rel="noopener">github.com/HKUST-Aerial-Robotics/VINS-Mono</a><br>
+• LIO-SAM: <a href="https://github.com/TixiaoShan/LIO-SAM" target="_blank" rel="noopener">github.com/TixiaoShan/LIO-SAM</a><br>
+• Fast-LIO2: <a href="https://github.com/hku-mars/fast_lio" target="_blank" rel="noopener">github.com/hku-mars/fast_lio</a><br>
+<strong>📂 数据集：</strong><br>
+• EuRoC MAV: <a href="https://projects.asl.ethz.ch/datasets/doku.php?id=kmavvisualinertialdatasets" target="_blank" rel="noopener">ETHZ ASL Dataset</a><br>
+• KITTI: <a href="http://www.cvlibs.net/datasets/kitti/" target="_blank" rel="noopener">cvlibs.net/datasets/kitti</a>
+</p></div>
+
+<div class="card blue"><div class="card-label">教程完结</div><h3>从感知到飞行：你的无人机智能之旅</h3><p>恭喜你完成了这本教程的全部17章！你现在应该对无人机传感器融合有了系统性的理解：<br><br>
+<strong>Part I</strong>：传感器融合概论、无人机平台架构<br>
+<strong>Part II</strong>：相机、Lidar、IMU、GPS的单传感器深度<br>
+<strong>Part III</strong>：时空标定、概率滤波、KF/EKF、因子图优化、VIO、Lidar+视觉融合<br>
+<strong>Part IV</strong>：融合定位、路径规划、集群协同、嵌入式部署<br>
+<strong>附录</strong>：开源工具链与实践路线<br><br>
+下一步：在仿真中飞起来，在真机上落地，在研究中深入。愿你飞得更高、看得更清、融得更稳。</p></div>
+
+</section>

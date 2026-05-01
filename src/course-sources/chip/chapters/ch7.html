@@ -1,0 +1,125 @@
+<section id="ch7">
+<div class="hero">
+<div class="chapter-tag">Chapter 7 · 设计架构</div>
+<h1>CPU、GPU、FPGA、ASIC：<br>四种计算范式的终极对比</h1>
+<p class="sub">从通用到专用，从灵活到高效——理解为什么无人机最终需要 ASIC，以及 Taalas 为什么选择这条路线。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约45分钟</span><span class="hero-meta-item">💻 架构对比</span></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>回顾 Chapter 6：</strong>上一章我们深入理解了现代 CPU 的复杂架构——流水线、超标量、乱序执行、分支预测、缓存一致性。这些机制让 CPU 能高效处理"任何程序"，但也付出了巨大的硬件和功耗代价。本章将展示：当任务足够明确时，放弃这些通用机制、走向专用化，可以获得数量级的效率提升。</div></div>
+
+<p class="lead">CPU 是"瑞士军刀"——什么都能做，但什么都不精。GPU 是"美术刀阵"——擅长并行切割。FPGA 是"可重构模具"——能变成任何形状。ASIC 是"专用模具"——只为一个产品优化到极致。理解这四种计算范式的本质差异，是理解无人机硬件加速路径的钥匙。</p>
+
+<h2 class="section-h2">7.1 CPU：通用计算的"瑞士军刀"</h2>
+<p class="p">CPU 的设计哲学是<span class="kw">"优化单线程延迟"</span>（Optimize Single-Thread Latency）。它假设程序是串行的、充满条件分支的、数据访问模式不可预测的——因此配备了大量通用机制来应对这些不确定性。</p>
+
+<h3 class="section-h3">7.1.1 CPU 的"通用税"</h3>
+<p class="p">CPU 为了"通用性"付出了哪些代价？</p>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon">🎯</div><h4>分支预测</h4><p>15-25%的晶体管用于预测程序走向。猜错一次惩罚10-20周期。</p></div>
+<div class="card-sm"><div class="card-sm-icon">🔄</div><h4>乱序执行</h4><p>ROB、保留站、寄存器重命名——30-40%的晶体管用于打破指令顺序。</p></div>
+<div class="card-sm"><div class="card-sm-icon">💾</div><h4>大缓存</h4><p>L1/L2/L3 缓存占芯片面积40-60%。缓存未命中时性能骤降。</p></div>
+<div class="card-sm"><div class="card-sm-icon">🌐</div><h4>缓存一致性</h4><p>多核之间的 MESI 协议消耗总线带宽和功耗。</p></div>
+</div>
+
+<div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>关键洞察：</strong>对于 AI 推理这样的"数据流任务"（输入→层层计算→输出，没有分支、没有乱序、数据访问完全可预测），CPU 的所有通用机制都是<strong>纯粹的开销</strong>。分支预测器永远猜对（因为没有分支），乱序执行没有东西可乱序，大缓存不需要（数据流是顺序访问）。这就是为什么 ASIC 可以把效率提升到 CPU 的100倍以上。</div></div>
+
+<h2 class="section-h2">7.2 GPU：并行计算的"美术刀阵"</h2>
+<p class="p">GPU 的设计哲学是<span class="kw">"优化吞吐量"</span>（Optimize Throughput）。它假设任务可以被分解成成千上万个独立的子任务——比如渲染屏幕上的每个像素、计算神经网络中的每个神经元。</p>
+
+<h3 class="section-h3">7.2.1 GPU 的架构：SIMT</h3>
+<p class="p">GPU 使用<span class="kw">SIMT</span>（Single Instruction, Multiple Threads，单指令多线程）架构：</p>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h4>流式多处理器 (SM)</h4><p>GPU 由数十到上百个 SM 组成，每个 SM 包含几十个 CUDA 核心（ALU）。</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h4>Warp 调度</h4><p>32个线程组成一个 Warp，共享同一条指令。Warp 内的所有线程同时执行相同的指令，但处理不同的数据。</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h4>零开销线程切换</h4><p>当某个 Warp 等待内存时，SM 立即切换到另一个就绪的 Warp——用"线程级并行"掩盖内存延迟。</p></div></div>
+</div>
+
+<h3 class="section-h3">7.2.2 GPU 的优势与劣势</h3>
+<table class="tbl">
+<thead><tr><th>维度</th><th>GPU 优势</th><th>GPU 劣势</th></tr></thead>
+<tbody>
+<tr><td class="hl">并行度</td><td>数千线程同时运行</td><td>单线程性能弱于 CPU</td></tr>
+<tr><td class="hl">内存带宽</td><td>HBM 提供 TB/s 级带宽</td><td>延迟高，需用并行掩盖</td></tr>
+<tr><td class="hl">编程模型</td><td>CUDA/OpenCL 成熟</td><td>需要显式管理内存和并行</td></tr>
+<tr><td class="hl">功耗</td><td>每瓦性能优于 CPU</td><td>峰值功耗极高（300-700W）</td></tr>
+<tr><td class="hl">灵活性</td><td>可编程，支持多种算法</td><td>不适合串行、分支多的任务</td></tr>
+</tbody>
+</table>
+
+<div class="card orange"><div class="card-label">无人机场景</div><h3>为什么 GPU 不是无人机的最佳选择？</h3><p>NVIDIA Jetson 系列（如 Jetson Orin）是无人机视觉 AI 的常用平台，但它有致命缺陷：<strong>功耗太高</strong>（15-60W）。对于续航30分钟的消费级无人机，电池容量通常只有5000mAh@11.1V（约55Wh），Jetson Orin  alone 就能在1小时内耗尽全部电量。这就是为什么大疆等厂商最终走向自研 ASIC。</p></div>
+
+<h2 class="section-h2">7.3 FPGA：可重构的"万能积木"</h2>
+<p class="p"><span class="kw">FPGA</span>（Field-Programmable Gate Array，现场可编程门阵列）是"硬件软件化"的极致——它由大量可编程逻辑单元和可编程互连组成，你可以用硬件描述语言（HDL）定义任何数字电路，然后"烧录"到 FPGA 中。</p>
+
+<h3 class="section-h3">7.3.1 FPGA 的内部结构</h3>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon">🔲</div><h4>可编程逻辑单元 (LUT)</h4><p>每个 LUT 是一个小型查找表（如6输入1输出），可以实现任意6输入布尔函数。成千上万个 LUT 组合成任何逻辑。</p></div>
+<div class="card-sm"><div class="card-sm-icon">🔗</div><h4>可编程互连</h4><p>LUT 之间通过可编程开关矩阵连接。你可以定义任何连线方式——就像在空中搭建任意电路。</p></div>
+<div class="card-sm"><div class="card-sm-icon">💾</div><h4>块 RAM (BRAM)</h4><p>片上分布式 SRAM，用于存储数据和中间结果。每个 BRAM 通常是 18Kb 或 36Kb。</p></div>
+<div class="card-sm"><div class="card-sm-icon">⚡</div><h4>DSP 切片</h4><p>专用的乘加单元（MAC），用于加速数字信号处理和 AI 推理中的矩阵乘法。</p></div>
+</div>
+
+<h3 class="section-h3">7.3.2 FPGA 的独特价值</h3>
+<p class="p">FPGA 在芯片开发流程中扮演<span class="kw">"原型验证平台"</span>的角色：</p>
+<div class="tags">
+<span class="tag t-blue">✅ 可重构：同一硬件可以运行不同算法</span>
+<span class="tag t-green">✅ 开发周期短：几周即可验证架构</span>
+<span class="tag t-orange">✅ 流片前验证：在真实硬件上测试设计</span>
+<span class="tag t-red">❌ 成本高：单颗 FPGA 数千美元</span>
+<span class="tag t-red">❌ 功耗高：可编程互连消耗大量电力</span>
+<span class="tag t-red">❌ 频率低：通常只能跑到100-300MHz</span>
+</div>
+
+<h2 class="section-h2">7.4 ASIC：专用集成电路的极致效率</h2>
+<p class="p"><span class="kw">ASIC</span>（Application-Specific Integrated Circuit，专用集成电路）是为单一特定任务设计的芯片。它放弃了所有通用性，把每一颗晶体管都用在刀刃上。</p>
+
+<h3 class="section-h3">7.4.1 ASIC 的效率来源</h3>
+<div class="card green"><div class="card-label">为什么 ASIC 比 CPU/GPU 高效100倍？</div><h3>去除一切通用开销</h3><p><strong>① 没有分支预测</strong>：数据流固定，路径预先确定。<br><strong>② 没有乱序执行</strong>：计算顺序在编译时确定，硬件只需按顺序执行。<br><strong>③ 没有大缓存</strong>：数据流从输入到输出，不需要随机访问内存。<br><strong>④ 没有缓存一致性</strong>：通常是单核或确定性多核，无需复杂协议。<br><strong>⑤ 定制化数据通路</strong>：每个运算单元的位置和连接都为特定算法优化。<br><strong>⑥ 低精度运算</strong>：AI 推理只需要 INT8/INT4，不需要 CPU 的64位浮点单元。</p></div>
+
+<h3 class="section-h3">7.4.2 ASIC 的代价</h3>
+<table class="tbl">
+<thead><tr><th>代价类型</th><th>具体描述</th><th>金额/时间</th></tr></thead>
+<tbody>
+<tr><td class="hl">设计成本</td><td>RTL设计、验证、物理设计</td><td>5000万-2亿美元</td></tr>
+<tr><td class="hl">掩模版成本</td><td>5nm工艺一套掩模版</td><td>3000万-5000万美元</td></tr>
+<tr><td class="hl">流片成本</td><td>试生产一批晶圆</td><td>数千万美元</td></tr>
+<tr><td class="hl">时间成本</td><td>从设计到量产</td><td>2-3年</td></tr>
+<tr><td class="hl">灵活性</td><td>流片后无法修改功能</td><td>零</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>跨章关联：</strong>Taalas HC1（Chapter 11）正是 ASIC 的极致案例——它把 Transformer 模型的权重直接"固化"在芯片的金属连线中，推理时不需要任何内存访问。这种"权重即电路"的设计让它的能效比达到 GPU 的100倍以上。而 Chapter 12 将展示：大疆等无人机厂商如何通过"自研 ASIC"把视觉 AI 的功耗从 GPU 的数十瓦降低到 ASIC 的1-2瓦。</div></div>
+
+<h2 class="section-h2">7.5 四种范式的量化对比</h2>
+<div class="stats">
+<div class="stat"><div class="stat-val">1x</div><div class="stat-lbl">CPU 能效基准</div></div>
+<div class="stat"><div class="stat-val">10x</div><div class="stat-lbl">GPU 能效提升</div></div>
+<div class="stat"><div class="stat-val">50x</div><div class="stat-lbl">FPGA 能效提升</div></div>
+<div class="stat"><div class="stat-val">100x+</div><div class="stat-lbl">ASIC 能效提升</div></div>
+</div>
+
+<table class="tbl">
+<thead><tr><th>维度</th><th>CPU</th><th>GPU</th><th>FPGA</th><th>ASIC</th></tr></thead>
+<tbody>
+<tr><td class="hl">灵活性</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐</td></tr>
+<tr><td class="hl">峰值性能</td><td>⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td class="hl">能效比</td><td>⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td class="hl">开发成本</td><td>⭐（买现成）</td><td>⭐（买现成）</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td class="hl">开发周期</td><td>零</td><td>零</td><td>周-月</td><td>年</td></tr>
+<tr><td class="hl">适合场景</td><td>通用计算</td><td>并行计算</td><td>原型验证</td><td>量产产品</td></tr>
+</tbody>
+</table>
+
+<div class=”divider”></div>
+
+<!-- 学习路线与资源 -->
+<div class=”card green”><div class=”card-label”>📚 本章学习路线</div><h3>芯片架构学习路径</h3><p><strong>第1步：CPU 通用税（15分钟）</strong>——7.1节。抓住分支预测、乱序执行和缓存一致性这三条主线，理解通用计算为什么”什么都能做，但什么都不便宜”。<br><strong>第2步：GPU 吞吐量（20分钟）</strong>——7.2节。把 SIMT、Warp 调度和内存延迟隐藏这套机制想清楚，建立”吞吐优先”的思维方式。<br><strong>第3步：FPGA 可重构性（20分钟）</strong>——7.3节。理解 LUT、互连、BRAM 和 DSP 如何拼出一块可编程硬件。<br><strong>第4步：ASIC 极致效率（15分钟）</strong>——7.4-7.5节。看懂专用化如何换来数量级能效提升，并自然过渡到后续的 AI 芯片章节。</p></div>
+
+<div class=”card orange”><div class=”card-label”>🔗 推荐课程与学习资源</div><h3>优质免费资源</h3><p><strong>🎓 架构课程：</strong><br>• MIT 6.004: Computation Structures — 计算机体系结构经典公开课，覆盖组合逻辑、时序电路和处理器设计<br>• UC Berkeley CS61C — 侧重 RISC-V、缓存和并行计算，适合建立体系结构直觉<br>• Nand2Tetris — 从逻辑门一路搭到 CPU，最适合理解硬件是如何层层构建出来的<br><br><strong>📖 推荐阅读：</strong><br>• 《Computer Architecture: A Quantitative Approach》— 体系结构圣经，帮助你理解性能、功耗和复杂度权衡<br>• NVIDIA CUDA Programming Guide — 了解 GPU 吞吐量模型的官方资料<br><br><strong>🛠️ 实践工具：</strong><br>• Xilinx / Intel FPGA 教程 — 体验硬件可重构设计<br>• 开源 RISC-V 内核项目（如 PicoRV32）— 看看一颗简化 CPU 是如何实现的</p></div>
+
+<div class=”card blue”><div class=”card-label”>本章关键概念</div><h3>四种计算范式的核心要点</h3><p><strong>① CPU（瑞士军刀）</strong>：优化单线程延迟，配备分支预测、乱序执行、大缓存。适合通用任务，但”通用税”高。<br><strong>② GPU（美术刀阵）</strong>：优化吞吐量，SIMT 架构用并行掩盖延迟。适合并行任务，但功耗高。<br><strong>③ FPGA（万能积木）</strong>：可重构硬件，LUT+BRAM+DSP。适合原型验证，介于灵活性和效率之间。<br><strong>④ ASIC（专用模具）</strong>：为特定任务定制，效率最高。适合量产产品，但灵活性最低。</p></div>
+
+<div class=”callout callout-info”><div class=”callout-icon”>🔜</div><div class=”callout-text”><strong>预告 Chapter 8：</strong>ASIC 的高效率是有代价的——它需要经历极其复杂的芯片制造流程。下一章将带你走进晶圆厂，理解芯片如何从”设计图纸”变成”真实硅片”——光刻、刻蚀、离子注入、CVD、CMP……数百道工序。</div></div>
+
+</section>

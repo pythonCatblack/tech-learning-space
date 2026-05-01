@@ -1,0 +1,98 @@
+<section id="ch16">
+<div class="hero">
+<div class="chapter-tag">Chapter 16 · 应用与部署</div>
+<h1>嵌入式部署与硬件加速：<br>把算法装进无人机</h1>
+<p class="sub">模型量化、TensorRT加速、ROS2实时化、功耗优化——如何将VIO/LIO-SAM部署到嵌入式平台。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约35分钟</span><span class="hero-meta-item">💻 部署实践</span></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 11（VIO）、Chapter 12（LIO-SAM）。在Jetson Orin上运行VIO，与在高性能GPU服务器上运行完全不同——嵌入式部署需要在算力、功耗、内存、延迟之间做出严格权衡。</div></div>
+
+<p class="lead">在Jetson Orin上运行VIO算法，与在高性能GPU服务器上运行完全不同——嵌入式部署需要在<span class="kw">算力、功耗、内存、延迟</strong>之间做出严格权衡。实验室能跑通的算法，不等于能在无人机上实时运行。</p>
+
+<h2 class="section-h2">16.1 嵌入式平台选型</h2>
+<table class="tbl">
+<thead><tr><th>平台</th><th>算力</th><th>功耗</th><th>GPU</th><th>适用算法</th></tr></thead>
+<tbody>
+<tr><td class="hl">Jetson Orin Nano</td><td>40-60 TOPS</td><td>15-40W</td><td>Ampere</td><td>LIO-SAM, VINS-Mono</td></tr>
+<tr><td class="hl">Jetson Orin NX</td><td>100 TOPS</td><td>20-40W</td><td>Ampere</td><td>LIO-SAM + 语义分割</td></tr>
+<tr><td class="hl">Qualcomm RB5</td><td>15 TOPS</td><td>5-7.5W</td><td>Adreno</td><td>VIO, 轻量级感知</td></tr>
+<tr><td class="hl">Google Edge TPU</td><td>4 TOPS</td><td>2W</td><td>TPU</td><td>深度学习推理</td></tr>
+<tr><td class="hl">STM32H7 (飞控)</td><td>< 1 GFLOPS</td><td>< 1W</td><td>无</td><td>EKF姿态估计</td></tr>
+</tbody>
+</table>
+
+<h2 class="section-h2">16.2 深度学习模型优化</h2>
+<h3 class="section-h3">16.2.1 模型量化</h3>
+<p class="p"><span class="kw">模型量化</strong>是嵌入式部署最重要的优化手段——将FP32模型转换为INT8或FP16，显著降低计算量和内存占用。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📉</div><h4>FP32 → FP16</h4><p>精度损失小，通常< 1%，推理加速约2倍。TensorRT和ONNX Runtime均支持。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📊</div><h4>FP32 → INT8</h4><p>精度损失稍大，需要校准数据集，加速可达4-8倍。主流目标检测模型均有成熟量化方案。</p></div>
+</div>
+
+<h3 class="section-h3">16.2.2 TensorRT加速</h3>
+<p class="p"><span class="kw">TensorRT</strong>是NVIDIA的推理优化框架——它通过算子融合、内核自动调优、内存优化等手段，可以将深度学习推理速度提升5-10倍。</p>
+
+<!-- ===== 🛠️ 动手实践 ===== -->
+<div class="card green"><div class="card-label">🛠️ 动手实践</div><h3>TensorRT INT8量化完整流程（YOLOv8）</h3><pre style="background:#f5f5f7;padding:12px;border-radius:8px;overflow-x:auto;font-size:13px">
+# ① 导出ONNX模型（PyTorch）
+python export.py --weights yolov8n.pt --include onnx
+
+# ② 使用trtexec进行INT8量化
+trtexec \
+  --onnx=yolov8n.onnx \
+  --int8 \
+  --calib=./calib_dataset/ \
+  --saveEngine=yolov8n_int8.engine \
+  --verbose
+
+# ③ 在Jetson Orin上运行
+./yolov8n_int8.engine
+
+# 性能对比
+# FP32: 25 FPS @ Orin Nano
+# FP16: 55 FPS @ Orin Nano  
+# INT8: 120 FPS @ Orin Nano  ← 实际可满足实时避障要求
+</pre></div>
+
+<h2 class="section-h2">16.3 实时化与功耗优化</h2>
+<h3 class="section-h3">16.3.1 ROS2实时化</h3>
+<p class="p">ROS2的实时性比ROS1大幅提升——支持确定性DDS通信、节点级别的实时线程调度。对于飞控链路（感知→决策→控制），实时性是硬性要求。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">⚡</div><h4>动态电压频率调节 (DVFS)</h4><p>根据计算负载动态调整CPU/GPU频率和电压。轻载时降频省电，满载时超频保证性能。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🧊</div><h4>模型层剪枝</h4><p>去除冗余神经元和连接，减少计算量。常用方法：结构性剪枝（去除整个通道）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🎯</div><h4>Jetson电源模式</h4><p>Orin Nano支持15W/25W/40W三档功率模式。在无人机上通常选MAXN 40W模式以保证算力。</p></div>
+</div>
+
+<h3 class="section-h3">16.3.2 功耗测试实战</h3>
+<div class="hlbox"><div class="hlbox-title">🔑 无人机感知系统的功耗预算</div><p>以DJI Matrice 350 RTK为例：<br>
+• 起飞重量：约2.5kg<br>
+• 电池容量：5880mAh @ 26.1V ≈ 153Wh<br>
+• 悬停时间：约35分钟<br>
+• 感知系统功耗预算：10-20W（占总功耗约30%）<br><br>
+<strong>实测参考（Orin Nano + Livox Mid-70）：</strong><br>
+• 待机（无负载）：5W<br>
+• LIO-SAM运行中：15-20W<br>
+• 峰值（LIO-SAM + 语义分割）：25-30W<br>
+• 剩余功率用于飞控、通信、电机 → 实际悬停时间会缩短到约30分钟。</p></div>
+
+<h2 class="section-h2">16.4 工程实践清单</h2>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h4>算法选型</h4><p>根据平台算力选择算法复杂度（Orin Nano上运行完整LIO-SAM，Edge TPU上运行轻量级感知）。</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h4>模型量化</h4><p>将深度学习模型量化到FP16/INT8，用校准数据集验证精度损失可接受。</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h4>算子融合</h4><p>使用TensorRT或供应商SDK将多个小算子融合为一个，减少内存访问。</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h4>功耗测试</h4><p>在实际飞行中测量感知系统的功耗，确保不超过飞行预算。</p></div></div>
+</div>
+
+<!-- ===== ⚠️ 常见陷阱 ===== -->
+<div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>常见陷阱① - INT8量化精度崩溃：</strong>某些模型（如小模型YOLOv8n）对INT8量化非常敏感——精度下降超过10%。解决：先用FP16验证精度，INT8仅在精度损失< 2%时才可接受。<br><br>
+<strong>常见陷阱② - 忽视散热导致降频：</strong>Orin Nano在25°C环境温度+密闭无人机机体内时，芯片温度可能超过85°C，触发热保护自动降频至15W模式——算力从40TOPS骤降至15TOPS，导致LIO-SAM丢帧。必须加散热片+主动风扇。<br><br>
+<strong>常见陷阱③ - CUDA内存泄漏：</strong>在长时间飞行中（如1小时+），点云处理如果不及时释放GPU内存，会导致显存碎片化，最终OOM崩溃。每帧处理完后必须显式调用 cudaFree。</div></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第17章 · 开源工具链）：</strong>理论和实践都已掌握——最后一章将整理最实用的开源项目、仿真平台和数据集，帮助你从零搭建第一套无人机感知系统。</div></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>嵌入式部署的核心挑战</h3><p><strong>① 模型量化：</strong>FP32→FP16/INT8，4-8倍加速，精度损失需验证。<br><strong>② TensorRT：</strong>NVIDIA推理优化框架，算子融合+内核调优，5-10倍加速。<br><strong>③ DVFS：</strong>动态电压频率调节，根据负载实时调整功耗。<br><strong>④ ROS2实时化：</strong>确定性通信+实时调度，确保感知-决策-控制链路的实时性。</p></div>
+
+</section>

@@ -1,0 +1,243 @@
+﻿<section id="ch9">
+<div class="hero">
+<div class="chapter-tag">Chapter 9 · 融合算法</div>
+<h1>卡尔曼滤波与EKF/UKF：<br>传感器融合的"主轴算法"</h1>
+<p class="sub">从线性KF到非线性EKF/UKF，详细推导工程实现细节——这是VIO和LIO-SAM的核心滤波引擎。</p>
+<div class="hero-meta"><span class="hero-meta-item">📖 约50分钟</span><span class="hero-meta-item">🔄 滤波算法</span></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 5（四元数姿态表示）、Chapter 8（概率滤波理论）。本章的 KF 五公式是所有实时融合系统的核心，理解它们是掌握 VIO/LIO-SAM 的前提。建议在完成 Ch8 后再进入本章。</div></div>
+
+<p class="lead">卡尔曼滤波（Kalman Filter）诞生于1960年，最初为阿波罗登月计划设计。60多年后的今天，它依然是<span class="kw">几乎所有实时传感器融合系统的核心算法</span>——从无人机飞控到手机陀螺仪，从汽车ESP到卫星导航。理解KF/EKF，是理解VIO、LIO-SAM、GPS-INS融合的必经之路。</p>
+
+<h2 class="section-h2">9.1 标准卡尔曼滤波（KF）</h2>
+<h3 class="section-h3">9.1.1 线性高斯系统模型</h3>
+<p class="p">卡尔曼滤波适用于<span class="kw">线性高斯系统</span>——状态转移和观测都是线性的，噪声都是高斯的：</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 线性高斯系统模型</div><p><strong>状态转移方程：</strong><br>xₖ = Aₖ₋₁ · xₖ₋₁ + Bₖ₋₁ · uₖ₋₁ + wₖ₋₁（w ~ N(0, Q)）<br><br>
+<strong>观测方程：</strong><br>zₖ = Hₖ · xₖ + vₖ（v ~ N(0, R)）<br><br>
+其中：<br>
+• A：状态转移矩阵（线性）<br>
+• B：控制输入矩阵<br>
+• H：观测矩阵（线性）<br>
+• Q：过程噪声协方差（描述模型不确定性）<br>
+• R：观测噪声协方差（描述传感器不确定性）<br>
+• w, v：零均值高斯白噪声
+</p></div>
+
+<h3 class="section-h3">9.1.2 卡尔曼滤波器的五个公式</h3>
+<p class="p">KF分为预测和更新两个阶段，共五个核心公式。以下是完整的推导思路和工程实现：</p>
+
+<div class="flow">
+<div class="flow-box" style="background:#e3f2fd"><div class="flow-box-title">t-1时刻</div><div class="flow-box-desc">后验估计 x̂ₜ₋₁|ₜ₋₁<br>后验协方差 Pₜ₋₁|ₜ₋₁</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">① 预测步</div><div class="flow-box-desc">x̂ₜ|ₜ₋₁ = A·x̂ₜ₋₁|ₜ₋₁ + B·u<br>Pₜ|ₜ₋₁ = A·Pₜ₋₁|ₜ₋₁·Aᵀ + Q</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">② 等待观测</div><div class="flow-box-desc">收到新观测 zₜ</div></div>
+</div>
+
+<div class="flow">
+<div class="flow-box"><div class="flow-box-title">③ 计算卡尔曼增益</div><div class="flow-box-desc">Kₜ = Pₜ|ₜ₋₁·Hᵀ·(H·Pₜ|ₜ₋₁·Hᵀ+R)⁻¹</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">④ 状态更新</div><div class="flow-box-desc">x̂ₜ|ₜ = x̂ₜ|ₜ₋₁ + Kₜ·(zₜ - H·x̂ₜ|ₜ₋₁)</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box" style="background:#e8f5e9"><div class="flow-box-title">⑤ 协方差更新</div><div class="flow-box-desc">Pₜ|ₜ = (I - Kₜ·H)·Pₜ|ₜ₋₁</div></div>
+</div>
+
+<div class="hlbox"><div class="hlbox-title">🔑 卡尔曼滤波五公式（线性情况）</div><p><strong>【预测步】</strong><br>
+① 状态预测：<strong>x̂ₖ|ₖ₋₁ = Aₖ₋₁ · x̂ₖ₋₁|ₖ₋₁ + Bₖ₋₁ · uₖ₋₁</strong><br>
+② 协方差预测：<strong>Pₖ|ₖ₋₁ = Aₖ₋₁ · Pₖ₋₁|ₖ₋₁ · Aₖ₋₁ᵀ + Qₖ₋₁</strong><br><br>
+<strong>【更新步】</strong><br>
+③ 计算卡尔曼增益：<strong>Kₖ = Pₖ|ₖ₋₁ · Hₖᵀ · (Hₖ · Pₖ|ₖ₋₁ · Hₖᵀ + Rₖ)⁻¹</strong><br>
+④ 状态更新：<strong>x̂ₖ|ₖ = x̂ₖ|₋₁ + Kₖ · (zₖ - Hₖ · x̂ₖ|ₖ₋₁)</strong><br>
+⑤ 协方差更新：<strong>Pₖ|ₖ = (I - Kₖ · Hₖ) · Pₖ|ₖ₋₁</strong><br><br>
+<strong>其中 (zₖ - Hₖ · x̂ₖ|ₖ₋₁) 称为"新息"（Innovation），是观测值与预测观测值之间的残差。</strong>
+</p></div>
+
+<div class="callout callout-info"><div class="callout-icon">💡</div><div class="callout-text"><strong>直觉理解：</strong>卡尔曼增益 Kₖ 决定了"信任观测还是信任预测"。当 R（观测噪声）大时，Kₖ → 0，以预测为主；当 Q（过程噪声）大时，Kₖ → H⁻¹，以观测为主。Kₖ 是动态计算的——这是KF"聪明"的地方。</div></div>
+
+<h3 class="section-h3">9.1.3 KF的推导：从贝叶斯滤波出发</h3>
+<p class="p">KF并非凭空出现——它可以从第8章的贝叶斯滤波推导出。关键洞察：对于线性高斯系统，后验分布 p(xₖ|z₁:ₖ) 仍然是高斯的，可以用均值（状态估计）和协方差（不确定性）完全描述。预测步和更新步都有闭式解：</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 从贝叶斯到KF的推导概要</div><p><strong>预测步（线性高斯）：</strong>若 xₖ₋₁|z₁:ₖ₋₁ ~ N(x̂ₖ₋₁|ₖ₋₁, Pₖ₋₁|ₖ₋₁)，且 xₖ = A·xₖ₋₁ + w，则：<br>
+x̂ₖ|ₖ₋₁ = A·x̂ₖ₋₁|ₖ₋₁（均值传递）<br>
+Pₖ|ₖ₋₁ = A·Pₖ₋₁|ₖ₋₁·Aᵀ + Q（协方差传递）<br><br>
+<strong>更新步（高斯乘积）：</strong>先验 p(xₖ|z₁:ₖ₋₁) 与似然 p(zₖ|xₖ) 相乘，仍为高斯分布。令后验均值和协方差满足使负对数似然最小的条件，得到 Kₖ 的表达式和更新公式。<br><br>
+<strong>工程意义：</strong>KF不需要存储历史观测数据，只需要维护当前状态均值 x̂ 和协方差 P——这解释了为什么KF可以在资源受限的嵌入式平台上实时运行。
+</p></div>
+
+<h2 class="section-h2">9.2 扩展卡尔曼滤波（EKF）</h2>
+<h3 class="section-h3">9.2.1 现实世界是非线性的</h3>
+<p class="p">标准KF要求系统是线性的——但真实世界的状态转移几乎都是非线性的。例如：IMU积分涉及三角函数和积分，四元数乘法是非线性的，相机投影包含除法（Z在分母）。<span class="kw">扩展卡尔曼滤波（EKF）</span>的解决方案是：在当前估计点附近做<span class="kw">一阶泰勒展开</span>，把非线性函数局部线性化。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 EKF的线性化</div><p>对于非线性状态转移 xₖ = f(xₖ₋₁, uₖ₋₁) + w，EKF在当前估计点 x̂ 处做一阶泰勒展开：<br><br>
+<strong>f(x) ≈ f(x̂) + F · (x - x̂)</strong><br><br>
+其中 F = ∂f/∂x 是<span class="kw">雅可比矩阵</span>（Jacobian），维度为 n×n（n为状态维度）。<br><br>
+对于观测函数 h(xₖ) + v，同理求雅可比矩阵 H = ∂h/∂x。<br><br>
+<strong>关键：</strong>雅可比矩阵的计算是EKF实现的核心工作。需要对每个非线性函数手动求偏导数（对于复杂模型如IMU预积分，这一步非常繁琐）。这就是为什么很多现代系统转向因子图优化——优化方法不需要显式计算雅可比。
+</p></div>
+
+<h3 class="section-h3">9.2.2 EKF vs KF：差异在哪里？</h3>
+<table class="tbl">
+<thead><tr><th>组件</th><th>KF（线性）</th><th>EKF（非线性）</th></tr></thead>
+<tbody>
+<tr><td class="hl">状态转移</td><td>x = A·x + B·u</td><td>x = f(x, u)，求雅可比 F</td></tr>
+<tr><td class="hl">观测</td><td>z = H·x</td><td>z = h(x)，求雅可比 H</td></tr>
+<tr><td class="hl">线性化点</td><td>不适用</td><td>当前估计点 x̂</td></tr>
+<tr><td class="hl">误差</td><td>无（闭式解）</td><td>一阶泰勒截断误差</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>EKF的致命缺陷：</strong>当非线性严重时（如无人机快速旋转），一阶泰勒展开误差会很大，导致滤波发散。这就是为什么很多VIO系统选择基于优化的方法（Factor Graph）而不是EKF——优化方法同时优化所有状态，不存在线性化误差累积的问题。</div></div>
+
+<h2 class="section-h2">9.3 无迹卡尔曼滤波（UKF）</h2>
+<h3 class="section-h3">9.3.1 Sigma点采样：另一种处理非线性的方法</h3>
+<p class="p"><span class="kw">UKF</span>（Unscented Kalman Filter）采用了一种完全不同的策略——不求雅可比，而是用<span class="kw">Sigma点采样</span>：根据当前状态的均值和协方差，选取一组代表性的采样点（Sigma点），通过非线性函数变换这些点，再从变换后的点恢复高斯分布。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 UKF的直觉与Sigma点选取</div><p>对于 n 维状态，UKF选取 2n+1 个Sigma点（1个中心点 + 2n个分布在主轴方向上的点）：<br><br>
+<strong>χ₀ = x̂（中心点）<br>
+χᵢ = x̂ + (√(n+λ)·Σ)ᵢ  for i = 1..n<br>
+χᵢ₊ₙ = x̂ - (√(n+λ)·Σ)ᵢ  for i = 1..n</strong><br><br>
+其中 Σ 是协方差矩阵的 Cholesky 分解，λ = α²(n+κ) - n 是缩放参数。<br><br>
+<strong>UKF的三大优势：</strong><br>
+① 不需要计算雅可比矩阵<br>
+② 对强非线性（如四元数乘法）更准确<br>
+③ 实现比EKF更简单（只需实现非线性函数本身）<br><br>
+<strong>UKF的劣势：</strong>当状态维度很高（>20）时，计算量显著增加。对于VIO等高维系统（状态维度可达15-30），通常选择EKF（误差状态卡尔曼滤波）或因子图优化。
+</p></div>
+
+<h2 class="section-h2">9.4 噪声参数调整：KF调参的艺术</h2>
+<p class="p">KF/EKF的滤波器性能高度依赖噪声协方差矩阵 Q 和 R 的设置。这是工程中最重要也最困难的部分——调参错误是90%的滤波器问题的根源：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon">⚙️</div><h4>Q（过程噪声）</h4><p>Q越大，滤波器越信任观测，响应越快，但抗噪声能力下降。Q太小会导致预测跟不上模型真实变化（滤波器"跟不上"）。</p></div>
+<div class="card-sm"><div class="card-sm-icon">📏</div><h4>R（观测噪声）</h4><p>R越大，滤波器越信任预测，响应越慢但更平滑。R太小会让滤波器过度响应噪声，产生振荡。</p></div>
+</div>
+
+<div class="card orange"><div class="card-label">🎯 Q/R调参实战方法</div><h3>三种调参策略</h3><p><strong>① 理论法（最推荐）：</strong>从艾伦方差图（见第5章）读取陀螺仪和加速度计的噪声参数，直接计算Q矩阵。R矩阵从传感器规格书读取测量噪声标准差。<br><br>
+<strong>② 网格搜索法：</strong>在真实飞行数据上，用不同的Q/R组合运行滤波器，选择轨迹误差最小的组合。常用评价指标：ATE（绝对轨迹误差）、RPE（相对位姿误差）。<br><br>
+<strong>③ 自适应调节：</strong>在线估计Q和R——用新息（Innovation）的统计特性自适应调整噪声协方差。常用方法：Strong Tracking Filter、Adaptive KF。<br><br>
+<strong>⚠️ 常见错误：</strong>Q/R比值设置不当比参数绝对值错误更致命。Q/R过小 → 滤波"太自信"，跟不上真实状态变化；Q/R过大 → 滤波"太犹豫"，响应严重滞后。
+</p></div>
+
+<!-- ===== 🛠️ 动手实践 ===== -->
+<div class="card green"><div class="card-label">🛠️ 动手实践</div><h3>用Python实现一维卡尔曼滤波</h3><p><strong>目标：</strong>用纯Python实现一维KF，理解预测-更新循环的核心逻辑。<br><br>
+<pre class="code-block">
+import numpy as np
+import matplotlib.pyplot as plt
+
+# ==== 一维位置估计 ====
+# 假设目标做匀速运动：xₖ = xₖ₋₁ + vₖ₋₁·dt, vₖ = vₖ₋₁
+# 状态向量：x = [position, velocity]ᵀ
+
+dt = 0.1
+A = np.array([[1, dt],   # 位置转移
+              [0, 1]])   # 速度不变
+H = np.array([[1, 0]])    # 只观测位置
+Q = np.array([[0.01, 0],  # 过程噪声协方差
+              [0, 0.01]])
+R = np.array([[1.0]])       # 观测噪声协方差
+
+x = np.array([[0], [1]])   # 初始状态 [位置, 速度]
+P = np.eye(2) * 0.1        # 初始协方差
+
+# 模拟真实轨迹（匀速 + 噪声观测）
+np.random.seed(42)
+n_steps = 100
+true_pos = [0]
+true_vel = 1.0
+obs = []
+estimates = []
+stds = []
+
+for i in range(n_steps):
+    # 真实状态
+    true_pos.append(true_pos[-1] + true_vel * dt)
+    obs.append(true_pos[-1] + np.random.randn() * np.sqrt(R[0,0]))
+    
+    # === KF Predict ===
+    x_pred = A @ x
+    P_pred = A @ P @ A.T + Q
+    
+    # === KF Update ===
+    z = obs[-1]
+    y = z - H @ x_pred                # Innovation（新息）
+    S = H @ P_pred @ H.T + R         # Innovation协方差
+    K = P_pred @ H.T @ np.linalg.inv(S)  # 卡尔曼增益
+    x = x_pred + K @ y
+    P = (np.eye(2) - K @ H) @ P_pred
+    
+    estimates.append(x[0,0])
+    stds.append(np.sqrt(P[0,0]))
+
+# 可视化
+plt.figure(figsize=(12, 5))
+plt.plot(range(n_steps), true_pos[1:], 'g-', label='真实位置')
+plt.plot(range(n_steps), obs, 'r.', alpha=0.5, label='观测（含噪声）')
+plt.plot(range(n_steps), estimates, 'b-', label='KF估计')
+plt.fill_between(range(n_steps), 
+                 np.array(estimates)-2*np.array(stds),
+                 np.array(estimates)+2*np.array(stds),
+                 alpha=0.2, label='±2σ不确定区间')
+plt.legend()
+plt.title('一维卡尔曼滤波：位置估计')
+plt.grid(True); plt.show()
+</pre>
+<strong>实验：</strong>改变 Q 和 R 的值，观察：<br>
+• Q/R 很大 → 估计曲线接近观测（响应快但噪声大）<br>
+• Q/R 很小 → 估计曲线平滑但滞后于真实轨迹（响应慢但噪声小）
+</p></div>
+
+<!-- ===== ⚠️ 常见陷阱 ===== -->
+<div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>常见陷阱① - Q/R比值严重失调：</strong>这是90%的KF问题根源。尝试用对数空间网格搜索（logQ vs logR），而不是线性搜索。<br><br>
+<strong>常见陷阱② - 忘记初始化P矩阵：</strong>P的初始值决定了滤波器对初始状态的"信任程度"。P太大 → 滤波器在初期过于响应观测噪声；P太小 → 滤波器在初期过于信任先验估计。P的初始值应该与对初始状态的不确定性匹配。<br><br>
+<strong>常见陷阱③ - EKF的雅可比计算错误：</strong>对于四元数等复杂表示，雅可比矩阵的正确性很难验证。建议用数值微分（Central Difference）做对比验证：∂f/∂x ≈ (f(x+ε) - f(x-ε)) / 2ε。</div></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第10章 · 因子图）：</strong>KF是递归滤波器，每步只用前一步的数据。因子图优化是一种批量方法——同时优化所有时刻的状态，可以获得全局最优解。VINS-Mono和LIO-SAM都采用因子图框架，理解它才能真正理解现代融合系统的设计思路。</div></div>
+
+
+<div class="exp">
+<div class="exp-hd"><div class="exp-tt"><span class="exp-icon">▼</span>📐 深度：卡尔曼滤波五公式完整推导</div></div>
+<div class="exp-bd">
+<p>本节从贝叶斯滤波出发，推导KF的五公式。适合想深入理解"为什么KF是这样的"读者。</p>
+
+<p><strong>目标：</strong>在预测步，x和P的均值和协方差如何传递？在更新步，后验分布的均值和协方差如何计算？</p>
+
+<p><strong>① 预测步（线性高斯）：</strong></p>
+<pre class="code-block-dark">
+已知：xₖ₋₁ ~ N(x̂ₖ₋₁, Pₖ₋₁)，且 xₖ = A·xₖ₋₁ + B·uₖ₋₁ + w
+
+线性变换后均值传递：
+  E[xₖ] = A · E[xₖ₋₁] + B·uₖ₋₁ + E[w] = A·x̂ₖ₋₁ + B·uₖ₋₁
+
+协方差传递（记住 Σ_y = A·Σ_x·Aᵀ）：
+  Pₖ₋₁_pred = A · Pₖ₋₁ · Aᵀ + Q
+</pre>
+
+<p><strong>② 更新步（高斯乘积）：</strong></p>
+<pre class="code-block-dark">
+先验：x ~ N(x̂, P)       [p(x) ∝ exp(-½(x-μ)ᵀΣ⁻¹(x-μ)]
+似然：z ~ N(H·x, R)   [p(z|x) ∝ exp(-½(z-Hx)ᵀR⁻¹(z-Hx)]
+
+高斯 × 高斯 = 高斯，乘积的均值和协方差：
+
+  Pₖ = (P⁻¹ + HᵀR⁻¹H)⁻¹
+  x̂ₖ = P · (P⁻¹x̂ + HᵀR⁻¹z)
+
+令 K = P·Hᵀ(H·P·Hᵀ + R)⁻¹
+则：Pₖ = (I - K·H) · P（协方差更新公式）
+    x̂ₖ = x̂ + K·(z - H·x̂)（状态更新公式）
+</pre>
+
+<p><strong>③ 卡尔曼增益 K 的物理含义：</strong></p>
+<pre class="code-block-dark">
+当 R（观测噪声）→ 0：K → P·Hᵀ·0⁻¹ → H⁻¹（完全信任观测）
+当 Q（过程噪声）→ ∞：K → 0（完全信任预测）
+当 R = H·P·Hᵀ：K = P·Hᵀ·(2H·P·Hᵀ)⁻¹ = ½Hᵀ（折中）
+
+这就是为什么K是"信任权重"——它动态平衡预测和观测的相对可信度。
+</pre>
+</div>
+</div><div class="card blue"><div class="card-label">本章关键概念</div><h3>卡尔曼滤波家族</h3><p><strong>① 卡尔曼滤波五公式：</strong>预测两步（状态+协方差）+ 更新三步（增益+状态+协方差）。<br><strong>② 卡尔曼增益 Kₖ：</strong>动态权衡"信任预测"还是"信任观测"。<br><strong>③ EKF：</strong>通过雅可比矩阵做一阶泰勒展开，将KF推广到非线性系统。<br><strong>④ UKF：</strong>用Sigma点采样避免雅可比计算，对强非线性更鲁棒。<br><strong>⑤ Q/R调参：</strong>工程中最关键的步骤，决定滤波器的动态响应和鲁棒性。</p></div>
+
+</section>

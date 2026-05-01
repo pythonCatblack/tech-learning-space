@@ -1,0 +1,159 @@
+<section id="ch6">
+<div class="hero">
+<div class="chapter-tag">Chapter 6 · 单传感器深度</div>
+<h1>GPS/GNSS与绝对定位：<br>从三角测量到RTK厘米级</h1>
+<p class="sub">从GNSS伪距方程到RTK差分定位，系统掌握"不漂移的绝对位置"——以及它的失效边界。</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约45分钟</span>
+<span class="hero-meta-item">🛰️ 卫星导航</span>
+</div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 5（IMU漂移本质）建立了"为什么需要绝对位置"的动机。本章将回答GPS的核心问题——如何在没有累积误差的前提下实现全球绝对定位。IMU+GPS融合是第9章 Kalman滤波最经典、最入门的应用场景，第10章的因子图也通过GPS因子节点（绝对位置约束）来锚定全局坐标系。</div></div>
+
+<p class="lead">GPS（Global Positioning System）是无人机能在户外获得"绝对、不漂移的全球坐标"的最核心手段。它的误差不随时间累积（这点与IMU完全相反），但接收条件苛刻——室内不可用、峡谷精度下降、强多云电离层干扰。理解了GPS，就理解了户外无人机定位的上限——以及为什么工业级作业还需要 VIO 和 LIO-SAM 来兜底。</p>
+
+<h2 class="section-h2">6.1 GNSS基础：伪距方程与三角测量</h2>
+
+<h3 class="section-h3">6.1.1 四大全球导航系统</h3>
+<p class="p">统称<span class="kw">GNSS</span>（Global Navigation Satellite System）——不止美国的GPS：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🇺🇸</div><h4>GPS (美国)</h4><p>31颗卫星，MEO轨道（~20,200km）。最早部署（1995年满编），全球覆盖最成熟。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🇨🇳</div><h4>BDS/北斗 (中国)</h4><p>30颗卫星，混合轨道（GEO+IGSO+MEO）。亚太区域精度最高，全球覆盖已完成。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🇪🇺</div><h4>Galileo (欧盟)</h4><p>24颗卫星，MEO轨道。民用定位精度与GPS相当，搜救转发功能独特。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🇷🇺</div><h4>GLONASS (俄罗斯)</h4><p>24颗卫星，MEO轨道。高纬度（靠近极地）精度优于GPS。</p></div>
+</div>
+
+<h3 class="section-h3">6.1.2 伪距方程：推算位置的数学模型</h3>
+<p class="p">每颗卫星向接收机广播两样东西：<strong>①精确轨道参数（星历）</strong>和<strong>②信号发射时间戳</strong>。接收机对比到达时间与发射时间，算出<span class="kw">伪距</span>（Pseudorange）：</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 伪距方程（单颗卫星）</div><p><strong>ρ = c · (t_receive - t_transmit) = |SV_pos - RX_pos| + c · Δt_rx + ε</strong><br><br>
+其中：<br>
+• ρ：伪距（m），含所有误差<br>
+• c：光速 = 299,792,458 m/s<br>
+• |SV_pos - RX_pos|：卫星与接收机的真实几何距离<br>
+• c · Δt_rx：接收机时钟偏差（纳秒级即米级误差）<br>
+• ε：电离层延迟、对流层延迟、多径误差等的总和<br><br>
+<strong>为什么需要4颗以上卫星？</strong>未知量：3个坐标 (x, y, z) + 1个时钟偏差 (Δt) = 4个未知数。至少4颗卫星的伪距联立求解。
+</p></div>
+
+<div class="hlbox"><div class="hlbox-title">🔑 伪距方程组的矩阵写法</div><p>设第 i 颗卫星坐标为 (Sxᵢ, Syᵢ, Szᵢ)，已知它的伪距为 ρᵢ。对于接收机坐标 (x, y, z) 和时钟偏差项 cdT = c·Δt（未知，是所有卫星共用的）：<br><br>
+<strong>√((Sxᵢ-x)² + (Syᵢ-y)² + (Szᵢ-z)²) + cdT = ρᵢ</strong><br><br>
+这是一个非线性方程组。——通常用 Newton-Raphson 迭代求解（先线性化在当前估计点，迭代收敛）。解这个方程组的过程，就是"GPS单点定位"（SPP, Single Point Positioning）。</p></div>
+
+<h3 class="section-h3">6.1.3 误差源详解：标准GPS为什么只有3-5m？</h3>
+
+<table class="tbl">
+<thead><tr><th>误差源</th><th>典型数值</th><th>特征</th><th>如何消除？</th></tr></thead>
+<tbody>
+<tr><td class="hl">电离层延迟</td><td>10-50m</td><td>与频率相关（f⁻²），日夜/太阳活动变化</td><td>双频接收机（如 L1+L5）可通过频率差消除</td></tr>
+<tr><td class="hl">对流层延迟</td><td>2-5m</td><td>与气压/温湿度相关，低频变化</td><td>气象模型校正（Saastamoinen模型）</td></tr>
+<tr><td class="hl">卫星钟差</td><td>0-3m</td><td>卫星原子钟与GPS时间的差异</td><td>导航电文广播实时修正参数（钟差 correction）</td></tr>
+<tr><td class="hl">多径效应</td><td>5-30m</td><td>信号从建筑物/地面反射后到达——时间延迟使伪距偏大</td><td>扼流圈天线 + 信号处理层检测；室外交界区域不可用</td></tr>
+<tr><td class="hl">接收机噪声</td><td>1-5m</td><td>接收机芯片热噪声、量化误差</td><td>集成抗干扰天线 + 跟踪环路优化</td></tr>
+</tbody>
+</table>
+
+<h2 class="section-h2">6.2 从 5m → 2cm：差分增强技术</h2>
+
+<h3 class="section-h3">6.2.1 差分定位（DGPS/DGNSS）的直觉</h3>
+<p class="p">核心思路：GPS误差源（电离层延迟、卫星钟差）对<span class="kw">位置接近的两个接收机</span>——几乎相同。利用"已知位置的基准站"来实时测算这些误差的影响，再通过通信链路播发给无人机。</p>
+
+<h3 class="section-h3">6.2.2 RTK：厘米级实时定位的工程实现</h3>
+<p class="p"><span class="kw">RTK</span>（Real-Time Kinematic）是目前工业无人机（DJI Matrice 350 RTK、5230B等测绘机型）的标配。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 RTK完整工作链路</div><p><strong>① 基准站（Base Station）：</strong>固定在已知精确坐标的位置（精度通常通过长时间静态 PPP 获得，坐标可提前部署）。<br><br>
+<strong>② 基准站计算实时"修正量"：</strong>基准站同时接收 GPS 信号，计算自己的"GPS 定位值"与其"已知精确坐标"之间的偏移——即当前时刻这组卫星的实时误差。<br><br>
+<strong>③ 实时播发修正量：</strong>通过4G/NB/电台/无人机内置的数据链路将修正量（RTCM 3.x 格式）发送给飞行中的无人机。<br><br>
+<strong>④ 无人机（流动站）应用修正：</strong>无人机接收这组修正量，从自己的GPS测量中去掉。剩余误差主要来自流动站与基准站的距离：基线距离越大，修正越不完整。RTK的有效基线距离通常 < 10-20km。<br><br>
+修正后定位精度：水平 ±1-2cm，垂直 ±2-3cm（双频 L1+L2 接收机）。需固件支持双频 + 多系统（GPS+BDS+Galileo+GLONASS）联合定位。
+</p></div>
+
+<h3 class="section-h3">6.2.3 RTK实战部署清单</h3>
+
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h4>获取基准站坐标</h4><p>在作业区域提前架设 GNSS 接收机（如 Trimble R10 或千寻魔盒），连续观测 10+ 小时，PPP 解算获取精确坐标。</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h4>配置 RTK 链路</h4><p>基准站通过 DTU/4G DTU 发送 RTCM 3.2 格式的实时修正数据。DJI Matrice 350 支持直接接入千寻/六分等 CORS 服务的 NTRIP 数据流。</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h4>验收 RTK 精度</h4><p>起飞前在已知标记点验证——无人机悬停在该标记上方 2m，记录系统给出的位置与标记坐标的偏差。偏差应 < 5cm。</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h4>建立融合链路</h4><p>将 GPS+RTK 的定位结果送入 Kalman 滤波（第9章）。滤波器同时接收 IMU 的高频率数据（1kHz），以RTK的低频（通常 5-20Hz）作为绝对位置观测更新。</p></div></div>
+</div>
+
+<h2 class="section-h2">6.3 GPS+IMU融合：EKF的"Hello World"</h2>
+<p class="p">这是传感器融合中最基础、最成熟、也最值得亲手实现的一个组合。GPS提供绝对位置观测（低频，约5-20Hz），IMU提供高频率姿态估计（1kHz+）。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 GPS+IMU EKF 融合的状态向量</div><p>状态向量 x = [位置 (ENU系, 3维), 速度 (ENU系, 3维), 姿态四元数 (4维), 加速度计偏差 (3维), 陀螺仪偏差 (3维)]ᵀ<br><br>
+共 16 维（3+3+4+3+3=16）<br><br>
+预测步：IMU 传播（每 1ms 执行一次）<br>
+更新步：GPS 观测更新（约 5-20Hz，即每 50-200ms 一次）<br><br>
+这个融合系统的核心调参项：<br>
+① Q 矩阵（过程噪声）——从 IMU 的 Allan 方差（第5章）读取<br>
+② R 矩阵（GPS 观测噪声）——从 GPS 接收机的规格书读取<br><br>
+GPS+IMU EKF 的定位精度与 GPS 单机精度相当，但输出的位姿是平滑、连续的——而且 GPS 短暂失效（几秒）时，IMU 可以继续提供姿态估计。</p></div>
+
+<h2 class="section-h2">6.4 GPS的失效边界与毫米波雷达的兜底</h2>
+
+<h3 class="section-h3">6.4.1 GPS失效的典型场景</h3>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#fce4ec">🏙️</div><h4>城市峡谷</h4><p>高楼遮挡 + 大量多径反射 → 可用卫星骤减（< 4颗） → GPS精度从2cm退化到10m+或完全失效。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fce4ec">🌲</div><h4>密林/隧道</h4><p>GPS L1信号（1575.42MHz）被树冠完全遮挡。消费级接收机完全不可用。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🏠</div><h4>室内/仓库</h4><p>GPS完全失效。需切换至 VIO（第11章）或 UWB定位。</p></div>
+</div>
+
+<h3 class="section-h3">6.4.2 毫米波雷达：全天候感知的互补传感器</h3>
+<p class="p">当GPS失效时，避障和导航需要其他传感器兜底。<span class="kw">毫米波雷达</span>（77GHz）穿透雨雾性能远优于 Lidar，已成为无人机避障的一个重要选项。</p>
+
+<div class="tags">
+<span class="tag t-green">77GHz：雨雾穿透能力强，小雨衰减< 1dB/km</span>
+<span class="tag t-blue">FMCW多普勒测速：每个目标自带速度测量，无需位置差分</span>
+<span class="tag t-orange">量产成本：单模组 $20-100（车载雷达产业链带动）</span>
+</div>
+
+<!-- ===== 🛠️ 动手实践 ===== -->
+<div class="card green" style="margin-bottom:16px"><div class="card-label">🛠️ 动手实践</div><h3>用 Python 解析 GPS NMEA 数据并绘制轨迹</h3><p><strong>目标：</strong>读取真实GPS NMEA 日志，解析GPGGA/GPRMC句子，提取经纬度和高程，绘制飞行轨迹。<br><br>
+<pre style="background:#f5f5f7;padding:12px;border-radius:8px;overflow-x:auto;font-size:13px">
+# 读取 NMEA 日志文件
+import re
+
+def parse_gpgga(line: str):
+    """解析 GPGGA（全球定位系统固定数据）"""
+    parts = line.split(',')
+    if len(parts) < 10: return None
+    lat_dm = parts[2]  # 度分格式：DDMM.MMMM
+    lat_dir = parts[3]  # N/S
+    lon_dm = parts[4]  # DDDMM.MMMM
+    lon_dir = parts[5]  # E/W
+    alt_msl = parts[9]   # 海拔高度（m）
+   
+   lat = float(lat_dm[:2]) + float(lat_dm[2:])/60.0
+   lon = float(lon_dm[:3]) + float(lon_dm[3:])/60.0
+   if lat_dir == 'S': lat = -lat
+   if lon_dir == 'W': lon = -lon
+   return lat, lon, float(alt_msl)
+
+coords = []
+with open('flight_log.nmea', 'r') as f:
+   for line in f:
+       if line.startswith('$GPGGA'):
+           r = parse_gpgga(line)
+           if r: coords.append(r)
+
+print(f"解析到 {len(coords)} 个GPS点")
+# 将经纬度转换为本地ENU坐标后可绘制轨迹
+</pre>
+<strong>进阶任务：</strong>找一个公开的NMEA飞行日志（如 ArduPilot DataFlash 日志），画出 GPS 轨迹 + 高度剖面图，标注哪些时段可用卫星数骤减。</p></div>
+
+<!-- ===== ⚠️ 常见陷阱 ===== -->
+<div class="callout callout-warn" style="margin-bottom:16px"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>常见陷阱① - RTK级联延迟：</strong>RTCM数据从基准站→4G→机载接收机，通常在50-200ms量级。如果这个时间延迟没有被 Kalman 滤波正确建模，位置估计会出现频谱分裂（高频成分消失而低频严重滞后）。在 PX4 中，RTK 延迟在 EKF2_EV_DELAY 参数中指定。<br><br>
+<strong>常见陷阱② - 忽视 GNSS 板块选择性：</strong>默认的 u-blox 模块通常只配置 GPS 或 GPS+GLONASS。在亚太地区飞行时，务必手动打开 BDS（北斗）——可显著增加可用卫星数（尤其在卫星仰角低的峡谷）。<br><br>
+<strong>常见陷阱③ - 在 GPS 失效边界上盲目切换：</strong>GPS 信号从7颗骤降到3颗时，位置估计会瞬跳到数米的误差。VIO/LIO-SAM 的接管必须有一个过渡区间（通常 3-5秒），在这个区间内两个传感器同时参与融合，确保平滑切换。</div></div>
+
+<div class="card orange" style="margin-bottom:16px"><div class="card-label">🎯 选型技巧</div><h3>GNSS接收机选型——三个维度快速定位</h3><p><strong>维度1：单频 vs 双频</strong>——如果你需要 RTK 精度，必须选双频 (L1+L2/L5) 接收机。单频 RTK 的基线长度限制很短（< 5km），因为电离层延迟无法通过频率差消除。<br><br>
+<strong>维度2：是否支持外部RTK流入？</strong>——DJI Matrice 350 RTK 支持通过内置DTU接入千寻/六分的NTRIP服务；开源飞控（PX4+Pixhawk 6X）需要配置一个4G DTU直连GNSS接收机的CORR接口。<br><br>
+<strong>维度3：是否支持多系统 (GPS+BDS+Galileo+GLONASS)？</strong>——消费级无人机可能只配置单/双系统；专业测绘机应配置4系统，确保在任何地区（尤其高纬度——GLONASS；亚太——BDS）都能充分接收卫星。</p></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第7章 · 时空标定）：</strong>GPS 给出了绝对位置的"已知坐标"——但这个坐标是哪个传感器的？所有传感器的数据必须对齐到<span class="kw">同一个时间</span>和<span class="kw">同一个空间坐标系</span>。下一章将讲述多传感器系统的"对齐工作"——标定（Calibration）。</div></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>GNSS定位：绝对位置的技术栈</h3><p><strong>① 伪距方程：</strong>ρ = |SV-RX| + c·Δt + ε，4个以上卫星联立求解。<br><strong>② 标准GPS精度：</strong>3-5m CEP，受电离层延迟（10-50m）主导。双频接收机可消除。支持4系统（GPS+BDS+Galileo+GLONASS）的接收机在户外可追踪 20+ 颗卫星。<br><strong>③ RTK：</strong>通过近距基准站的高精度差分，GPS → 2cm 水平 / 3cm 垂直。基线<20km，延迟<1s，用于测绘无人机。<br><strong>④ GPS+IMU 融合：</strong>EKF 的标准 "Hello World"——GPS提供绝对位置更新，IMU提供姿态高频传播。<br><strong>⑤ 毫米波雷达：</strong>全天候感知，77GHz，雨雾穿透好，每个点自带速度——是 Lidar 在恶劣天气的重要兜底。</p></div>
+
+</section>

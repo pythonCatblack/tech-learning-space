@@ -1,0 +1,229 @@
+﻿<section id="ch3">
+<div class="hero">
+<div class="chapter-tag">Chapter 3 · 单传感器深度</div>
+<h1>相机与计算机视觉基础：<br>无人机的"眼睛"</h1>
+<p class="sub">从针孔模型到深度学习，从单目到立体视觉——理解相机如何把光子变成无人机能用的数据结构。</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约50分钟阅读</span>
+<span class="hero-meta-item">📷 视觉感知</span>
+</div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 1（融合范式）、Chapter 2（平台架构）。本章建立的<span class="kw">针孔投影几何</span>和<span class="kw">特征点匹配</span>概念是第11章 VIO 和第12章 Lidar-视觉融合的数学基础。建议完全掌握本章后再进入融合算法部分。</div></div>
+
+<p class="lead">相机是无人机上最轻便、成本最低、信息量最大的传感器——一张图像可以包含数十万个特征点、丰富的纹理和语义信息。但它的根本局限在于：<span class="kw">从二维图像恢复三维结构是一个"病态问题"</span>（ill-posed problem）。理解这个局限，才能理解为什么视觉里程计（VO）需要融合IMU——单目视觉缺少尺度信息，而IMU可以提供这个缺失的维度。</p>
+
+<h2 class="section-h2">3.1 相机模型：从光子到像素的物理过程</h2>
+
+<h3 class="section-h3">3.1.1 针孔模型（Pinhole Camera Model）</h3>
+<p class="p">最基础的相机模型是<span class="kw">针孔模型</span>——假设所有光线通过一个无穷小的"针孔"后投影到成像平面上。这个模型虽然简化，但包含了理解视觉几何的所有核心要素。</p>
+
+<p class="p">在针孔模型中，三维世界中的一个点 <strong>P = [X, Y, Z]ᵀ</strong> 通过相机投影到图像平面上的点 <strong>p = [u, v]ᵀ</strong>，满足以下关系（称为<span class="kw">针孔投影方程</span>）：</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 相机投影方程（内参模型）</div><p>设焦距为 $f$，相机光心在像素坐标系的偏移为 $(c_x, c_y)$，则：<br><br>
+<strong>$u = f_x \cdot (X / Z) + c_x$</strong><br>
+<strong>$v = f_y \cdot (Y / Z) + c_y$</strong><br><br>
+写成矩阵形式（齐次坐标）：<strong>$Z \cdot p = K \cdot [R|t] \cdot P$</strong><br>
+其中 $K$ 称为<span class="kw">内参矩阵</span>（Intrinsic Matrix），包含焦距和光心偏移：<br><br>
+<strong>$$K = \begin{bmatrix} f_x & 0 & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix}$$</strong>
+</p></div>
+
+<div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>物理直觉：</strong>为什么是 Z 在分母？因为相机镜头将远处物体"压缩"到成像平面——物体距离越远，在图像上的位置越靠近光心。这个除法操作是投影的核心，也是从 2D 恢复 3D 困难的根本原因：不同的 (X, Y, Z) 组合可能投影到同一个 (u, v) 像素位置上。</div></div>
+
+<h3 class="section-h3">3.1.2 内参标定：你的相机"焦距"到底是多少？</h3>
+<p class="p">相机的内参不是固定的——镜头生产公差、安装偏差、温度变化都会导致内参漂移。<span class="kw">相机标定</span>（Camera Calibration）就是通过拍摄已知图案（如棋盘格）来精确测量内参的过程。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📐</div><h4>标定方法</h4><p>Zhang的棋盘格方法（2000）是最成熟方案，OpenCV和Kalibr工具链都支持。需要拍摄10-20张不同角度的棋盘格图像。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🎯</div><h4>标定参数</h4><p>内参 (fₓ,fᵧ,cₓ,cᵧ) + 畸变系数 (k₁,k₂,p₁,p₂,k₃)</p></div>
+</div>
+
+<h3 class="section-h3">3.1.3 镜头畸变：直线为什么会弯曲？</h3>
+<p class="p">实际镜头不是理想的针孔，存在<span class="kw">径向畸变</span>（边缘拉伸）和<span class="kw">切向畸变</span>（透镜倾斜）。畸变参数也是标定的一部分。</p>
+
+<div class="tags">
+<span class="tag t-red">桶形畸变 (k₁>0)：边缘向外拉伸，广角镜头常见</span>
+<span class="tag t-blue">枕形畸变 (k₁<0)：边缘向内收缩，长焦镜头常见</span>
+<span class="tag t-orange">切向畸变：透镜与sensor不平行导致</span>
+</div>
+
+<div class="hlbox"><div class="hlbox-title">🔑 畸变校正公式</div><p>畸变校正分为两步：<br><br>
+<strong>步骤1 - 归一化坐标：</strong> $x = (u - c_x)/f_x$, $y = (v - c_y)/f_y$<br><br>
+<strong>步骤2 - 径向畸变校正：</strong><br>
+$x' = x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)$<br>
+$y' = y(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)$<br>
+其中 $r^2 = x^2 + y^2$<br><br>
+<strong>步骤3 - 切向畸变校正：</strong><br>
+$x'' = x' + 2p_1 xy + p_2(r^2 + 2x^2)$<br>
+$y'' = y' + p_1(r^2 + 2y^2) + 2p_2 xy$<br><br>
+<strong>步骤4 - 投影回像素坐标：</strong><br>
+$u_{corrected} = f_x \cdot x'' + c_x$<br>
+$v_{corrected} = f_y \cdot y'' + c_y$
+</p></div>
+<div class="exp" style="margin:20px 0">
+<div class="exp-hd"><div class="exp-tt"><span class="exp-icon">▼</span>📐 深度：畸变校正完整公式推导</div></div>
+<div class="exp-bd">
+<p style="font-size:14.5px;color:var(--text2);line-height:1.8">本节给出畸变校正公式的完整推导过程，供想深入理解的读者参考。</p>
+
+<p style="font-size:14.5px;color:var(--text2);line-height:1.8"><strong>步骤1 - 归一化坐标：</strong>将像素坐标转换到归一化相机平面（以焦距为单位）：</p>
+<pre style="background:#1d1d1f;color:#f5f5f7;padding:14px;border-radius:8px;font-size:13px;line-height:1.7;overflow-x:auto;margin:12px 0">
+x = (u - cₓ) / fₓ
+y = (v - cᵧ) / fᵧ
+r² = x² + y²
+</pre>
+
+<p style="font-size:14.5px;color:var(--text2);line-height:1.8"><strong>步骤2 - 径向畸变校正：</strong>实际归一化坐标与理想坐标之间的关系为：</p>
+<pre style="background:#1d1d1f;color:#f5f5f7;padding:14px;border-radius:8px;font-size:13px;line-height:1.7;overflow-x:auto;margin:12px 0">
+x_distorted = x · (1 + k₁·r² + k₂·r⁴ + k₃·r⁶)
+y_distorted = y · (1 + k₁·r² + k₂·r⁴ + k₃·r⁶)
+</pre>
+
+<p style="font-size:14.5px;color:var(--text2);line-height:1.8"><strong>步骤3 - 切向畸变校正：</strong>透镜与sensor不平行导致的切向畸变：</p>
+<pre style="background:#1d1d1f;color:#f5f5f7;padding:14px;border-radius:8px;font-size:13px;line-height:1.7;overflow-x:auto;margin:12px 0">
+x_final = x_distorted + 2·p₁·x·y + p₂·(r² + 2·x²)
+y_final = y_distorted + p₁·(r² + 2·y²) + 2·p₂·x·y
+</pre>
+
+<p style="font-size:14.5px;color:var(--text2);line-height:1.8"><strong>步骤4 - 重投影回像素坐标：</strong></p>
+<pre style="background:#1d1d1f;color:#f5f5f7;padding:14px;border-radius:8px;font-size:13px;line-height:1.7;overflow-x:auto;margin:12px 0">
+u_corrected = fₓ · x_final + cₓ
+v_corrected = fᵧ · y_final + cᵧ
+</pre>
+
+<p style="font-size:13px;color:#86868b;margin-top:10px">💡 <strong>工程实现注意：</strong>实际应用中通常只保留 k₁（主要项），k₂/k₃ 用于广角镜头。切向畸变 p₁/p₂ 通常较小，必要时再估计。</p>
+</div>
+</div>
+
+<h2 class="section-h2">3.2 相机类型：不是所有相机都一样</h2>
+
+<h3 class="section-h3">3.2.1 单目相机（Monocular）</h3>
+<p class="p">最简单、成本最低的方案——只有一个摄像头。单目视觉的核心问题是：<span class="kw">无法从单帧图像恢复深度</span>。因为投影过程丢失了Z轴（深度）信息。</p>
+
+<div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>单目视觉的尺度问题：</strong>单目VO/SLAM可以恢复相对轨迹（形状），但无法恢复绝对尺度。例如：你可以说"机器人走了10个单位"，但不知道这个"单位"是厘米还是米。融合IMU（积分加速度获取尺度）或引入其他传感器（深度相机/Lidar）是解决尺度问题的常见方法。这也是第11章 VIO 之所以要融合 IMU 的核心原因。</div></div>
+
+<h3 class="section-h3">3.2.2 双目相机（Stereo）</h3>
+<p class="p"><span class="kw">双目相机</span>利用两个摄像头之间的<span class="kw">视差</span>（Disparity）恢复深度——同一个三维点投影到左右两个图像时，像素位置会有一个水平偏移（视差），这个偏移量与深度成反比。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 三角测量：视差如何变成深度</div><p>基线距离（两个相机光心之间的距离）为 $b$，焦距为 $f$。对于三维空间点 $P$，投影到左图像素 $(u_l, v)$，右图像素 $(u_r, v)$（假设已校正，y坐标相同），视差 $d = u_l - u_r$。<br><br>
+<strong>深度 $Z = f \cdot b / d$</strong><br><br>
+视差越小（物体越远），深度估计越不准确。通常有效测量范围是基线的10-100倍：基线10cm的双目，有效测距约1-10米。<br><br>
+<strong>推导：</strong> 由相似三角形：$Z/b = f/d \Rightarrow Z = f \cdot b / d$
+</p></div>
+
+<h3 class="section-h3">3.2.3 深度相机（RGB-D）</h3>
+<p class="p"><span class="kw">RGB-D相机</span>同时输出彩色图和深度图。深度获取方式有两种：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">⏱️</div><h4>ToF（飞行时间）</h4><p>发射红外光脉冲，测量光从发射到返回的时间。Intel RealSense D455、Microsoft Azure Kinect采用此方案。精度随距离下降，通常有效范围0.1-10m。户外阳光干扰大（红外信噪比下降）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📊</div><h4>结构光（Structured Light）</h4><p>发射已知红外图案，比较返回图案的变形计算深度。Apple Face ID、Intel RealSense D400系列使用。室内效果好，室外阳光干扰严重。</p></div>
+</div>
+
+<h3 class="section-h3">3.2.4 事件相机（Event Camera）</h3>
+<p class="p"><span class="kw">事件相机</span>（Event Camera，如 Prophesee、Celex）是近年来兴起的"类视网膜"传感器。与传统相机输出固定帧率图像不同，事件相机只输出<span class="kw">亮度变化的事件</span>——每个像素异步检测亮度变化，输出"变化发生时"的时间和位置。</p>
+
+<div class="stats">
+<div class="stat"><div class="stat-val">1MHz</div><div class="stat-lbl">峰值事件率（像素/秒）</div></div>
+<div class="stat"><div class="stat-val">0.01°</div><div class="stat-lbl">角分辨率（某些型号）</div></div>
+<div class="stat"><div class="stat-val">>120dB</div><div class="stat-lbl">动态范围</div></div>
+<div class="stat"><div class="stat-val">&lt; 1μs</div><div class="stat-lbl">延迟</div></div>
+</div>
+
+<p class="p">事件相机的优势在于<span class="kw">极低延迟</span>和<span class="kw">极高动态范围</span>——非常适合高速飞行（>10m/s）或高动态范围场景（如从隧道飞出到阳光下）。但它不输出传统图像，需要新的算法处理范式。事件相机SLAM是当前前沿研究方向，也是未来高性能无人机的潜在方向。</p>
+
+<h2 class="section-h2">3.3 计算机视觉基础算法</h2>
+
+<h3 class="section-h3">3.3.1 特征点检测与描述</h3>
+<p class="p"><span class="kw">特征点</span>（Feature）是图像中具有显著性的像素位置——它们在不同帧之间具有可重复性和独特性。传统视觉里程计的核心就是"检测特征点 → 匹配特征点 → 恢复相机运动"。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🔍</div><h4>FAST 角点</h4><p>快速检测局部像素值与圆周邻域差异显著的点。速度极快，适合实时应用。缺点：不带描述子，需搭配其他描述子使用。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🎯</div><h4>Harris 角点</h4><p>基于图像梯度的角点响应函数，对旋转不变。ORB-SLAM等经典系统使用。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🔢</div><h4>ORB 描述子</h4><p>ORB（Oriented FAST and Rotated BRIEF）是FAST+BRIEF的加速版，带方向信息。计算极快，广泛用于实时VIO系统。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🧬</div><h4>SIFT / SURF / AKAZE</h4><p>更高精度的描述子。SIFT精度最高但计算慢；AKAZE提供精度与速度的良好平衡。</p></div>
+</div>
+
+<h3 class="section-h3">3.3.2 光流法（Optical Flow）</h3>
+<p class="p"><span class="kw">光流</span>描述图像中像素随时间的运动模式。与特征点法不同，光流利用<span class="kw">稠密或半稠密</span>的信息，对低纹理区域更鲁棒。</p>
+
+<div class="tags">
+<span class="tag t-green">LK光流：稀疏光流，适合特征点跟踪，计算高效</span>
+<span class="tag t-blue">Horn-Schunck：全局稠密光流，引入平滑约束</span>
+<span class="tag t-orange">Farnebäck：稠密光流，用于运动分割和场景流估计</span>
+</div>
+
+<h3 class="section-h3">3.3.3 深度学习视觉感知</h3>
+<p class="p">2015年后，深度学习在视觉感知领域全面超越传统方法。当前主流网络架构：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#fce4ec">🎯</div><h4>目标检测</h4><p>YOLO系列（YOLOv5-v8）、Faster R-CNN——实时检测障碍物、人、车。YOLOv8可做到30-100fps。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🔢</div><h4>语义分割</h4><p>DeepLabv3+、SegFormer——像素级分类，理解可飞行区域。输出每个像素的类别（天空/地面/障碍物）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📐</div><h4>单目深度估计</h4><p>MiDaS、DPT——从单张图像预测稠密深度图。精度不如Lidar，但无尺度约束，部署灵活。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🔮</div><h4>场景流/光流</h4><p>RAFT（Optical Flow）、FlowNet——预测像素级运动矢量，用于运动检测。</p></div>
+</div>
+
+<div class="card orange"><div class="card-label">边缘部署的挑战</div><h3>为什么深度学习在无人机上部署困难？</h3><p>深度学习模型通常需要GPU加速，典型模型（YOLOv8-L）的推理需要10-30 GFLOPS。在Jetson Orin上可以实时运行，但功耗会显著增加。更重要的是：模型训练需要大量标注数据，数据偏差会导致意想不到的失效——在东北雪地训练的模型可能在云南竹林中完全失效。融合传统几何方法（如Lidar几何约束）可以显著提升鲁棒性。这也是第12章融合视觉与Lidar的动机之一。</p></div>
+
+<h2 class="section-h2">3.4 双目校正与立体匹配</h2>
+<p class="p">双目立体匹配的核心任务是：找到左图和右图中对应的像素点，计算视差，进而恢复深度。</p>
+
+<h3 class="section-h3">3.4.1 极线约束：搜索空间的降维</h3>
+<p class="p">如果没有约束，在右图中搜索匹配点需要在整个二维图像搜索——这既慢又不准。<span class="kw">极线约束</span>（Epipolar Constraint）把这个搜索降到一维：如果两个相机已经完全校正（极线平行），则左图中一个像素对应的点在右图中必然出现在同一行（扫描线）上。</p>
+
+<h3 class="section-h3">3.4.2 立体匹配算法</h3>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">⚡</div><h4>SGBM (Semi-Global Block Matching)</h4><p>半全局块匹配，速度与精度的良好平衡。OpenCV内置，NVIDIA GPU可硬件加速。实时应用首选。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🎯</div><h4>AD-Census</h4><p>精度更高但更慢，适合离线处理（如无人机测绘后重建）。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🤖</div><h4>深度学习立体匹配</h4><p>HM3D-Stereo、CASSTEREO等网络，精度显著超越传统方法，但需要GPU实时运行。</p></div>
+</div>
+
+<!-- ===== 🛠️ 动手实践 ===== -->
+<div class="card green" style="margin-bottom:16px"><div class="card-label">🛠️ 动手实践</div><h3>用OpenCV亲手实现相机标定</h3><p><strong>目标：</strong>用Python+OpenCV对相机进行内参标定，获得 (fₓ, fᵧ, cₓ, cᵧ) 和畸变系数。<br><br>
+<strong>步骤：</strong><br>
+<strong>①</strong> 打印棋盘格标定板（OpenCV文档中有标准PDF），拍摄15-20张不同角度的照片。<br>
+<strong>②</strong> 使用以下代码提取角点并标定：<br>
+<pre style="background:#f5f5f7;padding:12px;border-radius:8px;overflow-x:auto;font-size:13px">
+import cv2
+import numpy as np
+
+# 准备标定板的世界坐标（棋盘格角点）
+objp = np.zeros((9*6, 3), np.float32)
+objp[:, :2] = np.mgrid[0:9, 0:6].T.reshape(-1, 2)
+
+objpoints = []  # 3D points
+imgpoints = []  # 2D points
+
+for fname in images:  # 你的棋盘格图像列表
+    img = cv2.imread(fname)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    ret, corners = cv2.findChessboardCorners(gray, (9,6), None)
+    if ret:
+        objpoints.append(objp)
+        # 亚像素精度优化
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+        corners2 = cv2.cornerSubPix(gray, corners, (11,11), (-1,-1), criteria)
+        imgpoints.append(corners2)
+
+# 标定！
+ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
+print(f"内参矩阵K:\n{mtx}")
+print(f"畸变系数: {dist}")
+</pre>
+<strong>③</strong> 验证标定精度：计算重投影误差，<code>rms < 1.0</code> 像素代表标定良好。<br>
+<strong>④</strong> 用 <code>cv2.undistort()</code> 校正图像，观察畸变是否消除。
+</p></div>
+
+<!-- ===== ⚠️ 常见陷阱 ===== -->
+<div class="callout callout-warn" style="margin-bottom:16px"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>常见陷阱① - 棋盘格拍摄角度不足：</strong>如果所有照片都是从正前方拍摄（旋转角度不够），标定结果会低估畸变系数。正确做法：让棋盘格出现在图像的四个角落和边缘区域，这些区域畸变最明显。<br><br>
+<strong>常见陷阱② - 标定后不及时验证：</strong>拿到内参矩阵后，必须用<code>undistort()</code>校正一张训练集外的照片，观察边缘直线是否变直。如果直线仍然弯曲，说明标定数据不足。<br><br>
+<strong>常见陷阱③ - 忽视畸变模型版本：</strong>OpenCV默认使用5参数畸变模型(k₁, k₂, p₁, p₂, k₃)，但某些广角镜头（>150°）需要OpenCV 4.x+的rational模型(8参数)。否则即使标定误差小，边缘区域校正也不准确。</div></div>
+
+<div class="card green" style="margin-bottom:16px"><div class="card-label">📚 本章学习路线</div><h3>相机与视觉的学习路径</h3><p><strong>第1步：几何基础（20分钟）</strong>——3.1节的针孔模型和投影方程是所有视觉算法的数学基础。务必亲手用Python实现一遍：用已知的内参矩阵，把三维点投影到二维像素坐标，感受"降维"是如何发生的。<br><strong>第2步：特征点与光流（20分钟）</strong>——3.3节。安装OpenCV，用ORB特征做两帧图像的特征匹配，观察匹配结果。<br><strong>第3步：深度学习视觉（15分钟）</strong>——3.3.3节。体验YOLOv8和MiDaS Demo，感受深度学习"从数据学习特征"与手工设计特征的差异。<br><br>
+<strong>前置知识检查：</strong>理解相机投影方程 Z·p = K·[R|t]·P 中每个矩阵的维度（3×3, 3×4, 3×1），能说清楚"焦距f的物理含义"和"为什么单目无法恢复尺度"。</p></div>
+
+<div class="card orange" style="margin-bottom:16px"><div class="card-label">🔗 推荐课程与学习资源</div><h3>优质免费资源</h3><p><strong>🎓 视觉几何课程：</strong><br>• <a href="https://www.coursera.org/learn/robotics-perception" target="_blank" rel="noopener">Coursera: Robotics Perception (UPenn)</a> — 第1-3周覆盖针孔模型、双目几何和光流，教授为Sebastian Thrun（斯坦福/Google无人车）<br>• <a href="http://rpg.ifi.uzh.ch/teaching.html" target="_blank" rel="noopener">UZH RPG: Visual Odometry Lecture</a> — 苏黎世大学机器人实验室的VIO课程，世界上最权威的VIO课程之一<br>• <a href="https://vision.in.tum.de/education#lectures" target="_blank" rel="noopener">TUM Vision Lecture</a> — 慕尼黑工业大学计算机视觉课程，含全套PPT和练习<br><br><strong>📖 推荐教材：</strong><br>• 《Multiple View Geometry in Computer Vision》(Hartley & Zisserman) — 计算机视觉几何的圣经，必读第1-8章<br>• 《Deep Learning for Computer Vision》(Adrian Rosebrock) — 实战导向的深度学习视觉书<br><br><strong>🛠️ 实践工具：</strong><br>• OpenCV：视觉算法瑞士军刀，Python/C++接口<br>• Kalibr：ETHZ的相机标定工具箱，支持多相机+IMU联合标定<br>• OpenVSLAM / ORB-SLAM3：开源单目/双目/深度视觉SLAM系统</p></div>
+
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第4章 · 激光雷达）：</strong>相机依赖光线——夜间、强光、雨雾都会严重影响性能。激光雷达（Lidar）用主动光的方式直接测量距离，完全不依赖环境光照。但Lidar数据是稀疏的三维点云而非密集图像，需要专门的算法处理。理解Lidar的测距原理和数据特性，是设计鲁棒感知系统的关键——特别是第12章 Lidar-视觉融合，需要同时掌握两种传感器的优劣。</div></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>视觉感知的物理与算法基础</h3><p><strong>① 针孔模型：</strong>三维点投影为二维像素，Z·p = K·[R|t]·P。<br><strong>② 内参标定：</strong>Zhang方法标定内参和畸变参数，是所有视觉算法的第一步。<br><strong>③ 单目尺度缺失：</strong>单目无法从单帧恢复绝对尺度，需要IMU或额外传感器解决。<br><strong>④ 双目视差测距：</strong>Z = f·b/d，视差越小深度估计越不准确。<br><strong>⑤ 事件相机：</strong>只输出亮度变化事件，极低延迟、极高动态范围，是高速无人机的前沿方向。</p></div>
+
+</section>

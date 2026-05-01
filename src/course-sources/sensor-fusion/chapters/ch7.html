@@ -1,0 +1,89 @@
+<section id="ch7">
+<div class="hero">
+<div class="chapter-tag">Chapter 7 · 融合算法</div>
+<h1>时空标定实战：<br>传感器融合的"第一道工序"</h1>
+<p class="sub">Kalibr工具链全流程、标定精度诊断、手眼标定原理——让无人机所有传感器的时间和空间对齐。</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约40分钟</span>
+<span class="hero-meta-item">🔗 标定基础</span>
+</div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>前置依赖：</strong>Chapter 3（相机内参模型）、Chapter 4（Lidar坐标系）。本章是进入融合算法之前的"质检工序"——时空错位是融合系统最常见的隐性错误源。不理解标定就做融合，是典型的"公式正确但结果完全错"。</div></div>
+
+<p class="lead">传感器融合有一条铁律：<span class="kw">融合之前必须先同步</span>。时间不同步 = 把不同时刻的数据混为一谈；空间不对齐 = 把不同参考系的数据强行拼接。两种错误都会让再精巧的融合算法完全失效。标定看似"枯燥"，但它是整个感知系统的<span class="kw">地基工程</span>——地基不稳，上层建筑必然倒塌。</p>
+
+<h2 class="section-h2">7.1 时间同步：让所有传感器"同时说话"</h2>
+
+<h3 class="section-h3">7.1.1 时钟的本质问题</h3>
+<p class="p">每个传感器自带独立的晶振（振荡器）。IMU 以 1kHz 采样，相机以 30fps 触发快门，Lidar 以 10-20Hz 扫描一圈——它们的时钟即便标称相同频率，实际也存在：</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">⏱️</div><h4>时钟偏移 (Offset)</h4><p>两个时钟在某一时刻的绝对差。如相机时钟比系统时钟慢了 12.3ms——这是常数偏移，可以用静态时延标定得到。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🔄</div><h4>时钟漂移 (Skew / Drift)</h4><p>两个晶振的频率不完全相同，导致它们的时差随时间线性增长。例如：相机晶振比系统晶振慢 2ppm（百万分之二）→ 每飞行 10 分钟产生 1.2ms 的额外偏移。</p></div>
+</div>
+
+<div class="hlbox"><div class="hlbox-title">🔑 时间同步的工程精度要求</div><p><strong>IMU + 相机（VIO）：< 2ms</strong> —— 2ms 的时差 + 无人机快速旋转（如 180°/s，即 3°/帧）→ 角度投影误差 = 3°/帧 × 2ms = 0.006°/帧 —— 看起来小。但是：0.006° 的误差通过三角测量进入 100m 远处的 3D 点 → 点位置误差 = 100m × sin(0.006°) ≈ 10.5mm —— 这已经在厘米级了。累积多帧后，VIO的位姿漂移会显著加剧。<br><br>
+<strong>IMU + Lidar：< 5ms</strong> —— 无人机高速飞行（10m/s）时，5ms 的时差 → 0.05m（5cm）的位置误差 → 不使用PTP同步的Lidar系统，高速飞行时几何精度严重下降。</p></div>
+
+<h3 class="section-h3">7.1.2 硬件同步：PTP与外部触发</h3>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">⚡</div><h4>PPS (Pulse Per Second) 硬件触发</h4><p>飞控每整秒发出一个 PPS 脉冲。所有传感器以此脉冲为"零点"对齐各自的时钟偏移。同步精度 < 1μs。许多高精度 GNSS+IMU 组合导航系统（如 ADIS-16495）通过 PPS 触发采样。局限：不是所有传感器支持外部触发输入。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🌐</div><h4>PTP (IEEE 1588)</h4><p>以太网上的精密时钟同步协议。需要一个"主时钟"（Grandmaster），通过硬件打时戳（Hardware Timestamping）实现端到端时差估算。Jetson Orin 的网卡支持 PTP，配合支持 PTP 的交换机，可实现亚微秒级同步。在高性能 Lidar（Ouster OS1）上已是标配。</p></div>
+</div>
+
+<h3 class="section-h3">7.1.3 软件同步：交叉相关时延估计</h3>
+<p class="p">当硬件同步不可行时，通过<span class="kw">数据驱动</span>的方式估计时差。核心方法：</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 交叉相关法估计时延</div><p><strong>原理：</strong>IMU 测得的机体角速度与视觉/Lidar 测得的位姿旋转速率，如果时间对齐，两者的互相关性显著不为零。如果存在时延 Δt，互相关函数在 Δt 处出现峰值。<br><br>
+步骤：<br>
+1. 从 IMU 数据积分得到角度序列 θ_IMU(t)<br>
+2. 从视觉/Lidar 相对位姿提取角度序列 θ_CAM(t)<br>
+3. 计算互相关：C(τ) = E[θ_IMU(t)·θ_CAM(t+τ)]<br>
+4. 取 C(τ) 峰值所在 τ 作为 C → I 的时间偏移<br><br>
+这是 Kalibr 等工具中时间同步模块的底层算法。精度可达 < 半个采样周期（IMU 1kHz → 0.5ms）。</p></div>
+
+<h2 class="section-h2">7.2 空间标定：建立传感器的"共同参考系"</h2>
+
+<h3 class="section-h3">7.2.1 标定的两大类：内参 vs 外参</h3>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🎯</div><h4>内参 (Intrinsic)</h4><p>描述单个传感器内部的光学/几何特征。如相机的焦距 (fₓ,fᵧ)、光心 (cₓ,cᵧ)、畸变系数 (k₁,k₂,p₁,p₂,k₃)。通过拍摄标定板（棋盘格/AprilTag）获得。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🔄</div><h4>外参 (Extrinsic)</h4><p>描述传感器之间的刚体变换关系。如相机到 Lidar 的 [R|t] 矩阵。通过标定板（同时被两个传感器观察到）或手眼标定获得。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">⚙️</div><h4>相机到IMU的外参</h4><p>这是 VIO 标定的核心输出。相机坐标系 {C} 到 IMU 坐标系 {I} 的变换 R_CtoI, t_CtoI。</p></div>
+</div>
+
+<h3 class="section-h3">7.2.2 手眼标定 (Hand-Eye Calibration) 原理</h3>
+<p class="p"><span class="kw">手眼标定</span>是经典的多传感器外参标定方法。核心方程：<strong>AX = XB</strong></p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 AX = XB：手眼标定的核心</div><p>A：相对位姿在坐标系 O 下的变换（如从时刻 tᵢ 到 tⱼ 相机在{E}系下的运动）<br>
+B：相对位姿在坐标系 P 下的变换（如 IMU 在{B}系下的积分位移）<br>
+X：我们要标定的未知外参（从 P 到 O 的刚体变换）<br><br>
+<strong>方程：AX = XB</strong><br><br>
+在无人机上：A = 两帧间视觉里程计估计的相对位姿 ；B = 两帧间 IMU 预积分的相对运动；X = 相机到IMU的未知外参 [R|t]<br><br>
+手眼标定在多组运动下联立求解 AX=XB，得到最优的外参矩阵。这是 Kalibr 和 VINS-Mono 在线标定的底层算法。</p></div>
+
+<h3 class="section-h3">7.2.3 Kalibr 工具链全流程</h3>
+<p class="p"><span class="kw">Kalibr</span> 是ETHZ ASL实验室开发的权威标定工具，支持多相机 + IMU 联合标定。</p>
+
+<div class="card green"><div class="card-label">标定流程</div><h3>Kalibr 相机+IMU联合标定步骤</h3><p><strong>① 准备 AprilGrid 标定板：</strong>从 Kalibr 仓库打印推荐的标定板。选择网格尺寸与相机拍摄距离匹配（无人机上通常使用 6×6 的 AprilTag 网格）。<br><br>
+<strong>② 录制标定数据集 (rosbag)：</strong>手持无人机（固定好所有传感器）进行丰富的空间运动——绕三轴旋转、加速、上下起伏——让 IMU 充分激励，且相机在各个角度都能清晰看到标定板。<br><br>
+<strong>③ 运行 Kalibr 联合标定：</strong><br>
+<code>rosrun kalibr kalibr_calibrate_imu_camera \
+  --bag calibration.bag \
+  --cam cam0.yaml --imu imu.yaml \
+  --target april_grid.yaml \
+  --time-calibration --timeoffset-padding 0.05</code><br><br>
+其中 <code>--time-calibration</code> 同时估计相机到IMU的时间偏移。<br>
+出参：相机到IMU的旋转和平移矩阵；IMU的噪声密度和随机游走参数（用于 Kalman 滤波的 Q 矩阵）。<br><br>
+<strong>④ 验证标定精度：</strong>Kalibr 输出每个残差的重投影误差分布。好的标定结果：重投影误差 < 1 像素，外参的平移误差 < 1cm。</p></div>
+
+<div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>标定高频痛点：</strong>无人机高振动场景（> 500Hz 螺旋桨振动），外参会随振动缓慢漂移。建议：(a) 刚性安装——所有传感器用铝合金支架安装，禁止弹性材料；(b) 每次飞行前用快速标定法验证——在已知标记场景中飞行 5 秒，看 Lidar投影到图像上的对齐程度。如果系统性地偏移了几个像素，说明外参已变化。</div></div>
+
+<!-- ===== ⚠️ 常见陷阱 ===== -->
+<div class="callout callout-warn" style="margin-bottom:16px"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>常见陷阱① - 标定板太小：</strong>标定板应在图像中占据 >30% 的面积。如果标定板太小（如 A4 纸大小在 5m 远处只有几十个像素），角点提取精度很差。标定结果不可靠。<br><br>
+<strong>常见陷阱② - 忽略手眼标定的奇异性：</strong>如果 IMU 只沿一个轴旋转（单自由度运动），AX=XB 的平移部分会出现奇异性——CM 到 IMU 的平移向量无法可靠估计。录制标定数据时，<strong>必须进行多角度、多方向的复合运动</strong>（滚动+俯仰+偏航同时参与）。<br><br>
+<strong>常见陷阱③ - 时间同步标定时 IMU 数据质量差：</strong>如果 IMU 在标定时温度迅速变化（从室内拿到室外），零偏会随时间漂移——交叉相关法会把零偏漂移当作时间偏移，给出错误估计。标定前让 IMU 预热 5 分钟。</div></div>
+
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>时空标定：融合的地基</h3><p><strong>① 时间同步：</strong>硬件触发 (<1μs) > PTP (<1μs) > 软件交叉相关 (<0.5ms)。<br><strong>② 手眼标定：</strong>AX = XB 方程，多组运动联立求解 sensor间的外参矩阵。<br><strong>③ Kalibr：</strong>ETHZ权威标定工具，支持多相机+IMU联合标定+时间偏移估算。<br><strong>④ 标定准确性：</strong>重投影误差 < 1像素、外参平移误差 < 1cm → 合格标定。</p></div>
+
+</section>

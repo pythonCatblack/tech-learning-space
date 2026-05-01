@@ -1,0 +1,144 @@
+<section id="ch1">
+<div class="hero">
+<div class="chapter-tag">Chapter 1 · 基础概念</div>
+<h1>认识芯片：<br>从一粒沙子到智能核心</h1>
+<p class="sub">理解芯片是什么、有哪些种类、它如何从地球最丰富的元素——沙子里诞生，又是怎样成为驱动整个人类文明的核心力量。</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约35分钟阅读</span>
+<span class="hero-meta-item">🧩 入门级</span>
+</div>
+</div>
+
+<p class="lead">每天醒来，你口袋里的手机、手腕上的手表、甚至冰箱里的定时器，都有一颗或数十颗芯片在默默工作。芯片是现代文明的"大脑"，但它最初的开端，却是你脚下随处可见的一粒沙子。本章将带你从零开始，彻底理解芯片是什么——为什么会有 CPU、GPU、ASIC 等不同种类？它们和你关心的无人机、AI 有什么关系？</p>
+
+<!-- ===== 1.1 什么是芯片？ ===== -->
+<h2 class="section-h2">1.1 什么是芯片？</h2>
+<p class="p">芯片的正式名称是<span class="kw">集成电路</span>（Integrated Circuit，简称 <span class="kw">IC</span>）。它的标准定义是：将数量极大的微型电子元件（晶体管、电阻、电容等）全部制作在一小块半导体材料（通常是硅）上，并实现特定电子功能的微型电路系统。</p>
+
+<div class="hlbox"><div class="hlbox-title">💡 一个让你恍然大悟的类比</div><p>想象一下1960年代：一台能运行简单程序的电子计算机，需要用分立元件——几十万个独立的晶体管、电阻、电容——一个一个手工焊接在电路板上。这台机器会像一间教室那么大，耗电量比十个电饭锅还高。<br><br>芯片做的事情，就是把这"一间教室"的所有功能<strong>全部微缩到一枚硬币大小的硅片上</strong>——这枚硅片消耗的电力不到一台普通电风扇的十分之一，却比那间教室的机器快了几万倍。</p></div>
+
+<h3 class="section-h3">1.1.1 芯片的物理形态</h3>
+<p class="p">一个普通人在生活中看到的"芯片"，其实是一个<span class="kw">封装好的黑色方块</span>。但当你砸开这个黑色外壳（别试，会碎），里面藏着的真正芯片本尊——叫做<span class="kw">裸片</span>（Die）——比米粒还小，厚度不到0.5毫米。</p>
+<p class="p">这个"微缩程度"到底有多夸张？如果把你手机处理器的每个晶体管看成一颗芝麻，那一颗芯片的晶体管总量足以铺满一整个标准足球场。而在现实世界——所有这些"芝麻"被塞进了指甲盖那么大的硅片上，彼此之间的连接线比头发丝的千分之一还细。</p>
+
+<div class="stats">
+<div class="stat"><div class="stat-val">500亿</div><div class="stat-lbl">晶体管（旗舰手机CPU）</div></div>
+<div class="stat"><div class="stat-val">3nm</div><div class="stat-lbl">最小量产工艺节点</div></div>
+<div class="stat"><div class="stat-val">300mm</div><div class="stat-lbl">晶圆直径（12英寸）</div></div>
+<div class="stat"><div class="stat-val">~0.3mm</div><div class="stat-lbl">裸片厚度</div></div>
+</div>
+
+<h3 class="section-h3">1.1.2 芯片的层次结构：从沙子到系统</h3>
+<p class="p">芯片不是一个"整体"，它的存在遵循严格的层次结构。理解这个层次很重要，因为后面章节每一步制造工艺、每一种设计方法，都对应特定层次：</p>
+
+<div class="flow">
+<div class="flow-box"><div class="flow-box-title">1. 材料</div><div class="flow-box-desc">硅晶圆</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">2. 器件</div><div class="flow-box-desc">晶体管</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">3. 门级</div><div class="flow-box-desc">逻辑门</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">4. 模块</div><div class="flow-box-desc">寄存器/ALU</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">5. 微架构</div><div class="flow-box-desc">流水线/缓存</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">6. 系统</div><div class="flow-box-desc">SoC / 完整芯片</div></div>
+</div>
+
+<div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>教程导航：</strong>这个层次结构就是我们教程的路线图。<strong>第1-2层</strong>将在 Chapter 2（半导体物理）和 Chapter 3（晶体管原理）中详细展开；<strong>第3-4层</strong>对应 Chapter 4-6（逻辑门、数字电路、架构设计）；<strong>第5-6层</strong>对应 Chapter 7-8（芯片类型、制造流程）；而 <strong>Taalas 与无人机应用</strong>（Chapter 11-13）将展示这些层次如何组合成你真正关心的产品。</div></div>
+
+<!-- ===== 1.2 芯片的工作原理 ===== -->
+<h2 class="section-h2">1.2 芯片是如何工作的？</h2>
+<p class="p">尽管芯片种类繁多，但它们的核心工作机制都遵循同一个范式：<span class="kw">冯·诺依曼架构</span>——输入 → 存储 → 计算 → 输出。只不过不同的芯片在这四个环节上各有侧重。</p>
+
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📥</div><h4>数据进入</h4><p>传感器、按键、网络接口将现实世界的信号（温度、光、声音、电磁波）转换为芯片能理解的 0/1 信号。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">💾</div><h4>临时存储</h4><p>芯片内部的寄存器、缓存（SRAM）暂时抱住数据，等待处理。这些是芯片上"最快但也最贵"的存储。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">⚡</div><h4>真正计算</h4><p>算术逻辑单元（ALU）对数据进行加减乘除、比较大小、判断真假。这是芯片的"肌肉"。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🎯</div><h4>决策控制</h4><p>控制单元决定"下一步做什么"——执行哪条指令、跳转到哪个位置。这是芯片的"大脑"。</p></div>
+</div>
+
+<div class="quote"><p>"芯片的本质是一个极其精密的自动化流水线：信号进来 → 被分解为无数次逻辑判断 → 经过亿级晶体管协作 → 最终输出你需要的结果。整个过程在几纳秒内完成——比你眨眼快了一千万倍。"</p></div>
+
+<h3 class="section-h3">1.2.1 芯片处理信息的最小单位：0 和 1</h3>
+<p class="p">芯片只懂两件事：<span class="kw">有电（1）</span>和<span class="kw">没电（0）</span>。这就是"二进制"。但这并不代表芯片只能做简单的事——就像26个英文字母可以组合成莎士比亚的全部著作，0 和 1 通过巧妙组合，可以表示数字、文字、图像、声音、甚至三维空间坐标。具体如何在物理层面实现 0 和 1，将在 Chapter 2 的半导体物理中展开。</p>
+
+<!-- ===== 1.3 芯片的分类体系 ===== -->
+<h2 class="section-h2">1.3 芯片的分类体系：你手里的芯片属于哪一类？</h2>
+<p class="p">"芯片"是一个超级广义的称呼。就像"汽车"包含了轿车、卡车、赛车、推土机——这些设计完全不同，芯片也一样。理解分类至关重要，因为后续章节你将看到：无人机需要的芯片和手机里的芯片是完全不同的设计哲学。</p>
+
+<h3 class="section-h3">1.3.1 按功能用途分类</h3>
+<table class="tbl">
+<thead><tr><th>类别</th><th>功能</th><th>典型实例</th><th>与无人机的关联</th></tr></thead>
+<tbody>
+<tr><td class="hl">计算芯片</td><td>执行程序、推理</td><td>CPU、GPU、AI加速器</td><td>飞控运算、AI视觉</td></tr>
+<tr><td class="hl">存储芯片</td><td>保存数据/程序</td><td>DRAM、NAND Flash、HBM</td><td>视频缓存、模型参数</td></tr>
+<tr><td class="hl">模拟芯片</td><td>处理连续信号</td><td>运放、ADC/DAC</td><td>传感器信号转换</td></tr>
+<tr><td class="hl">混合信号芯片</td><td>数字+模拟混合</td><td>PMIC、射频收发器</td><td>电池管理、GPS</td></tr>
+<tr><td class="hl">传感器芯片</td><td>感知物理世界</td><td>IMU、陀螺仪、雷达</td><td>姿态感知、避障</td></tr>
+<tr><td class="hl">通信芯片</td><td>无线/有线传输</td><td>WiFi/BLE/5G Modem</td><td>图传、遥控链路</td></tr>
+</tbody>
+</table>
+
+<h3 class="section-h3">1.3.2 按集成规模分类</h3>
+<p class="p">芯片行业有一个有趣的历史分类，反映的是"一块芯片上能塞多少元件"：</p>
+<div class="flow">
+<div class="flow-box"><div class="flow-box-title">SSI</div><div class="flow-box-desc">小规模<br>＜10门<br>1960s</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">MSI</div><div class="flow-box-desc">中规模<br>10-100门<br>1960s末</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">LSI</div><div class="flow-box-desc">大规模<br>100-10,000门<br>1970s</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">VLSI</div><div class="flow-box-desc">超大规模<br>10K-1M门<br>1980s</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">ULSI</div><div class="flow-box-desc">极大规模<br>>1M门<br>1990s至今</div></div>
+</div>
+<p class="p">今天的芯片全部属于 ULSI 级别，但这个分类帮助我们理解一个关键趋势：<strong>每过十年，同样大小的硅片上能塞进的门数量增加1000倍</strong>。这就是著名的<span class="kw">摩尔定律</span>（Moore's Law）的核心。</p>
+
+<!-- ===== 1.4 CPU / GPU / FPGA / ASIC ===== -->
+<h2 class="section-h2">1.4 CPU、GPU、FPGA、ASIC——四种"大脑"的区别</h2>
+<p class="p">这是芯片世界里最常见的四个术语，也是你未来理解无人机硬件加速绕不开的核心概念。它们的本质区别在于<span class="kw">灵活性与效率的权衡</span>。</p>
+
+<table class="tbl">
+<thead><tr><th>类型</th><th>灵活性</th><th>效率</th><th>开发成本</th><th>制造方式</th><th>无人机场景</th></tr></thead>
+<tbody>
+<tr><td class="hl">CPU</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐</td><td>低（买现成）</td><td>标准量产</td><td>主要飞控逻辑</td></tr>
+<tr><td class="hl">GPU</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>低（买现成）</td><td>标准量产</td><td>视觉AI（功耗高）</td></tr>
+<tr><td class="hl">FPGA</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>中（编程即可）</td><td>标准量产+编程</td><td>原型验证</td></tr>
+<tr><td class="hl">ASIC</td><td>⭐</td><td>⭐⭐⭐⭐⭐</td><td>极高（需流片）</td><td>完全定制</td><td>量产最优解</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>核心概念——灵活性与效率的权衡：</strong>CPU 可以跑任何程序（灵活性最高），但功耗大；ASIC 只能做一件事（灵活性最低），但功耗是 CPU 的百分之一。从 CPU → GPU → FPGA → ASIC，你放弃灵活性来换取效率。无人机的电池只有那么点，所以极致效率的 ASIC 是终极答案。<br><br>这个权衡关系将在 Chapter 7（CPU/GPU/ASIC 深入对比）中用量化数据详细展示，Chapter 12 将直接解答"无人机为什么最终走向 ASIC"。</div></div>
+
+<!-- ===== 1.5 芯片简史 ===== -->
+<h2 class="section-h2">1.5 芯片简史：一部改变人类的超级压缩史</h2>
+<p class="p">1958年，德州仪器的<span class="kw">杰克·基尔比</span>（Jack Kilby）在实验室里把几个晶体管和电阻做在了同一块锗片上——世界上第一块集成电路诞生了。同一时期，仙童半导体的<span class="kw">罗伯特·诺伊斯</span>（Robert Noyce，后来和戈登·摩尔共同创立了 Intel）独立发明了"平面工艺"——这是现代 IC 制造真正的起点。</p>
+
+<div class="card green"><div class="card-label">历史要点</div><h3>芯片发展的五个时代</h3>
+<p><strong>1958-1970：发明与验证期</strong>——从锗基到硅基、从几个晶体管到几千个。Intel 4004（1971年）是第一款商用微处理器，4位，2300个晶体管。<br>
+<strong>1971-1990：PC时代</strong>——x86架构统治世界。Intel 8086（1978年）开创了至今仍在使用的基本指令集架构。摩尔定律在这个阶段完美应验。<br>
+<strong>1990-2007：多核与图形时代</strong>——频率墙出现，芯片走向多核并行。NVIDIA 将 GPU 从图形专用推向通用计算（GPGPU）。<br>
+<strong>2007-2020：移动革命</strong>——iPhone 发布，ARM 架构的低功耗处理器统治移动设备。台积电成为全球最先进的芯片制造商。<br>
+<strong>2020至今：AI芯片时代</strong>——专用AI芯片（NPU、TPU、Taalas HC1）爆发。工艺节点进入3nm-2nm，小模型固化硬件成为新范式。</p></div>
+
+<h3 class="section-h3">1.5.1 摩尔定律：预言还是诅咒？</h3>
+<p class="p"><span class="kw">摩尔定律</span>（Gordon Moore, 1965）的原始表述是：集成电路上可容纳的晶体管数量，每隔约两年便会增加一倍。这条"定律"实际上是一个基于观察的预测——但它自我实现的预言能力惊人：过去五十年里，半导体行业几乎精确地沿着这条曲线前进。物理极限正在逼近（原子本身的大小就是最终壁垒），这直接催生了 Chapter 9-10 讨论的先进工艺和 3D 封装技术，以及 Chapter 13 的小模型固化替代路线。</p>
+
+<div class="card orange"><div class="card-label">思考题</div><h3>如果摩尔定律终结，芯片性能怎么继续提升？</h3><p>这正是驱动 ASIC、存内计算和神经形态芯片研究的根本动力——既然不能靠缩小晶体管来提速，那就换个思路：让芯片只为特定任务优化。这也是 Chapter 12-13 要回答的问题。</p></div>
+
+
+<!-- 学习路线与资源 -->
+<div class="card green" style="margin-bottom:16px"><div class="card-label">📚 本章学习路线</div><h3>从零到掌握的学习路径</h3><p><strong>第1步：了解分类（15分钟）</strong>——先用本章1.1-1.2节搞懂芯片分类（CPU/GPU/FPGA/ASIC），顺便搜一下"chip inside iPhone"的拆解视频，直观感受芯片长什么样。<br><strong>第2步：理解架构（20分钟）</strong>——1.3节冯·诺依曼架构是后续所有章节的核心范式，务必理解"计算"和"存储"分离的设计逻辑。配合 YouTube 搜索 "Von Neumann Architecture explained" 的动画视频。<br><strong>第3步：阅读历史（10分钟）</strong>——1.4-1.5节了解芯片发展脉络和摩尔定律，建立宏观认知框架。</p></div>
+
+<div class="card orange" style="margin-bottom:16px"><div class="card-label">🔗 推荐课程与学习资源</div><h3>优质免费资源</h3><p><strong>🎓 入门课程：</strong><br>• <a href="https://www.edx.org/learn/computer-science/" target="_blank" rel="noopener">edX CS50 (Harvard)</a> — 哈佛计算机科学导论，第0周讲解二进制和计算机底层逻辑，豆瓣评分最高的计算机公开课<br>• <a href="https://www.coursera.org/learn/build-a-computer" target="_blank" rel="noopener">Coursera: Build a Modern Computer from First Principles (Nand2Tetris)</a> — 从最基础的与非门开始，一步步"造"出一台计算机，完美匹配第1-6章<br>• <a href="https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/" target="_blank" rel="noopener">MIT 6.004 Computation Structures</a> — MIT经典课程，从数字逻辑到处理器架构，有全套视频和讲义<br><br><strong>📖 推荐阅读：</strong><br>• 《编码：隐匿在计算机软硬件背后的语言》(Code: The Hidden Language) — Charles Petzold，被无数程序员称为"读过最好的计算机科普书"<br>• 《计算机组成与设计：硬件/软件接口》(Patterson &amp; Hennessy) — 教材中的经典，第1-3章完美对应前6章内容<br><br><strong>🎬 视频资源：</strong><br>• YouTube搜索 <a href="https://www.youtube.com/results?search_query=how+a+chip+is+made" target="_blank" rel="noopener">"How a Chip is Made"</a> — 大量芯片制造科普视频<br>• B站搜索 <a href="https://search.bilibili.com/all?keyword=芯片制造" target="_blank" rel="noopener">"芯片制造"</a> — 中文科普动画，适合入门</p></div>
+
+<!-- key takeaways -->
+<div class="divider"></div>
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>记住这些，后续章节会用到的核心概念</h3><p><strong>① 集成电路（IC）= 芯片</strong>：在硅片上集成了大量电子元件的微型电路。<br>
+<strong>② 层次结构</strong>：材料→器件→门→模块→微架构→系统——教程的路线图。<br>
+<strong>③ 冯·诺依曼架构</strong>：输入→存储→计算→输出——所有芯片的基础工作范式。<br>
+<strong>④ 灵活性与效率的权衡</strong>：CPU（最灵活）→ GPU → FPGA → ASIC（最高效）。<br>
+<strong>⑤ 摩尔定律</strong>：晶体管数量每两年翻倍——正在接近物理极限。</p></div>
+
+</section>
