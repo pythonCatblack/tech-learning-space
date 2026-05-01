@@ -38,7 +38,7 @@
 <h3 class="section-h3">4.2.4 AND 门与 OR 门：NAND/NOR + NOT</h3>
 <p class="p">AND 门和 OR 门在 CMOS 中不是"原生"实现的——它们由 NAND/NOR 后面接一个 NOT 门组成。这意味着一个二输入 AND 门需要6个晶体管（4个 NAND + 2个 NOT）。这就是为什么在芯片设计中，工程师更倾向于直接使用 NAND 和 NOR——它们更省晶体管、更快、功耗更低。</p>
 
-<div class="card orange"><div class="card-label">设计智慧</div><h3>为什么 NAND 比 AND 更常用？</h3><p>在 CMOS 中，NAND 门只需要4个晶体管，而 AND 门需要6个。对于一颗有500亿晶体管的芯片，每个门少用2个晶体管意味着节省数百亿个晶体管——直接转化为更小的芯片面积、更低的功耗、更低的制造成本。这就是为什么数字电路设计以 NAND/NOR 为核心，AND/OR 只在必要时使用。</p></div>
+<div class="card orange"><div class="card-label">设计智慧</div><h3>为什么 NAND 比 AND 更常用？</h3><p>在 CMOS 中，NAND 门只需要4个晶体管，而 AND 门需要6个。对于一颗有280亿+晶体管的芯片，每个门少用2个晶体管意味着节省数百亿个晶体管——直接转化为更小的芯片面积、更低的功耗、更低的制造成本。这就是为什么数字电路设计以 NAND/NOR 为核心，AND/OR 只在必要时使用。</p></div>
 
 <h2 class="section-h2">4.3 组合逻辑：没有记忆的"即时计算"</h2>
 <p class="p"><span class="kw">组合逻辑</span>（Combinational Logic）是指输出仅取决于当前输入、与历史状态无关的电路。加法器、比较器、编码器、译码器都属于组合逻辑。</p>

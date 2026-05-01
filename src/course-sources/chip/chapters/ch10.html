@@ -55,11 +55,11 @@
 <div class="card purple"><div class="card-label">3D V-Cache 的意义</div><h3>让缓存命中率达到极限</h3><p>对于游戏和 AI 推理任务，大缓存意味着数据不需要去内存里找，直接在芯片上就能命中。AMD 5950X 加上 3D V-Cache 后，游戏性能提升了 15-25%。</p></div>
 
 <h3 class="section-h3">10.3.2 HBM + 3D 堆叠：AI 训练的秘密</h3>
-<p class="p">NVIDIA H100 GPU 使用 <span class="kw">HBM3 内存</span> + 3D 堆叠技术：</p>
+<p class="p">NVIDIA H100/H200 GPU 使用 <span class="kw">HBM3E 内存</span> + 3D 堆叠技术：</p>
 <div class="steps">
-<div class="step"><div class="step-num">1</div><div><h4>HBM3</h4><p>每颗 HBM3 颗粒提供 3.35TB/s 的带宽，是 DDR5 的 10 倍以上。</p></div></div>
-<div class="step"><div class="step-num">2</div><div><h4>3D 堆叠</h4><p>8 颗 HBM3 堆叠在一起，通过 TSV 与 GPU 核心连接。</p></div></div>
-<div class="step"><div class="step-num">3</div><div><h4>结果</h4><p>总带宽达到 3.35TB/s × 8 = 26.8TB/s，支撑大模型的 AI 训练。</p></div></div>
+<div class="step"><div class="step-num">1</div><div><h4>HBM3E</h4><p>每颗 HBM3E 颗粒提供 1.2TB/s 的带宽，是 DDR5 的 3 倍以上。</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h4>3D 堆叠</h4><p>8 颗 HBM3E 堆叠在一起，通过 TSV 与 GPU 核心连接。</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h4>结果</h4><p>总带宽达到 1.2TB/s × 8 = 9.6TB/s，支撑大模型的 AI 训练。</p></div></div>
 </div>
 
 <h2 class="section-h2">10.4 Chiplet：小芯片的大革命</h2>
