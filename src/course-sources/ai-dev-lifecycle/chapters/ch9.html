@@ -41,9 +41,18 @@ PR描述：
 
 <h2>9.3 专用AI审查工具</h2>
 
-<p><strong>CodeRabbit</strong></p>
+<table>
+<thead><tr><th>工具</th><th>核心能力</th><th>定价</th><th>市场数据</th></tr></thead>
+<tbody>
+<tr><td><strong>CodeRabbit</strong></td><td>PR自动审查、缺陷检测、安全漏洞识别</td><td>开源免费；Pro约$12/月</td><td>15000+客户，审查300万仓库，发现7500万缺陷</td></tr>
+<tr><td><strong>Sourcery</strong></td><td>实时PR审查、重构建议、安全扫描</td><td>$25/月/开发者</td><td>支持Python/JS/TS/Go/Rust/Ruby</td></tr>
+<tr><td><strong>Codacy</strong></td><td>多语言代码质量分析、安全漏洞检测</td><td>$15/月/用户</td><td>支持30+编程语言</td></tr>
+<tr><td><strong>Semgrep</strong></td><td>SAST、SCA、 secrets扫描，AI Assistant减少80%误报</td><td>免费/商业</td><td>30+语言支持</td></tr>
+<tr><td><strong>Snyk</strong></td><td>漏洞优先级排序、依赖检查、安全态势管理</td><td>免费/团队$25/月</td><td>AI安全平台领导者</td></tr>
+</tbody>
+</table>
 
-<p>CodeRabbit是一个AI驱动的代码审查工具，能自动审查PR并提供改进建议。据官网数据，CodeRabbit已服务超过15000+客户，审查了300万个仓库，发现了7500万个代码缺陷。包括NVIDIA在内的多家知名企业都在使用CodeRabbit进行代码审查。</p>
+<p><strong>CodeRabbit</strong>：包括NVIDIA在内的多家知名企业都在使用CodeRabbit进行代码审查。</p>
 
 <pre><code># .github/workflows/coderabbit.yml
 name: CodeRabbit Review

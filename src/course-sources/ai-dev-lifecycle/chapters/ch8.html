@@ -97,13 +97,29 @@ export function validateTask(task: Partial&lt;Task&gt;): ValidationResult {
 
 <h2>8.5 AI测试工具生态</h2>
 
+<table>
+<thead><tr><th>工具</th><th>类型</th><th>核心能力</th><th>定价</th></tr></thead>
+<tbody>
+<tr><td><strong>Diffblue Cover</strong></td><td>Java单元测试生成</td><td>自动生成JUnit测试，维护测试与代码同步</td><td>商业定价</td></tr>
+<tr><td><strong>Applitools</strong></td><td>视觉AI测试</td><td>像素级UI差异检测，跨浏览器/设备测试</td><td>$99-199/月</td></tr>
+<tr><td><strong>Testim</strong></td><td>E2E测试</td><td>AI自愈定位器，适应UI变化</td><td>企业定价</td></tr>
+<tr><td><strong>Mabl</strong></td><td>E2E测试</td><td>ML驱动测试创建和维护，API测试</td><td>企业定价</td></tr>
+<tr><td><strong>Pynguin</strong></td><td>Python测试生成</td><td>开源工具，自动生成Python单元测试</td><td>免费开源</td></tr>
+<tr><td><strong>EvoSuite</strong></td><td>Java测试生成</td><td>基于搜索的测试生成，Mockito集成</td><td>免费开源</td></tr>
+</tbody>
+</table>
+
+<h2>8.6 AI测试研究数据</h2>
+
+<p><strong>GitClear代码质量报告（2025）</strong>：基于2.11亿行代码分析发现，AI辅助开发带来新挑战：</p>
+
 <ul>
-<li><strong>Diffblue</strong>：自动为Java代码生成单元测试，覆盖率高</li>
-<li><strong>Testim</strong>：AI驱动的端到端测试平台，自愈能力强大</li>
-<li><strong>Applitools</strong>：AI视觉测试，自动检测UI变化</li>
-<li><strong>Mabl</strong>：集成ML的测试自动化平台</li>
-<li><strong>Codegen by TestRail</strong>：从手动测试用例自动生成自动化脚本</li>
+<li>代码重复率增加4倍，开发者倾向于复制粘贴AI生成的代码</li>
+<li>短期变更代码（Churn）显著增加</li>
+<li>开发者更多时间用于审查AI建议而非编写代码</li>
 </ul>
+
+<p><strong>研究结论</strong>：AI生成的代码通常存在安全漏洞风险（如SQL注入、硬编码凭证），需要人工审查。</p>
 
 <h2>8.6 持续测试与CI集成</h2>
 

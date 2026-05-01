@@ -80,27 +80,67 @@
 
 <p><strong>欧盟AI法案（EU AI Act）风险分类与实施时间线</strong>：</p>
 
-<p>欧盟《人工智能法案》（Regulation (EU) 2024/1689）于2024年8月1日正式生效，是全球首部综合性人工智能法律框架。实施时间线如下：</p>
+<p>欧盟《人工智能法案》（Regulation (EU) 2024/1689）于2024年8月1日正式生效，是全球首部综合性人工智能法律框架，包含180个序言、113条条款和13个附件。实施时间线如下：</p>
 
 <table>
 <thead><tr><th>风险等级</th><th>应用示例</th><th>要求</th><th>生效时间</th></tr></thead>
 <tbody>
-<tr><td>不可接受风险</td><td>社会评分、实时人脸识别（公共场所）</td><td>禁止</td><td>2025年2月2日</td></tr>
-<tr><td>高风险</td><td>招聘筛选、信贷审批、医疗设备</td><td>严格监管：透明度、文档、审计</td><td>2026年8月2日</td></tr>
-<tr><td>有限风险</td><td>聊天机器人、情感识别</td><td>透明度义务</td><td>2026年8月2日</td></tr>
-<tr><td>最小风险</td><td>垃圾邮件过滤、推荐系统</td><td>自愿遵守行为准则</td><td>2026年8月2日</td></tr>
+<tr><td>禁止类风险</td><td>社会评分、实时人脸识别（公共场所）、基于神经操控的AI</td><td>完全禁止</td><td>2025年2月2日</td></tr>
+<tr><td>高风险</td><td>招聘筛选、信贷审批、医疗设备、教育评估、关键基础设施</td><td>CE认证、技术文档、人类监督、风险管理系统</td><td>2026年8月2日</td></tr>
+<tr><td>有限风险</td><td>聊天机器人、深fake、情感识别系统</td><td>透明度义务</td><td>2026年8月2日</td></tr>
+<tr><td>最小风险</td><td>垃圾邮件过滤、推荐系统、视频游戏AI</td><td>自愿行为准则</td><td>2026年8月2日</td></tr>
 </tbody>
 </table>
 
-<h2>16.6 数据隐私保护</h2>
+<p><strong>罚款标准</strong>：禁止类违规最高罚款全球年营业额的7%；高风险违规3%；信息错误1.5%。</p>
+
+<h3>其他主要AI法规</h3>
+
+<table>
+<thead><tr><th>法规</th><th>地区</th><th>发布时间</th><th>特点</th></tr></thead>
+<tbody>
+<tr><td><strong>NIST AI RMF</strong></td><td>美国</td><td>2023年1月</td><td>自愿性框架，四大核心功能：Govern、Map、Measure、Manage</td></tr>
+<tr><td><strong>美国AI行政令</strong></td><td>美国</td><td>2023年10月</td><td>要求开发者共享安全测试结果，建立AI安全标准</td></tr>
+<tr><td><strong>中国生成式AI法规</strong></td><td>中国</td><td>2023年8月</td><td>要求合法数据来源、反映社会主义核心价值观</td></tr>
+<tr><td><strong>ISO/IEC 42001</strong></td><td>国际</td><td>2023年12月</td><td>首个AI管理系统国际标准，可认证</td></tr>
+</tbody>
+</table>
+
+<h2>16.6 数据隐私保护与隐私计算技术</h2>
 
 <p><strong>隐私保护技术</strong>：</p>
 
-<ul>
-<li><strong>差分隐私（Differential Privacy）</strong>：在数据中添加噪声，保护个体隐私同时保留统计特性</li>
-<li><strong>联邦学习（Federated Learning）</strong>：数据不出本地，模型在边缘设备上训练</li>
-<li><strong>同态加密（Homomorphic Encryption）</strong>：在加密数据上直接计算</li>
-</ul>
+<table>
+<thead><tr><th>技术</th><th>核心原理</th><th>主流工具</th></tr></thead>
+<tbody>
+<tr><td><strong>差分隐私</strong></td><td>在数据中添加校准噪声，保护个体隐私同时保留统计特性</td><td>Microsoft SmartNoise、Google DP Library、OpenDP、PyDP</td></tr>
+<tr><td><strong>联邦学习</strong></td><td>数据不出本地，仅共享模型梯度更新</td><td>TensorFlow Federated、PySyft、FATE、Flower</td></tr>
+<tr><td><strong>同态加密</strong></td><td>在加密数据上直接计算，无需解密</td><td>Microsoft SEAL、PALISADE、HELIB、OpenFHE</td></tr>
+</tbody>
+</table>
+
+<h3>AI公平性与偏见检测工具</h3>
+
+<table>
+<thead><tr><th>工具</th><th>提供商</th><th>核心能力</th></tr></thead>
+<tbody>
+<tr><td><strong>AI Fairness 360</strong></td><td>IBM</td><td>70+公平性指标，偏见缓解算法（预处理/处理中/后处理）</td></tr>
+<tr><td><strong>What-If Tool</strong></td><td>Google</td><td>可视化调查、子群性能比较、反事实分析</td></tr>
+<tr><td><strong>Fairlearn</strong></td><td>Microsoft</td><td>公平性评估、scikit-learn集成、阈值优化器</td></tr>
+</tbody>
+</table>
+
+<h3>可解释AI（XAI）工具</h3>
+
+<table>
+<thead><tr><th>工具</th><th>核心能力</th></tr></thead>
+<tbody>
+<tr><td><strong>SHAP</strong></td><td>基于博弈论的Shapley值，特征归因，一致性保证</td></tr>
+<tr><td><strong>LIME</strong></td><td>局部代理模型，模型无关解释</td></tr>
+<tr><td><strong>AI Explainability 360</strong></td><td>14+可解释性算法，多种解释类型</td></tr>
+<tr><td><strong>Captum</strong></td><td>PyTorch原生，神经网络解释</td></tr>
+</tbody>
+</table>
 
 <pre><code>提示词：
 "为一个AI任务管理系统设计隐私保护方案：
