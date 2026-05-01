@@ -1,166 +1,253 @@
-<h1>第十二章：智能项目管理——AI驱动的研发效能提升</h1>
+<section id="ch12">
+<div class="hero">
+<div class="chapter-tag">Chapter 12 · AI Development Lifecycle</div>
+<h1>智能项目管理——AI驱动的研发效能提升</h1>
+<p class="sub">AI可以从历史数据中学习，提供更准确的预测和更及时的风险预警</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 17 min</span>
+</div>
+</div>
 
-<h2>12.1 传统项目管理的痛点</h2>
+<h2 class="section-h2">12.1 传统项目管理的痛点</h2>
 
-<p>软件项目管理面临诸多挑战：估算不准确、进度不透明、风险发现滞后、资源冲突难以协调。AI可以从历史数据中学习，提供更准确的预测和更及时的风险预警。</p>
+<p class="p">软件项目管理面临诸多挑战：估算不准确、进度不透明、风险发现滞后、资源冲突难以协调。AI可以从历史数据中学习，提供更准确的预测和更及时的风险预警。</p>
 
-<h2>12.2 工作量估算的AI辅助</h2>
+<h2 class="section-h2">12.2 工作量估算的AI辅助</h2>
 
-<p>传统估算依赖主观判断，AI可以从历史数据中发现规律。</p>
+<p class="p">传统估算依赖主观判断，AI可以从历史数据中发现规律。</p>
 
-<pre><code>提示词：
-"基于团队历史项目数据，预测新项目的工作量：
-
-历史数据：
-| 项目类型 | 需求点数 | 实际工时 | 团队规模 | 工期(周) | 质量 |
-|---------|---------|---------|---------|---------|-----|
-| CRM系统 | 120 | 480h | 3人 | 8 | 良好 |
-| 电商小程序 | 80 | 320h | 2人 | 6 | 优秀 |
-| 数据报表 | 60 | 180h | 2人 | 4 | 良好 |
-| 内部OA | 100 | 520h | 3人 | 10 | 一般 |
-
-新项目：
-- 类型：移动App
-- 预估需求点：90
-- 团队规模：3人
-- 目标工期：6周
-
-请预测：
-1. 预估工时
-2. 合理工期
-3. 质量预期
-4. 主要风险点"
-</code></pre>
-
-<h2>12.3 Sprint健康度分析</h2>
-
-<pre><code>提示词：
-"分析当前Sprint的健康状态：
-
-Sprint信息：
-- Sprint 12，目标：完成用户模块
-- 周期：2周（当前第8天）
-- 团队：4人开发 + 1人测试
-
-燃尽图数据（第8天）：
-- 计划曲线：应该剩余约30点
-- 实际曲线：剩余约45点
-- 偏差：+15点（落后于计划）
-
-阻塞问题：
-- Task-156：等待设计稿，已阻塞3天
-- Task-162：第三方API对接问题，技术难点
-
-团队反馈：
-- 开发A：需求变更导致返工
-- 开发B：代码评审积压严重
-
-请分析：
-1. Sprint目标能完成吗？
-2. 主要原因是什么？
-3. 建议的调整措施？
-4. 如何避免类似问题？"
-</code></pre>
-
-<h2>12.4 资源冲突的AI协调</h2>
-
-<pre><code>提示词：
-"分析以下资源冲突并给出优化建议：
-
-项目组合（Q1）：
-| 项目 | 优先级 | 所需人力 | 截止日期 |
-|-----|-------|---------|---------|
-| A | P1 | 3人 | 2月底 |
-| B | P2 | 2人 | 3月中 |
-| C | P3 | 2人 | 3月底 |
-
-可用资源：
-- 工程师总数：5人
-- 其中高级工程师：2人
-- 人员分配现状：
-  - 项目A占用：2人（含1高工）
-  - 项目B占用：1人
-  - 项目C占用：0人
-
-冲突点：
-- 项目B负责人要求2人，但只有1人可用
-- 项目C需要高级工程师，但高工都在A项目
-
-请分析：
-1. 资源冲突的根本原因
-2. 可能的解决方案（至少3个）
-3. 推荐方案及理由
-4. 对业务的影响评估"
-</code></pre>
-
-<h2>12.5 风险预测与预警</h2>
-
-<p>AI可以从历史模式中识别潜在风险，提前预警。</p>
-
-<pre><code>提示词：
-"作为项目风险顾问，请分析以下项目的风险状态：
-
-项目背景：
-- 电商平台重构项目
-- 原计划6个月，目前进入第5个月
-- 原型设计变更了3次
-- 核心团队成员1人离职
-- 关键技术方案还未最终确定
-
-当前状态：
-- 完成度约60%
-- 预算消耗约70%
-- 质量测试覆盖率仅40%
-
-请分析：
-1. 列出TOP 5风险（按可能性×影响排序）
-2. 对每个风险给出：
-   - 风险描述
-   - 早期预警信号
-   - 缓解措施
-3. 整体项目按时交付的概率评估
-4. 建议的决策点"
-</code></pre>
-
-<h2>12.6 团队效能的AI分析</h2>
-
-<pre><code>提示词：
-"分析团队开发效率及优化建议：
-
-数据来源（过去3个月）：
-- 平均Sprint Velocity：42点/周期
-- 代码量：人均1500行/月
-- Bug数：线上缺陷密度0.3个/千行
-- 代码评审时间：平均4.8小时/PR
-- 技术债增加：+15%（相对于还债速度）
-
-个体数据：
-- 工程师A：velocity 45，bug密度0.2，擅长前端
-- 工程师B：velocity 38，bug密度0.4，擅长后端
-- 工程师C：velocity 50，bug密度0.5，擅长全栈
-
-请分析：
-1. 团队整体效率评估
-2. 个体差异原因分析
-3. 技术债的影响评估
-4. 优化建议（流程、技术、人员）"
-</code></pre>
-
-<h2>12.7 AI项目管理工具</h2>
-
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<p>基于团队历史项目数据，预测新项目的工作量：</p>
+<p>历史数据：</p>
+<table class="tbl">
+<thead><tr><th>项目类型</th><th>需求点数</th><th>实际工时</th><th>团队规模</th><th>工期(周)</th><th>质量</th></tr></thead>
+<tbody>
+<tr><td>CRM系统</td><td>120</td><td>480h</td><td>3人</td><td>8</td><td>良好</td></tr>
+<tr><td>电商小程序</td><td>80</td><td>320h</td><td>2人</td><td>6</td><td>优秀</td></tr>
+<tr><td>数据报表</td><td>60</td><td>180h</td><td>2人</td><td>4</td><td>良好</td></tr>
+<tr><td>内部OA</td><td>100</td><td>520h</td><td>3人</td><td>10</td><td>一般</td></tr>
+</tbody>
+</table>
+<p>新项目：</p>
 <ul>
-<li><strong>Jira + Atlassian Intelligence</strong>：自动生成Sprint报告、识别阻塞</li>
-<li><strong>Linear + AI</strong>：智能问题分类、关联相关issue</li>
-<li><strong>Notion AI</strong>：会议纪要提取、文档生成</li>
-<li><strong>GitHub Copilot for Projects</strong>：代码与任务关联分析</li>
+<li>类型：移动App</li>
+<li>预估需求点：90</li>
+<li>团队规模：3人</li>
+<li>目标工期：6周</li>
 </ul>
-
-<h2>12.8 本章小结</h2>
-
+<p>请预测：</p>
 <ol>
-<li>AI可以从历史数据学习，提供更准确的项目预测</li>
-<li>Sprint健康度分析帮助及时发现问题并调整</li>
-<li>资源冲突需要综合考虑优先级、技能、时间多维因素</li>
-<li>AI风险预测能提前预警，避免问题恶化</li>
-<li>团队效能分析帮助识别瓶颈和优化点</li>
+<li>预估工时</li>
+<li>合理工期</li>
+<li>质量预期</li>
+<li>主要风险点</li>
 </ol>
+</div>
+
+<h2 class="section-h2">12.3 Sprint健康度分析</h2>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<p>分析当前Sprint的健康状态：</p>
+<p>Sprint信息：</p>
+<ul>
+<li>Sprint 12，目标：完成用户模块</li>
+<li>周期：2周（当前第8天）</li>
+<li>团队：4人开发 + 1人测试</li>
+</ul>
+<p>燃尽图数据（第8天）：</p>
+<ul>
+<li>计划曲线：应该剩余约30点</li>
+<li>实际曲线：剩余约45点</li>
+<li>偏差：+15点（落后于计划）</li>
+</ul>
+<p>阻塞问题：</p>
+<ul>
+<li>Task-156：等待设计稿，已阻塞3天</li>
+<li>Task-162：第三方API对接问题，技术难点</li>
+</ul>
+<p>团队反馈：</p>
+<ul>
+<li>开发A：需求变更导致返工</li>
+<li>开发B：代码评审积压严重</li>
+</ul>
+<p>请分析：</p>
+<ol>
+<li>Sprint目标能完成吗？</li>
+<li>主要原因是什么？</li>
+<li>建议的调整措施？</li>
+<li>如何避免类似问题？</li>
+</ol>
+</div>
+
+<h2 class="section-h2">12.4 资源冲突的AI协调</h2>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<p>分析以下资源冲突并给出优化建议：</p>
+<p>项目组合（Q1）：</p>
+<table class="tbl">
+<thead><tr><th>项目</th><th>优先级</th><th>所需人力</th><th>截止日期</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>P1</td><td>3人</td><td>2月底</td></tr>
+<tr><td>B</td><td>P2</td><td>2人</td><td>3月中</td></tr>
+<tr><td>C</td><td>P3</td><td>2人</td><td>3月底</td></tr>
+</tbody>
+</table>
+<p>可用资源：</p>
+<ul>
+<li>工程师总数：5人</li>
+<li>其中高级工程师：2人</li>
+<li>人员分配现状：
+  <ul>
+  <li>项目A占用：2人（含1高工）</li>
+  <li>项目B占用：1人</li>
+  <li>项目C占用：0人</li>
+  </ul>
+</li>
+</ul>
+<p>冲突点：</p>
+<ul>
+<li>项目B负责人要求2人，但只有1人可用</li>
+<li>项目C需要高级工程师，但高工都在A项目</li>
+</ul>
+<p>请分析：</p>
+<ol>
+<li>资源冲突的根本原因</li>
+<li>可能的解决方案（至少3个）</li>
+<li>推荐方案及理由</li>
+<li>对业务的影响评估</li>
+</ol>
+</div>
+
+<h2 class="section-h2">12.5 风险预测与预警</h2>
+
+<p class="p">AI可以从历史模式中识别潜在风险，提前预警。</p>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<p>作为项目风险顾问，请分析以下项目的风险状态：</p>
+<p>项目背景：</p>
+<ul>
+<li>电商平台重构项目</li>
+<li>原计划6个月，目前进入第5个月</li>
+<li>原型设计变更了3次</li>
+<li>核心团队成员1人离职</li>
+<li>关键技术方案还未最终确定</li>
+</ul>
+<p>当前状态：</p>
+<ul>
+<li>完成度约60%</li>
+<li>预算消耗约70%</li>
+<li>质量测试覆盖率仅40%</li>
+</ul>
+<p>请分析：</p>
+<ol>
+<li>列出TOP 5风险（按可能性×影响排序）</li>
+<li>对每个风险给出：
+  <ul>
+  <li>风险描述</li>
+  <li>早期预警信号</li>
+  <li>缓解措施</li>
+  </ul>
+</li>
+<li>整体项目按时交付的概率评估</li>
+<li>建议的决策点</li>
+</ol>
+</div>
+
+<h2 class="section-h2">12.6 团队效能的AI分析</h2>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<p>分析团队开发效率及优化建议：</p>
+<p>数据来源（过去3个月）：</p>
+<ul>
+<li>平均Sprint Velocity：42点/周期</li>
+<li>代码量：人均1500行/月</li>
+<li>Bug数：线上缺陷密度0.3个/千行</li>
+<li>代码评审时间：平均4.8小时/PR</li>
+<li>技术债增加：+15%（相对于还债速度）</li>
+</ul>
+<p>个体数据：</p>
+<ul>
+<li>工程师A：velocity 45，bug密度0.2，擅长前端</li>
+<li>工程师B：velocity 38，bug密度0.4，擅长后端</li>
+<li>工程师C：velocity 50，bug密度0.5，擅长全栈</li>
+</ul>
+<p>请分析：</p>
+<ol>
+<li>团队整体效率评估</li>
+<li>个体差异原因分析</li>
+<li>技术债的影响评估</li>
+<li>优化建议（流程、技术、人员）</li>
+</ol>
+</div>
+
+<h2 class="section-h2">12.7 AI项目管理工具</h2>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🔧</div>
+<h4>Jira + Atlassian Intelligence</h4>
+<p>自动生成Sprint报告、识别阻塞</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">⚡</div>
+<h4>Linear + AI</h4>
+<p>智能问题分类、关联相关issue</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📝</div>
+<h4>Notion AI</h4>
+<p>会议纪要提取、文档生成</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🐙</div>
+<h4>GitHub Copilot for Projects</h4>
+<p>代码与任务关联分析</p>
+</div>
+</div>
+
+<h2 class="section-h2">12.8 本章小结</h2>
+
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>项目预测</h4>
+<p>AI可以从历史数据学习，提供更准确的项目预测</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>Sprint健康度</h4>
+<p>Sprint健康度分析帮助及时发现问题并调整</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>资源协调</h4>
+<p>资源冲突需要综合考虑优先级、技能、时间多维因素</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div>
+<h4>风险预警</h4>
+<p>AI风险预测能提前预警，避免问题恶化</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">5</div>
+<div>
+<h4>效能分析</h4>
+<p>团队效能分析帮助识别瓶颈和优化点</p>
+</div>
+</div>
+</div>
+
+</section>

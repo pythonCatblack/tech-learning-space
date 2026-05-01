@@ -3,15 +3,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import CourseLayout from '../../../../layouts/CourseLayout.astro';
 import RawHtml from '../../../../components/RawHtml.astro';
-import { getCourseBySlug } from '../../../../courses';
+import { getCourseBySlug, courses } from '../../../../courses';
 
 export async function getStaticPaths() {
-  const courses = ['chip', 'sensor-fusion'].map((slug) => getCourseBySlug(slug)).filter(Boolean);
-
   return courses.flatMap((course) =>
-    course!.chapters.map((chapter) => ({
-      params: { course: course!.slug, chapter: chapter.id },
-      props: { course: course!, chapter },
+    course.chapters.map((chapter) => ({
+      params: { course: course.slug, chapter: chapter.id },
+      props: { course, chapter },
     })),
   );
 }

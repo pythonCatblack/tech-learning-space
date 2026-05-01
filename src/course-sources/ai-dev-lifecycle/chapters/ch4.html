@@ -1,17 +1,27 @@
-<h1>第四章：开发流程与项目管理——AI驱动的研发管理</h1>
+<section id="ch4">
+<div class="hero">
+<div class="chapter-tag">Chapter 4 · AI</div>
+<h1>开发流程与项目管理——AI驱动的研发管理</h1>
+<p class="sub">掌握AI在Sprint Planning、看板管理、Retrospective等环节的应用</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 18 min</span>
+</div>
+</div>
 
-<h2>4.1 敏捷开发中的AI协同</h2>
+<p class="lead">现代软件开发普遍采用敏捷方法论，但敏捷实践的质量往往参差不齐：Sprint planning流于形式、Daily standup变成汇报会、Retrospective缺乏深度反思。AI可以在每个环节提升协作质量。</p>
 
-<p>现代软件开发普遍采用敏捷方法论，但敏捷实践的质量往往参差不齐：Sprint planning流于形式、Daily standup变成汇报会、Retrospective缺乏深度反思。AI可以在每个环节提升协作质量。</p>
+<h2 class="section-h2">4.1 敏捷开发中的AI协同</h2>
 
-<p>AI AGENT在敏捷团队中可以扮演多种角色：Sprint助理、代码审查员、测试协调员、文档管理员。通过明确的角色定义，团队可以更有效地利用AI能力。</p>
+<p class="p">AI AGENT在敏捷团队中可以扮演多种角色：Sprint助理、代码审查员、测试协调员、文档管理员。通过明确的角色定义，团队可以更有效地利用AI能力。</p>
 
-<h2>4.2 Sprint Planning的AI辅助</h2>
+<h2 class="section-h2">4.2 Sprint Planning的AI辅助</h2>
 
-<p>Sprint Planning是敏捷中最关键的会议之一。准备充分可以让两小时的会议效率翻倍。</p>
+<p class="p">Sprint Planning是敏捷中最关键的会议之一。准备充分可以让两小时的会议效率翻倍。</p>
 
-<p><strong>AI辅助会前准备</strong>：</p>
+<p class="p"><strong>AI辅助会前准备</strong>：</p>
 
+<div class="hlbox">
+<div class="hlbox-title">📝 提示词模板</div>
 <pre><code>提示词模板：
 "基于以下产品待办列表（Backlog），请帮我：
 1. 评估每个用户故事的复杂度（使用斐波那契点数：1/2/3/5/8/13）
@@ -20,28 +30,32 @@
 4. 指出可能的技术风险
 
 待办列表：
-{backlog_items}"
-</code></pre>
+{backlog_items}"</code></pre>
+</div>
 
-<p><strong>AI辅助工作量估算</strong>：</p>
+<p class="p"><strong>AI辅助工作量估算</strong>：</p>
 
-<p>历史数据是估算的基础。团队如果有wiki或文档记录过往Sprint的 velocity（速率），AI可以基于此预测当前Sprint的承载能力。</p>
+<p class="p">历史数据是估算的基础。团队如果有wiki或文档记录过往Sprint的 velocity（速率），AI可以基于此预测当前Sprint的承载能力。</p>
 
+<div class="hlbox">
+<div class="hlbox-title">📊 AI工作量预测</div>
 <pre><code>提示词：
 "基于团队过往数据：
 - Sprint 1-6平均velocity：32点
 - 当前Sprint可用人力：3人×10天 = 30人天
 - 技术债务预留：约20%容量
 
-请预测当前Sprint可以承诺多少故事点？并给出风险提示。"
-</code></pre>
+请预测当前Sprint可以承诺多少故事点？并给出风险提示。"</code></pre>
+</div>
 
-<h2>4.3 每日站会的AI转化</h2>
+<h2 class="section-h2">4.3 每日站会的AI转化</h2>
 
-<p>对于分布式或异步团队，AI可以收集和汇总每日的进展更新。</p>
+<p class="p">对于分布式或异步团队，AI可以收集和汇总每日的进展更新。</p>
 
-<p><strong>AI日报聚合</strong>：</p>
+<p class="p"><strong>AI日报聚合</strong>：</p>
 
+<div class="hlbox">
+<div class="hlbox-title">📝 提示词模板</div>
 <pre><code>提示词：
 "请将以下团队成员的每日更新汇总成一份简洁的Sprint进度报告：
 
@@ -52,15 +66,17 @@
 请生成：
 1. 今日进展摘要（3句话）
 2. 阻塞问题（标红高亮）
-3. 明日计划"
-</code></pre>
+3. 明日计划"</code></pre>
+</div>
 
-<h2>4.4 看板管理的AI优化</h2>
+<h2 class="section-h2">4.4 看板管理的AI优化</h2>
 
-<p>可视化看板（如Jira、Trello）能帮助团队追踪任务状态。AI可以分析看板数据，提供优化建议。</p>
+<p class="p">可视化看板（如Jira、Trello）能帮助团队追踪任务状态。AI可以分析看板数据，提供优化建议。</p>
 
-<p><strong>AI看板分析prompt</strong>：</p>
+<p class="p"><strong>AI看板分析</strong>：</p>
 
+<div class="hlbox">
+<div class="hlbox-title">📊 看板分析示例</div>
 <pre><code>"分析以下Sprint看板数据，识别问题并给出建议：
 
 任务流转情况：
@@ -75,13 +91,15 @@
 请分析：
 1. 哪个环节存在瓶颈？
 2. 那两个问题任务的阻塞原因是什么？
-3. Sprint目标能否按时完成？"
-</code></pre>
+3. Sprint目标能否按时完成？"</code></pre>
+</div>
 
-<h2>4.5 Retrospective的AI引导</h2>
+<h2 class="section-h2">4.5 Retrospective的AI引导</h2>
 
-<p>很多团队的Retrospective陷入套路：要么沉默，要么吐槽。AI可以作为 facilitator（引导师），通过结构化提问让反思更有深度。</p>
+<p class="p">很多团队的Retrospective陷入套路：要么沉默，要么吐槽。AI可以作为 facilitator（引导师），通过结构化提问让反思更有深度。</p>
 
+<div class="hlbox">
+<div class="hlbox-title">📝 提示词模板</div>
 <pre><code>提示词：
 "作为Sprint Retrospective的引导师，请用'Stin模型'（What went well/What didn't go well/What I learned）引导团队反思。
 
@@ -89,36 +107,78 @@
 1. 5个引导性问题（用于'What went well'环节）
 2. 5个引导性问题（用于'What didn't go well'环节）
 3. 3个深度追问模板（用于挖掘根因）
-4. 一个改进计划模板（SMART目标格式）"
-</code></pre>
+4. 一个改进计划模板（SMART目标格式）"</code></pre>
+</div>
 
-<h2>4.6 项目管理工具的AI集成</h2>
+<h2 class="section-h2">4.6 项目管理工具的AI集成</h2>
 
-<p>主流项目管理工具都开始集成AI能力：</p>
+<p class="p">主流项目管理工具都开始集成AI能力：</p>
 
-<ul>
-<li><strong>Jira + Atlassian Intelligence</strong>：自动生成故事描述、估算工作量、识别阻塞</li>
-<li><strong>Linear + AI</strong>：智能分类问题、关联相似issue</li>
-<li><strong>Notion + AI</strong>：会议纪要自动提取action items</li>
-<li><strong>GitHub Projects + Copilot</strong>：代码与issue关联追踪</li>
-</ul>
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">📋</div>
+<h4>Jira + Atlassian Intelligence</h4>
+<p>自动生成故事描述、估算工作量、识别阻塞</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">⚡</div>
+<h4>Linear + AI</h4>
+<p>智能分类问题、关联相似issue</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📄</div>
+<h4>Notion + AI</h4>
+<p>会议纪要自动提取action items</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🐙</div>
+<h4>GitHub Projects + Copilot</h4>
+<p>代码与issue关联追踪</p>
+</div>
+</div>
 
-<h2>4.7 AI-TaskManager的项目管理实践</h2>
+<h2 class="section-h2">4.7 AI-TaskManager的项目管理实践</h2>
 
-<p>在AI-TaskManager开发过程中，我们采用以下AI辅助实践：</p>
+<p class="p">在AI-TaskManager开发过程中，我们采用以下AI辅助实践：</p>
 
-<ol>
-<li><strong>Sprint开始前</strong>：AI分析产品待办列表，生成优先级建议和Sprint目标草案</li>
-<li><strong>每日</strong>：团队成员在 Slack/飞书 提交更新，AI自动汇总并发送到频道</li>
-<li><strong>每周</strong>：AI分析看板数据，识别WIP瓶颈，生成Sprint健康度报告</li>
-<li><strong>Sprint结束时</strong>：AI协助生成Sprint总结，包含velocity趋势、燃尽图分析、改进建议</li>
-</ol>
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div><h4>Sprint开始前</h4><p>AI分析产品待办列表，生成优先级建议和Sprint目标草案</p></div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div><h4>每日</h4><p>团队成员在 Slack/飞书 提交更新，AI自动汇总并发送到频道</p></div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div><h4>每周</h4><p>AI分析看板数据，识别WIP瓶颈，生成Sprint健康度报告</p></div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div><h4>Sprint结束时</h4><p>AI协助生成Sprint总结，包含velocity趋势、燃尽图分析、改进建议</p></div>
+</div>
+</div>
 
-<h2>4.8 本章小结</h2>
+<h2 class="section-h2">4.8 本章小结</h2>
 
-<ol>
-<li>AI可以在Sprint Planning、Daily Standup、看板管理、Retrospective等各环节提升效率</li>
-<li>AI不会替代敏捷 ceremonies，而是让每个 ceremony 更有质量</li>
-<li>项目管理工具的AI集成是趋势，团队应积极采用</li>
-<li>关键是明确AI在团队中的角色，建立有效的协作模式</li>
-</ol>
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div><h4>AI提升敏捷各环节效率</h4><p>Sprint Planning、Daily Standup、看板管理、Retrospective等</p></div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div><h4>AI不会替代敏捷 ceremonies</h4><p>而是让每个 ceremony 更有质量</p></div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div><h4>项目管理工具的AI集成是趋势</h4><p>团队应积极采用</p></div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div><h4>关键是明确AI在团队中的角色</h4><p>建立有效的协作模式</p></div>
+</div>
+</div>
+
+</section>

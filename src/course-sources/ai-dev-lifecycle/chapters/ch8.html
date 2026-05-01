@@ -1,15 +1,43 @@
-<h1>第八章：自动化测试与质量保障——AI驱动的测试工程</h1>
+<section id="ch8">
+<div class="hero">
+<div class="chapter-tag">Chapter 8 · Testing & Quality</div>
+<h1>自动化测试与质量保障——AI驱动的测试工程</h1>
+<p class="sub">利用AI提升测试效率，保证代码质量</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📚 30 min</span>
+<span class="hero-meta-item">🧪 Testing</span>
+</div>
+</div>
 
-<h2>8.1 测试金字塔与AI角色</h2>
+<p class="lead">测试金字塔从下到上分为：单元测试（量大、快速）→ 集成测试（中量、中速）→ 端到端测试（量小、慢速）。AI在每个层级都能发挥作用，但价值最大的是单元测试生成和测试用例优化。</p>
 
-<p>测试金字塔从下到上分为：单元测试（量大、快速）→ 集成测试（中量、中速）→ 端到端测试（量小、慢速）。AI在每个层级都能发挥作用，但价值最大的是单元测试生成和测试用例优化。</p>
+<h2 class="section-h2">8.1 测试金字塔与AI角色</h2>
 
-<p>传统测试的痛点：测试覆盖率难以保证、边界条件容易遗漏、测试用例维护成本高。AI通过分析代码逻辑自动生成测试用例，能显著提升测试效率。</p>
+<p class="p">传统测试的痛点：测试覆盖率难以保证、边界条件容易遗漏、测试用例维护成本高。AI通过分析代码逻辑自动生成测试用例，能显著提升测试效率。</p>
 
-<h2>8.2 单元测试的AI生成</h2>
+<div class="flow">
+<div class="flow-box">
+<div class="flow-box-title">单元测试</div>
+<div class="flow-box-desc">量大、快速<br/>AI生成价值最高</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">集成测试</div>
+<div class="flow-box-desc">中量、中速<br/>AI辅助生成</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">E2E测试</div>
+<div class="flow-box-desc">量小、慢速<br/>AI辅助生成</div>
+</div>
+</div>
 
-<p><strong>使用GitHub Copilot编写单元测试</strong></p>
+<h2 class="section-h2">8.2 单元测试的AI生成</h2>
 
+<p class="p"><strong>使用GitHub Copilot编写单元测试</strong></p>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
 <pre><code>提示词：
 "为以下函数生成完整的单元测试：
 
@@ -50,13 +78,15 @@ export function validateTask(task: Partial&lt;Task&gt;): ValidationResult {
 2. 使用describe/it组织测试结构
 3. 覆盖所有有效和无效输入组合
 4. 使用test.each生成参数化测试
-5. 添加有意义的断言消息"
-</code></pre>
+5. 添加有意义的断言消息"</code></pre>
+</div>
 
-<h2>8.3 边界测试用例的AI枚举</h2>
+<h2 class="section-h2">8.3 边界测试用例的AI枚举</h2>
 
-<p>AI擅长枚举边界条件和极端场景，这些往往是人工测试容易遗漏的。</p>
+<p class="p">AI擅长枚举边界条件和极端场景，这些往往是人工测试容易遗漏的。</p>
 
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
 <pre><code>提示词：
 "作为测试工程师，请为以下功能生成边界测试用例清单：
 
@@ -74,11 +104,13 @@ export function validateTask(task: Partial&lt;Task&gt;): ValidationResult {
 6. 网络异常场景（上传中断）
 7. 恶意文件场景（伪造扩展名、嵌入恶意代码）
 
-请以表格形式输出每个测试用例：ID、描述、前置条件、输入、预期输出、优先级"
-</code></pre>
+请以表格形式输出每个测试用例：ID、描述、前置条件、输入、预期输出、优先级"</code></pre>
+</div>
 
-<h2>8.4 测试数据生成的AI辅助</h2>
+<h2 class="section-h2">8.4 测试数据生成的AI辅助</h2>
 
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
 <pre><code>提示词：
 "为任务管理系统的测试生成模拟数据。
 
@@ -92,38 +124,38 @@ export function validateTask(task: Partial&lt;Task&gt;): ValidationResult {
 3. 生成的数据应包含合理的边界情况
 4. 提供TypeScript类型定义
 
-请生成一个testDataBuilder.ts文件，包含可复用的测试数据生成器。"
-</code></pre>
+请生成一个testDataBuilder.ts文件，包含可复用的测试数据生成器。"</code></pre>
+</div>
 
-<h2>8.5 AI测试工具生态</h2>
+<h2 class="section-h2">8.5 AI测试工具生态</h2>
 
-<table>
+<table class="tbl">
 <thead><tr><th>工具</th><th>类型</th><th>核心能力</th><th>定价</th></tr></thead>
 <tbody>
-<tr><td><strong>Diffblue Cover</strong></td><td>Java单元测试生成</td><td>自动生成JUnit测试，维护测试与代码同步</td><td>商业定价</td></tr>
-<tr><td><strong>Applitools</strong></td><td>视觉AI测试</td><td>像素级UI差异检测，跨浏览器/设备测试</td><td>$99-199/月</td></tr>
-<tr><td><strong>Testim</strong></td><td>E2E测试</td><td>AI自愈定位器，适应UI变化</td><td>企业定价</td></tr>
-<tr><td><strong>Mabl</strong></td><td>E2E测试</td><td>ML驱动测试创建和维护，API测试</td><td>企业定价</td></tr>
-<tr><td><strong>Pynguin</strong></td><td>Python测试生成</td><td>开源工具，自动生成Python单元测试</td><td>免费开源</td></tr>
-<tr><td><strong>EvoSuite</strong></td><td>Java测试生成</td><td>基于搜索的测试生成，Mockito集成</td><td>免费开源</td></tr>
+<tr><td class="hl">Diffblue Cover</td><td>Java单元测试生成</td><td>自动生成JUnit测试，维护测试与代码同步</td><td>商业定价</td></tr>
+<tr><td class="hl">Applitools</td><td>视觉AI测试</td><td>像素级UI差异检测，跨浏览器/设备测试</td><td>$99-199/月</td></tr>
+<tr><td class="hl">Testim</td><td>E2E测试</td><td>AI自愈定位器，适应UI变化</td><td>企业定价</td></tr>
+<tr><td class="hl">Mabl</td><td>E2E测试</td><td>ML驱动测试创建和维护，API测试</td><td>企业定价</td></tr>
+<tr><td class="hl">Pynguin</td><td>Python测试生成</td><td>开源工具，自动生成Python单元测试</td><td>免费开源</td></tr>
+<tr><td class="hl">EvoSuite</td><td>Java测试生成</td><td>基于搜索的测试生成，Mockito集成</td><td>免费开源</td></tr>
 </tbody>
 </table>
 
-<h2>8.6 AI测试研究数据</h2>
+<h2 class="section-h2">8.6 AI测试研究数据</h2>
 
-<p><strong>GitClear代码质量报告（2025）</strong>：基于2.11亿行代码分析发现，AI辅助开发带来新挑战：</p>
+<div class="callout callout-warn">
+<div class="callout-icon">⚠️</div>
+<div class="callout-text"><strong>GitClear代码质量报告（2025）：</strong>基于2.11亿行代码分析发现，AI辅助开发带来新挑战：代码重复率增加4倍，短期变更代码（Churn）显著增加，开发者更多时间用于审查AI建议而非编写代码。</div>
+</div>
 
-<ul>
-<li>代码重复率增加4倍，开发者倾向于复制粘贴AI生成的代码</li>
-<li>短期变更代码（Churn）显著增加</li>
-<li>开发者更多时间用于审查AI建议而非编写代码</li>
-</ul>
+<div class="callout callout-info">
+<div class="callout-icon">ℹ️</div>
+<div class="callout-text"><strong>研究结论：</strong>AI生成的代码通常存在安全漏洞风险（如SQL注入、硬编码凭证），需要人工审查。</div>
+</div>
 
-<p><strong>研究结论</strong>：AI生成的代码通常存在安全漏洞风险（如SQL注入、硬编码凭证），需要人工审查。</p>
+<h2 class="section-h2">8.7 持续测试与CI集成</h2>
 
-<h2>8.6 持续测试与CI集成</h2>
-
-<p>在CI流水线中集成AI测试工具：</p>
+<p class="p">在CI流水线中集成AI测试工具：</p>
 
 <pre><code># .github/workflows/ci.yml
 name: CI
@@ -155,13 +187,14 @@ jobs:
         run: npm run test:ci
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v3
-</code></pre>
+        uses: codecov/codecov-action@v3</code></pre>
 
-<h2>8.7 测试覆盖率与质量指标</h2>
+<h2 class="section-h2">8.8 测试覆盖率与质量指标</h2>
 
-<p>AI可以帮助分析测试覆盖率的盲区：</p>
+<p class="p">AI可以帮助分析测试覆盖率的盲区：</p>
 
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
 <pre><code>提示词：
 "分析以下代码的测试覆盖率盲区：
 
@@ -178,11 +211,13 @@ jobs:
 1. 这些未覆盖的代码可能是做什么的？
 2. 为什么测试没有覆盖到？（基于代码逻辑推测）
 3. 需要补充什么类型的测试用例？
-4. 是否有可能是死代码？"
-</code></pre>
+4. 是否有可能是死代码？"</code></pre>
+</div>
 
-<h2>8.8 本章小结</h2>
+<h2 class="section-h2">8.9 本章小结</h2>
 
+<div class="hlbox">
+<div class="hlbox-title">📚 核心要点</div>
 <ol>
 <li>AI在测试金字塔各层都能发挥作用，尤其适合单元测试生成</li>
 <li>GitHub Copilot能辅助生成测试代码，但需要明确测试意图</li>
@@ -190,3 +225,6 @@ jobs:
 <li>测试数据生成器可以复用，提升测试效率</li>
 <li>AI测试工具正在快速发展，选择适合团队技术栈的工具</li>
 </ol>
+</div>
+
+</section>

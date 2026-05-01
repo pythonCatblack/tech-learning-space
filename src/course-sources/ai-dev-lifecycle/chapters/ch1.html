@@ -1,84 +1,98 @@
-<h1>第一章：AI赋能开发综述：从创意到落地的智能新范式</h1>
+<section id="ch1">
+<div class="hero">
+<div class="chapter-tag">Chapter 1 · 入门基础</div>
+<h1>AI赋能开发综述：<br>从创意到落地的智能新范式</h1>
+<p class="sub">建立AI-Augmented Development的整体认知框架，理解AI AGENT如何贯穿产品全生命周期。</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约35分钟阅读</span>
+<span class="hero-meta-item">🤖 入门级</span>
+</div>
+</div>
 
-<h2>1.1 课程全景地图</h2>
+<p class="lead">在传统软件开发中，一个产品从想法到上线通常经历：需求调研 → 架构设计 → 编码实现 → 测试验证 → 部署运维。每个环节都依赖人工决策，效率瓶颈明显。而 AI AGENT（智能体）的出现，正在从根本上改变这一范式。</p>
 
-<p>在传统软件开发中，一个产品从想法到上线通常经历这样的路径：需求调研 → 架构设计 → 编码实现 → 测试验证 → 部署运维。每个环节都依赖人工决策，效率瓶颈明显。而 AI AGENT（智能体）的出现，正在从根本上改变这一范式。</p>
+<h2 class="section-h2">1.1 课程全景地图</h2>
+<p class="p">AI AGENT 不仅仅是"更聪明的代码补全工具"，它是一个能够理解目标、自主规划、调用工具、执行任务的智能系统。将其融入开发全周期，就形成了<strong>AI-Augmented Development</strong>（AI增强开发）新范式。</p>
 
-<p>AI AGENT 不仅仅是"更聪明的代码补全工具"，它是一个能够理解目标、自主规划、调用工具、执行任务的智能系统。将其融入开发全周期，就形成了<strong>AI-Augmented Development</strong>（AI增强开发）新范式。</p>
+<div class="hlbox"><div class="hlbox-title">💡 AI AGENT 的核心能力</div><p>AI AGENT 的核心能力可以用"感知-规划-执行-反馈"四环来概括：感知环境（理解需求、读取代码）、规划步骤（分解任务、选择策略）、执行动作（生成代码、调用API）、反馈优化（评估结果、迭代改进）。</p></div>
 
-<blockquote>
-<p>AI AGENT 的核心能力可以用"感知-规划-执行-反馈"四环来概括：感知环境（理解需求、读取代码）、规划步骤（分解任务、选择策略）、执行动作（生成代码、调用API）、反馈优化（评估结果、迭代改进）。</p>
-</blockquote>
+<h2 class="section-h2">1.2 为什么是"全周期"？</h2>
+<p class="p">很多团队引入AI只停留在"写代码"环节，这其实是最大的浪费。从产品创意阶段的头脑风暴，到需求分析时的用户故事提取，再到架构设计、代码生成、测试编写、部署发布、运维监控——AI AGENT在每个环节都能发挥独特价值。</p>
 
-<h2>1.2 为什么是"全周期"？</h2>
+<p class="p">举个具体例子：某团队开发一个电商推荐系统。传统流程需要产品经理写PRD、架构师画蓝图、开发者写代码、测试人员编写用例、运维人员配置集群。有了AI AGENT，这个流程可以变成：</p>
 
-<p>很多团队引入AI只停留在"写代码"环节，这其实是最大的浪费。从产品创意阶段的头脑风暴，到需求分析时的用户故事提取，再到架构设计、代码生成、测试编写、部署发布、运维监控——AI AGENT在每个环节都能发挥独特价值。</p>
+<div class="flow">
+<div class="flow-box"><div class="flow-box-title">需求讨论</div><div class="flow-box-desc">与AI讨论功能方向</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">文档生成</div><div class="flow-box-desc">AI自动生成需求文档初稿</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">架构分析</div><div class="flow-box-desc">AI辅助架构选型分析</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">代码生成</div><div class="flow-box-desc">AI生成核心代码框架</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">测试编写</div><div class="flow-box-desc">AI自动编写测试用例</div></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><div class="flow-box-title">CI/CD</div><div class="flow-box-desc">AI协助配置流水线</div></div>
+</div>
 
-<p>举个具体例子：某团队开发一个电商推荐系统。传统流程需要产品经理写PRD、架构师画蓝图、开发者写代码、测试人员编写用例、运维人员配置集群。有了AI AGENT，这个流程可以变成：产品经理与AI讨论功能方向 → AI自动生成需求文档初稿 → AI辅助架构选型分析 → AI生成核心代码框架 → AI自动编写测试用例 → AI协助配置CI/CD流水线。整个周期从3个月压缩到6周。</p>
+<div class="card orange"><div class="card-label">效率提升</div><h3>全周期AI赋能的惊人效果</h3><p>整个开发周期从 <strong>3个月</strong> 压缩到 <strong>6周</strong>——时间效率提升超过 10 倍。</p></div>
 
-<h2>1.3 课程学习路径</h2>
+<h2 class="section-h2">1.3 课程学习路径</h2>
+<p class="p">本课程分为三大模块：</p>
 
-<p>本课程分为三大模块：</p>
+<div class="card-grid">
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">📚</div><h4>入门基础篇</h4><p>第一章至第五章：建立AI开发的基本认知，熟悉工具链，理解产品从0到1的全周期概念。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">⚡</div><h4>核心技能篇</h4><p>第六章至第十章：深入代码开发、测试、审查、部署的核心环节，掌握AI赋能的实战技能。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🎯</div><h4>AI赋能实战篇</h4><p>第十一章至第十七章：面向高阶应用，学习用AI驱动需求分析、项目管理、低代码平台、运维智能化，以及AI伦理治理。</p></div>
+</div>
 
-<ul>
-<li><strong>入门基础篇（第一章至第五章）</strong>：建立AI开发的基本认知，熟悉工具链，理解产品从0到1的全周期概念。</li>
-<li><strong>核心技能篇（第六章至第十章）</strong>：深入代码开发、测试、审查、部署的核心环节，掌握AI赋能的实战技能。</li>
-<li><strong>AI赋能实战篇（第十一章至第十七章）</strong>：面向高阶应用，学习如何用AI驱动需求分析、项目管理、低代码平台、运维智能化，以及AI伦理治理。</li>
-</ul>
+<h2 class="section-h2">1.4 主流AI开发工具生态</h2>
+<p class="p">当前市场上主流的AI开发工具可分为几大类：</p>
 
-<h2>1.4 主流AI开发工具生态</h2>
-
-<p>当前市场上主流的AI开发工具可分为几大类：</p>
-
-<table>
+<table class="tbl">
 <thead><tr><th>类别</th><th>工具代表</th><th>核心能力</th><th>市场数据（2024-2025）</th></tr></thead>
 <tbody>
-<tr><td>AI对话助手</td><td>ChatGPT、Claude、文心一言</td><td>需求讨论、代码解释、文档生成</td><td>ChatGPT企业版用户超60万</td></tr>
-<tr><td>AI代码补全</td><td>GitHub Copilot、Cursor</td><td>实时代码生成、代码重构</td><td>Copilot用户2000万+（2025年7月），Cursor ARR超1亿美元</td></tr>
-<tr><td>AI代码审查</td><td>CodeRabbit、Sourcery</td><td>自动审查、缺陷检测、性能建议</td><td>CodeRabbit 15000+客户，审查300万仓库，发现7500万缺陷</td></tr>
-<tr><td>AI测试生成</td><td>Diffblue、Applitools、Testim</td><td>单元测试自动生成、端到端测试</td><td>视觉AI测试市场快速发展</td></tr>
-<tr><td>AI运维监控</td><td>Datadog、Splunk、PagerDuty</td><td>异常检测、根因分析</td><td>AIOps市场2025年达25亿美元</td></tr>
-<tr><td>低代码AI平台</td><td>Dataiku、Vertex AI、Azure ML</td><td>MLOps流程编排、AutoML</td><td>企业AI平台市场持续增长</td></tr>
+<tr><td class="hl">AI对话助手</td><td>ChatGPT、Claude、文心一言</td><td>需求讨论、代码解释、文档生成</td><td>ChatGPT企业版用户超60万</td></tr>
+<tr><td class="hl">AI代码补全</td><td>GitHub Copilot、Cursor</td><td>实时代码生成、代码重构</td><td>Copilot用户2000万+（2025年7月），Cursor ARR超1亿美元</td></tr>
+<tr><td class="hl">AI代码审查</td><td>CodeRabbit、Sourcery</td><td>自动审查、缺陷检测，性能建议</td><td>CodeRabbit 15000+客户，审查300万仓库，发现7500万缺陷</td></tr>
+<tr><td class="hl">AI测试生成</td><td>Diffblue、Applitools、Testim</td><td>单元测试自动生成、端到端测试</td><td>视觉AI测试市场快速发展</td></tr>
+<tr><td class="hl">AI运维监控</td><td>Datadog、Splunk、PagerDuty</td><td>异常检测、根因分析</td><td>AIOps市场2025年达25亿美元</td></tr>
+<tr><td class="hl">低代码AI平台</td><td>Dataiku、Vertex AI、Azure ML</td><td>MLOps流程编排、AutoML</td><td>企业AI平台市场持续增长</td></tr>
 </tbody>
 </table>
 
-<h2>1.5 你将构建什么</h2>
+<h2 class="section-h2">1.5 你将构建什么</h2>
+<p class="p">课程配套一个贯穿始终的实战项目：一个<strong>智能任务管理系统</strong>（AI-TaskManager）。这个系统会随着课程进展逐步完善：</p>
 
-<p>课程配套一个贯穿始终的实战项目：一个<strong>智能任务管理系统</strong>（AI-TaskManager）。这个系统会随着课程进展逐步完善：</p>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div><h4>基础版本</h4><p>命令行版本，支持任务 CRUD</p></div></div>
+<div class="step"><div class="step-num">2</div><div><h4>Web版本</h4><p>前后端分离，加入AI辅助功能</p></div></div>
+<div class="step"><div class="step-num">3</div><div><h4>智能化版本</h4><p>接入AI AGENT实现自动任务分解、智能优先级排序</p></div></div>
+<div class="step"><div class="step-num">4</div><div><h4>上线部署版本</h4><p>容器化部署，监控告警完善</p></div></div>
+</div>
 
-<ul>
-<li>基础版本（第一阶段）：命令行版本，支持任务 CRUD</li>
-<li>Web版本（第二阶段）：前后端分离，加入AI辅助功能</li>
-<li>智能化版本（第三阶段）：接入AI AGENT实现自动任务分解、智能优先级排序</li>
-<li>上线部署版本（第四阶段）：容器化部署，监控告警完善</li>
-</ul>
+<div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>行业里程碑：</strong>2024年3月，Cognition AI推出全球首个AI程序员<strong>Devin</strong>，标志着AI从辅助编码向独立完成复杂软件任务迈出重要一步。Devin在SWE-bench测试中解决了13.86%的问题（GPT-4仅1.74%），月费$500。</div></div>
 
-<p><strong>行业里程碑</strong>：2024年3月，Cognition AI推出全球首个AI程序员<strong>Devin</strong>，标志着AI从辅助编码向独立完成复杂软件任务迈出重要一步。Devin在SWE-bench测试中解决了13.86%的问题（GPT-4仅1.74%），月费$500。</p>
+<h2 class="section-h2">1.6 行业调研数据</h2>
 
-<p><strong>行业调研数据（2024-2025）：</strong></p>
+<div class="stats">
+<div class="stat"><div class="stat-val">75%</div><div class="stat-lbl">Gartner预测：2028年企业软件工程师将使用AI助手</div></div>
+<div class="stat"><div class="stat-val">84%</div><div class="stat-lbl">Stack Overflow 2025调查：开发者使用或计划使用AI工具</div></div>
+<div class="stat"><div class="stat-val">4x</div><div class="stat-lbl">GitClear报告：AI辅助开发中代码重复率增加</div></div>
+<div class="stat"><div class="stat-val">-19%</div><div class="stat-lbl">METR研究：高级开发人员使用AI后任务完成速度降低</div></div>
+</div>
 
-<ul>
-<li>Gartner预测：2028年75%的企业软件工程师将使用AI代码助手</li>
-<li>Stack Overflow 2025调查：84%的开发者正在使用或计划使用AI工具</li>
-<li>GitClear报告：AI辅助开发中代码重复率增加4倍</li>
-<li>METR研究：高级开发人员使用AI工具后任务完成速度反而降低19%</li>
-</ul>
+<h2 class="section-h2">1.7 本章小结</h2>
 
-<h2>1.6 本章小结</h2>
+<div class="card green"><div class="card-label">核心要点</div><h3>本章关键收获</h3>
+<p><strong>① AI AGENT的核心能力</strong>：感知-规划-执行-反馈的闭环系统。<br>
+<strong>② 全周期赋能</strong>：AI应贯穿产品全生命周期，而非仅限于编码环节。<br>
+<strong>③ 工具生态</strong>：覆盖开发、测试、部署、运维全流程。<br>
+<strong>④ 实战项目</strong>：智能任务管理系统贯穿各章节，实现学以致用。</p></div>
 
-<p>本章建立了AI赋能开发的整体认知框架。核心要点：</p>
+<div class="card orange"><div class="card-label">延伸阅读</div><h3>推荐资源</h3>
+<p>• 《Hands-On AI Agent Development》— 深入理解AI Agent架构<br>
+• GitHub Copilot官方文档 — 掌握AI辅助编码的最佳实践<br>
+• Martin Fowler《Patterns of Enterprise Application Architecture》— 理解架构设计的核心模式</p></div>
 
-<ol>
-<li>AI AGENT的核心能力是"感知-规划-执行-反馈"的闭环</li>
-<li>AI赋能应贯穿产品全生命周期，而非仅限于编码环节</li>
-<li>主流工具生态覆盖开发、测试、部署、运维全流程</li>
-<li>本课程通过"智能任务管理系统"贯穿各章节，实现学以致用</li>
-</ol>
-
-<h2>延伸阅读</h2>
-
-<ul>
-<li>《Hands-On AI Agent Development》— 深入理解AI Agent架构</li>
-<li>GitHub Copilot官方文档 — 掌握AI辅助编码的最佳实践</li>
-<li>Martin Fowler《Patterns of Enterprise Application Architecture》— 理解架构设计的核心模式</li>
-</ul>
+</section>

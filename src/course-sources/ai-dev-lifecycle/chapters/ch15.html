@@ -1,14 +1,20 @@
+<section id="ch15">
+<div class="hero">
+<div class="chapter-tag">Chapter 15 · AI Product</div>
 <h1>第十五章：数据驱动的决策——AI辅助的业务分析</h1>
+<p class="sub">利用AI技术实现数据驱动的产品决策，从海量数据中提取洞察</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 25分钟</span>
+</div>
+</div>
 
-<h2>15.1 数据驱动的重要性</h2>
+<p class="lead">现代软件开发不仅是技术工作，也是数据工作。产品决策需要数据支持、技术选型需要数据验证、团队管理需要数据衡量。但如何从海量数据中提取洞察，是很多团队面临的挑战。</p>
 
-<p>现代软件开发不仅是技术工作，也是数据工作。产品决策需要数据支持、技术选型需要数据验证、团队管理需要数据衡量。但如何从海量数据中提取洞察，是很多团队面临的挑战。</p>
+<p class="p">AI让数据驱动变得更加容易：自然语言查询、自动化报表、趋势分析、预测性洞察——这些过去需要数据分析师才能完成的工作，现在可以被AI democratize。</p>
 
-<p>AI让数据驱动变得更加容易：自然语言查询、自动化报表、趋势分析、预测性洞察——这些过去需要数据分析师才能完成的工作，现在可以被AI democratize。</p>
+<h2 class="section-h2">15.1 产品指标体系设计</h2>
 
-<h2>15.2 产品指标体系设计</h2>
-
-<p>一个好的产品指标体系应该包含：业务指标、技术指标、用户行为指标。</p>
+<p class="p">一个好的产品指标体系应该包含：业务指标、技术指标、用户行为指标。</p>
 
 <pre><code>提示词：
 "为一个任务管理SaaS产品设计指标体系：
@@ -28,12 +34,11 @@
 对于每个指标，请说明：
 - 计算方法
 - 健康值范围
-- 采集方式"
-</code></pre>
+- 采集方式"</code></pre>
 
-<h2>15.3 自然语言数据查询</h2>
+<h2 class="section-h2">15.2 自然语言数据查询</h2>
 
-<p>AI可以让非技术人员用自然语言查询数据库。</p>
+<p class="p">AI可以让非技术人员用自然语言查询数据库。</p>
 
 <pre><code>提示词：
 "将以下自然语言查询转换为SQL：
@@ -50,10 +55,9 @@ event_type枚举：'page_view', 'task_created', 'task_completed', 'login'
 请生成：
 1. 对应的SQL查询
 2. 结果的解释
-3. 如果要进一步分析用户行为，还要查询哪些数据？"
-</code></pre>
+3. 如果要进一步分析用户行为，还要查询哪些数据？"</code></pre>
 
-<h2>15.4 用户行为的AI分析</h2>
+<h2 class="section-h2">15.3 用户行为的AI分析</h2>
 
 <pre><code>提示词：
 "分析以下用户行为数据，识别产品改进机会：
@@ -83,12 +87,11 @@ event_type枚举：'page_view', 'task_created', 'task_completed', 'login'
 1. 用户流失的主要节点在哪里？
 2. 高价值用户有什么共同特征？
 3. 产品改进的优先级建议
-4. 如何提升低活跃用户的参与度？"
-</code></pre>
+4. 如何提升低活跃用户的参与度？"</code></pre>
 
-<h2>15.5 A/B测试的AI辅助</h2>
+<h2 class="section-h2">15.4 A/B测试的AI辅助</h2>
 
-<p>AI可以辅助设计A/B测试、分析结果、给出决策建议。</p>
+<p class="p">AI可以辅助设计A/B测试、分析结果、给出决策建议。</p>
 
 <pre><code>提示词：
 "设计并分析一个A/B测试：
@@ -111,12 +114,11 @@ event_type枚举：'page_view', 'task_created', 'task_completed', 'login'
 1. 实验结果是否统计显著？
 2. 主要指标提升是否有实际意义？
 3. 满意度略降但使用时长增加，如何解读？
-4. 是否应该发布新算法？理由？"
-</code></pre>
+4. 是否应该发布新算法？理由？"</code></pre>
 
-<h2>15.6 数据可视化与报表自动化</h2>
+<h2 class="section-h2">15.5 数据可视化与报表自动化</h2>
 
-<p>AI可以帮助自动生成数据报表和可视化。</p>
+<p class="p">AI可以帮助自动生成数据报表和可视化。</p>
 
 <pre><code>提示词：
 "为一个任务管理产品生成月度数据报告：
@@ -134,26 +136,73 @@ event_type枚举：'page_view', 'task_created', 'task_completed', 'login'
 2. 关键亮点（TOP 3）
 3. 关注点（需要解释的变化）
 4. 下一步行动建议
-5. 详细数据表格"
-</code></pre>
+5. 详细数据表格"</code></pre>
 
-<h2>15.7 数据安全与隐私</h2>
+<h2 class="section-h2">15.6 数据安全与隐私</h2>
 
-<p>数据驱动必须建立在数据安全和隐私保护的基础上。</p>
+<p class="p">数据驱动必须建立在数据安全和隐私保护的基础上。</p>
 
-<ul>
-<li><strong>数据脱敏</strong>：分析使用脱敏数据，不暴露真实用户信息</li>
-<li><strong>访问控制</strong>：基于角色的数据访问控制</li>
-<li><strong>合规性</strong>：GDPR、CCPA等隐私法规遵从</li>
-<li><strong>审计追踪</strong>：记录所有数据访问操作</li>
-</ul>
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🔒</div>
+<h4>数据脱敏</h4>
+<p>分析使用脱敏数据，不暴露真实用户信息</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">👥</div>
+<h4>访问控制</h4>
+<p>基于角色的数据访问控制</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📋</div>
+<h4>合规性</h4>
+<p>GDPR、CCPA等隐私法规遵从</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📝</div>
+<h4>审计追踪</h4>
+<p>记录所有数据访问操作</p>
+</div>
+</div>
 
-<h2>15.8 本章小结</h2>
+<h2 class="section-h2">15.7 本章小结</h2>
 
-<ol>
-<li>数据驱动决策需要完善的指标体系和采集机制</li>
-<li>AI让自然语言查询数据库成为可能，democratize数据分析</li>
-<li>用户行为分析能发现产品改进的关键节点</li>
-<li>A/B测试需要科学的实验设计和统计验证</li>
-<li>数据驱动必须建立在安全和隐私保护的基础上</li>
-</ol>
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>指标体系</h4>
+<p>数据驱动决策需要完善的指标体系和采集机制</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>自然语言查询</h4>
+<p>AI让自然语言查询数据库成为可能，democratize数据分析</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>用户行为分析</h4>
+<p>用户行为分析能发现产品改进的关键节点</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div>
+<h4>A/B测试</h4>
+<p>A/B测试需要科学的实验设计和统计验证</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">5</div>
+<div>
+<h4>数据安全</h4>
+<p>数据驱动必须建立在安全和隐私保护的基础上</p>
+</div>
+</div>
+</div>
+
+</section>

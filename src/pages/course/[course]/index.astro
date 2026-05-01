@@ -1,9 +1,9 @@
 ---
 import CourseLayout from '../../../layouts/CourseLayout.astro';
-import { chapterPath, getCourseBySlug } from '../../../courses';
+import { chapterPath, getCourseBySlug, courses } from '../../../courses';
 
 export async function getStaticPaths() {
-  return ['chip', 'sensor-fusion'].map((course) => ({ params: { course } }));
+  return courses.map((course) => ({ params: { course: course.slug } }));
 }
 
 const { course: courseSlug } = Astro.params;

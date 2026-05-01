@@ -1,32 +1,35 @@
+<section id="ch16">
+<div class="hero">
+<div class="chapter-tag">Chapter 16 · AI Engineering</div>
 <h1>第十六章：AI伦理与治理——负责任的AI开发实践</h1>
+<p class="sub">探讨AI开发中的伦理问题，理解AI治理框架，保护用户隐私</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 30分钟</span>
+</div>
+</div>
 
-<h2>16.1 为什么AI伦理如此重要</h2>
+<p class="lead">AI系统正在做越来越多的人类决策：贷款审批、简历筛选、医疗诊断、刑事司法辅助。这些决策直接影响人们的生活。如果AI系统存在偏见、歧视或透明度问题，将造成严重的社会后果。</p>
 
-<p>AI系统正在做越来越多的人类决策：贷款审批、简历筛选、医疗诊断、刑事司法辅助。这些决策直接影响人们的生活。如果AI系统存在偏见、歧视或透明度问题，将造成严重的社会后果。</p>
+<p class="p">作为开发者，我们不仅是技术的实现者，也是技术伦理的守护者。在开发AI应用时，需要主动考虑公平性、透明度、可解释性、隐私保护等问题。</p>
 
-<p>作为开发者，我们不仅是技术的实现者，也是技术伦理的守护者。在开发AI应用时，需要主动考虑公平性、透明度、可解释性、隐私保护等问题。</p>
+<h2 class="section-h2">16.1 常见AI伦理问题</h2>
 
-<h2>16.2 常见AI伦理问题</h2>
+<div class="hlbox">
+<div class="hlbox-title">⚠️ 偏见与歧视</div>
+<p>AI从历史数据中学习，如果历史数据存在偏见，AI会放大这些偏见。例如：招聘AI系统可能歧视女性候选人（因为历史录用数据以男性为主）、贷款审批AI可能对少数族裔有偏见、面部识别系统对不同种族识别准确率差异巨大。</p>
+</div>
 
-<p><strong>偏见与歧视</strong></p>
-
-<p>AI从历史数据中学习，如果历史数据存在偏见，AI会放大这些偏见。例如：</p>
-
-<ul>
-<li>招聘AI系统可能歧视女性候选人（因为历史录用数据以男性为主）</li>
-<li>贷款审批AI可能对少数族裔有偏见</li>
-<li>面部识别系统对不同种族识别准确率差异巨大</li>
-</ul>
-
-<p><strong>缺乏透明度</strong></p>
-
+<div class="hlbox">
+<div class="hlbox-title">🔍 缺乏透明度</div>
 <p>深度学习模型是"黑箱"，很难解释为什么做出某个决策。这在需要问责的场景（如医疗诊断、金融风控）是个大问题。</p>
+</div>
 
-<p><strong>隐私侵犯</strong></p>
-
+<div class="hlbox">
+<div class="hlbox-title">🔐 隐私侵犯</div>
 <p>AI系统需要大量数据训练，可能侵犯用户隐私。模型可能"记住"训练数据，在推理时泄露敏感信息。</p>
+</div>
 
-<h2>16.3 AI公平性检测与修复</h2>
+<h2 class="section-h2">16.2 AI公平性检测与修复</h2>
 
 <pre><code>提示词：
 "作为AI伦理专家，请审查以下招聘筛选AI系统的公平性问题：
@@ -46,12 +49,11 @@
 2. 偏见的来源是什么？
 3. 如何检测这些偏见？
 4. 如何修复/缓解这些偏见？
-5. 上线前应该做什么测试？"
-</code></pre>
+5. 上线前应该做什么测试？"</code></pre>
 
-<h2>16.4 可解释AI（XAI）</h2>
+<h2 class="section-h2">16.3 可解释AI（XAI）</h2>
 
-<p>可解释AI（Explainable AI，XAI）旨在让AI决策过程更透明。</p>
+<p class="p">可解释AI（Explainable AI，XAI）旨在让AI决策过程更透明。</p>
 
 <pre><code>提示词：
 "解释以下AI决策过程：
@@ -71,32 +73,35 @@
 1. 为什么模型做出这个决定？
 2. 哪些因素影响最大？
 3. 如果申请人想提高批准概率，应该怎么做？
-4. 这个解释是否足够清晰？为什么？"
-</code></pre>
+4. 这个解释是否足够清晰？为什么？"</code></pre>
 
-<h2>16.5 AI治理框架</h2>
+<h2 class="section-h2">16.4 AI治理框架</h2>
 
-<p>企业需要建立AI治理框架来确保AI系统的负责任使用。</p>
+<p class="p">企业需要建立AI治理框架来确保AI系统的负责任使用。</p>
 
-<p><strong>欧盟AI法案（EU AI Act）风险分类与实施时间线</strong>：</p>
+<div class="hlbox">
+<div class="hlbox-title">📜 欧盟AI法案（EU AI Act）</div>
+<p>欧盟《人工智能法案》（Regulation (EU) 2024/1689）于2024年8月1日正式生效，是全球首部综合性人工智能法律框架，包含180个序言、113条条款和13个附件。</p>
+</div>
 
-<p>欧盟《人工智能法案》（Regulation (EU) 2024/1689）于2024年8月1日正式生效，是全球首部综合性人工智能法律框架，包含180个序言、113条条款和13个附件。实施时间线如下：</p>
-
-<table>
+<table class="tbl">
 <thead><tr><th>风险等级</th><th>应用示例</th><th>要求</th><th>生效时间</th></tr></thead>
 <tbody>
-<tr><td>禁止类风险</td><td>社会评分、实时人脸识别（公共场所）、基于神经操控的AI</td><td>完全禁止</td><td>2025年2月2日</td></tr>
-<tr><td>高风险</td><td>招聘筛选、信贷审批、医疗设备、教育评估、关键基础设施</td><td>CE认证、技术文档、人类监督、风险管理系统</td><td>2026年8月2日</td></tr>
+<tr><td class="hl">禁止类风险</td><td>社会评分、实时人脸识别（公共场所）、基于神经操控的AI</td><td>完全禁止</td><td>2025年2月2日</td></tr>
+<tr><td class="hl">高风险</td><td>招聘筛选、信贷审批、医疗设备、教育评估、关键基础设施</td><td>CE认证、技术文档、人类监督、风险管理系统</td><td>2026年8月2日</td></tr>
 <tr><td>有限风险</td><td>聊天机器人、深fake、情感识别系统</td><td>透明度义务</td><td>2026年8月2日</td></tr>
 <tr><td>最小风险</td><td>垃圾邮件过滤、推荐系统、视频游戏AI</td><td>自愿行为准则</td><td>2026年8月2日</td></tr>
 </tbody>
 </table>
 
-<p><strong>罚款标准</strong>：禁止类违规最高罚款全球年营业额的7%；高风险违规3%；信息错误1.5%。</p>
+<div class="callout callout-warn">
+<div class="callout-icon">⚠</div>
+<div class="callout-text"><strong>罚款标准：</strong>禁止类违规最高罚款全球年营业额的7%；高风险违规3%；信息错误1.5%</div>
+</div>
 
-<h3>其他主要AI法规</h3>
+<h3 class="section-h3">其他主要AI法规</h3>
 
-<table>
+<table class="tbl">
 <thead><tr><th>法规</th><th>地区</th><th>发布时间</th><th>特点</th></tr></thead>
 <tbody>
 <tr><td><strong>NIST AI RMF</strong></td><td>美国</td><td>2023年1月</td><td>自愿性框架，四大核心功能：Govern、Map、Measure、Manage</td></tr>
@@ -106,22 +111,20 @@
 </tbody>
 </table>
 
-<h2>16.6 数据隐私保护与隐私计算技术</h2>
+<h2 class="section-h2">16.5 数据隐私保护与隐私计算技术</h2>
 
-<p><strong>隐私保护技术</strong>：</p>
-
-<table>
+<table class="tbl">
 <thead><tr><th>技术</th><th>核心原理</th><th>主流工具</th></tr></thead>
 <tbody>
-<tr><td><strong>差分隐私</strong></td><td>在数据中添加校准噪声，保护个体隐私同时保留统计特性</td><td>Microsoft SmartNoise、Google DP Library、OpenDP、PyDP</td></tr>
-<tr><td><strong>联邦学习</strong></td><td>数据不出本地，仅共享模型梯度更新</td><td>TensorFlow Federated、PySyft、FATE、Flower</td></tr>
-<tr><td><strong>同态加密</strong></td><td>在加密数据上直接计算，无需解密</td><td>Microsoft SEAL、PALISADE、HELIB、OpenFHE</td></tr>
+<tr><td class="hl"><strong>差分隐私</strong></td><td>在数据中添加校准噪声，保护个体隐私同时保留统计特性</td><td>Microsoft SmartNoise、Google DP Library、OpenDP、PyDP</td></tr>
+<tr><td class="hl"><strong>联邦学习</strong></td><td>数据不出本地，仅共享模型梯度更新</td><td>TensorFlow Federated、PySyft、FATE、Flower</td></tr>
+<tr><td class="hl"><strong>同态加密</strong></td><td>在加密数据上直接计算，无需解密</td><td>Microsoft SEAL、PALISADE、HELIB、OpenFHE</td></tr>
 </tbody>
 </table>
 
-<h3>AI公平性与偏见检测工具</h3>
+<h3 class="section-h3">AI公平性与偏见检测工具</h3>
 
-<table>
+<table class="tbl">
 <thead><tr><th>工具</th><th>提供商</th><th>核心能力</th></tr></thead>
 <tbody>
 <tr><td><strong>AI Fairness 360</strong></td><td>IBM</td><td>70+公平性指标，偏见缓解算法（预处理/处理中/后处理）</td></tr>
@@ -130,9 +133,9 @@
 </tbody>
 </table>
 
-<h3>可解释AI（XAI）工具</h3>
+<h3 class="section-h3">可解释AI（XAI）工具</h3>
 
-<table>
+<table class="tbl">
 <thead><tr><th>工具</th><th>核心能力</th></tr></thead>
 <tbody>
 <tr><td><strong>SHAP</strong></td><td>基于博弈论的Shapley值，特征归因，一致性保证</td></tr>
@@ -160,25 +163,86 @@
 2. 数据存储加密方案
 3. API调用时的隐私保护措施
 4. 用户权利保障机制（访问权、删除权）
-5. 数据保留和删除策略"
-</code></pre>
+5. 数据保留和删除策略"</code></pre>
 
-<h2>16.7 AI安全最佳实践</h2>
+<h2 class="section-h2">16.6 AI安全最佳实践</h2>
 
-<ol>
-<li><strong>对抗性测试</strong>：模拟攻击测试AI系统的鲁棒性</li>
-<li><strong>输入验证</strong>：防止恶意输入诱导错误输出</li>
-<li><strong>模型版本控制</strong>：记录每次模型变更，便于审计回滚</li>
-<li><strong>人工审核</strong>：对高风险决策保持人工干预能力</li>
-<li><strong>持续监控</strong>：部署后持续监控模型性能和公平性</li>
-</ol>
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>对抗性测试</h4>
+<p>模拟攻击测试AI系统的鲁棒性</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>输入验证</h4>
+<p>防止恶意输入诱导错误输出</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>模型版本控制</h4>
+<p>记录每次模型变更，便于审计回滚</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div>
+<h4>人工审核</h4>
+<p>对高风险决策保持人工干预能力</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">5</div>
+<div>
+<h4>持续监控</h4>
+<p>部署后持续监控模型性能和公平性</p>
+</div>
+</div>
+</div>
 
-<h2>16.8 本章小结</h2>
+<h2 class="section-h2">16.7 本章小结</h2>
 
-<ol>
-<li>AI伦理问题是AI开发中不可回避的重要议题</li>
-<li>偏见可能来自训练数据，需要主动检测和修复</li>
-<li>可解释AI让决策过程更透明，便于问责</li>
-<li>AI治理框架帮助企业规范AI的使用</li>
-<li>隐私保护技术（差分隐私、联邦学习）是保护用户数据的重要手段</li>
-</ol>
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>AI伦理重要性</h4>
+<p>AI伦理问题是AI开发中不可回避的重要议题</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>偏见检测</h4>
+<p>偏见可能来自训练数据，需要主动检测和修复</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>可解释性</h4>
+<p>可解释AI让决策过程更透明，便于问责</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div>
+<h4>治理框架</h4>
+<p>AI治理框架帮助企业规范AI的使用</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">5</div>
+<div>
+<h4>隐私技术</h4>
+<p>隐私保护技术（差分隐私、联邦学习）是保护用户数据的重要手段</p>
+</div>
+</div>
+</div>
+
+</section>

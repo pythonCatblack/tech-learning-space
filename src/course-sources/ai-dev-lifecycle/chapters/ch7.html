@@ -1,24 +1,47 @@
-<h1>第七章：智能代码生成与优化——从框架到业务逻辑</h1>
+<section id="ch7">
+<div class="hero">
+<div class="chapter-tag">Chapter 7 · Code Generation</div>
+<h1>智能代码生成与优化——从框架到业务逻辑</h1>
+<p class="sub">利用AI实现从框架搭建到业务逻辑的全方位代码生成</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📚 35 min</span>
+<span class="hero-meta-item">⚡ Code Gen</span>
+</div>
+</div>
 
-<h2>7.1 代码生成的层次</h2>
+<p class="lead">AI代码生成可以分为几个层次：语法级生成、函数级生成、模块级生成、架构级生成。层次越高，AI的作用越大，但也需要更精准的Prompt和更多的审查。</p>
 
-<p>AI代码生成可以分为几个层次：</p>
+<h2 class="section-h2">7.1 代码生成的层次</h2>
 
-<ul>
-<li><strong>语法级生成</strong>：如Copilot的实时补全，单行或短代码块</li>
-<li><strong>函数级生成</strong>：根据注释或函数签名生成完整函数</li>
-<li><strong>模块级生成</strong>：根据需求描述生成一个功能模块（多个文件）</li>
-<li><strong>架构级生成</strong>：AI辅助搭建项目结构，生成基础架构代码</li>
-</ul>
+<div class="flow">
+<div class="flow-box">
+<div class="flow-box-title">语法级</div>
+<div class="flow-box-desc">如Copilot的实时补全，单行或短代码块</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">函数级</div>
+<div class="flow-box-desc">根据注释或函数签名生成完整函数</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">模块级</div>
+<div class="flow-box-desc">根据需求描述生成一个功能模块（多个文件）</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">架构级</div>
+<div class="flow-box-desc">AI辅助搭建项目结构，生成基础架构代码</div>
+</div>
+</div>
 
-<p>层次越高，AI的作用越大，但也需要更精准的Prompt和更多的审查。</p>
+<h2 class="section-h2">7.2 框架代码的AI生成</h2>
 
-<h2>7.2 框架代码的AI生成</h2>
+<p class="p"><strong>使用Fastify + TypeScript创建REST API</strong></p>
 
-<p><strong>使用Fastify + TypeScript创建REST API</strong></p>
-
-<pre><code>提示词：
-"使用Fastify + TypeScript创建一个任务管理的REST API框架。
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<pre><code>使用Fastify + TypeScript创建一个任务管理的REST API框架。
 
 要求：
 1. 使用Fastify 4.x版本
@@ -40,17 +63,18 @@
 - src/schemas/task.ts（Zod schema）
 - src/services/task.service.ts（业务逻辑服务）
 - src/types/task.ts（TypeScript类型）
-- package.json依赖配置"
-</code></pre>
+- package.json依赖配置</code></pre>
+</div>
 
-<h2>7.3 业务逻辑的AI辅助</h2>
+<h2 class="section-h2">7.3 业务逻辑的AI辅助</h2>
 
-<p>业务逻辑往往涉及复杂的领域知识，AI无法完全理解业务背景，但可以帮助实现模式化的逻辑。</p>
+<p class="p">业务逻辑往往涉及复杂的领域知识，AI无法完全理解业务背景，但可以帮助实现模式化的逻辑。</p>
 
-<p><strong>示例：任务优先级计算</strong></p>
+<p class="p"><strong>示例：任务优先级计算</strong></p>
 
-<pre><code>提示词：
-"为任务管理系统实现优先级计算逻辑。
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<pre><code>为任务管理系统实现优先级计算逻辑。
 
 业务规则：
 1. 紧急程度（基于截止日期）：
@@ -75,15 +99,16 @@
 - 纯函数，无副作用
 - 完整的类型定义
 - 单元测试覆盖主要场景
-- 包含JSDoc注释"
-</code></pre>
+- 包含JSDoc注释</code></pre>
+</div>
 
-<h2>7.4 代码重构与优化</h2>
+<h2 class="section-h2">7.4 代码重构与优化</h2>
 
-<p>AI可以帮助识别代码异味（Code Smell）并提供重构建议。</p>
+<p class="p">AI可以帮助识别代码异味（Code Smell）并提供重构建议。</p>
 
-<pre><code>提示词：
-"请审查以下代码，指出可能的问题并提供重构建议。
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<pre><code>请审查以下代码，指出可能的问题并提供重构建议。
 
 关注点：
 1. SOLID原则违反情况
@@ -113,15 +138,16 @@ class TaskManager {
     console.log('Task added');
   }
 }
-```"
-</code></pre>
+```</code></pre>
+</div>
 
-<h2>7.5 算法实现的AI辅助</h2>
+<h2 class="section-h2">7.5 算法实现的AI辅助</h2>
 
-<p>对于常见算法问题，AI可以提供多种实现方案及复杂度分析。</p>
+<p class="p">对于常见算法问题，AI可以提供多种实现方案及复杂度分析。</p>
 
-<pre><code>提示词：
-"为任务管理系统实现'智能任务分解'功能。
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<pre><code>为任务管理系统实现'智能任务分解'功能。
 
 需求：
 - 输入：一个高层级任务描述（如'完成用户登录功能'）
@@ -132,15 +158,16 @@ class TaskManager {
 2. 至少实现两种分解策略：基于关键词、基于常用模式
 3. 返回结果包含任务描述、预估工时、依赖关系
 4. 分析时间和空间复杂度
-5. 包含使用示例"
-</code></pre>
+5. 包含使用示例</code></pre>
+</div>
 
-<h2>7.6 数据库查询的AI优化</h2>
+<h2 class="section-h2">7.6 数据库查询的AI优化</h2>
 
-<p>AI可以帮忙分析和优化数据库查询。</p>
+<p class="p">AI可以帮忙分析和优化数据库查询。</p>
 
-<pre><code>提示词：
-"分析以下SQL查询的性能问题：
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<pre><code>分析以下SQL查询的性能问题：
 
 ```sql
 SELECT t.*, u.name as assignee_name
@@ -163,11 +190,13 @@ ORDER BY t.priority DESC, t.due_date ASC;
 问题：
 1. 这个查询能否利用索引？
 2. 排序是否需要额外的文件排序？
-3. 如何优化？"
-</code></pre>
+3. 如何优化？</code></pre>
+</div>
 
-<h2>7.7 本章小结</h2>
+<h2 class="section-h2">7.7 本章小结</h2>
 
+<div class="hlbox">
+<div class="hlbox-title">📚 核心要点</div>
 <ol>
 <li>AI代码生成可分为语法级、函数级、模块级、架构级四个层次</li>
 <li>框架代码生成是AI最擅长的场景，能大幅提升开发效率</li>
@@ -175,3 +204,6 @@ ORDER BY t.priority DESC, t.due_date ASC;
 <li>AI辅助代码审查能发现潜在问题和优化点</li>
 <li>保持对AI生成代码的批判性审查，确保质量和安全</li>
 </ol>
+</div>
+
+</section>

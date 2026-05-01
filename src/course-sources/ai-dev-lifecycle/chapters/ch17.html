@@ -1,16 +1,23 @@
+<section id="ch17">
+<div class="hero">
+<div class="chapter-tag">Chapter 17 · Practice</div>
 <h1>第十七章：综合实战——构建智能化产品发布</h1>
+<p class="sub">通过完整案例串联AI赋能开发全周期，从概念到部署上线</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 35分钟</span>
+</div>
+</div>
 
-<h2>17.1 端到端智能化开发的完整旅程</h2>
+<p class="lead">在前16章中，我们学习了AI赋能开发全周期的各个专题。现在，让我们用一个完整案例来串联所有知识：从产品概念到部署上线，全流程体验AI赋能的开发模式。</p>
 
-<p>在前16章中，我们学习了AI赋能开发全周期的各个专题。现在，让我们用一个完整案例来串联所有知识：从产品概念到部署上线，全流程体验AI赋能的开发模式。</p>
+<p class="p">我们将完成一个真实的智能化产品发布：AI-TaskManager的智能任务推荐功能。</p>
 
-<p>我们将完成一个真实的智能化产品发布：AI-TaskManager的智能任务推荐功能。</p>
+<h2 class="section-h2">17.1 产品定义与需求分析（AI辅助）</h2>
 
-<h2>17.2 产品定义与需求分析（AI辅助）</h2>
-
-<p><strong>场景</strong>：团队决定在AI-TaskManager中增加"智能任务推荐"功能，帮助用户发现最应该处理的任务。</p>
-
-<p><strong>AI辅助需求分析</strong>：</p>
+<div class="callout callout-info">
+<div class="callout-icon">ℹ</div>
+<div class="callout-text"><strong>场景：</strong>团队决定在AI-TaskManager中增加"智能任务推荐"功能，帮助用户发现最应该处理的任务。</p>
+</div>
 
 <pre><code>提示词：
 "为'智能任务推荐'功能生成完整的产品需求文档：
@@ -30,10 +37,9 @@
 - 推荐最应该立即处理的任务
 - 提升团队整体效率
 
-请生成完整PRD，包含：概述、用户故事、功能详述、验收标准、技术约束、非功能需求、风险评估"
-</code></pre>
+请生成完整PRD，包含：概述、用户故事、功能详述、验收标准、技术约束、非功能需求、风险评估"</code></pre>
 
-<h2>17.3 架构设计与技术选型</h2>
+<h2 class="section-h2">17.2 架构设计与技术选型</h2>
 
 <pre><code>提示词：
 "为智能任务推荐功能设计技术方案：
@@ -54,13 +60,12 @@
 2. 系统架构设计
 3. 技术栈建议
 4. MVP实现路径
-5. 后续迭代计划"
-</code></pre>
+5. 后续迭代计划"</code></pre>
 
-<h2>17.4 敏捷开发与项目管理</h2>
+<h2 class="section-h2">17.3 敏捷开发与项目管理</h2>
 
-<p><strong>Sprint规划</strong>：</p>
-
+<div class="hlbox">
+<div class="hlbox-title">📋 Sprint规划</div>
 <pre><code>Sprint 1（2周）：MVP
 目标：完成基础推荐算法和API
 
@@ -73,13 +78,13 @@ Sprint 2（2周）：体验优化
 目标：提升推荐质量，增加可视化
 
 Sprint 3（2周）：数据驱动优化
-目标：基于用户反馈迭代算法
-</code></pre>
+目标：基于用户反馈迭代算法</code></pre>
+</div>
 
-<h2>17.5 AI赋能的代码开发</h2>
+<h2 class="section-h2">17.4 AI赋能的代码开发</h2>
 
-<p><strong>使用Copilot生成推荐算法</strong>：</p>
-
+<div class="hlbox">
+<div class="hlbox-title">💻 使用Copilot生成推荐算法</div>
 <pre><code>提示词：
 "为任务推荐系统实现基于优先级的排序算法：
 
@@ -94,10 +99,10 @@ Sprint 3（2周）：数据驱动优化
 1. TypeScript类型定义
 2. 评分计算函数
 3. 排序函数
-4. 单元测试"
-</code></pre>
+4. 单元测试"</code></pre>
+</div>
 
-<h2>17.6 智能测试策略</h2>
+<h2 class="section-h2">17.5 智能测试策略</h2>
 
 <pre><code>提示词：
 "为任务推荐功能设计测试策略：
@@ -113,10 +118,9 @@ Sprint 3（2周）：数据驱动优化
 2. 各层测试用例清单（重点是边界条件）
 3. 性能测试方案
 4. A/B测试方案
-5. 上线前的验收标准"
-</code></pre>
+5. 上线前的验收标准"</code></pre>
 
-<h2>17.7 CI/CD与自动化部署</h2>
+<h2 class="section-h2">17.6 CI/CD与自动化部署</h2>
 
 <pre><code># GitHub Actions workflow
 name: Recommend Feature Pipeline
@@ -161,19 +165,14 @@ jobs:
       - name: Health Check
         run: ./scripts/health-check.sh
       - name: AI Post-Deploy Analysis
-        run: npx ai-health-check --env=production
-</code></pre>
+        run: npx ai-health-check --env=production</code></pre>
 
-<h2>17.8 监控与持续优化</h2>
+<h2 class="section-h2">17.7 监控与持续优化</h2>
 
-<p><strong>关键指标监控</strong>：</p>
-
-<ul>
-<li><strong>推荐点击率</strong>：衡量推荐质量</li>
-<li><strong>推荐采纳率</strong>：用户是否按照推荐行事</li>
-<li><strong>任务完成率</strong>：最终业务目标</li>
-<li><strong>用户满意度</strong>：NPS评分</li>
-</ul>
+<div class="hlbox">
+<div class="hlbox-title">📊 关键指标监控</div>
+<p>推荐点击率：衡量推荐质量<br>推荐采纳率：用户是否按照推荐行事<br>任务完成率：最终业务目标<br>用户满意度：NPS评分</p>
+</div>
 
 <pre><code>监控仪表盘设计：
 ┌─────────────────────────────────────────────────────────┐
@@ -189,13 +188,13 @@ jobs:
 ├─────────────────────────────────────────────────────────┤
 │  实时告警                                                │
 │  ⚠️ P99延迟超过阈值(200ms)，当前250ms                 │
-└─────────────────────────────────────────────────────────┘
-</code></pre>
+└─────────────────────────────────────────────────────────┘</code></pre>
 
-<h2>17.9 发布后的回顾与迭代</h2>
+<h2 class="section-h2">17.8 发布后的回顾与迭代</h2>
 
-<pre><code>Sprint Review要点：
-1. 目标达成评估
+<div class="hlbox">
+<div class="hlbox-title">🔄 Sprint Review要点</div>
+<pre><code>1. 目标达成评估
    - 推荐功能成功上线，用户覆盖率80%
    - 点击率达到45%，超过目标40%
    - 但采纳率仅32%，低于目标50%
@@ -208,41 +207,116 @@ jobs:
 3. 迭代计划
    - Sprint 4：引入时间偏好学习
    - Sprint 5：增加推荐解释功能
-   - Sprint 6：引入协同过滤解决冷启动
-</code></pre>
+   - Sprint 6：引入协同过滤解决冷启动</code></pre>
+</div>
 
-<h2>17.10 课程总结与展望</h2>
+<h2 class="section-h2">17.9 课程总结与展望</h2>
 
-<p>恭喜你完成了"全周期程序开发实战课程"！让我们回顾整个旅程：</p>
+<p class="p">恭喜你完成了"全周期程序开发实战课程"！让我们回顾整个旅程：</p>
 
-<ol>
-<li><strong>第一章</strong>：建立了AI赋能开发的整体认知框架</li>
-<li><strong>第二至五章</strong>：掌握了产品思维、架构设计、项目管理、工具链搭建</li>
-<li><strong>第六至十章</strong>：深入学习了AI辅助编码、测试、审查、部署的核心技能</li>
-<li><strong>第十一至十五章</strong>：探索了AI在需求分析、项目管理、低代码平台、运维监控、数据分析中的应用</li>
-<li><strong>第十六章</strong>：理解了AI伦理与治理的重要性</li>
-<li><strong>第十七章</strong>：完成了端到端的综合实战</li>
-</ol>
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>第一章</h4>
+<p>建立了AI赋能开发的整体认知框架</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2-5</div>
+<div>
+<h4>第二至五章</h4>
+<p>掌握了产品思维、架构设计、项目管理、工具链搭建</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">6-10</div>
+<div>
+<h4>第六至十章</h4>
+<p>深入学习了AI辅助编码、测试、审查、部署的核心技能</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">11-15</div>
+<div>
+<h4>第十一至十五章</h4>
+<p>探索了AI在需求分析、项目管理、低代码平台、运维监控、数据分析中的应用</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">16</div>
+<div>
+<h4>第十六章</h4>
+<p>理解了AI伦理与治理的重要性</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">17</div>
+<div>
+<h4>第十七章</h4>
+<p>完成了端到端的综合实战</p>
+</div>
+</div>
+</div>
 
-<p><strong>未来展望</strong>：</p>
+<h3 class="section-h3">未来展望</h3>
 
-<ul>
-<li>AI Agent将变得更加自主和智能</li>
-<li>低代码/无代码平台将持续进化</li>
-<li>AI伦理和治理将成为必修课</li>
-<li>人机协作模式将不断创新</li>
-</ul>
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🤖</div>
+<h4>AI Agent</h4>
+<p>AI Agent将变得更加自主和智能</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🚀</div>
+<h4>低代码平台</h4>
+<p>低代码/无代码平台将持续进化</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">⚖️</div>
+<h4>AI伦理</h4>
+<p>AI伦理和治理将成为必修课</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🤝</div>
+<h4>人机协作</h4>
+<p>人机协作模式将不断创新</p>
+</div>
+</div>
 
-<blockquote>
-<p>最重要的事情是：AI是工具，不是目的。真正创造价值的是人的洞察和决策。AI放大你的能力，但无法替代你的思考。保持好奇心，持续学习，你已经走上了成为AI时代顶级工程师的道路。</p>
-</blockquote>
+<div class="callout callout-good">
+<div class="callout-icon">💡</div>
+<div class="callout-text"><strong>最重要的事情是：</strong>AI是工具，不是目的。真正创造价值的是人的洞察和决策。AI放大你的能力，但无法替代你的思考。保持好奇心，持续学习，你已经走上了成为AI时代顶级工程师的道路。</div>
+</div>
 
-<h2>延伸学习资源</h2>
+<h2 class="section-h2">延伸学习资源</h2>
 
-<ul>
-<li>《Hands-On AI Agent Development》— 深入AI Agent架构</li>
-<li>《Engineering Manager Handbook》— 技术管理实践</li>
-<li>FastAPI官方文档 — 现代API开发</li>
-<li>Dataiku Academy — 数据科学LCNC平台</li>
-<li>EU AI Act官方文档 — AI法规参考</li>
-</ul>
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">📚</div>
+<h4>Hands-On AI Agent Development</h4>
+<p>深入AI Agent架构</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📖</div>
+<h4>Engineering Manager Handbook</h4>
+<p>技术管理实践</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🔧</div>
+<h4>FastAPI官方文档</h4>
+<p>现代API开发</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📊</div>
+<h4>Dataiku Academy</h4>
+<p>数据科学LCNC平台</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📜</div>
+<h4>EU AI Act官方文档</h4>
+<p>AI法规参考</p>
+</div>
+</div>
+
+</section>

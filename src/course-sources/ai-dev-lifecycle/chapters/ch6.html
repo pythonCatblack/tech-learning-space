@@ -1,19 +1,42 @@
-<h1>第六章：AI编码助手实战——ChatGPT与Copilot的高效使用</h1>
+<section id="ch6">
+<div class="hero">
+<div class="chapter-tag">Chapter 6 · AI Coding Assistants</div>
+<h1>AI编码助手实战——ChatGPT与Copilot的高效使用</h1>
+<p class="sub">掌握AI编码助手，让开发效率倍增</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📚 30 min</span>
+<span class="hero-meta-item">🤖 AI Tools</span>
+</div>
+</div>
 
-<h2>6.1 AI编码助手的定位</h2>
+<p class="lead">AI编码助手不是替代程序员，而是程序员的"第二双手"。它擅长处理重复性编码任务、探索未知API、提供多角度思路。但它也需要正确的引导才能发挥最大价值。</p>
 
-<p>AI编码助手不是替代程序员，而是程序员的"第二双手"。它擅长处理重复性编码任务、探索未知API、提供多角度思路。但它也需要正确的引导才能发挥最大价值。</p>
+<h2 class="section-h2">6.1 AI编码助手的定位</h2>
 
-<p>理解AI的能力边界是关键：<strong>AI擅长</strong>——模式化代码生成、代码解释与翻译、调试思路建议、文档生成。<strong>AI不擅长</strong>——完全替代业务理解、处理最新框架API（知识截止限制）、处理超长上下文、保证100%正确的代码。</p>
+<p class="p">理解AI的能力边界是关键：</p>
 
-<h2>6.2 ChatGPT在开发中的使用模式</h2>
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">✅</div>
+<h4>AI 擅长</h4>
+<p>模式化代码生成、代码解释与翻译、调试思路建议、文档生成</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">❌</div>
+<h4>AI 不擅长</h4>
+<p>完全替代业务理解、处理最新框架API、处理超长上下文、保证100%正确的代码</p>
+</div>
+</div>
 
-<p><strong>模式一：代码解释与学习</strong></p>
+<h2 class="section-h2">6.2 ChatGPT在开发中的使用模式</h2>
 
-<p>遇到复杂代码时，让AI扮演"代码导师"角色：</p>
+<h3 class="section-h3">模式一：代码解释与学习</h3>
 
-<pre><code>提示词：
-"请解释以下代码的实现逻辑，重点关注：
+<p class="p">遇到复杂代码时，让AI扮演"代码导师"角色：</p>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词模板</div>
+<pre><code>请解释以下代码的实现逻辑，重点关注：
 1. 整体流程是什么？
 2. 关键的数据结构有哪些？
 3. 可能的性能瓶颈在哪里？
@@ -34,13 +57,14 @@ function processTaskQueue(tasks: Task[]): ProcessedResult {
     return acc;
   }, {} as ProcessedResult);
 }
-```"
-</code></pre>
+```</code></pre>
+</div>
 
-<p><strong>模式二：代码翻译与迁移</strong></p>
+<h3 class="section-h3">模式二：代码翻译与迁移</h3>
 
-<pre><code>提示词：
-"将以下JavaScript代码转换为TypeScript，要求：
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词模板</div>
+<pre><code>将以下JavaScript代码转换为TypeScript，要求：
 1. 添加完整的类型定义
 2. 使用类型守卫处理边界情况
 3. 保持原有逻辑不变
@@ -59,41 +83,58 @@ function calculatePriority(task) {
 
   return 40 + (task.importance * 10);
 }
-```"
-</code></pre>
+```</code></pre>
+</div>
 
-<p><strong>模式三：Bug诊断与修复</strong></p>
+<h3 class="section-h3">模式三：Bug诊断与修复</h3>
 
-<pre><code>提示词：
-"我遇到了一个bug：任务列表页面加载很慢，有时需要10秒以上。
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词模板</div>
+<pre><code>我遇到了一个bug：任务列表页面加载很慢，有时需要10秒以上。
 错误日志显示：'Warning: Each child in a list should have a unique "key" prop.'
 
 请帮我分析：
 1. 这个警告可能导致什么问题？
 2. 可能的原因是什么？
-3. 如何修复？请给出代码示例"
-</code></pre>
+3. 如何修复？请给出代码示例</code></pre>
+</div>
 
-<h2>6.3 GitHub Copilot的进阶技巧</h2>
+<h2 class="section-h2">6.3 GitHub Copilot的进阶技巧</h2>
 
-<p><strong>重要更新：2024年10月，GitHub Copilot已支持多模型选择</strong>，包括Anthropic的Claude 3.5 Sonnet、谷歌的Gemini 1.5 Pro，以及OpenAI o1-preview和o1-mini，不再仅依赖OpenAI模型。</p>
+<div class="callout callout-info">
+<div class="callout-icon">ℹ️</div>
+<div class="callout-text"><strong>重要更新：</strong>2024年10月，GitHub Copilot已支持多模型选择，包括Anthropic的Claude 3.5 Sonnet、谷歌的Gemini 1.5 Pro，以及OpenAI o1-preview和o1-mini，不再仅依赖OpenAI模型。</div>
+</div>
 
-<p><strong>最新定价（2025-2026）：</strong></p>
+<p class="p"><strong>最新定价（2025-2026）：</strong></p>
 
-<table>
+<table class="tbl">
 <thead><tr><th>套餐</th><th>价格</th><th>主要功能</th></tr></thead>
 <tbody>
-<tr><td>Free</td><td>免费</td><td>每月50次Agent/Chat请求，2000次补全，访问Haiku 4.5和GPT-5 mini</td></tr>
-<tr><td>Pro</td><td>$10/月</td><td>无限聊天，300次高级请求，Claude和Codex模型访问</td></tr>
-<tr><td>Pro+</td><td>$39/月</td><td>更高请求限额，云端Agent，Copilot CLI</td></tr>
+<tr><td class="hl">Free</td><td>免费</td><td>每月50次Agent/Chat请求，2000次补全，访问Haiku 4.5和GPT-5 mini</td></tr>
+<tr><td class="hl">Pro</td><td>$10/月</td><td>无限聊天，300次高级请求，Claude和Codex模型访问</td></tr>
+<tr><td class="hl">Pro+</td><td>$39/月</td><td>更高请求限额，云端Agent，Copilot CLI</td></tr>
 </tbody>
 </table>
 
-<p><strong>市场数据：</strong>截至2025年7月，GitHub Copilot用户突破2000万，GitHub自身已拥有1.5亿开发者用户。Google CEO Sundar Pichai于2024年10月表示，Google内部25%的新代码由AI编写。</p>
+<div class="stats">
+<div class="stat">
+<div class="stat-val">2000万+</div>
+<div class="stat-lbl">Copilot 用户（2025.7）</div>
+</div>
+<div class="stat">
+<div class="stat-val">1.5亿</div>
+<div class="stat-lbl">GitHub 开发者用户</div>
+</div>
+<div class="stat">
+<div class="stat-val">25%</div>
+<div class="stat-lbl">Google 新代码由AI编写</div>
+</div>
+</div>
 
-<p><strong>技巧一：上下文感知补全</strong></p>
+<h3 class="section-h3">技巧一：上下文感知补全</h3>
 
-<p>在代码中增加注释和类型定义，Copilot能更准确地理解你的意图。</p>
+<p class="p">在代码中增加注释和类型定义，Copilot能更准确地理解你的意图。</p>
 
 <pre><code>// 定义清晰的数据结构
 interface Task {
@@ -111,68 +152,122 @@ interface Task {
 // 输出：按执行顺序排列的任务数组
 async function getExecutionOrder(tasks: Task[]): Promise&lt;Task[]&gt; {
   // Copilot 会自动补全这个函数的实现
-}
-</code></pre>
+}</code></pre>
 
-<p><strong>技巧二：函数级生成</strong></p>
+<h3 class="section-h3">技巧二：函数级生成</h3>
 
-<p>在函数签名后换行，输入简洁注释，按Tab等待Copilot生成。</p>
+<p class="p">在函数签名后换行，输入简洁注释，按Tab等待Copilot生成。</p>
 
 <pre><code>// 生成智能排序比较函数
 const compareTasks = (a: Task, b: Task): number => {
   // Copilot 会建议基于优先级和截止日期的比较逻辑
-};
-</code></pre>
+};</code></pre>
 
-<p><strong>技巧三：自然语言转正则</strong></p>
+<h3 class="section-h3">技巧三：自然语言转正则</h3>
 
 <pre><code>// 用户名：字母数字下划线，3-20位
 // 邮箱：标准邮箱格式
 // 手机号：中国大陆手机号
-// Copilot 会生成对应的正则表达式
-</code></pre>
+// Copilot 会生成对应的正则表达式</code></pre>
 
-<h2>6.4 Cursor IDE的特殊能力</h2>
+<h2 class="section-h2">6.4 Cursor IDE的特殊能力</h2>
 
-<p>Cursor是一个深度集成AI的IDE，采用AI-First设计理念，相比VS Code + Copilot有独特优势：</p>
+<p class="p">Cursor是一个深度集成AI的IDE，采用AI-First设计理念，相比VS Code + Copilot有独特优势：</p>
 
-<ul>
-<li><strong>Chat模式</strong>：选中代码片段，直接与AI对话讨论</li>
-<li><strong>Composer模式</strong>：AI可以在整个项目中创建/修改多个文件</li>
-<li><strong>Apply功能</strong>：AI生成的代码可以直接应用并预览diff</li>
-<li><strong>多模型支持</strong>：内置Claude 3.5、GPT-4等多个模型选择</li>
-<li><strong>Cursor CLI</strong>：终端版AI编程工具，与Claude Code竞争</li>
-</ul>
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">💬</div>
+<h4>Chat模式</h4>
+<p>选中代码片段，直接与AI对话讨论</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🎭</div>
+<h4>Composer模式</h4>
+<p>AI可以在整个项目中创建/修改多个文件</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">✅</div>
+<h4>Apply功能</h4>
+<p>AI生成的代码可以直接应用并预览diff</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🤖</div>
+<h4>多模型支持</h4>
+<p>内置Claude 3.5、GPT-4等多个模型选择</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">⌨️</div>
+<h4>Cursor CLI</h4>
+<p>终端版AI编程工具，与Claude Code竞争</p>
+</div>
+</div>
 
-<p><strong>最新定价：</strong></p>
+<p class="p"><strong>最新定价：</strong></p>
 
-<table>
+<table class="tbl">
 <thead><tr><th>套餐</th><th>价格</th><th>功能</th></tr></thead>
 <tbody>
-<tr><td>Free</td><td>免费</td><td>有限请求数，基础功能</td></tr>
-<tr><td>Pro</td><td>$20/月</td><td>无限请求，优先模型访问</td></tr>
-<tr><td>Business</td><td>$40/月</td><td>团队功能，SSO，更高限额</td></tr>
+<tr><td class="hl">Free</td><td>免费</td><td>有限请求数，基础功能</td></tr>
+<tr><td class="hl">Pro</td><td>$20/月</td><td>无限请求，优先模型访问</td></tr>
+<tr><td class="hl">Business</td><td>$40/月</td><td>团队功能，SSO，更高限额</td></tr>
 </tbody>
 </table>
 
-<p><strong>市场数据</strong>：截至2025年初，Cursor ARR超1亿美元，估值26亿美元，是AI编程工具领域增长最快的公司之一。团队仅约12名工程师，却实现了极高的资本效率。</p>
+<div class="stats">
+<div class="stat">
+<div class="stat-val">$1亿+</div>
+<div class="stat-lbl">Cursor ARR（2025初）</div>
+</div>
+<div class="stat">
+<div class="stat-val">$26亿</div>
+<div class="stat-lbl">估值</div>
+</div>
+<div class="stat">
+<div class="stat-val">~12</div>
+<div class="stat-lbl">工程师数量</div>
+</div>
+</div>
 
-<p><strong>Claude Code</strong>：Anthropic于2025年推出的命令行编程工具，与Cursor直接竞争。支持Windows原生运行（无需WSL）、会话恢复、命令历史搜索等功能。</p>
+<div class="callout callout-info">
+<div class="callout-icon">ℹ️</div>
+<div class="callout-text"><strong>Claude Code：</strong>Anthropic于2025年推出的命令行编程工具，与Cursor直接竞争。支持Windows原生运行（无需WSL）、会话恢复、命令历史搜索等功能。</div>
+</div>
 
-<h2>6.5 Prompt Engineering for Code</h2>
+<h2 class="section-h2">6.5 Prompt Engineering for Code</h2>
 
-<p>好的Prompt是获得高质量AI代码的关键。</p>
+<p class="p">好的Prompt是获得高质量AI代码的关键。</p>
 
-<p><strong>GREENS原则</strong>：</p>
+<p class="p"><strong>GREENS原则：</strong></p>
 
-<ul>
-<li><strong>G</strong>oal（目标）：明确告诉AI要做什么</li>
-<li><strong>R</strong>ole（角色）：设定AI扮演的角色</li>
-<li><strong>E</strong>ngineering context（工程上下文）：提供足够的代码上下文</li>
-<li><strong>N</strong>Constraints（约束条件）：说明限制和边界</li>
-<li><strong>S</strong>tyle（风格）：指定代码风格要求</li>
-</ul>
+<div class="flow">
+<div class="flow-box">
+<div class="flow-box-title">G</div>
+<div class="flow-box-desc">Goal 目标<br/>明确告诉AI要做什么</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">R</div>
+<div class="flow-box-desc">Role 角色<br/>设定AI扮演的角色</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">E</div>
+<div class="flow-box-desc">Engineering context<br/>提供足够的代码上下文</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">N</div>
+<div class="flow-box-desc">Constraints 约束<br/>说明限制和边界</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">S</div>
+<div class="flow-box-desc">Style 风格<br/>指定代码风格要求</div>
+</div>
+</div>
 
+<div class="hlbox">
+<div class="hlbox-title">💡 GREENS原则示例</div>
 <pre><code>提示词示例：
 "作为TypeScript专家（Role），请帮我实现一个任务过滤函数（Goal）。
 
@@ -191,20 +286,38 @@ const compareTasks = (a: Task, b: Task): number => {
 - 添加JSDoc注释
 - 遵循airbnb编码规范
 
-请提供完整实现和单元测试。"
-</code></pre>
+请提供完整实现和单元测试。"</code></pre>
+</div>
 
-<h2>6.6 常见陷阱与规避</h2>
+<h2 class="section-h2">6.6 常见陷阱与规避</h2>
 
-<ol>
-<li><strong>过度依赖</strong>：不假思索接受AI建议，应先理解再使用</li>
-<li><strong>上下文丢失</strong>：长对话中AI可能遗忘早期上下文，注意清理和补充</li>
-<li><strong>知识截止</strong>：AI知识有截止日期，新框架/库可能不了解</li>
-<li><strong>安全风险</strong>：AI可能生成包含安全漏洞的代码（如SQL注入），必须审查</li>
-</ol>
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">⚠️</div>
+<h4>过度依赖</h4>
+<p>不假思索接受AI建议，应先理解再使用</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🔄</div>
+<h4>上下文丢失</h4>
+<p>长对话中AI可能遗忘早期上下文，注意清理和补充</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📅</div>
+<h4>知识截止</h4>
+<p>AI知识有截止日期，新框架/库可能不了解</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🔒</div>
+<h4>安全风险</h4>
+<p>AI可能生成包含安全漏洞的代码（如SQL注入），必须审查</p>
+</div>
+</div>
 
-<h2>6.7 本章小结</h2>
+<h2 class="section-h2">6.7 本章小结</h2>
 
+<div class="hlbox">
+<div class="hlbox-title">📚 核心要点</div>
 <ol>
 <li>AI编码助手是程序员的效率工具，不是替代品</li>
 <li>ChatGPT适合代码解释、翻译、Bug诊断等多场景</li>
@@ -212,3 +325,6 @@ const compareTasks = (a: Task, b: Task): number => {
 <li>GREENS原则能帮助写出高质量的AI生成Prompt</li>
 <li>保持批判性思维，审查AI生成的每一行代码</li>
 </ol>
+</div>
+
+</section>

@@ -1,71 +1,106 @@
-<h1>第十一章：AI驱动的需求分析与文档自动化</h1>
+<section id="ch11">
+<div class="hero">
+<div class="chapter-tag">Chapter 11 · AI Development Lifecycle</div>
+<h1>AI驱动的需求分析与文档自动化</h1>
+<p class="sub">AI可以大幅加速需求文档的生成，从会议纪要到PRD，实现文档自动化</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 16 min</span>
+</div>
+</div>
 
-<h2>11.1 从需求到文档的AI自动化</h2>
+<h2 class="section-h2">11.1 从需求到文档的AI自动化</h2>
 
-<p>传统的产品文档工作流是：需求讨论 → 会议纪要 → 产品经理整理 → PRD文档 → 技术评审 → 设计稿。这个流程耗时且容易信息失真。AI可以大幅加速这个过程，甚至实现部分自动化。</p>
+<p class="p">传统的产品文档工作流是：需求讨论 → 会议纪要 → 产品经理整理 → PRD文档 → 技术评审 → 设计稿。这个流程耗时且容易信息失真。AI可以大幅加速这个过程，甚至实现部分自动化。</p>
 
-<p>核心思想是：把AI作为"需求沉淀器"，实时记录、分析、归纳团队的需求讨论，生成结构化文档。</p>
+<p class="p">核心思想是：把AI作为"需求沉淀器"，实时记录、分析、归纳团队的需求讨论，生成结构化文档。</p>
 
-<h2>11.2 会议纪要的AI生成</h2>
+<div class="flow">
+<div class="flow-box">
+<div class="flow-box-title">需求讨论</div>
+<div class="flow-box-desc">团队头脑风暴</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">AI记录分析</div>
+<div class="flow-box-desc">实时沉淀要点</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">自动生成</div>
+<div class="flow-box-desc">PRD文档</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">技术评审</div>
+<div class="flow-box-desc">开发人员审核</div>
+</div>
+</div>
 
-<pre><code>提示词：
-"基于以下产品需求讨论会议纪要，生成结构化的产品需求文档（PRD）：
+<h2 class="section-h2">11.2 会议纪要的AI生成</h2>
 
-原始会议记录：
-发言人：张总（CEO）、李经理（产品）、王工（技术）
-时间：2024年1月15日 14:00-15:30
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<p>基于以下产品需求讨论会议纪要，生成结构化的产品需求文档（PRD）：</p>
+<p>原始会议记录：</p>
+<p>发言人：张总（CEO）、李经理（产品）、王工（技术）<br>
+时间：2024年1月15日 14:00-15:30</p>
+<p>讨论要点：</p>
+<ol>
+<li>张总提出需要增加'智能任务推荐'功能</li>
+<li>李经理解释了竞品分析，Notion和Asana都有类似功能</li>
+<li>王工询问了技术实现难度，认为可以基于现有任务标签做简单推荐</li>
+<li>讨论了数据来源：任务历史完成情况、团队成员擅长领域、项目Deadline约束</li>
+<li>张总要求第一版先做'相似任务推荐'，不需要复杂AI模型</li>
+<li>初步计划2个月内上线MVP</li>
+</ol>
+<p>请生成：</p>
+<ol>
+<li>产品需求概述</li>
+<li>用户故事（使用US-格式）</li>
+<li>功能详细描述</li>
+<li>验收标准</li>
+<li>技术约束</li>
+<li>优先级评估（MoSCoW）</li>
+<li>风险评估</li>
+</ol>
+</div>
 
-讨论要点：
-1. 张总提出需要增加'智能任务推荐'功能
-2. 李经理解释了竞品分析，Notion和Asana都有类似功能
-3. 王工询问了技术实现难度，认为可以基于现有任务标签做简单推荐
-4. 讨论了数据来源：任务历史完成情况、团队成员擅长领域、项目Deadline约束
-5. 张总要求第一版先做'相似任务推荐'，不需要复杂AI模型
-6. 初步计划2个月内上线MVP
+<h2 class="section-h2">11.3 需求变更的AI追踪</h2>
 
-请生成：
-1. 产品需求概述
-2. 用户故事（使用US-格式）
-3. 功能详细描述
-4. 验收标准
-5. 技术约束
-6. 优先级评估（MoSCoW）
-7. 风险评估"
-</code></pre>
+<p class="p">需求变更（Scope Creep）是项目延期的主要原因之一。AI可以帮助追踪需求变更的影响。</p>
 
-<h2>11.3 需求变更的AI追踪</h2>
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<p>分析以下需求变更请求，评估影响：</p>
+<p>原始Sprint范围：</p>
+<ul>
+<li>Sprint 7目标：完成用户认证模块</li>
+<li>故事点：34点</li>
+<li>人力：3人 × 10天 = 30人天</li>
+</ul>
+<p>新增需求：</p>
+<ul>
+<li>用户希望增加'社交登录'功能（支持微信、Google登录）</li>
+<li>预计影响：需要新增OAuth集成（约8故事点）</li>
+<li>技术复杂度：中等，需要第三方SDK集成</li>
+</ul>
+<p>请分析：</p>
+<ol>
+<li>对Sprint目标的影响</li>
+<li>对交付时间的影响</li>
+<li>技术风险点</li>
+<li>建议的应对策略（接受/拒绝/延后）</li>
+</ol>
+</div>
 
-<p>需求变更（Scope Creep）是项目延期的主要原因之一。AI可以帮助追踪需求变更的影响。</p>
+<h2 class="section-h2">11.4 API文档的AI生成</h2>
 
-<pre><code>提示词：
-"分析以下需求变更请求，评估影响：
+<p class="p">好的API文档是开发效率的关键。AI可以根据代码自动生成和更新API文档。</p>
 
-原始Sprint范围：
-- Sprint 7目标：完成用户认证模块
-- 故事点：34点
-- 人力：3人 × 10天 = 30人天
-
-新增需求：
-- 用户希望增加'社交登录'功能（支持微信、Google登录）
-- 预计影响：需要新增OAuth集成（约8故事点）
-- 技术复杂度：中等，需要第三方SDK集成
-
-请分析：
-1. 对Sprint目标的影响
-2. 对交付时间的影响
-3. 技术风险点
-4. 建议的应对策略（接受/拒绝/延后）"
-</code></pre>
-
-<h2>11.4 API文档的AI生成</h2>
-
-<p>好的API文档是开发效率的关键。AI可以根据代码自动生成和更新API文档。</p>
-
-<pre><code>提示词：
-"根据以下TypeScript接口定义，生成OpenAPI 3.0规范的API文档：
-
-```typescript
-interface TaskCreateInput {
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<p>根据以下TypeScript接口定义，生成OpenAPI 3.0规范的API文档：</p>
+<pre><code>interface TaskCreateInput {
   title: string;           // 任务标题，1-200字符
   description?: string;     // 任务描述，可选
   priority: 'high' | 'medium' | 'low';
@@ -96,69 +131,113 @@ interface ApiResponse&lt;T&gt; {
     code: string;
     message: string;
   };
-}
-```
-
-请生成完整的OpenAPI 3.0文档，包含：
-1. /tasks endpoint的所有操作
-2. 请求/响应schema
-3. 错误码定义
-4. 认证说明"
-</code></pre>
-
-<h2>11.5 用户手册的AI辅助编写</h2>
-
-<pre><code>提示词：
-"为AI-TaskManager的'智能任务分解'功能生成用户手册章节：
-
-功能描述：
-- 用户输入一个高层级任务（如'完成项目启动'）
-- AI自动分析并分解为可执行的子任务
-- 支持手动调整分解结果
-- 分解结果可一键导入任务列表
-
-目标读者：普通用户（非技术人员）
-文档风格：简洁、有案例、图文并茂
-
-请生成：
-1. 功能概述（约100字）
-2. 使用场景描述（至少3个场景）
-3. 详细操作步骤（含截图占位符）
-4. 常见问题FAQ（至少5个）
-5. 视频教程链接占位符"
-</code></pre>
-
-<h2>11.6 文档一致性的AI检查</h2>
-
-<p>项目中文档之间常常出现不一致，AI可以帮助发现这些问题。</p>
-
-<pre><code>提示词：
-"请检查以下三份文档的一致性：
-
-文档A（PRD）：
-- 用户注册需要邮箱验证
-- 验证码有效期15分钟
-
-文档B（技术设计）：
-- 注册流程：邮箱 -> 验证 -> 完成
-- 验证码存储在Redis，过期时间15分钟
-
-文档C（用户手册）：
-- 注册后系统会发送验证邮件
-- 验证码30分钟内有效
-
-请指出：
-1. 三份文档之间的不一致之处
-2. 哪个是正确的/最新的？
-3. 建议的修正方案"
-</code></pre>
-
-<h2>11.7 本章小结</h2>
-
+}</code></pre>
+<p>请生成完整的OpenAPI 3.0文档，包含：</p>
 <ol>
-<li>AI可以大幅加速需求文档的生成，从会议纪要到PRD</li>
-<li>AI能追踪需求变更的影响，辅助决策</li>
-<li>OpenAPI文档可以从代码类型定义自动生成</li>
-<li>AI可以检查文档一致性，发现隐藏的不一致</li>
-<li>文档自动化释放产品经理时间，让他们专注于真正的产品思考</li>
+<li>/tasks endpoint的所有操作</li>
+<li>请求/响应schema</li>
+<li>错误码定义</li>
+<li>认证说明</li>
 </ol>
+</div>
+
+<h2 class="section-h2">11.5 用户手册的AI辅助编写</h2>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<p>为AI-TaskManager的'智能任务分解'功能生成用户手册章节：</p>
+<p>功能描述：</p>
+<ul>
+<li>用户输入一个高层级任务（如'完成项目启动'）</li>
+<li>AI自动分析并分解为可执行的子任务</li>
+<li>支持手动调整分解结果</li>
+<li>分解结果可一键导入任务列表</li>
+</ul>
+<p>目标读者：普通用户（非技术人员）<br>
+文档风格：简洁、有案例、图文并茂</p>
+<p>请生成：</p>
+<ol>
+<li>功能概述（约100字）</li>
+<li>使用场景描述（至少3个场景）</li>
+<li>详细操作步骤（含截图占位符）</li>
+<li>常见问题FAQ（至少5个）</li>
+<li>视频教程链接占位符</li>
+</ol>
+</div>
+
+<h2 class="section-h2">11.6 文档一致性的AI检查</h2>
+
+<p class="p">项目中文档之间常常出现不一致，AI可以帮助发现这些问题。</p>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<p>请检查以下三份文档的一致性：</p>
+<p>文档A（PRD）：</p>
+<ul>
+<li>用户注册需要邮箱验证</li>
+<li>验证码有效期15分钟</li>
+</ul>
+<p>文档B（技术设计）：</p>
+<ul>
+<li>注册流程：邮箱 -> 验证 -> 完成</li>
+<li>验证码存储在Redis，过期时间15分钟</li>
+</ul>
+<p>文档C（用户手册）：</p>
+<ul>
+<li>注册后系统会发送验证邮件</li>
+<li>验证码30分钟内有效</li>
+</ul>
+<p>请指出：</p>
+<ol>
+<li>三份文档之间的不一致之处</li>
+<li>哪个是正确的/最新的？</li>
+<li>建议的修正方案</li>
+</ol>
+</div>
+
+<div class="callout callout-warn">
+<div class="callout-icon">⚠️</div>
+<div class="callout-text"><strong>文档不一致风险：</strong>文档间的不一致会导致开发人员困惑、测试遗漏、上线后用户投诉。建议建立文档一致性检查流程。</div>
+</div>
+
+<h2 class="section-h2">11.7 本章小结</h2>
+
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>需求文档自动化</h4>
+<p>AI可以大幅加速需求文档的生成，从会议纪要到PRD</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>变更影响追踪</h4>
+<p>AI能追踪需求变更的影响，辅助决策</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>API文档生成</h4>
+<p>OpenAPI文档可以从代码类型定义自动生成</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div>
+<h4>文档一致性检查</h4>
+<p>AI可以检查文档一致性，发现隐藏的不一致</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">5</div>
+<div>
+<h4>释放产品经理价值</h4>
+<p>文档自动化释放产品经理时间，让他们专注于真正的产品思考</p>
+</div>
+</div>
+</div>
+
+</section>
