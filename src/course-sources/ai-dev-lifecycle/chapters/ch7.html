@@ -1,0 +1,177 @@
+<h1>第七章：智能代码生成与优化——从框架到业务逻辑</h1>
+
+<h2>7.1 代码生成的层次</h2>
+
+<p>AI代码生成可以分为几个层次：</p>
+
+<ul>
+<li><strong>语法级生成</strong>：如Copilot的实时补全，单行或短代码块</li>
+<li><strong>函数级生成</strong>：根据注释或函数签名生成完整函数</li>
+<li><strong>模块级生成</strong>：根据需求描述生成一个功能模块（多个文件）</li>
+<li><strong>架构级生成</strong>：AI辅助搭建项目结构，生成基础架构代码</li>
+</ul>
+
+<p>层次越高，AI的作用越大，但也需要更精准的Prompt和更多的审查。</p>
+
+<h2>7.2 框架代码的AI生成</h2>
+
+<p><strong>使用Fastify + TypeScript创建REST API</strong></p>
+
+<pre><code>提示词：
+"使用Fastify + TypeScript创建一个任务管理的REST API框架。
+
+要求：
+1. 使用Fastify 4.x版本
+2. TypeScript strict模式
+3. 实现以下endpoints：
+   - GET /tasks - 获取任务列表（支持分页和筛选）
+   - GET /tasks/:id - 获取单个任务
+   - POST /tasks - 创建任务
+   - PUT /tasks/:id - 更新任务
+   - DELETE /tasks/:id - 删除任务
+4. 使用JSON Schema做请求/响应验证
+5. 集成Zod做运行时验证
+6. 错误处理统一封装
+7. 包含健康检查endpoint
+
+请生成：
+- src/index.ts（入口文件）
+- src/routes/tasks.ts（任务路由）
+- src/schemas/task.ts（Zod schema）
+- src/services/task.service.ts（业务逻辑服务）
+- src/types/task.ts（TypeScript类型）
+- package.json依赖配置"
+</code></pre>
+
+<h2>7.3 业务逻辑的AI辅助</h2>
+
+<p>业务逻辑往往涉及复杂的领域知识，AI无法完全理解业务背景，但可以帮助实现模式化的逻辑。</p>
+
+<p><strong>示例：任务优先级计算</strong></p>
+
+<pre><code>提示词：
+"为任务管理系统实现优先级计算逻辑。
+
+业务规则：
+1. 紧急程度（基于截止日期）：
+   - 已过期：100分
+   - 24小时内到期：80分
+   - 3天内到期：60分
+   - 7天内到期：40分
+   - 7天后到期：20分
+
+2. 重要程度（基于标签）：
+   - 有'紧急'标签：+30分
+   - 有'重要'标签：+20分
+   - 有'客户'标签：+15分
+
+3. 阻塞惩罚：
+   - 被其他任务阻塞：-50分
+   - 阻塞其他任务：+10分
+
+4. 最低优先级为0，最高不超过100
+
+请使用TypeScript实现这个优先级计算函数，要求：
+- 纯函数，无副作用
+- 完整的类型定义
+- 单元测试覆盖主要场景
+- 包含JSDoc注释"
+</code></pre>
+
+<h2>7.4 代码重构与优化</h2>
+
+<p>AI可以帮助识别代码异味（Code Smell）并提供重构建议。</p>
+
+<pre><code>提示词：
+"请审查以下代码，指出可能的问题并提供重构建议。
+
+关注点：
+1. SOLID原则违反情况
+2. 可能的性能问题
+3. 错误处理不完善的地方
+4. 可测试性问题
+5. 安全漏洞
+
+原始代码：
+```typescript
+class TaskManager {
+  private tasks: any[] = [];
+
+  addTask(task: any) {
+    if (!task.title) throw new Error('Title required');
+    if (!task.dueDate) throw new Error('Due date required');
+    this.tasks.push(task);
+    this.notify();
+  }
+
+  getTasks() {
+    return this.tasks;
+  }
+
+  private notify() {
+    // 发送通知的逻辑
+    console.log('Task added');
+  }
+}
+```"
+</code></pre>
+
+<h2>7.5 算法实现的AI辅助</h2>
+
+<p>对于常见算法问题，AI可以提供多种实现方案及复杂度分析。</p>
+
+<pre><code>提示词：
+"为任务管理系统实现'智能任务分解'功能。
+
+需求：
+- 输入：一个高层级任务描述（如'完成用户登录功能'）
+- 输出：分解后的子任务列表
+
+请用TypeScript实现，要求：
+1. 使用策略模式，支持可扩展的分解策略
+2. 至少实现两种分解策略：基于关键词、基于常用模式
+3. 返回结果包含任务描述、预估工时、依赖关系
+4. 分析时间和空间复杂度
+5. 包含使用示例"
+</code></pre>
+
+<h2>7.6 数据库查询的AI优化</h2>
+
+<p>AI可以帮忙分析和优化数据库查询。</p>
+
+<pre><code>提示词：
+"分析以下SQL查询的性能问题：
+
+```sql
+SELECT t.*, u.name as assignee_name
+FROM tasks t
+LEFT JOIN users u ON t.assignee_id = u.id
+WHERE t.project_id = 123
+AND t.status IN ('pending', 'in_progress')
+AND t.created_at > '2024-01-01'
+ORDER BY t.priority DESC, t.due_date ASC;
+```
+
+表数据量：
+- tasks表：1000万条记录
+- users表：10万条记录
+
+索引情况：
+- tasks: (project_id, status), (assignee_id), (created_at)
+- users: (email) UNIQUE
+
+问题：
+1. 这个查询能否利用索引？
+2. 排序是否需要额外的文件排序？
+3. 如何优化？"
+</code></pre>
+
+<h2>7.7 本章小结</h2>
+
+<ol>
+<li>AI代码生成可分为语法级、函数级、模块级、架构级四个层次</li>
+<li>框架代码生成是AI最擅长的场景，能大幅提升开发效率</li>
+<li>业务逻辑生成需要提供足够的上下文和约束</li>
+<li>AI辅助代码审查能发现潜在问题和优化点</li>
+<li>保持对AI生成代码的批判性审查，确保质量和安全</li>
+</ol>

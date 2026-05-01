@@ -11,10 +11,10 @@ const totalChapters = courses.reduce((sum, course) => sum + course.chapters.leng
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>学习空间 | 芯片设计与无人机传感器融合</title>
+    <title>学习空间 | 全周期开发 · 芯片设计 · 传感器融合</title>
     <meta
       name="description"
-      content="同一套 Astro 框架下的多课程学习空间，包含芯片设计与制造、无人机传感器融合等课程。"
+      content="同一套 Astro 框架下的多课程学习空间，包含全周期程序开发、芯片设计与制造、无人机传感器融合等课程。"
     />
     <style is:global>
       body { margin: 0; }
@@ -38,7 +38,7 @@ const totalChapters = courses.reduce((sum, course) => sum + course.chapters.leng
             构建你的<br><span class="gradient-text">技术知识体系</span>
           </h1>
           <p class="hero-desc">
-            从晶体管到芯片架构，从传感器融合到SLAM系统——两门深度课程，30+章节，带你从入门到精通。
+            从芯片设计到传感器融合，从AI驱动开发到智能运维——三门深度课程，47章节，带你构建完整的技术知识体系。
           </p>
           <div class="hero-stats">
             <div class="hero-stat">
@@ -52,7 +52,7 @@ const totalChapters = courses.reduce((sum, course) => sum + course.chapters.leng
             </div>
             <div class="hero-stat-divider"></div>
             <div class="hero-stat">
-              <span class="hero-stat-num">30+</span>
+              <span class="hero-stat-num">45+</span>
               <span class="hero-stat-label">小时内容</span>
             </div>
           </div>
@@ -94,18 +94,18 @@ const totalChapters = courses.reduce((sum, course) => sum + course.chapters.leng
       <section class="features-section">
         <div class="features-header">
           <h2 class="features-title">为什么选择这里？</h2>
-          <p class="features-sub">两门课程相辅相成，构建完整的智能硬件知识图谱</p>
+          <p class="features-sub">三门课程相辅相成，构建从硬件到软件到AI的完整技术栈</p>
         </div>
         <div class="features-grid">
           <div class="feature-card">
             <div class="feature-icon">📚</div>
             <h3 class="feature-name">系统化知识</h3>
-            <p class="feature-desc">从底层物理到顶层应用，每章环环相扣，形成完整知识体系</p>
+            <p class="feature-desc">从底层硬件到AI应用，每章环环相扣，形成完整技术知识体系</p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">🎯</div>
             <h3 class="feature-name">聚焦工业实践</h3>
-            <p class="feature-desc">不是学术教科书，而是真实的芯片设计与无人机开发经验</p>
+            <p class="feature-desc">不是学术教科书，而是真实的AI开发、芯片设计与无人机开发经验</p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">🧩</div>
@@ -125,6 +125,11 @@ const totalChapters = courses.reduce((sum, course) => sum + course.chapters.leng
         <div class="path-card">
           <div class="path-visual">
             <div class="path-node">
+              <div class="path-node-icon">💫</div>
+              <div class="path-node-label">AI开发</div>
+            </div>
+            <div class="path-line"></div>
+            <div class="path-node">
               <div class="path-node-icon">⚡</div>
               <div class="path-node-label">芯片设计</div>
             </div>
@@ -136,7 +141,7 @@ const totalChapters = courses.reduce((sum, course) => sum + course.chapters.leng
           </div>
           <div class="path-text">
             <h3 class="path-title">学习路径推荐</h3>
-            <p class="path-desc">先学芯片设计理解硬件基础，再学传感器融合掌握无人机智能——或按需选择感兴趣的方向。</p>
+            <p class="path-desc">先学AI开发方法论提升工程效率，再学芯片设计理解硬件基础，最后学传感器融合掌握无人机智能——或按需选择感兴趣的方向。</p>
           </div>
         </div>
       </section>
@@ -332,6 +337,10 @@ const totalChapters = courses.reduce((sum, course) => sum + course.chapters.leng
         background: linear-gradient(90deg, #1f9d55, #0f6fff);
       }
 
+      .course-card:nth-child(3) .course-card-accent {
+        background: linear-gradient(90deg, #ff6b35, #f7c94b);
+      }
+
       .course-card-icon-wrap {
         width: 56px;
         height: 56px;
@@ -348,6 +357,10 @@ const totalChapters = courses.reduce((sum, course) => sum + course.chapters.leng
 
       .course-card:last-child .course-card-icon-wrap {
         background: linear-gradient(135deg, rgba(31, 157, 85, 0.12), rgba(15, 111, 255, 0.1));
+      }
+
+      .course-card:nth-child(3) .course-card-icon-wrap {
+        background: linear-gradient(135deg, rgba(255, 107, 53, 0.12), rgba(247, 201, 75, 0.1));
       }
 
       .course-card-icon {

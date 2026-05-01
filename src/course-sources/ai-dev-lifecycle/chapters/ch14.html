@@ -1,0 +1,166 @@
+<h1>第十四章：AI驱动的运维智能化——从监控到自愈</h1>
+
+<h2>14.1 AIOps的崛起</h2>
+
+<p>AIOps（Artificial Intelligence for IT Operations）是将AI应用于IT运维的实践。它不是要替代运维工程师，而是让工程师从繁琐的监控告警中解放出来，专注于更有价值的工作。</p>
+
+<p>传统运维的困境：告警疲劳（大量告警淹没真正问题）、问题定位困难（分布式系统日志分散）、被动响应（等问题发生了才知道）。AIOps带来的改变：智能告警（减少噪音）、自动根因分析（快速定位）、预测性维护（预防问题发生）。</p>
+
+<h2>14.2 智能告警与异常检测</h2>
+
+<p>传统阈值告警的痛点：固定阈值无法适应业务周期性变化、误报率高、无法检测未知异常模式。</p>
+
+<p>AI异常检测的思路：学习系统的"正常模式"，当行为偏离正常时告警。</p>
+
+<pre><code>提示词：
+"作为AIOps专家，请设计一个智能告警系统：
+
+系统背景：
+- 基于微服务架构的在线服务
+- 5个核心服务，日均请求量100万
+- 使用Prometheus采集指标，Grafana展示
+
+当前问题：
+- 告警泛滥，每天收到50+告警，但真正需要处理的只有5-10个
+- 告警没有优先级划分
+- 无法提前预警
+
+请设计：
+1. 智能告警的架构方案
+2. 核心算法选择（Isolation Forest / LSTM / Prophet等）
+3. 告警收敛和聚合策略
+4. 优先级评估模型
+5. 实施路线图"
+</code></pre>
+
+<h2>14.3 日志分析与模式识别</h2>
+
+<p>在分布式系统中，日志分散在多个服务节点。AI可以从海量日志中识别模式、发现异常。</p>
+
+<pre><code>提示词：
+"分析以下日志序列，使用AI识别异常模式：
+
+日志样本（过去1小时）：
+[10:00:15] INFO [api-gateway] Request received: /api/tasks, latency=45ms
+[10:00:16] INFO [api-gateway] Request received: /api/tasks, latency=52ms
+...
+[10:05:23] WARN [db-connector] Connection pool running low: 3/20 available
+[10:05:24] WARN [db-connector] Connection pool running low: 2/20 available
+[10:05:25] ERROR [db-connector] Connection timeout after 30000ms
+[10:05:26] ERROR [task-service] Failed to create task: DB connection error
+[10:05:27] ERROR [task-service] Failed to create task: DB connection error
+[10:05:28] WARN [db-connector] Connection pool recovered: 15/20 available
+[10:05:30] INFO [db-connector] Connection pool stable: 18/20 available
+
+请分析：
+1. 发生了什么问题？
+2. 问题的时间线是什么？
+3. 根本原因是什么？
+4. 如何预防类似问题？"
+</code></pre>
+
+<h2>14.4 根因分析的AI方法</h2>
+
+<p>根因分析（Root Cause Analysis）是运维中最耗时的任务之一。AI可以通过因果推断快速定位问题。</p>
+
+<pre><code>提示词：
+"作为SRE专家，请使用因果分析方法来诊断以下系统故障：
+
+故障现象：
+- API响应时间从平均200ms上升到2000ms
+- 错误率从0.1%上升到5%
+- 持续时间：30分钟
+
+系统拓扑：
+- 用户 → CDN → Load Balancer → API Gateway → 3个API实例 → PostgreSQL
+
+监控数据：
+- API Gateway CPU：正常
+- API实例1 CPU：95%（高）
+- API实例2 CPU：正常
+- API实例3 CPU：正常
+- PostgreSQL：CPU 80%，连接数达到上限
+
+请分析：
+1. 使用5 Whys方法进行因果推断
+2. 列出可能的根因假设
+3. 验证假设的方法
+4. 最终根因结论
+5. 修复步骤和预防措施"
+</code></pre>
+
+<h2>14.5 预测性维护</h2>
+
+<p>AI不仅可以检测当前异常，还能预测未来问题。</p>
+
+<pre><code>提示词：
+"基于以下历史监控数据，预测未来的资源需求和潜在问题：
+
+过去6个月数据（月度平均）：
+| 月份 | 用户量 | CPU使用率 | 内存使用率 | 磁盘IO | 故障次数 |
+|-----|-------|-----------|-----------|-------|---------|
+| 1月  | 10万  | 45%       | 60%       | 正常  | 2       |
+| 3月  | 15万  | 55%       | 65%       | 正常  | 3       |
+| 6月  | 25万  | 70%       | 75%       | 轻微高| 5       |
+| 9月  | 40万  | 85%       | 88%       | 高    | 8       |
+
+当前容量：
+- 服务器配置：8核CPU，32GB内存
+- 当前使用率：85% CPU，88%内存
+
+业务预测：
+- 下季度用户量预计增长50%
+
+请预测：
+1. 未来3个月的资源使用情况
+2. 何时需要扩容？
+3. 推荐的扩容方案
+4. 潜在风险点"
+</code></pre>
+
+<h2>14.6 自愈系统的设计</h2>
+
+<p>自愈系统（Self-Healing）是指系统能自动检测并修复常见问题，无需人工干预。</p>
+
+<pre><code>自愈策略示例：
+
+场景1：服务无响应
+  检测：连续3次健康检查失败
+  动作：重启服务实例
+  验证：健康检查恢复后继续监控
+
+场景2：内存泄漏
+  检测：内存使用率持续高于90%超过10分钟
+  动作：触发优雅重启
+  验证：重启后内存恢复正常
+
+场景3：数据库连接池耗尽
+  检测：连接超时错误连续出现
+  动作：清空连接池，重新建立连接
+  验证：执行测试查询确认恢复
+
+场景4：异常流量
+  检测：流量突增超过历史平均300%
+  动作：启动限流，发送告警
+  验证：流量恢复到正常范围后解除限流
+</code></pre>
+
+<h2>14.7 主流AIOps平台</h2>
+
+<ul>
+<li><strong>Datadog AI Ops</strong>：一体化监控平台，集成AI异常检测</li>
+<li><strong>Grafana LGTM</strong>：开源监控栈+Loki+Prometheus+Tempo</li>
+<li><strong>PagerDuty AI</strong>：告警聚合+事件智能化</li>
+<li><strong>Splunk AI</strong>：日志分析+机器学习</li>
+<li><strong>Azure Monitor</strong>：微软云原生AIOps方案</li>
+</ul>
+
+<h2>14.8 本章小结</h2>
+
+<ol>
+<li>AIOps让运维从被动响应走向主动预防</li>
+<li>智能告警显著降低告警噪音，提高响应效率</li>
+<li>AI日志分析能快速定位根因，减少MTTR</li>
+<li>预测性维护避免问题发生，优化资源使用</li>
+<li>自愈系统是运维自动化的终极目标</li>
+</ol>

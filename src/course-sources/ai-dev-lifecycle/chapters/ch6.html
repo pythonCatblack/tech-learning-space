@@ -1,0 +1,182 @@
+<h1>第六章：AI编码助手实战——ChatGPT与Copilot的高效使用</h1>
+
+<h2>6.1 AI编码助手的定位</h2>
+
+<p>AI编码助手不是替代程序员，而是程序员的"第二双手"。它擅长处理重复性编码任务、探索未知API、提供多角度思路。但它也需要正确的引导才能发挥最大价值。</p>
+
+<p>理解AI的能力边界是关键：<strong>AI擅长</strong>——模式化代码生成、代码解释与翻译、调试思路建议、文档生成。<strong>AI不擅长</strong>——完全替代业务理解、处理最新框架API（知识截止限制）、处理超长上下文、保证100%正确的代码。</p>
+
+<h2>6.2 ChatGPT在开发中的使用模式</h2>
+
+<p><strong>模式一：代码解释与学习</strong></p>
+
+<p>遇到复杂代码时，让AI扮演"代码导师"角色：</p>
+
+<pre><code>提示词：
+"请解释以下代码的实现逻辑，重点关注：
+1. 整体流程是什么？
+2. 关键的数据结构有哪些？
+3. 可能的性能瓶颈在哪里？
+4. 如果要优化，你建议从哪个方向入手？
+
+代码：
+```typescript
+function processTaskQueue(tasks: Task[]): ProcessedResult {
+  const sorted = tasks.sort((a, b) => b.priority - a.priority);
+  const groups = groupBy(sorted, 'status');
+
+  return Object.entries(groups).reduce((acc, [status, items]) => {
+    acc[status] = items.map(item => ({
+      ...item,
+      processedAt: new Date(),
+      result: executeTask(item)
+    }));
+    return acc;
+  }, {} as ProcessedResult);
+}
+```"
+</code></pre>
+
+<p><strong>模式二：代码翻译与迁移</strong></p>
+
+<pre><code>提示词：
+"将以下JavaScript代码转换为TypeScript，要求：
+1. 添加完整的类型定义
+2. 使用类型守卫处理边界情况
+3. 保持原有逻辑不变
+
+代码：
+```javascript
+function calculatePriority(task) {
+  const now = Date.now();
+  const due = new Date(task.dueDate).getTime();
+  const daysUntilDue = (due - now) / (1000 * 60 * 60 * 24);
+
+  if (task.isBlocked) return 0;
+  if (daysUntilDue < 0) return 100;
+  if (daysUntilDue < 1) return 80;
+  if (daysUntilDue < 3) return 60;
+
+  return 40 + (task.importance * 10);
+}
+```"
+</code></pre>
+
+<p><strong>模式三：Bug诊断与修复</strong></p>
+
+<pre><code>提示词：
+"我遇到了一个bug：任务列表页面加载很慢，有时需要10秒以上。
+错误日志显示：'Warning: Each child in a list should have a unique "key" prop.'
+
+请帮我分析：
+1. 这个警告可能导致什么问题？
+2. 可能的原因是什么？
+3. 如何修复？请给出代码示例"
+</code></pre>
+
+<h2>6.3 GitHub Copilot的进阶技巧</h2>
+
+<p><strong>技巧一：上下文感知补全</strong></p>
+
+<p>在代码中增加注释和类型定义，Copilot能更准确地理解你的意图。</p>
+
+<pre><code>// 定义清晰的数据结构
+interface Task {
+  id: string;
+  title: string;
+  priority: 'high' | 'medium' | 'low';
+  dueDate: Date;
+  assignee?: User;
+  status: 'pending' | 'in_progress' | 'completed';
+  tags: string[];
+}
+
+// AI Agent: 分析任务依赖并生成拓扑排序
+// 输入：任务列表
+// 输出：按执行顺序排列的任务数组
+async function getExecutionOrder(tasks: Task[]): Promise&lt;Task[]&gt; {
+  // Copilot 会自动补全这个函数的实现
+}
+</code></pre>
+
+<p><strong>技巧二：函数级生成</strong></p>
+
+<p>在函数签名后换行，输入简洁注释，按Tab等待Copilot生成。</p>
+
+<pre><code>// 生成智能排序比较函数
+const compareTasks = (a: Task, b: Task): number => {
+  // Copilot 会建议基于优先级和截止日期的比较逻辑
+};
+</code></pre>
+
+<p><strong>技巧三：自然语言转正则</strong></p>
+
+<pre><code>// 用户名：字母数字下划线，3-20位
+// 邮箱：标准邮箱格式
+// 手机号：中国大陆手机号
+// Copilot 会生成对应的正则表达式
+</code></pre>
+
+<h2>6.4 Cursor IDE的特殊能力</h2>
+
+<p>Cursor是一个深度集成AI的IDE，相比VS Code + Copilot有独特优势：</p>
+
+<ul>
+<li><strong>Chat模式</strong>：选中代码片段，直接与AI对话讨论</li>
+<li><strong>Composer模式</strong>：AI可以在整个项目中创建/修改多个文件</li>
+<li><strong>Apply功能</strong>：AI生成的代码可以直接应用并预览diff</li>
+</ul>
+
+<h2>6.5 Prompt Engineering for Code</h2>
+
+<p>好的Prompt是获得高质量AI代码的关键。</p>
+
+<p><strong>GREENS原则</strong>：</p>
+
+<ul>
+<li><strong>G</strong>oal（目标）：明确告诉AI要做什么</li>
+<li><strong>R</strong>ole（角色）：设定AI扮演的角色</li>
+<li><strong>E</strong>ngineering context（工程上下文）：提供足够的代码上下文</li>
+<li><strong>N</strong>Constraints（约束条件）：说明限制和边界</li>
+<li><strong>S</strong>tyle（风格）：指定代码风格要求</li>
+</ul>
+
+<pre><code>提示词示例：
+"作为TypeScript专家（Role），请帮我实现一个任务过滤函数（Goal）。
+
+上下文：
+- 我们使用TypeScript + React
+- 已有Task类型定义
+- 需要支持多条件组合过滤
+
+约束：
+- 不要使用any类型
+- 保持函数纯粹（无副作用）
+- 导出为默认导出
+
+风格：
+- 使用函数式编程风格
+- 添加JSDoc注释
+- 遵循airbnb编码规范
+
+请提供完整实现和单元测试。"
+</code></pre>
+
+<h2>6.6 常见陷阱与规避</h2>
+
+<ol>
+<li><strong>过度依赖</strong>：不假思索接受AI建议，应先理解再使用</li>
+<li><strong>上下文丢失</strong>：长对话中AI可能遗忘早期上下文，注意清理和补充</li>
+<li><strong>知识截止</strong>：AI知识有截止日期，新框架/库可能不了解</li>
+<li><strong>安全风险</strong>：AI可能生成包含安全漏洞的代码（如SQL注入），必须审查</li>
+</ol>
+
+<h2>6.7 本章小结</h2>
+
+<ol>
+<li>AI编码助手是程序员的效率工具，不是替代品</li>
+<li>ChatGPT适合代码解释、翻译、Bug诊断等多场景</li>
+<li>GitHub Copilot擅长上下文感知的实时补全</li>
+<li>GREENS原则能帮助写出高质量的AI生成Prompt</li>
+<li>保持批判性思维，审查AI生成的每一行代码</li>
+</ol>

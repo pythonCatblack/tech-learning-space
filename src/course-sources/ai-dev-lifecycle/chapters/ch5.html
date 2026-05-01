@@ -1,0 +1,158 @@
+<h1>第五章：开发环境与工具链——AI-Ready的工程基础设施</h1>
+
+<h2>5.1 工具链的重要性</h2>
+
+<p>优秀的工具链是AI赋能开发的前提。如果开发环境混乱、依赖管理繁琐、构建速度缓慢，AI代码生成的价值会被大打折扣。在真正引入AI能力之前，团队需要先建设好工程基础设施。</p>
+
+<p>一个<strong>AI-Ready的工程环境</strong>具备以下特征：</p>
+
+<ul>
+<li>一致的开发环境（Dev Container / Docker）</li>
+<li>可靠的依赖管理（版本锁定、可重现构建）</li>
+<li>高效的代码仓库（清晰的分支策略）</li>
+<li>自动化的CI/CD流水线</li>
+<li>结构化的代码规范（Linting/Formatting）</li>
+</ul>
+
+<h2>5.2 容器化的开发环境</h2>
+
+<p>为AI-TaskManager创建Docker开发环境：</p>
+
+<pre><code>FROM node:20-alpine
+
+WORKDIR /app
+
+# 安装依赖管理工具
+RUN npm install -g pnpm
+
+# 复制 package 文件
+COPY package*.json ./
+
+# 安装依赖（使用 pnpm）
+RUN pnpm install --frozen-lockfile
+
+# 复制源代码
+COPY . .
+
+# 暴露端口
+EXPOSE 3000
+
+# 启动命令
+CMD ["pnpm", "dev"]
+</code></pre>
+
+<p>使用VS Code的Dev Container扩展，团队成员可以一键进入统一开发环境，无需手动配置本地环境。</p>
+
+<h2>5.3 GitHub Copilot的环境配置</h2>
+
+<p>配置GitHub Copilot以获得最佳体验：</p>
+
+<ol>
+<li><strong>安装扩展</strong>：在VS Code中安装 GitHub Copilot 扩展</li>
+<li><strong>配置快捷键</strong>：设置 Tab 接受建议、Esc 拒绝建议</li>
+<li><strong>启用/禁用</strong>：为不同文件类型配置是否启用 Copilot</li>
+<li><strong>fine-tuning</strong>：通过注释引导Copilot生成更符合项目风格的代码</li>
+</ol>
+
+<pre><code>// .github/copilot-config.json
+{
+  "disableAutoSuggestions": false,
+  "suggestionMode": "inline",
+  "languages": {
+    "typescript": true,
+    "typescriptreact": true,
+    "python": true
+  },
+  "commentStyle": "block"  // 使用块注释而非行注释引导
+}
+</code></pre>
+
+<h2>5.4 项目结构的AI友好设计</h2>
+
+<p>AI代码助手在结构清晰的项目中表现更好。遵循以下原则：</p>
+
+<ul>
+<li><strong>一致性</strong>：遵循社区通用的项目结构（如Angular的约定优于配置）</li>
+<li><strong>模块化</strong>：每个功能模块独立，减少上下文依赖</li>
+<li><strong>命名清晰</strong>：文件和变量命名自解释，减少AI理解歧义</li>
+<li><strong>单职原则</strong>：每个文件/函数/类只做一件事</li>
+</ul>
+
+<p>AI-TaskManager的目录结构：</p>
+
+<pre><code>ai-task-manager/
+├── src/
+│   ├── features/              # 功能模块（DDD风格）
+│   │   ├── tasks/
+│   │   │   ├── domain/       # 领域逻辑
+│   │   │   ├── application/  # 应用服务
+│   │   │   └── infrastructure/ # 外部依赖
+│   │   ├── users/
+│   │   └── projects/
+│   ├── shared/                # 共享代码
+│   │   ├── components/       # 公共组件
+│   │   ├── hooks/            # 公共hooks
+│   │   └── utils/            # 工具函数
+│   └── ai/                    # AI相关功能
+│       ├── agents/           # AI Agent定义
+│       └── prompts/          # Prompt模板
+├── tests/                     # 测试文件（就近放置）
+├── docs/                      # 文档
+├── docker/                    # Docker配置
+└── scripts/                   # 构建脚本
+</code></pre>
+
+<h2>5.5 代码规范与AI生成质量</h2>
+
+<p>AI代码生成的质量很大程度上取决于项目的代码规范程度。完善的ESLint + Prettier配置能让AI生成的代码直接符合团队标准。</p>
+
+<p>为AI-TaskManager配置ESLint：</p>
+
+<pre><code>// .eslintrc.js
+module.exports = {
+  extends: [
+    'airbnb-base',
+    'airbnb-typescript/base',
+    'plugin:@typescript-eslint/recommended',
+    'prettier'  // 禁用会冲突的规则
+  ],
+  rules: {
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'import/prefer-default-export': 'off'
+  }
+};
+</code></pre>
+
+<h2>5.6 版本管理与分支策略</h2>
+
+<p>采用Git Flow的简化版本，适合中小团队：</p>
+
+<ul>
+<li><strong>main</strong>：生产环境代码，永远可部署</li>
+<li><strong>develop</strong>：开发主分支，集成所有功能分支</li>
+<li><strong>feature/*</strong>：功能开发分支</li>
+<li><strong>hotfix/*</strong>：紧急修复分支</li>
+<li><strong>release/*</strong>：发布准备分支</li>
+</ul>
+
+<p>Commit Message采用Conventional Commits规范，配合AI工具可以自动生成Changelog。</p>
+
+<pre><code>格式：type(scope): description
+
+示例：
+feat(tasks): add AI-powered task decomposition
+fix(auth): resolve token refresh race condition
+docs(readme): update deployment instructions
+refactor(ai): extract prompt templates to separate module
+</code></pre>
+
+<h2>5.7 本章小结</h2>
+
+<ol>
+<li>AI-Ready的工程环境是AI赋能开发的前提</li>
+<li>Dev Container确保团队开发环境一致性</li>
+<li>清晰的代码结构和命名规范能提升AI代码生成质量</li>
+<li>完善的代码规范（ESLint/Prettier）让AI生成的代码直接可用</li>
+<li>Git Flow分支策略配合Conventional Commits便于AI生成变更日志</li>
+</ol>

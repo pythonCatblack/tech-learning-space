@@ -1,0 +1,133 @@
+<h1>第十三章：低代码/无代码AI平台——快速构建AI应用</h1>
+
+<h2>13.1 低代码/无代码平台的演进</h2>
+
+<p>低代码平台（Low-Code/No-Code，LCNC）已经存在多年，但AI的加入让它进入了新阶段。过去，低代码平台主要用于简化"重复性编程"；现在，AI使能平台可以简化"创意到原型"的距离，让非技术人员也能构建AI应用。</p>
+
+<h2>13.2 主流低代码AI平台概览</h2>
+
+<table>
+<thead><tr><th>平台</th><th>类型</th><th>AI能力</th><th>适用场景</th></tr></thead>
+<tbody>
+<tr><td>Dataiku</td><td>数据科学LCNC</td><td>AutoML、数据处理、MLOps</td><td>企业数据分析</td></tr>
+<tr><td>Vertex AI (Google)</td><td>ML平台</td><td>AutoML、模型部署</td><td>需要 GCP 集成的企业</td></tr>
+<tr><td>Azure ML</td><td>ML平台</td><td>Designer、AutoML</td><td>微软生态企业</td></tr>
+<tr><td>Bubble</td><td>应用开发</td><td>AI插件集成</td><td>快速Web应用原型</td></tr>
+<tr><td>Bolt (Startup)</td><td>应用开发</td><td>AI代码生成</td><td>早期产品原型</td></tr>
+<tr><td>LangFlow</td><td>LLM应用</td><td>可视化流程编排</td><td>LLM应用原型</td></tr>
+</tbody>
+</table>
+
+<h2>13.3 Dataiku实战：构建推荐系统</h2>
+
+<p>Dataiku是一个端到端的数据科学平台，适合构建企业级AI应用。</p>
+
+<p><strong>实战：使用Dataiku构建任务推荐系统</strong></p>
+
+<p>假设我们要为AI-TaskManager构建智能任务推荐功能：根据用户的历史任务完成模式，推荐最可能完成的任务。</p>
+
+<p>使用Dataiku的工作流：</p>
+
+<ol>
+<li><strong>数据准备</strong>：连接PostgreSQL，加载历史任务数据</li>
+<li><strong>特征工程</strong>：提取用户特征（擅长领域、完成速度）、任务特征（类型、难度）、上下文特征（时间、项目）</li>
+<li><strong>模型训练</strong>：使用AutoML选择最优推荐算法</li>
+<li><strong>评估优化</strong>：A/B测试验证推荐效果</li>
+<li><strong>部署上线</strong>：一键部署为API服务</li>
+</ol>
+
+<h2>13.4 Vertex AI AutoML实战</h2>
+
+<p>对于深度学习任务，Vertex AI的AutoML能力可以大大降低门槛。</p>
+
+<pre><code>提示词：
+"我想使用Google Vertex AI的AutoML Tables构建一个任务优先级预测模型。
+
+场景：
+- 输入：任务的多维特征（标题文本、项目类型、截止日期、负责人历史、标签等）
+- 输出：优先级评分（0-100）
+
+数据情况：
+- 训练数据：10万条历史任务记录
+- 特征：15个原始特征
+- 标签：优先级评分（连续值，可离散化为高中低）
+
+请告诉我：
+1. Vertex AI AutoML Tables的完整使用流程
+2. 如何准备和上传训练数据
+3. 如何配置AutoML训练任务
+4. 如何评估模型效果
+5. 如何部署为预测API"
+</code></pre>
+
+<h2>13.5 LangFlow：LLM应用可视化编排</h2>
+
+<p>LangFlow是一个开源的LLM应用可视化编排工具，可以用拖拽方式构建复杂的AI工作流。</p>
+
+<p><strong>实战：构建任务分析Agent</strong></p>
+
+<p>使用LangFlow构建一个任务分析Agent：输入任务描述 → AI自动分析 → 输出任务分解建议。</p>
+
+<pre><code>LangFlow组件：
+1. ChatInput（用户输入）
+2. PromptTemplate（提示词模板）
+3. OpenAIModel（GPT-4模型）
+4. Parser（输出解析）
+5. ChatOutput（输出展示）
+
+连接关系：
+ChatInput → PromptTemplate → OpenAIModel → Parser → ChatOutput
+</code></pre>
+
+<h2>13.6 何时用LCNC，何时写代码</h2>
+
+<p>低代码平台不是银弹，有其适用场景：</p>
+
+<p><strong>适合使用LCNC的场景</strong>：</p>
+
+<ul>
+<li>快速原型验证（1-2周内需要MVP）</li>
+<li>非核心功能（如内部工具、简单报表）</li>
+<li>团队缺乏AI/ML专业人才</li>
+<li>数据处理流程相对标准</li>
+</ul>
+
+<p><strong>需要写代码的场景</strong>：</p>
+
+<ul>
+<li>核心竞争壁垒的AI功能</li>
+<li>需要深度定制的模型架构</li>
+<li>超大规模数据处理（成本敏感）</li>
+<li>实时性要求极高的场景</li>
+</ul>
+
+<h2>13.7 混合架构策略</h2>
+
+<p>最佳实践往往是混合架构：核心AI能力自研，通用能力外购。</p>
+
+<pre><code>架构分层：
+┌─────────────────────────────────┐
+│     前端应用（自研/SaaS）        │
+├─────────────────────────────────┤
+│     业务逻辑层（自研）           │
+├─────────────────────────────────┤
+│     AI能力层                    │
+│  ┌─────────────┬─────────────┐ │
+│  │  核心AI自研  │ 通用AI外购  │ │
+│  │  - 任务分解  │  - 数据分析  │ │
+│  │  - 智能排序  │  - 图像识别  │ │
+│  └─────────────┴─────────────┘ │
+├─────────────────────────────────┤
+│     数据层（标准数据库/仓库）    │
+└─────────────────────────────────┘
+</code></pre>
+
+<h2>13.8 本章小结</h2>
+
+<ol>
+<li>低代码AI平台正在 democratize AI，让更多人能构建AI应用</li>
+<li>Dataiku适合企业级数据分析，Vertex AI适合GCP生态</li>
+<li>LangFlow适合LLM应用的可视化原型</li>
+<li>选择LCNC还是自研取决于场景：原型用LCNC，核心能力自研</li>
+<li>混合架构是大型项目的最佳实践</li>
+</ol>

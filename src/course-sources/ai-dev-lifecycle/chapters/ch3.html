@@ -1,0 +1,148 @@
+<h1>第三章：系统架构设计——AI辅助的架构决策</h1>
+
+<h2>3.1 架构设计的本质</h2>
+
+<p>架构是关于"重大技术决策"的学问。这些决策一旦做出，修改成本极高：数据库选型错了要迁移，微服务拆分了想合并代价巨大，上云决策做错了可能要推倒重来。</p>
+
+<p>架构设计的核心问题是<strong>权衡（Trade-off）</strong>。没有完美的架构，只有在特定约束下最合适的架构。AI的价值在于：它能快速检索和综合大量架构案例，帮助团队理解每种选择的利弊。</p>
+
+<h2>3.2 AI辅助架构选型分析</h2>
+
+<p>当团队面临技术选型时，AI可以做"架构顾问"的角色，提供多维度的对比分析。</p>
+
+<p>以AI-TaskManager为例，团队需要决定后端架构形式。向AI提问：</p>
+
+<pre><code>提示词：
+"我需要为一个智能任务管理系统选择后端架构，考虑以下约束：
+- 团队规模：3人后端
+- 预期用户：1000并发
+- 核心功能：任务CRUD、AI任务分解、智能排序
+- 交付时间：6周
+
+请对比分析三种方案：
+1. 单体架构 + 关系型数据库
+2. 微服务架构
+3. Serverless架构
+
+针对每个方案，分析：适用场景、优缺点、运维复杂度、成本估算、开发效率"
+</code></pre>
+
+<p>AI的输出会包含详细的对比表格和推荐建议。团队可以在此基础上做最终决策，而不是从零开始研究。</p>
+
+<h2>3.3 常用架构模式与AI理解</h2>
+
+<p>AI能够帮助团队深入理解经典架构模式，而不仅仅是知道名字。通过"苏格拉底式提问"，AI可以帮助架构师深化对模式的理解。</p>
+
+<p><strong>示例：理解微服务 vs 单体</strong></p>
+
+<pre><code>提示词：
+"请解释微服务架构的核心原则，并提出10个问题来测试我对微服务的理解。
+每个问题后附答案，以便我自我检验。
+
+重点考察：
+- 什么时候应该拆微服务？
+- 什么时候不该拆？
+- 微服务带来的额外复杂度是什么？"
+</code></pre>
+
+<h2>3.4 数据建模与API设计</h2>
+
+<p>确定架构风格后，下一步是数据建模。AI可以辅助完成：</p>
+
+<ul>
+<li><strong>实体识别</strong>：从需求文档中提取核心名词，识别潜在实体</li>
+<li><strong>关系建模</strong>：确定实体间的一对一、一对多、多对多关系</li>
+<li><strong>API设计</strong>：生成RESTful API初稿，包含endpoint、HTTP方法、请求/响应结构</li>
+</ul>
+
+<p>为AI-TaskManager生成的初始数据模型：</p>
+
+<pre><code>实体：
+- User: id, name, email, role, preferences
+- Task: id, title, description, status, priority, dueDate, createdAt, updatedAt
+- Project: id, name, description, ownerId, memberIds
+- Tag: id, name, color
+- Comment: id, content, taskId, userId, createdAt
+
+关系：
+- User 1:N Task (一个用户有多个任务)
+- Project N:M User (项目和用户是多对多)
+- Task N:M Tag (任务和标签是多对多)
+- Task 1:N Comment (一个任务有多条评论)
+</code></pre>
+
+<h2>3.5 架构决策记录（ADR）</h2>
+
+<p>架构决策记录（Architecture Decision Records）是团队记录重要决策的工具。AI可以辅助生成ADR模板和初始内容。</p>
+
+<pre><code>ADR模板：
+# ADR-001: 选择PostgreSQL作为主数据库
+
+## 状态：已接受
+
+## 背景
+需要为智能任务管理系统选择主数据库，需支持复杂查询、事务一致性、JSON字段扩展。
+
+## 决策
+采用PostgreSQL 15作为主数据库。
+
+## 后果
+**正面**：
+- 支持复杂查询和事务
+- JSONB类型便于存储半结构化数据
+- 丰富的索引类型
+
+**负面**：
+- 水平扩展相对复杂
+- 相比NoSQL，写入吞吐可能较低
+
+## 替代方案考虑
+- MySQL: 功能类似，但JSON支持和事务隔离级别略逊
+- MongoDB: 文档型更灵活，但多表关联查询弱
+</code></pre>
+
+<h2>3.6 架构图绘制与文档</h2>
+
+<p>现代架构文档大量使用Mermaid、PlantUML等工具绘制图表。AI可以辅助生成这些图表的代码。</p>
+
+<pre><code>```mermaid
+graph TB
+    subgraph Client["客户端层"]
+        Web[Web App]
+        Mobile[Mobile App]
+    end
+
+    subgraph Gateway["API网关层"]
+        NGINX[NGINX]
+    end
+
+    subgraph Backend["业务逻辑层"]
+        API[API Server]
+        AI[AI Agent Service]
+    end
+
+    subgraph Data["数据层"]
+        PG[(PostgreSQL)]
+        Redis[(Redis Cache)]
+        MQ[Message Queue]
+    end
+
+    Web --> NGINX
+    Mobile --> NGINX
+    NGINX --> API
+    API --> PG
+    API --> Redis
+    API --> MQ
+    AI --> MQ
+    AI --> PG
+```
+</code></pre>
+
+<h2>3.7 本章小结</h2>
+
+<ol>
+<li>架构设计是权衡的艺术，AI可以帮助快速获取和分析各种方案的利弊</li>
+<li>AI辅助架构选型的价值在于扩大信息获取面，而非替代架构师决策</li>
+<li>数据建模和API设计可以借助AI快速生成初稿</li>
+<li>架构决策记录（ADR）是团队重要的知识资产，AI可辅助生成模板</li>
+</ol>

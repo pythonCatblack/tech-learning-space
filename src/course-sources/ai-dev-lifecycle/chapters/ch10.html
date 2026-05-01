@@ -1,0 +1,216 @@
+<h1>第十章：自动化部署与运维——AI赋能的DevOps</h1>
+
+<h2>10.1 DevOps与AI的融合</h2>
+
+<p>DevOps强调开发和运维的协作，追求快速、可靠的软件交付。AI为DevOps带来了新的可能：智能监控、异常检测、自动告警、根因分析。传统的阈值告警只能发现"已知问题"，而AI可以发现"异常模式"，预测"潜在问题"。</p>
+
+<h2>10.2 CI/CD流水线的AI增强</h2>
+
+<p>GitHub Actions是目前最流行的CI/CD平台之一，结合AI可以实现更智能的流水线。</p>
+
+<pre><code># .github/workflows/deploy.yml
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: npm test
+      - name: AI Code Quality Check
+        run: |
+          npx ai-code-review --pr=${{ github.event.pull_request.number }}
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: npm run build
+      - name: Deploy to Production
+        run: ./scripts/deploy.sh
+      - name: AI Post-Deploy Health Check
+        run: |
+          npx ai-health-check --env=production --endpoint=https://api.example.com
+</code></pre>
+
+<h2>10.3 Docker与容器化部署</h2>
+
+<p>为AI-TaskManager创建生产级Docker配置：</p>
+
+<pre><code># Dockerfile
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodeapp -u 1001
+USER nodeapp
+
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
+
+CMD ["node", "dist/index.js"]
+</code></pre>
+
+<h2>10.4 Kubernetes部署配置</h2>
+
+<pre><code># k8s/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-task-manager
+  labels:
+    app: ai-task-manager
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ai-task-manager
+  template:
+    metadata:
+      labels:
+        app: ai-task-manager
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/pythoncatblack/ai-task-manager:latest
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: database-url
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+</code></pre>
+
+<h2>10.5 智能监控与告警</h2>
+
+<p>传统监控基于固定阈值，AI监控基于动态基线和异常检测。</p>
+
+<p><strong>Prometheus + Grafana + AI</strong></p>
+
+<pre><code>提示词：
+"我有一套Prometheus监控指标：
+
+# HELP http_request_duration_seconds HTTP请求延迟
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{le="0.1"} 8500
+http_request_duration_seconds_bucket{le="0.5"} 9500
+http_request_duration_seconds_bucket{le="1"} 9900
+http_request_duration_seconds_sum 1250
+http_request_duration_seconds_count 10000
+
+请分析：
+1. P50、P90、P99延迟分别是多少？
+2. 这个延迟分布是否正常？
+3. 有什么优化建议？"
+</code></pre>
+
+<p><strong>AI异常检测场景</strong>：</p>
+
+<ul>
+<li>API响应时间突然增加（可能是攻击或后端故障）</li>
+<li>错误率异常上升（可能是新部署的bug）</li>
+<li>内存使用量持续增长（可能是内存泄漏）</li>
+<li>异常流量模式（可能是DDoS攻击）</li>
+</ul>
+
+<h2>10.6 日志分析与根因诊断</h2>
+
+<p>AI在日志分析方面有独特优势：快速检索、模式识别、关联分析。</p>
+
+<pre><code>提示词：
+"分析以下错误日志序列，诊断根本原因：
+
+日志序列：
+[10:23:15] ERROR [AuthService] Token validation failed: token expired
+[10:23:16] WARN [APIGateway] Retry attempt 1/3 for user:123
+[10:23:17] ERROR [AuthService] Token validation failed: token expired
+[10:23:18] WARN [APIGateway] Retry attempt 2/3 for user:123
+[10:23:19] ERROR [AuthService] Token validation failed: token expired
+[10:23:20] ERROR [UserController] Failed to authenticate user:123 after 3 retries
+[10:23:21] INFO [SessionManager] Cleaning up expired session for user:123
+[10:23:25] ERROR [PaymentService] Transaction failed: timeout after 30s
+
+请分析：
+1. 这些错误之间的关联关系是什么？
+2. 哪个是根本原因（root cause）？
+3. 需要收集哪些额外信息来进一步诊断？
+4. 建议的修复步骤是什么？"
+</code></pre>
+
+<h2>10.7 AI运维助手</h2>
+
+<p>AI运维助手可以7x24小时监控系统，并在异常时提供诊断建议。</p>
+
+<pre><code>提示词：
+"作为SRE助手，请分析当前系统状态并给出建议：
+
+系统状态：
+- CPU使用率：85%（较高）
+- 内存使用率：92%（危险）
+- 磁盘IO：正常
+- 网络流量：比昨天增长20%
+- 活跃连接数：5000（正常范围：1000-8000）
+
+错误日志：
+- 最近5分钟有20次数据库连接超时错误
+- 最近1分钟有5次OOM Killer触发
+
+请给出：
+1. 当前最紧急的问题是什么？
+2. 可能的原因是什么？
+3. 建议的立即行动是什么？
+4. 如何预防类似问题？"
+</code></pre>
+
+<h2>10.8 本章小结</h2>
+
+<ol>
+<li>AI为DevOps带来智能监控、异常检测和自动诊断能力</li>
+<li>GitHub Actions + AI工具可以构建智能化CI/CD流水线</li>
+<li>容器化部署需要关注健康检查、资源限制、自动扩缩容</li>
+<li>AI日志分析能快速定位根因，比传统关键词检索更智能</li>
+<li>AI运维助手可以提供7x24的监控和诊断服务</li>
+</ol>
