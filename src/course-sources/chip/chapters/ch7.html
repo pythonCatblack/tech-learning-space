@@ -111,15 +111,15 @@
 </tbody>
 </table>
 
-<div class=”divider”></div>
+<div class="divider"></div>
 
 <!-- 学习路线与资源 -->
-<div class=”card green”><div class=”card-label”>📚 本章学习路线</div><h3>芯片架构学习路径</h3><p><strong>第1步：CPU 通用税（15分钟）</strong>——7.1节。抓住分支预测、乱序执行和缓存一致性这三条主线，理解通用计算为什么”什么都能做，但什么都不便宜”。<br><strong>第2步：GPU 吞吐量（20分钟）</strong>——7.2节。把 SIMT、Warp 调度和内存延迟隐藏这套机制想清楚，建立”吞吐优先”的思维方式。<br><strong>第3步：FPGA 可重构性（20分钟）</strong>——7.3节。理解 LUT、互连、BRAM 和 DSP 如何拼出一块可编程硬件。<br><strong>第4步：ASIC 极致效率（15分钟）</strong>——7.4-7.5节。看懂专用化如何换来数量级能效提升，并自然过渡到后续的 AI 芯片章节。</p></div>
+<div class="card green"><div class="card-label">📚 本章学习路线</div><h3>芯片架构学习路径</h3><p><strong>第1步：CPU 通用税（15分钟）</strong>——7.1节。抓住分支预测、乱序执行和缓存一致性这三条主线，理解通用计算为什么"什么都能做，但什么都不便宜"。<br><strong>第2步：GPU 吞吐量（20分钟）</strong>——7.2节。把 SIMT、Warp 调度和内存延迟隐藏这套机制想清楚，建立"吞吐优先"的思维方式。<br><strong>第3步：FPGA 可重构性（20分钟）</strong>——7.3节。理解 LUT、互连、BRAM 和 DSP 如何拼出一块可编程硬件。<br><strong>第4步：ASIC 极致效率（15分钟）</strong>——7.4-7.5节。看懂专用化如何换来数量级能效提升，并自然过渡到后续的 AI 芯片章节。</p></div>
 
-<div class=”card orange”><div class=”card-label”>🔗 推荐课程与学习资源</div><h3>优质免费资源</h3><p><strong>🎓 架构课程：</strong><br>• MIT 6.004: Computation Structures — 计算机体系结构经典公开课，覆盖组合逻辑、时序电路和处理器设计<br>• UC Berkeley CS61C — 侧重 RISC-V、缓存和并行计算，适合建立体系结构直觉<br>• Nand2Tetris — 从逻辑门一路搭到 CPU，最适合理解硬件是如何层层构建出来的<br><br><strong>📖 推荐阅读：</strong><br>• 《Computer Architecture: A Quantitative Approach》— 体系结构圣经，帮助你理解性能、功耗和复杂度权衡<br>• NVIDIA CUDA Programming Guide — 了解 GPU 吞吐量模型的官方资料<br><br><strong>🛠️ 实践工具：</strong><br>• Xilinx / Intel FPGA 教程 — 体验硬件可重构设计<br>• 开源 RISC-V 内核项目（如 PicoRV32）— 看看一颗简化 CPU 是如何实现的</p></div>
+<div class="card orange"><div class="card-label">🔗 推荐课程与学习资源</div><h3>优质免费资源</h3><p><strong>🎓 架构课程：</strong><br>• MIT 6.004: Computation Structures — 计算机体系结构经典公开课，覆盖组合逻辑、时序电路和处理器设计<br>• UC Berkeley CS61C — 侧重 RISC-V、缓存和并行计算，适合建立体系结构直觉<br>• Nand2Tetris — 从逻辑门一路搭到 CPU，最适合理解硬件是如何层层构建出来的<br><br><strong>📖 推荐阅读：</strong><br>• 《Computer Architecture: A Quantitative Approach》— 体系结构圣经，帮助你理解性能、功耗和复杂度权衡<br>• NVIDIA CUDA Programming Guide — 了解 GPU 吞吐量模型的官方资料<br><br><strong>🛠️ 实践工具：</strong><br>• Xilinx / Intel FPGA 教程 — 体验硬件可重构设计<br>• 开源 RISC-V 内核项目（如 PicoRV32）— 看看一颗简化 CPU 是如何实现的</p></div>
 
-<div class=”card blue”><div class=”card-label”>本章关键概念</div><h3>四种计算范式的核心要点</h3><p><strong>① CPU（瑞士军刀）</strong>：优化单线程延迟，配备分支预测、乱序执行、大缓存。适合通用任务，但”通用税”高。<br><strong>② GPU（美术刀阵）</strong>：优化吞吐量，SIMT 架构用并行掩盖延迟。适合并行任务，但功耗高。<br><strong>③ FPGA（万能积木）</strong>：可重构硬件，LUT+BRAM+DSP。适合原型验证，介于灵活性和效率之间。<br><strong>④ ASIC（专用模具）</strong>：为特定任务定制，效率最高。适合量产产品，但灵活性最低。</p></div>
+<div class="card blue"><div class="card-label">本章关键概念</div><h3>四种计算范式的核心要点</h3><p><strong>① CPU（瑞士军刀）</strong>：优化单线程延迟，配备分支预测、乱序执行、大缓存。适合通用任务，但"通用税"高。<br><strong>② GPU（美术刀阵）</strong>：优化吞吐量，SIMT 架构用并行掩盖延迟。适合并行任务，但功耗高。<br><strong>③ FPGA（万能积木）</strong>：可重构硬件，LUT+BRAM+DSP。适合原型验证，介于灵活性和效率之间。<br><strong>④ ASIC（专用模具）</strong>：为特定任务定制，效率最高。适合量产产品，但灵活性最低。</p></div>
 
-<div class=”callout callout-info”><div class=”callout-icon”>🔜</div><div class=”callout-text”><strong>预告 Chapter 8：</strong>ASIC 的高效率是有代价的——它需要经历极其复杂的芯片制造流程。下一章将带你走进晶圆厂，理解芯片如何从”设计图纸”变成”真实硅片”——光刻、刻蚀、离子注入、CVD、CMP……数百道工序。</div></div>
+<div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>预告 Chapter 8：</strong>ASIC 的高效率是有代价的——它需要经历极其复杂的芯片制造流程。下一章将带你走进晶圆厂，理解芯片如何从"设计图纸"变成"真实硅片"——光刻、刻蚀、离子注入、CVD、CMP……数百道工序。</div></div>
 
 </section>
