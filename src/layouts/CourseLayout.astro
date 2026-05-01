@@ -11,8 +11,12 @@ interface Props {
 }
 
 const { course, activeChapterId, showSidebar = true, backHref = '/' } = Astro.props;
-const activeChapter = activeChapterId ? course.chapters.find((chapter) => chapter.id === activeChapterId) : undefined;
-const pageTitle = activeChapter ? `${activeChapter.title}｜${course.title}` : `${course.title}｜${course.subtitle}`;
+const activeChapter = activeChapterId
+  ? course.chapters.find((chapter) => chapter.id === activeChapterId)
+  : undefined;
+const pageTitle = activeChapter
+  ? `${activeChapter.title}｜${course.title}`
+  : `${course.title}｜${course.subtitle}`;
 
 function chapterHref(chapterId: string) {
   return `/course/${course.slug}/chapter/${chapterId}/`;
@@ -26,18 +30,20 @@ function chapterHref(chapterId: string) {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={course.description} />
     <title>{pageTitle}</title>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
     <script is:inline src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script is:inline src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script
+      is:inline
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <script is:inline>
       function initKatex() {
         try {
           renderMathInElement(document.body, {
             delimiters: [
-              {left: '$$', right: '$$', display: true},
-              {left: '$', right: '$', display: false}
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false },
             ],
             throwOnError: false,
             trust: false,
@@ -45,8 +51,8 @@ function chapterHref(chapterId: string) {
             macros: {
               '\\R': '\\mathbb{R}',
               '\\N': '\\mathbb{N}',
-              '\\Z': '\\mathbb{Z}'
-            }
+              '\\Z': '\\mathbb{Z}',
+            },
           });
         } catch (e) {
           console.warn('KaTeX rendering error:', e);
@@ -62,64 +68,76 @@ function chapterHref(chapterId: string) {
   <body>
     <button class="mobile-menu" id="menuBtn" aria-label="打开或关闭章节目录">☰</button>
     <div class="app-shell">
-      {showSidebar && (
-        <aside class="sidebar" id="sidebar">
-          <div class="sidebar-brand">
-            <div class="sidebar-brand-mark">{course.icon}</div>
-            <div>
-              <div class="sidebar-brand-title">{course.title}</div>
-              <div class="muted" style="font-size: 12px; margin-top: 2px;">{course.subtitle}</div>
-            </div>
-          </div>
-
-          <div class="sidebar-search">
-            <input
-              type="text"
-              id="chapterSearch"
-              placeholder="搜索章节..."
-              class="sidebar-search-input"
-            />
-          </div>
-
-          <ReadingProgressIsland
-            client:load
-            chapterId={activeChapterId}
-            chapterTitle={activeChapter?.navLabel}
-            totalChapters={course.chapters.length}
-            storageKey={course.storageKey}
-            courseSlug={course.slug}
-            chapters={course.chapters.map((chapter) => ({ id: chapter.id, label: chapter.navLabel }))}
-          />
-
-          <div class="sidebar-note">
-            当前课程位于 <strong>{course.slug}</strong> 子目录。不同课程共用同一套 Astro 框架，但内容、互动和章节列表彼此独立。
-          </div>
-
-          <nav class="sidebar-group" aria-label={`${course.title} 章节目录`}>
-            <div class="sidebar-group-title">章节目录</div>
-            {course.groups.map((group) => (
-              <div class="sidebar-group" style="margin-bottom: 10px;">
-                <div class="sidebar-group-title" style="padding-left: 0; margin-bottom: 6px;">{group.label}</div>
-                {group.chapters.map((chapter) => (
-                  <a
-                    class:list={["side-link", activeChapterId === chapter.id && 'active']}
-                    data-ch={chapter.id}
-                    href={chapterHref(chapter.id)}
-                  >
-                    <span class={`side-link-icon ${chapter.badgeClass}`}>{chapter.icon}</span>
-                    <span class="side-link-title">{chapter.navLabel}</span>
-                    <span class="side-link-check">✓</span>
-                  </a>
-                ))}
+      {
+        showSidebar && (
+          <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+              <div class="sidebar-brand-mark">{course.icon}</div>
+              <div>
+                <div class="sidebar-brand-title">{course.title}</div>
+                <div class="muted" style="font-size: 12px; margin-top: 2px;">
+                  {course.subtitle}
+                </div>
               </div>
-            ))}
-          </nav>
+            </div>
 
-          <div class="sidebar-note" style="margin-top: 8px;">
-            <a href={backHref} style="color: var(--accent); font-weight: 700;">← 返回课程目录</a>
-          </div>
-        </aside>
-      )}
+            <div class="sidebar-search">
+              <input
+                type="text"
+                id="chapterSearch"
+                placeholder="搜索章节..."
+                class="sidebar-search-input"
+              />
+            </div>
+
+            <ReadingProgressIsland
+              client:load
+              chapterId={activeChapterId}
+              chapterTitle={activeChapter?.navLabel}
+              totalChapters={course.chapters.length}
+              storageKey={course.storageKey}
+              courseSlug={course.slug}
+              chapters={course.chapters.map((chapter) => ({
+                id: chapter.id,
+                label: chapter.navLabel,
+              }))}
+            />
+
+            <div class="sidebar-note">
+              当前课程位于 <strong>{course.slug}</strong> 子目录。不同课程共用同一套 Astro
+              框架，但内容、互动和章节列表彼此独立。
+            </div>
+
+            <nav class="sidebar-group" aria-label={`${course.title} 章节目录`}>
+              <div class="sidebar-group-title">章节目录</div>
+              {course.groups.map((group) => (
+                <div class="sidebar-group" style="margin-bottom: 10px;">
+                  <div class="sidebar-group-title" style="padding-left: 0; margin-bottom: 6px;">
+                    {group.label}
+                  </div>
+                  {group.chapters.map((chapter) => (
+                    <a
+                      class:list={['side-link', activeChapterId === chapter.id && 'active']}
+                      data-ch={chapter.id}
+                      href={chapterHref(chapter.id)}
+                    >
+                      <span class={`side-link-icon ${chapter.badgeClass}`}>{chapter.icon}</span>
+                      <span class="side-link-title">{chapter.navLabel}</span>
+                      <span class="side-link-check">✓</span>
+                    </a>
+                  ))}
+                </div>
+              ))}
+            </nav>
+
+            <div class="sidebar-note" style="margin-top: 8px;">
+              <a href={backHref} style="color: var(--accent); font-weight: 700;">
+                ← 返回课程目录
+              </a>
+            </div>
+          </aside>
+        )
+      }
 
       <div class="main">
         <div class="progress"><div class="progress-bar" id="pbar"></div></div>

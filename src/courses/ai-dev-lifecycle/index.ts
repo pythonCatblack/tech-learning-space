@@ -212,7 +212,8 @@ export const aiDevLifecycleCourse: CourseDefinition = {
   slug: 'ai-dev-lifecycle',
   title: '全周期程序开发实战指南',
   subtitle: 'AI AGENT赋能从创意到部署的全流程开发',
-  description: '系统涵盖产品构思、架构设计、AI驱动开发、智能测试、自动化部署与运维的全链路工程实践。',
+  description:
+    '系统涵盖产品构思、架构设计、AI驱动开发、智能测试、自动化部署与运维的全链路工程实践。',
   icon: '💫',
   sourceRoot: path.resolve(process.cwd(), 'src/course-sources/ai-dev-lifecycle/chapters'),
   storageKey: 'ai-dev-lifecycle-course-progress',

@@ -172,7 +172,9 @@ export const chapters: ChapterMeta[] = [
   },
 ];
 
-export const chapterById = Object.fromEntries(chapters.map((chapter) => [chapter.id, chapter])) as Record<string, ChapterMeta>;
+export const chapterById = Object.fromEntries(
+  chapters.map((chapter) => [chapter.id, chapter])
+) as Record<string, ChapterMeta>;
 
 const groupDefinitions: Array<{ id: ChapterGroupId; label: string }> = [
   { id: 'foundation', label: '第一章 · 基础概念' },
