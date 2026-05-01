@@ -119,7 +119,7 @@
 <p class="p">海湾战争后，美国投入巨资发展无人机（UAV）。"捕食者"（Predator）和"全球鹰"（Global Hawk）配备了前视红外（FLIR）、合成孔径雷达（SAR）和彩色光电相机，通过地面控制站的<span class="kw">人工融合</span>实现目标识别。这个阶段的融合主要靠人工——操作员在多个屏幕之间切换，脑补出完整的战场态势。</p>
 
 <h3 class="section-h3">1.5.3 DARPA Grand Challenge：自动化的转折点（2004-2007）</h3>
-<p class="p">2004年DARPA Grand Challenge（沙漠自动驾驶）是一个历史转折点——第一届比赛中成绩最好的车辆也只行驶了11.8公里。但它催生了<span class="kw">实时传感器融合</span>的工程化探索，Velodyne激光雷达（64线机械式）正是在这个背景下诞生并快速迭代。2007年的Urban Challenge中，卡内基梅隆大学的Boss车大量使用激光雷达和摄像头融合，在城市场景中实现了复杂导航。</p>
+<p class="p">2004年DARPA Grand Challenge（沙漠自动驾驶）是一个历史转折点——第一届比赛中成绩最好的车辆也只行驶了11.8公里。但它催生了<span class="kw">实时传感器融合</span>的工程化探索，Velodyne激光雷达（64线机械式）正是在这个背景下诞生并快速迭代（2022年Velodyne与Ouster合并）。2007年的Urban Challenge中，卡内基梅隆大学的Boss车大量使用激光雷达和摄像头融合，在城市场景中实现了复杂导航。</p>
 
 <h3 class="section-h3">1.5.4 无人机行业的消费级爆发（2012-至今）</h3>
 <p class="p">大疆（DJI）的崛起是这个阶段最标志性的事件。2013年发布的Phantom 1首次将四旋翼整机+云台相机打包进入消费级市场。从Phantom 4开始，大疆引入<span class="kw">双目前视摄像头+IMU的融合感知系统</span>，实现了令人震撼的自主避障。此后，VIO（视觉惯性里程计）、LIO-SAM等开源算法将多传感器融合带入了每个研究者和工程师的桌面。</p>
@@ -134,10 +134,10 @@
 <thead><tr><th>平台</th><th>核心感知传感器</th><th>融合方案</th><th>典型应用</th></tr></thead>
 <tbody>
 <tr><td class="hl">DJI Mavic 3</td><td>双目前视 + 下视ToF + IMU + GPS/BDS</td><td>视觉惯性紧耦合 + EKF</td><td>消费级航拍、自主避障</td></tr>
-<tr><td class="hl">DJI Matrice 350 RTK</td><td>Livox Horizon激光雷达 + 全向摄像头 + RTK</td><td>LIO-SAM + 后端因子图优化</td><td>工业测绘、精细巡检</td></tr>
+<tr><td class="hl">DJI Matrice 350 RTK</td><td>Hesai Pandar激光雷达（全球市场份额第一）+ 全向摄像头 + RTK</td><td>LIO-SAM + 后端因子图优化</td><td>工业测绘、精细巡检</td></tr>
 <tr><td class="hl">Skydio 2</td><td>12路环绕摄像头 + IMU + GPS</td><td>视觉惯性紧耦合</td><td>自主跟拍、山地骑行</td></tr>
 <tr><td class="hl">PX4 Swarm</td><td>单目相机 + IMU + UWB</td><td>VIO + UWB距离融合</td><td>集群协同</td></tr>
-<tr><td class="hl">MIT Starmac</td><td>Velodyne VLP-16 + 双目 + IMU + Optitrack</td><td>LVI-SLAM (紧耦合)</td><td>科研平台</td></tr>
+<tr><td class="hl">MIT Starmac</td><td>Hesai Pandar XT32 / Ouster OS1-128 + 双目 + IMU + Optitrack</td><td>LVI-SLAM (紧耦合)</td><td>科研平台</td></tr>
 </tbody>
 </table>
 

@@ -7,7 +7,7 @@
 
 <div class="callout callout-info"><div class="callout-icon">🔗</div><div class="callout-text"><strong>回顾 Chapter 10：</strong>上一章我们理解了先进封装技术——从2.5D的CoWoS到3D的TSV堆叠，封装正在从"保护芯片"进化为"提升性能"的核心技术。但封装解决的是"如何把多颗芯片连起来"，而 AI 芯片的核心问题是"如何让 AI 推理更快更省电"。本章将聚焦这个问题，并以 Taalas 为案例，展示一种极端但高效的解决方案。</div></div>
 
-<p class="lead">2023年，一家名为 Taalas 的加拿大创业公司发布了一款名为 HC1 的芯片，声称在 Transformer 推理上比 NVIDIA GPU 高效100倍。它的秘密不是更好的制程、不是更多的晶体管——而是<span class="kw">"权重固化"</span>（Weight Stationary）：把神经网络的权重直接"刻"进芯片的金属连线中，推理时不需要任何内存访问。本章将深入解析这一技术路线。</p>
+<p class="lead">2025年，一家名为 Taalas 的加拿大创业公司发布了 HC1 芯片，声称在 Transformer 推理上比 NVIDIA GPU 高效100倍。Taalas 已获得 $219M 融资，推理性能达 17K tokens/s。它的秘密不是更好的制程、不是更多的晶体管——而是<span class="kw">"权重固化"</span>（Weight Stationary）：把神经网络的权重直接"刻"进芯片的金属连线中，推理时不需要任何内存访问。本章将深入解析这一技术路线。</p>
 
 <h2 class="section-h2">11.1 AI 芯片的发展脉络</h2>
 <p class="p">在深入 Taalas 之前，我们需要理解 AI 芯片的演进历史——每一次架构变革都是为了解决上一代架构的瓶颈。</p>
@@ -41,7 +41,7 @@
 <div class="stat"><div class="stat-val">~3TB/s</div><div class="stat-lbl">HBM 实际带宽</div></div>
 <div class="stat"><div class="stat-val">30x</div><div class="stat-lbl">带宽缺口倍数</div></div>
 </div>
-<p class="p">HBM3 的实际带宽约3TB/s，但 GPT-3 推理需要约100TB/s——<strong>带宽缺口高达30倍</strong>。这意味着 GPU 90%的时间都在等数据从内存传来，只有10%的时间在真正计算。数据搬运的能耗也远超计算本身：从 DRAM 读取1bit数据的能耗，是在芯片内部计算1bit的100-1000倍。</p>
+<p class="p">HBM4 的实际带宽约2.8TB/s（单通道），但 GPT-4 推理需要约150TB/s——<strong>带宽缺口仍然高达50倍</strong>。这意味着 GPU 90%的时间都在等数据从内存传来，只有10%的时间在真正计算。数据搬运的能耗也远超计算本身：从 DRAM 读取1bit数据的能耗，是在芯片内部计算1bit的100-1000倍。</p>
 
 <div class="card red"><div class="card-label">核心矛盾</div><h3>AI 推理的能耗分布</h3><p>在典型的 GPU AI 推理中：<br>• <strong>数据搬运（内存↔计算单元）</strong>：占总能耗的90%<br>• <strong>实际计算（乘加运算）</strong>：占总能耗的10%<br><br>这意味着：<strong>即使你把计算单元的能效提升10倍，整体能效只能提升约5%</strong>。真正的瓶颈不是"算得慢"，而是"数据搬得慢"。</p></div>
 
@@ -86,6 +86,7 @@
 <div class="stat"><div class="stat-val">10x</div><div class="stat-lbl">面积效率（vs GPU）</div></div>
 <div class="stat"><div class="stat-val">~1W</div><div class="stat-lbl">推理功耗</div></div>
 <div class="stat"><div class="stat-val">7B</div><div class="stat-lbl">支持模型规模</div></div>
+<div class="stat"><div class="stat-val">17K/s</div><div class="stat-lbl">tokens/s推理速度</div></div>
 </div>
 
 <h2 class="section-h2">11.5 权重固化的代价与局限</h2>
