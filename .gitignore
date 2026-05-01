@@ -1,4 +1,30 @@
+# Dependencies
 node_modules/
+
+# Build output
 dist/
+
+# Astro cache (generated files)
+.astro/
+
+# System files
 .DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Logs
 *.log
+npm-debug.log*
+
+# Environment files (if any)
+.env
+.env.local
+.env.*.local
+
+# Sync script (local utility, not needed in repo)
+scripts/
