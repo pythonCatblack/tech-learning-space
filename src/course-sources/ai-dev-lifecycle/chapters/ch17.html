@@ -45,6 +45,78 @@
 
 请生成完整PRD，包含：概述、用户故事、功能详述、验收标准、技术约束、非功能需求、风险评估"</code></pre>
 
+  <h3 class="section-h3">17.1.1 推荐系统的理论基础</h3>
+  <p class="p">
+    智能任务推荐系统是一个典型的推荐系统问题。理解推荐系统的理论基础有助于设计更有效的AI-TaskManager推荐功能。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 推荐系统的三大范式</div>
+    <p>
+      <strong>协同过滤（Collaborative Filtering）</strong>：<br />
+      "喜欢X的人也喜欢Y"——基于用户行为的相似性进行推荐。
+    </p>
+    <p>
+      <strong>内容过滤（Content-Based Filtering）</strong>：<br />
+      "你喜欢X，X有属性Y，所以可能喜欢也有属性Y的Z"——基于物品特征的匹配。
+    </p>
+    <p>
+      <strong>混合推荐（Hybrid）</strong>：<br />
+      结合协同过滤和内容过滤，弥补各自的冷启动问题。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 推荐系统的评价指标</div>
+    <p><strong>准确率指标</strong>：</p>
+    <ul>
+      <li><strong>MAE（平均绝对误差）</strong> - 预测评分与真实评分的绝对差异</li>
+      <li><strong>RMSD（均方根误差）</strong> - 对大误差惩罚更重</li>
+      <li><strong>Precision@K</strong> - Top-K推荐中相关物品的比例</li>
+      <li><strong>Recall@K</strong> - 相关物品被推荐出来的比例</li>
+    </ul>
+    <p><strong>排名指标</strong>：</p>
+    <ul>
+      <li><strong>NDCG（归一化折损累计增益）</strong> - 考虑推荐列表中物品位置的重要性</li>
+      <li><strong>MRR（平均倒数排名）</strong> - 第一个相关物品的倒数排名</li>
+    </ul>
+  </div>
+
+  <h3 class="section-h3">17.1.2 Multi-Agent系统的博弈论基础</h3>
+  <p class="p">
+    在AI开发中，多个AI Agent协作完成任务是一个新兴的研究方向。这涉及博弈论和分布式决策的理论基础。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 博弈论基础</div>
+    <p><strong>博弈论（Game Theory）</strong>研究多个决策者之间的策略交互：</p>
+    <ul>
+      <li><strong>参与者（Players）</strong> - 做出决策的主体</li>
+      <li><strong>策略（Strategies）</strong> - 每个参与者可以选择的行动</li>
+      <li><strong>收益（Payoffs）</strong> - 每个策略组合的结果</li>
+    </ul>
+    <p>
+      <strong>纳什均衡（Nash Equilibrium）</strong
+      >：没有参与者能通过单方面改变策略来获得更高收益的状态。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 多Agent系统的类型</div>
+    <p>
+      <strong>合作博弈（Cooperative Game）</strong>：<br />
+      Agent之间存在约束力的合作协议，追求团队最优。
+    </p>
+    <p>
+      <strong>非合作博弈（Non-cooperative Game）</strong>：<br />
+      Agent独立决策，仅追求个人利益最大化。
+    </p>
+    <p>
+      <strong>机制设计（Mechanism Design）</strong>：<br />
+      设计游戏规则使得自利的Agent行为产生期望的全局结果。
+    </p>
+  </div>
+
   <h2 class="section-h2">17.2 架构设计与技术选型</h2>
 
   <pre><code>提示词：

@@ -19,6 +19,68 @@
     架构设计的核心问题是<strong>权衡（Trade-off）</strong>。没有完美的架构，只有在特定约束下最合适的架构。AI的价值在于：它能快速检索和综合大量架构案例，帮助团队理解每种选择的利弊。
   </p>
 
+  <h3 class="section-h3">3.1.1 软件架构的理论基础</h3>
+  <p class="p">
+    软件架构作为一个研究领域，起源于1970年代关于"软件结构"的研究。1990年代，Mary Shaw和David
+    Garlan提出了"软件架构"作为一个独立研究领域的宣言，定义了架构风格、描述语言和架构验证等核心概念。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 架构描述的理论框架</div>
+    <p><strong>4+1架构视图模型</strong>（Kruchten, 1995）是业界最广泛使用的架构描述框架：</p>
+    <ul>
+      <li><strong>逻辑视图</strong> - 设计对象模型（面向对象设计）</li>
+      <li><strong>开发视图</strong> - 软件模块组织和依赖关系</li>
+      <li><strong>进程视图</strong> - 并发和同步机制</li>
+      <li><strong>物理视图</strong> - 硬件部署和分布</li>
+      <li><strong>场景视图</strong> - 描述关键用例</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 架构决策的认知模型</div>
+    <p>架构决策是一种<strong>设计认知活动</strong>，受到以下因素影响：</p>
+    <ul>
+      <li><strong>问题空间复杂度</strong> - 需求的规模、变化性、不确定性</li>
+      <li><strong>解决方案空间复杂度</strong> - 可选技术、模式的规模</li>
+      <li><strong>认知约束</strong> - 人类工作记忆容量约7±2个chunk</li>
+      <li><strong>组织约束</strong> - 团队经验、文化、政治因素</li>
+    </ul>
+    <p>AI可以扩展认知能力——通过快速检索和分析大量架构案例，帮助架构师遍历更大的解决方案空间。</p>
+  </div>
+
+  <h3 class="section-h3">3.1.2 架构权衡的量化方法</h3>
+  <p class="p">架构权衡不应该只停留在定性讨论。量化方法使权衡更加精确和可沟通。</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📊 架构质量属性模型</div>
+    <p>
+      <strong>质量属性场景（Quality Attribute Scenario）</strong>是描述架构非功能需求的标准化格式：
+    </p>
+    <ul>
+      <li><strong>刺激源</strong> - 谁/什么触发了这个场景</li>
+      <li><strong>刺激</strong> - 到达系统的刺激</li>
+      <li><strong>制品</strong> - 受影响的系统组件</li>
+      <li><strong>环境</strong> - 系统运行状态</li>
+      <li><strong>响应</strong> - 系统采取的行动</li>
+      <li><strong>响应度量</strong> - 衡量响应的标准</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📊 ATAM：架构权衡分析方法</div>
+    <p>
+      <strong>Architecture Tradeoff Analysis Method（ATAM）</strong>（Kazman et al.,
+      2000）是一种系统化的架构评估方法：
+    </p>
+    <ol>
+      <li><strong>阶段1：描述</strong> - 描述架构、收集信息、创建质量属性树</li>
+      <li><strong>阶段2：调查分析</strong> - 分析架构方法、生成敏感性分析</li>
+      <li><strong>阶段3：测试验证</strong> - 与利益相关者验证分析结果</li>
+    </ol>
+    <p>ATAM已被全球数百个组织采用，是架构决策领域最具影响力的方法论之一。</p>
+  </div>
+
   <h2 class="section-h2">3.2 AI辅助架构选型分析</h2>
 
   <p class="p">当团队面临技术选型时，AI可以做"架构顾问"的角色，提供多维度的对比分析。</p>

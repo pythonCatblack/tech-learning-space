@@ -18,6 +18,15 @@
     </div>
   </div>
 
+  <div class="callout callout-info">
+    <div class="callout-icon">🔗</div>
+    <div class="callout-text">
+      <strong>跨课程关联：</strong>感知系统的硬件核心是 AI 芯片。想理解 Jetson Orin
+      等嵌入式平台上感知算法的硬件加速原理，以及 AI 芯片如何实现极低功耗的神经网络推理，请参阅
+      <a href="../chip/chapters/ch11">芯片设计 Ch11（AI芯片与Taalas）</a>。
+    </div>
+  </div>
+
   <p class="lead">
     一架无人机不是传感器的简单堆叠。飞控架构决定了传感器如何接入系统，机体结构限制了传感器安装位置和视野（FOV），有效载荷决定了总算力预算。理解这些物理约束，才能理解为什么大疆用双目视觉而不是激光雷达做消费级避障——不是因为双目"更好"，而是因为它更轻、更便宜、更适合消费级产品的约束。
   </p>
@@ -355,7 +364,112 @@
     </div>
   </div>
 
-  <h3 class="section-h3">2.5.1 主流无人机通信总线对比</h3>
+  <h3 class="section-h3">2.5.1 时间同步的数学基础：时钟模型与同步误差</h3>
+  <p class="p">
+    多传感器时间对齐的核心是理解<span class="kw">时钟漂移模型</span
+    >。在分布式系统中，每个节点的本地时钟建模为：
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔑 时钟漂移的数学模型</div>
+    <p>
+      设真实物理时间为 $\tau$，节点 $i$ 的本地时钟为 $C_i(\tau)$。本地时钟通常建模为：<br /><br />
+      <strong>$C_i(\tau) = a_i \cdot \tau + b_i + w_i(\tau)$</strong><br /><br />
+      其中 $a_i$ 是时钟偏斜（clock skew，理想值为1），$b_i$ 是时钟偏移（clock offset），$w_i(\tau)$
+      是随机游走噪声。<br /><br />
+      <strong>时钟偏斜的物理来源：</strong>晶振频率误差。MEMS IMU的晶振精度通常为 $\pm 50$
+      ppm，意味着每秒钟累计误差可达 $50\mu
+      s$。对于需要微秒级同步的传感器融合系统，这个漂移不可忽视。<br /><br />
+      <strong>同步误差分解：</strong><br />
+      • <strong>确定性误差</strong>（可校正）：时钟偏斜 $a_i$ 和偏移 $b_i$<br />
+      • <strong>随机性误差</strong>（不可完全消除）：晶振噪声、量化误差、通信延迟的不确定性
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔑 PTP（IEEE 1588）同步协议原理</div>
+    <p>
+      PTP通过交换同步报文（Sync/Follow_Up/P_delay_Req/P_delay_Resp）测量路径延迟并校正时钟偏移。同步精度可达<span
+        class="kw"
+        >亚微秒级</span
+      >。<br /><br />
+      <strong>同步方程：</strong><br />
+      设主从时钟偏移为 $o$，路径延迟为 $d$。主时钟发送Sync报文（时间戳 $T_1$），从时钟接收时间
+      $T_2$：<br />
+      $T_2 = T_1 + d + o$<br /><br />
+      从时钟发送Pdelay_Req（$T_3$），主时钟回复Pdelay_Resp（$T_4$）：<br />
+      $T_4 = T_3 + d - o$<br /><br />
+      联立求解：<br />
+      <strong>$o = \frac{(T_2 - T_1) - (T_4 - T_3)}{2}$</strong><br />
+      <strong>$d = \frac{(T_2 - T_1) + (T_4 - T_3)}{2}$</strong><br /><br />
+      <strong>同步误差的主要来源：</strong><br />
+      ①
+      <strong>非对称延迟</strong
+      >：发送路径和接收路径的物理延迟不同。这是PTP的理论极限，即使时间戳精度无限高也无法消除。<br />
+      ② <strong>时钟晶振噪声</strong>：同步后本地时钟仍会以 $50\mu s/s$
+      量级的速度漂移，需要周期性重同步。<br />
+      ③ <strong>CPU调度延迟</strong>：软件时间戳的获取发生在操作系统调度之后，存在 $10-100\mu s$
+      的不确定性。硬件时间戳（MAC层）可将此项降低到 $< 1\mu s$。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔑 NTP时间同步协议</div>
+    <p>
+      NTP（Network Time
+      Protocol）是互联网时间同步的事实标准，通过多层时间服务器（stratum）分发UTC时间。NTP的同步精度：<br />
+      • 局域网（同一子网）：$1-10ms$<br />
+      • 广域网：$10-100ms$<br />
+      • 互联网骨干：$< 10ms$<br /><br />
+      对于无人机飞控链路（要求 $< 1ms$ 同步），NTP精度不足，必须使用PTP或硬件触发同步。
+    </p>
+  </div>
+
+  <h3 class="section-h3">2.5.2 实时调度理论基础</h3>
+  <p class="p">
+    飞控系统是一个典型的<span class="kw">实时系统</span
+    >——计算结果必须在严格的时间约束内产生，否则会导致系统失效。实时调度理论研究如何在有限计算资源下满足所有任务的时间约束。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔑 实时任务模型与调度可行性</div>
+    <p>
+      实时任务建模为三元组 $(C, T, D)$：<br />
+      • $C$：最坏情况执行时间（WCET）<br />
+      • $T$：任务周期<br />
+      • $D$：相对截止期（通常 $D \leq T$）<br /><br />
+      <strong>利用率（Utilization）：</strong> $U = \sum_{i=1}^{n} \frac{C_i}{T_i}$<br /><br />
+      <strong>速率单调调度（RMS）可行性判定：</strong><br />
+      对于周期性实时任务，RMS是静态优先级调度最优策略。任务可调度的充分条件：<br />
+      <strong>$\sum_{i=1}^{n} \frac{C_i}{T_i} \leq n \cdot (2^{1/n} - 1)$</strong><br /><br />
+      当 $n \to \infty$ 时，右边趋近于 $\ln 2 \approx 0.693$。这意味着：<br />
+      • 单任务：$U \leq 1$<br />
+      • 双任务：$U \leq 0.828$<br />
+      • 大量任务：$U \leq 0.693$<br /><br />
+      <strong>早期绑定与晚期绑定：</strong><br />
+      早期绑定将感知任务分配到固定CPU核心，减少调度开销但可能导致负载不均衡。晚期绑定动态分配，负载均衡好但调度开销大。飞控关键任务通常用早期绑定到专用核心。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔑 多传感器数据流的调度优化</div>
+    <p>
+      考虑一个典型的无人机感知数据流：<br />
+      • IMU：$T_{imu} = 1ms$，$C_{imu} = 0.1ms$<br />
+      • 相机：$T_{cam} = 33ms$，$C_{cam} = 5ms$<br />
+      • Lidar：$T_{lidar} = 50ms$，$C_{lidar} = 10ms$<br /><br />
+      总利用率：$U = 0.1/1 + 5/33 + 10/50 = 0.1 + 0.152 + 0.2 = 0.452$<br /><br />
+      RMS可调度边界：$n=3$ 时为 $3 \times (2^{1/3}-1) \approx 1.089$（利用率小于1即可调度）<br /><br />
+      <strong>带宽预留（Bandwidth Reservation）：</strong><br />
+      为关键任务预留CPU带宽，非关键任务在空闲时间运行。Linux内核通过 cgroups 和 rt throttling
+      实现。<br /><br />
+      <strong>感知-控制链路的确定性保证：</strong><br />
+      对于飞控内环（$1kHz$，周期 $1ms$），必须保证每次都在 $1ms$ 内完成。使用 FIFO 调度 +
+      核心隔离（isolcpus）将控制任务固定在专用核心，消除调度不确定性。
+    </p>
+  </div>
+
+  <h3 class="section-h3">2.5.3 主流无人机通信总线对比</h3>
   <table class="tbl">
     <thead>
       <tr>

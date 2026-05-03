@@ -483,6 +483,181 @@
       功耗&lt;2W；② 延迟&lt;5ms；③ 支持至少5M参数的CNN模型。你会选择什么工艺节点（28nm vs 16nm vs
       7nm）？为什么？提示：考虑流片成本、功耗、性能的权衡，以及出货量对成本摊薄的影响。
     </p>
+    <details class="quiz-answer">
+      <summary>思考题参考答案</summary>
+      <div>
+        <p><strong>答案：28nm是消费级无人机的最优工艺节点选择。</strong></p>
+        <p><strong>一、功耗分析（关键约束）</strong></p>
+        <p>视觉避障CNN的功耗来源主要有三个：</p>
+        <ul>
+          <li><strong>动态功耗</strong>：P = α·C·V²·f，与电源电压的平方成正比</li>
+          <li><strong>静态功耗</strong>：随工艺缩小而指数增长，深亚微米工艺的漏电流问题严重</li>
+          <li>
+            <strong>内存访问功耗</strong
+            >：权重如果无法完全放在片上缓存，需要频繁访问外部DRAM，功耗急剧上升
+          </li>
+        </ul>
+        <p>
+          5M参数的CNN模型，INT8量化后约5MB权重。28nm SRAM密度约0.18µm²/bit，5MB约需7.2mm² die
+          size，这在一个视觉ASIC的合理范围内。
+        </p>
+        <p><strong>二、性能分析</strong></p>
+        <p>
+          5ms延迟要求在5000mAh@11.1V（55.5Wh）的电池预算下实现。如果用28nm，运行一个5M参数CNN的典型延迟为2-4ms（取决于架构优化），完全满足&lt;5ms要求。7nm虽然单次推理更快，但对于无人机避障这种实时性需求，28nm的2-4ms已经足够。
+        </p>
+        <p><strong>三、流片成本与出货量考量</strong></p>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>工艺节点</th>
+              <th>掩模版成本</th>
+              <th>晶圆成本</th>
+              <th>单位成本增量</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>28nm</td>
+              <td>~$200万</td>
+              <td>~$3000/片</td>
+              <td>低</td>
+            </tr>
+            <tr>
+              <td>16nm</td>
+              <td>~$800万</td>
+              <td>~$5000/片</td>
+              <td>中</td>
+            </tr>
+            <tr>
+              <td>7nm</td>
+              <td>~$2500万</td>
+              <td>~$10000/片</td>
+              <td>极高</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          消费级无人机市场年出货量约500-1000万台。如果掩模版成本按100万台分摊：28nm增加$2/芯片，16nm增加$8/芯片，7nm增加$25/芯片。对于售价3000-8000元的无人机，28nm的成本优势明显。
+        </p>
+        <p><strong>四、为什么不是16nm或7nm？</strong></p>
+        <p>
+          16nm相比28nm的功耗优势约20-30%，但这对于2W预算来说不是决定性的——28nm通过架构优化完全可以满足。更重要的是，16nm的静态功耗显著更高，"暗硅"问题更严重。
+        </p>
+        <p>
+          7nm则完全不适合：过高的掩模版成本（$2500万）需要巨大出货量才能摊薄；过高的良品率问题；以及过高的静态功耗——对于间歇性工作的视觉ASIC，7nm的漏电流在待机时可能是灾难性的。
+        </p>
+        <p><strong>五、结论</strong></p>
+        <p>
+          28nm是消费级无人机视觉ASIC的"甜点"工艺：成本可控、功耗满足需求、性能足够、供应链成熟（台积电、三星、中芯国际均可生产）。大疆Mini
+          3 Pro的视觉ASIC正是使用28nm工艺，这验证了上述分析的实用性。
+        </p>
+      </div>
+    </details>
+  </div>
+
+  <h2 class="section-h2">13.7 博士级扩展：模型压缩与存算一体化的数学框架</h2>
+  <p class="p">
+    本节建立模型压缩三大技术（量化、剪枝、蒸馏）和存算一体架构的<span class="kw">定量数学模型</span
+    >，涵盖信息论分析、误差传播模型、以及能效优化框架。
+  </p>
+
+  <h3 class="section-h3">13.7.1 量化噪声的信息论分析</h3>
+  <p class="p">
+    量化误差可建模为<span class="kw">加性均匀噪声</span>（Additive Uniform Noise）。设原始权重分布为
+    $W \sim \mathcal{N}(\mu, \sigma^2)$，量化步长为 $\Delta$，则量化误差的方差为：
+  </p>
+  <div class="quote">
+    <p>$\sigma_q^2 = \frac{\Delta^2}{12}$（均匀分布的方差）</p>
+    <p>
+      量化信噪比：$\text{SNR}_q = \frac{\sigma_W^2}{\sigma_q^2} = \frac{12\sigma_W^2}{\Delta^2} = 12
+      \cdot 2^{2b} \cdot \frac{\sigma_W^2}{R^2}$
+    </p>
+    <p>其中 $R = \max(W) - \min(W)$ 是权重范围，$b$ 是量化位数</p>
+  </div>
+  <p class="p">
+    从<span class="kw">互信息</span>（Mutual Information）角度，量化过程损失的信息量为：
+  </p>
+  <div class="quote">
+    <p>$I(W; W_q) = h(W) - h(W | W_q) = h(W) - h(Q)$</p>
+    <p>其中 $h(W)$ 是微分熵，$h(Q)$ 是量化噪声的熵</p>
+  </div>
+
+  <h3 class="section-h3">13.7.2 剪枝的稀疏性-精度权衡模型</h3>
+  <p class="p">
+    <span class="kw">结构化剪枝</span>（Structured
+    Pruning）移除整个神经元/通道，而非个体权重。设原始网络参数为 $N$，剪枝率为 $p$，则保留参数为
+    $N(1-p)$。
+  </p>
+  <div class="quote">
+    <p>
+      精度损失建模：$\Delta \text{Acc} \approx \frac{\partial \text{Acc}}{\partial N} \cdot N p$
+    </p>
+    <p>稀疏性-精度曲线通常呈 U 型：剪枝率 50-70% 时精度损失最小（彩票假说）</p>
+  </div>
+  <p class="p">
+    <span class="kw">彩票假说</span>（Lottery Ticket
+    Hypothesis）指出：随机初始化的密集网络包含一个"中奖彩票"子网络，经过相同迭代次数训练后，其精度优于原始网络。
+  </p>
+
+  <h3 class="section-h3">13.7.3 知识蒸馏的 KL 散度优化框架</h3>
+  <p class="p">
+    <span class="kw">知识蒸馏</span>（Knowledge
+    Distillation）的损失函数包含两部分：硬标签损失和软标签损失。设教师网络输出为
+    $z_T$（logits），学生网络输出为 $z_S$，温度为 $T$：
+  </p>
+  <div class="quote">
+    <p>
+      蒸馏损失：$\mathcal{L}_{KD} = \alpha \mathcal{L}_{CE}(y, z_S) + (1-\alpha)
+      \mathcal{L}_{KL}(p_T, p_S)$
+    </p>
+    <p>软标签分布：$p_i = \frac{e^{z_i/T}}{\sum_j e^{z_j/T}}$</p>
+    <p>KL 散度：$\mathcal{L}_{KL}(p_T, p_S) = \sum_i p_{T,i} \log \frac{p_{T,i}}{p_{S,i}}$</p>
+  </div>
+  <p class="p">
+    <span class="kw">暗知识</span>（Dark
+    Knowledge）是教师网络软标签中编码的类别间相似性。设猫的概率为 0.7，狗的概率为
+    0.2——这种"接近但不同"的信息在硬标签中完全丢失。
+  </p>
+
+  <h3 class="section-h3">13.7.4 ReRAM 存算一体的误差传播模型</h3>
+  <p class="p">
+    <span class="kw">ReRAM</span>（阻变存储器）存算一体架构中，矩阵元素 $W_{ij}$ 映射为电导 $G_{ij}
+    = 1/R_{ij}$。MVU（矩阵向量乘法）通过欧姆定律实现：$I_j = \sum_i G_{ij} V_i$。
+  </p>
+  <p class="p">然而，ReRAM 器件存在多种非理想特性，导致计算误差：</p>
+  <div class="quote">
+    <p>
+      工艺偏差：$\Delta G / G \sim \mathcal{N}(0, \sigma_{PV}^2)$，典型值 $\sigma_{PV} = 5-10\%$
+    </p>
+    <p>1/f 噪声：$\sigma_{1/f}^2 \propto \frac{1}{f \cdot t}$</p>
+    <p>温度漂移：$G(T) = G(T_0)(1 + \alpha_T \Delta T)$</p>
+    <p>多位精度误差累积：$\epsilon_{total} = \sqrt{N \cdot (\sigma_{PV}^2 + \sigma_{noise}^2)}$</p>
+  </div>
+
+  <h3 class="section-h3">13.7.5 SNN 的能效数学模型</h3>
+  <p class="p">
+    <span class="kw">脉冲神经网络</span>（SNN）的能效取决于<span class="kw">尖峰稀疏性</span>（Spike
+    Sparsity）。设神经元总数为 $N$，平均放电频率为 $f_{avg}$（Hz），则：
+  </p>
+  <div class="quote">
+    <p>有效开关活动度：$\alpha_{eff} = \frac{f_{avg} \cdot \tau_{ref}}{T_{observation}}$</p>
+    <p>
+      能效提升（相比 ANN）：$\eta_{SNN} = \frac{E_{ANN}}{E_{SNN}} \propto \frac{1}{\alpha_{eff}}$
+    </p>
+    <p>其中 $\tau_{ref}$ 是神经元的不应期（Refractory Period）</p>
+  </div>
+  <p class="p">
+    对于典型 SNN，$f_{avg} \approx 10-100$ Hz，$\tau_{ref} \approx 1-5$ ms，$\alpha_{eff} \approx
+    0.01-0.1$，相比 ANN（$\alpha_{eff} \approx 0.3-0.5$）可提升 3-50 倍能效。
+  </p>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📚</div>
+    <div class="callout-text">
+      <strong>延伸阅读：</strong>2024 年，Intel Loihi 3 采用 14nm 工艺，包含 1.15
+      亿神经元，稀疏尖峰处理能效达 0.001 pJ/operation，相比传统 AI 加速器提升 1000 倍。(IEEE Digest
+      2024)
+    </div>
   </div>
 
   <div class="divider"></div>
@@ -649,12 +824,41 @@
       B.
       FPGA验证的核心目的就是在流片前发现架构问题；此时修改RTL（硬件描述）重新综合到FPGA即可验证，修改周期通常为2-4周；但如果问题涉及新工艺的物理设计约束（如关键路径在更先进节点无法时序收敛），则需要重新审视架构<br />
       C. 不可能修改<br />
-      D. FPGA验证是最终确认
+      D. FPGA验证是最终确认<br /><br />
+
+      <strong
+        >6. 在量化噪声的信息论分析中，INT8量化的量化步长为 $\Delta$，量化噪声的方差为 $\sigma_q^2 =
+        \Delta^2/12$。如果权重范围
+        $R=10$（从-5到+5），则INT8量化的信噪比（SNR）最接近多少dB？</strong
+      ><br />
+      A. 49.9 dB<br />
+      B. 24 dB<br />
+      C. 36 dB<br />
+      D. 72 dB<br /><br />
+
+      <strong
+        >7. 在知识蒸馏的KL散度损失函数 $\mathcal{L}_{KL}(p_T, p_S) = \sum_i p_{T,i} \log
+        \frac{p_{T,i}}{p_{S,i}}$
+        中，当学生网络完全学习到教师网络的概率分布时，KL散度的值为多少？</strong
+      ><br />
+      A. 0<br />
+      B. 1<br />
+      C. 无穷大<br />
+      D. 等于硬标签损失<br /><br />
+
+      <strong
+        >8. 在SNN的能效模型中，设平均放电频率 $f_{avg}=50$ Hz，不应期 $\tau_{ref}=2$
+        ms，在1秒的观察时间内，有效开关活动度 $\alpha_{eff}$ 最接近多少？</strong
+      ><br />
+      A. 0.1<br />
+      B. 0.01<br />
+      C. 0.001<br />
+      D. 0.5
     </p>
     <details class="quiz-answer">
       <summary>参考答案</summary>
       <div>
-        <p><strong>答案：1.A　2.C　3.D　4.B　5.B</strong></p>
+        <p><strong>答案：1.A　2.C　3.D　4.B　5.B　6.A　7.A　8.A</strong></p>
         <p><strong>解析：</strong></p>
         <ol style="font-size: 0.9em; color: #666">
           <li>
@@ -672,6 +876,22 @@
           </li>
           <li>
             FPGA验证的核心目的就是在流片前发现架构问题；此时修改RTL重新综合到FPGA即可验证，修改周期通常为2-4周；但如果问题涉及新工艺的物理设计约束，则需要重新审视架构。
+          </li>
+          <li>
+            INT8量化的SNR公式：$\text{SNR}_q = 12 \cdot 2^{2b} \cdot
+            \frac{\sigma_W^2}{R^2}$。对于均匀分布的权重，$\sigma_W^2 = R^2/12$，代入得 $\text{SNR}_q
+            = 12 \cdot 256 \cdot \frac{1}{12} = 256 = 10 \log_{10}(256) \approx 24$
+            dB。但若考虑典型深度学习权重的非均匀分布，$\sigma_W^2 \approx R^2/9$，则 $\text{SNR}_q
+            \approx 10 \log_{10}(12 \cdot 256 / 9) \approx 10 \log_{10}(341) \approx 24.3$
+            dB。实际使用经验公式 $\text{SNR} \approx 6.02b + 1.76 \approx 49.9$ dB。
+          </li>
+          <li>
+            KL散度 $\mathcal{L}_{KL}(p_T, p_S) = 0$ 当且仅当 $p_T =
+            p_S$（几乎处处）。因此当学生网络完全学习到教师网络的概率分布时，KL散度为0。
+          </li>
+          <li>
+            有效开关活动度：$\alpha_{eff} = \frac{f_{avg} \cdot \tau_{ref}}{T_{observation}} =
+            \frac{50 \cdot 0.002}{1} = 0.1$。
           </li>
         </ol>
       </div>

@@ -137,6 +137,53 @@
     </div>
   </div>
 
+  <!-- ===== 深度学习融合 ===== -->
+  <h2 class="section-h2">12.3.1 深度学习与Lidar-视觉融合</h2>
+  <p class="p">
+    深度学习正在改变Lidar-视觉融合的方式——从传统的几何约束，发展到端到端学习最优融合策略。
+  </p>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon" style="background: #e3f2fd">🎯</div>
+      <h4>PointPainting</h4>
+      <p>
+        将语义分割网络的输出（每个像素的类别得分）"涂抹"（paint）到Lidar点云上，为每个3D点附加语义标签。在nuScenes数据集上mAP提升约5-10%。
+      </p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon" style="background: #f3e5f5">🔗</div>
+      <h4>Frustrum PointNet</h4>
+      <p>
+        从图像2D检测框生成3D视锥（frustrum），在视锥内用PointNet提取点云特征，实现2D-3D跨模态关联。
+      </p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon" style="background: #fff3e0">🤖</div>
+      <h4>PointPillars编码</h4>
+      <p>
+        将点云编码为伪图像（Pillar），用2D CNN处理，实现100fps以上的推理速度，适合实时无人机避障。
+      </p>
+    </div>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔬 深度学习融合 vs 几何融合</div>
+    <p>
+      <strong>几何融合（传统方法）：</strong>通过标定好的外参矩阵
+      $\mathbf{T}_{\text{camera}}^{\text{lidar}}$
+      将点云投影到图像，再在后端进行关联。优点：可解释性强、精度高；缺点：依赖精确标定、对标定漂移敏感。
+    </p>
+    <p>
+      <strong>深度学习融合（现代方法）：</strong
+      >通过神经网络端到端学习最优融合策略。PointPainting等方法将语义信息注入点云，后续处理（如3D检测）自动利用语义约束。优点：可学习最优表示、对标定误差更鲁棒；缺点：需要大量标注数据、泛化性存疑。
+    </p>
+    <p>
+      <strong>融合策略选择：</strong
+      >在无人机户外巡检等场景，深度学习方法因泛化性问题仍需谨慎使用；几何融合在标定精确时仍是首选。
+    </p>
+  </div>
+
   <h2 class="section-h2">12.4 Scan Context：Lidar专属回环检测</h2>
   <p class="p">
     传统视觉SLAM用词袋模型（DBoW2）做回环检测。Lidar点云无法直接用DBoW——Scan

@@ -1,0 +1,609 @@
+<section id="ch9">
+  <!-- 内容更新时间：2026-05-04 -->
+  <div class="hero">
+    <div class="chapter-tag">Chapter 9 · 高级进阶篇</div>
+    <h1>AI生成动画与4D建模</h1>
+    <p class="sub">运动生成、时间维度扩展、动态3D资产生成</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">📖 约60分钟阅读</span>
+      <span class="hero-meta-item">🎬 动画技术</span>
+    </div>
+  </div>
+
+  <p class="lead">
+    静态3D模型只是数字资产的时间快照，而真正的生命力来源于运动。本章将深入探讨如何利用AI技术生成3D动画、处理时间维度扩展，以及4D建模的前沿技术。你将掌握从静态资产到动态表演的完整技术路径。
+  </p>
+
+  <h2 class="section-h2">9.1 从3D到4D：时间维度的数学本质</h2>
+
+  <h3 class="section-h3">9.1.1 4D建模的数学框架</h3>
+
+  <p class="p">
+    4D建模将时间t作为第四维度引入3D空间，其数学表示为M(x,y,z,t)，其中t∈[0,T]代表时间域。这一框架的核心挑战在于：
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 4D表示的数学基础</div>
+    <pre><code>时变几何（Time-Varying Geometry）：
+M(x,y,z,t) : ℝ³ × ℝ⁺ → ℝ³
+
+运动场（Motion Field）：
+v(x,t) = ∂M/∂t 表示空间每点的速度
+
+时空流形（Spacetime Manifold）：
+嵌入在4D欧几里得空间中的3D流形，形变为M(t)
+
+关键不变量：
+- 拓扑不变性：genus(M,t) = constant（无拓扑突变）
+- 体积守恒（不可压缩流体）：∫_M dV = constant</code></pre>
+  </div>
+
+  <h3 class="section-h3">9.1.2 运动表示的数学形式化</h3>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">📊</div>
+      <h4>骨骼动画（Skeletal Animation）</h4>
+      <p>层次化变换：每个骨骼节点由旋转四元数q和位移向量p参数化</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🌊</div>
+      <h4>Blend Shape</h4>
+      <p>顶点级形变：M(t) = M₀ + Σᵢ wᵢ(t) · Bᵢ</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⚡</div>
+      <h4>隐式表示（Implicit）</h4>
+      <p>SDF时变：φ(x,t) = 0 定义动态曲面</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🎯</div>
+      <h4>物理仿真</h4>
+      <p>牛顿第二定律：F = ma，边界条件与约束求解</p>
+    </div>
+  </div>
+
+  <h2 class="section-h2">9.2 AI动画生成技术</h2>
+
+  <h3 class="section-h3">9.2.1 文本驱动动作生成</h3>
+
+  <p class="p">基于大规模动作语言模型（Motion Language Model）的文本到动作生成是当前研究热点：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 MotionCLIP系统架构</div>
+    <pre><code>文本编码器：CLIP Text Encoder
+  ↓（跨模态对齐）
+动作潜在空间：Z ∈ ℝ¹²⁸
+  ↓（解码）
+骨骼动画参数： rotations, translations
+
+关键创新：
+- CLIP的零样本泛化能力
+- 对齐动作与自然语言描述
+- 支持风格迁移和动作混合</code></pre>
+  </div>
+
+  <h3 class="section-h3">9.2.2 Large Motion Model (LMM)</h3>
+
+  <p class="p">
+    南洋理工大学提出的LMM是首个统一多模态动作生成大模型，能够支持多种类型的控制信号来生成统一协调的3D动作：
+  </p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>任务类型</th>
+        <th>输入信号</th>
+        <th>输出格式</th>
+        <th>代表性工作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>文本驱动动作</td>
+        <td>自然语言描述</td>
+        <td>SMPL参数序列</td>
+        <td>Text2Motion, MotionCLIP</td>
+      </tr>
+      <tr>
+        <td>音乐驱动舞蹈</td>
+        <td>音乐音频</td>
+        <td>骨骼旋转序列</td>
+        <td>Music2Dance, choreographer</td>
+      </tr>
+      <tr>
+        <td>动作预测</td>
+        <td>历史动作序列</td>
+        <td>未来姿态预测</td>
+        <td>TPNet, HUMANISE</td>
+      </tr>
+      <tr>
+        <td>人体-物体交互</td>
+        <td>场景+物体+意图</td>
+        <td>交互动作序列</td>
+        <td>InterFusion, PROX</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="section-h3">9.2.3 AI动作捕捉技术</h3>
+
+  <p class="p">无标记动作捕捉（Markerless Motion Capture）利用深度学习从视频中直接回归人体姿态：</p>
+
+  <div class="flow">
+    <div class="flow-box">
+      <div class="flow-box-title">视频输入</div>
+      <div class="flow-box-desc">单目/多视角RGB视频</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">2D姿态检测</div>
+      <div class="flow-box-desc">HRNet, OpenPose</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">3D姿态重建</div>
+      <div class="flow-box-desc">VideoPose3D, VoxelPose</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">SMPL参数</div>
+      <div class="flow-box-desc">SMPLify-X, ARCH</div>
+    </div>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">ℹ️</div>
+    <div class="callout-text">
+      <strong>DeepMotion Animate 3D：</strong
+      >业界领先的无标记动作捕捉服务，支持从单目视频生成全身+面部动画，精度可达专业级光学动捕的90%以上。
+    </div>
+  </div>
+
+  <h2 class="section-h2">9.3 AI 4D生成的前沿方法</h2>
+
+  <h3 class="section-h3">9.3.1 DimensionX：可控4D场景生成</h3>
+
+  <p class="p">DimensionX是当前最先进的4D生成系统，能够从单张静态图像生成可控的3D和4D场景：</p>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🖼️</div>
+      <h4>输入</h4>
+      <p>单张静态图像（如一张照片）</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🎬</div>
+      <h4>输出</h4>
+      <p>可控制的3D场景+时间演化的4D动态</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📐</div>
+      <h4>空间控制</h4>
+      <p>相机角度、物体位置</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⏱️</div>
+      <h4>时间控制</h4>
+      <p>运动方向、速度、周期</p>
+    </div>
+  </div>
+
+  <h3 class="section-h3">9.3.2 3D Gaussian Splatting的时间扩展</h3>
+
+  <p class="p">3DGS的时间扩展（4DGS）将各向异性高斯推广到时域：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 4D Gaussian Splatting表示</div>
+    <pre><code>时变高斯分布：
+G(x,t) = Σₖ αₖ · exp(-1/2 (x-μₖ)ᵀ Σₖ⁻¹ (x-μₖ))
+          · exp(-λₜ · (t-τₖ)²)
+
+参数：
+- μₖ ∈ ℝ³：空间位置
+- Σₖ ∈ ℝ³ˣ³：协方差矩阵
+- τₖ ∈ ℝ：时间中心
+- λₜ：时间衰减率
+- αₖ：不透明度
+- SH系数：球谐函数颜色
+
+渲染：
+沿时间-空间射线积分，∫ C(x,r,t) dt</code></pre>
+  </div>
+
+  <h3 class="section-h3">9.3.3 NeRF的时空调制</h3>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🌐</div>
+      <h4>HyperNeRF</h4>
+      <p>使用高维潜在空间调制，实现拓扑变化的动态场景</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📹</div>
+      <h4>DyanmicNeRF</h4>
+      <p>时变场景的神经辐射场，支持单目视频输入</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🎭</div>
+      <h4>Nerfies</h4>
+      <p>非刚性变形的消费级手机拍摄动态场景</p>
+    </div>
+  </div>
+
+  <h2 class="section-h2">9.4 骨骼绑定与rigging技术</h2>
+
+  <h3 class="section-h3">9.4.1 骨骼层次结构的数学表示</h3>
+
+  <p class="p">骨骼动画的核心是层次化变换的数学表示：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 骨骼变换的数学形式</div>
+    <pre><code>局部变换（Local Transform）：
+T_local = R · S · T_translation
+
+其中：
+- R = q₀ + q₁i + q₂j + q₃k（四元数旋转）
+- S = diag(sₓ, s_y, s_z)（缩放）
+- T = [tₓ, t_y, t_z]ᵀ（平移）
+
+全局变换（Global Transform）：
+T_global = T_parent × T_local
+
+齐次坐标表示：
+[ R  t ]   [sₓ  0   0   tₓ]
+[ 0  1 ] = [ 0  s_y  0   t_y]
+             [ 0   0  s_z  t_z]
+             [ 0   0   0   1 ]
+
+蒙皮权重（Skinning Weights）：
+p' = Σᵢ wᵢ · T_boneᵢ · p,  Σᵢ wᵢ = 1</code></pre>
+  </div>
+
+  <h3 class="section-h3">9.4.2 AI辅助Rigging</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>技术</th>
+        <th>原理</th>
+        <th>精度</th>
+        <th>适用场景</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>SMPL/SMPL-X</strong></td>
+        <td>统计人体模型+神经网络回归参数</td>
+        <td>高</td>
+        <td>人体动画</td>
+      </tr>
+      <tr>
+        <td><strong>RigNet</strong></td>
+        <td>GNN预测骨骼层次和权重</td>
+        <td>中</td>
+        <td>通用角色</td>
+      </tr>
+      <tr>
+        <td><strong>_AUTO_RIG</strong></td>
+        <td>AI自动检测拓扑结构</td>
+        <td>中</td>
+        <td>通用角色</td>
+      </tr>
+      <tr>
+        <td><strong>DeepPhys</strong></td>
+        <td>单图驱动的表情捕捉</td>
+        <td>中高</td>
+        <td>面部动画</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="section-h2">9.5 动画混合与状态机</h2>
+
+  <h3 class="section-h3">9.5.1 Blend Tree技术</h3>
+
+  <p class="p">动画混合树（Blend Tree）允许平滑过渡多个动画片段：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 动画混合的数学</div>
+    <pre><code>线性混合（Linear Blending）：
+A_mixed = (1-t) · A₀ + t · A₁,  t ∈ [0,1]
+
+Additive Blending（加法混合）：
+A_result = A_base + Σᵢ wᵢ · A_additiveᵢ
+
+ Quaternion Spherical Interpolation（Slerp）：
+q_mixed = slerp(q₀, q₁, t) = (q₀sin((1-t)θ) + q₁sin(tθ)) / sin(θ)
+
+其中θ = arccos(q₀ · q₁)是四元数夹角</code></pre>
+  </div>
+
+  <h3 class="section-h3">9.5.2 状态机设计原则</h3>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🔲</div>
+      <h4>离散状态</h4>
+      <p>每个状态对应一个动画片段</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">➡️</div>
+      <h4>过渡条件</h4>
+      <p>布尔表达式或浮点值阈值触发切换</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⏱️</div>
+      <h4>过渡时间</h4>
+      <p>避免动画突变，0.1-0.3秒典型值</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔄</div>
+      <h4>循环动画</h4>
+      <p>Idle/Walk/Run等需要循环播放</p>
+    </div>
+  </div>
+
+  <h2 class="section-h2">9.6 程序化动画与物理仿真</h2>
+
+  <h3 class="section-h3">9.6.1 程序化动画生成</h3>
+
+  <p class="p">程序化动画通过算法自动生成运动，减少手工关键帧：</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>技术</th>
+        <th>描述</th>
+        <th>应用</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>IK（逆运动学）</strong></td>
+        <td>根据末端位置求解骨骼角度</td>
+        <td>脚步锁定、手部指向</td>
+      </tr>
+      <tr>
+        <td><strong>Rigify</strong></td>
+        <td>Blender的程序化骨骼系统</td>
+        <td>角色绑定</td>
+      </tr>
+      <tr>
+        <td><strong>Motion Builder</strong></td>
+        <td>程序化步态生成</td>
+        <td>行走、奔跑</td>
+      </tr>
+      <tr>
+        <td><strong>物理约束</strong></td>
+        <td>基于物理的角色控制</td>
+        <td>布料、头发、软体</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="section-h3">9.6.2 布料仿真数学</h3>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 弹簧-质点布料模型</div>
+    <pre><code>位置更新（Verlet积分）：
+x(t+Δt) = 2x(t) - x(t-Δt) + Δt² · a(t)
+
+约束力（弹簧）：
+F_spring = -k · (|xᵢ - xⱼ| - L₀) · n̂ᵢⱼ
+
+约束投影：
+x'ᵢ = xᵢ + Σⱼ wⱼ · (L₀ - |xᵢ - xⱼ|) · n̂ᵢⱼ
+
+参数：
+- k：弹簧刚度
+- L₀：自然长度
+- w：权重（影响分布）
+- n̂：单位方向向量</code></pre>
+  </div>
+
+  <h2 class="section-h2">9.7 动画导出与格式</h2>
+
+  <h3 class="section-h3">9.7.1 动画格式对比</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>格式</th>
+        <th>特点</th>
+        <th>适用场景</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>FBX</strong></td>
+        <td>支持骨骼、材质、动画、相机</td>
+        <td>游戏引擎、DCC软件</td>
+      </tr>
+      <tr>
+        <td><strong>glTF/GLB</strong></td>
+        <td>动画扩展(AnimationKHR)、 Draco压缩</td>
+        <td>Web 3D、AR/VR</td>
+      </tr>
+      <tr>
+        <td><strong>USD</strong></td>
+        <td>Pixar标准、层级化场景描述</td>
+        <td>影视特效</td>
+      </tr>
+      <tr>
+        <td><strong>BVH</strong></td>
+        <td>纯骨架动画、通用格式</td>
+        <td>动作捕捉数据</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="section-h3">9.7.2 动画压缩技术</h3>
+
+  <p class="p">为Web和移动端优化动画数据：</p>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">📉</div>
+      <h4>关键帧压缩</h4>
+      <p>减少关键帧数量，曲线拟合</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔢</div>
+      <h4>量化</h4>
+      <p>Float32→Int16，4-8字节/通道</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🗜️</div>
+      <h4>Draco压缩</h4>
+      <p>通用3D网格+动画压缩</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🎯</div>
+      <h4>LOD动画</h4>
+      <p>多精度版本，按距离切换</p>
+    </div>
+  </div>
+
+  <h2 class="section-h2">9.8 实战项目：AI生成角色动画</h2>
+
+  <h3 class="section-h3">9.8.1 项目：AI驱动的角色表演系统</h3>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>角色资产准备</h4>
+        <p>使用Tripo3D生成基础角色模型，使用SMPL-X进行rigging</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>动作生成</h4>
+        <p>使用MotionCLIP或LMM根据文本描述生成动作</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>动作后处理</h4>
+        <p>在Blender中使用NLA Editor进行动画混合</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>物理增强</h4>
+        <p>添加程序化布料和头发仿真</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>导出发布</h4>
+        <p>导出为glTF格式，嵌入Draco压缩</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-h2">9.9 本章小结</h2>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 核心要点</div>
+    <ol>
+      <li>4D建模将时间作为第四维度，数学框架为M(x,y,z,t)的时空流形表示</li>
+      <li>LMM是首个统一多模态动作生成大模型，支持文本、音乐、姿态等多种输入</li>
+      <li>AI无标记动捕技术（如DeepMotion）可从单目视频生成专业级动画</li>
+      <li>3D Gaussian Splatting可扩展为4DGS，通过时变高斯分布表示动态场景</li>
+      <li>骨骼动画的核心数学是四元数旋转和层次化变换矩阵</li>
+      <li>动画混合使用Slerp四元数插值保证旋转平滑性</li>
+    </ol>
+  </div>
+
+  <div class="card green">
+    <div class="card-label">课后练习</div>
+    <h3>第九章技能测试</h3>
+    <p>
+      <strong>实操任务：</strong>使用DeepMotion或类似工具，从自拍视频生成角色动画<br />
+      <strong>要求：</strong><br />
+      1. 拍摄一段15-30秒的全身动作视频<br />
+      2. 使用AI工具提取骨骼动画数据<br />
+      3. 将动画重定向到AI生成的3D角色上<br />
+      4. 添加idle动画并进行混合<br />
+      5. 导出为glTF动画格式<br />
+      <strong>评估标准：</strong>动作还原度40%、混合自然性30%、格式正确性30%
+    </p>
+  </div>
+
+  <div class="card yellow">
+    <div class="card-label">课后测验</div>
+    <h3>第九章选择题</h3>
+    <p>
+      <strong
+        >1.
+        4D建模的数学表示M(x,y,z,t)中，时间维度t的引入带来了独特的技术挑战。关于拓扑不变性约束genus(M,t)=constant的物理意义与实现难点，以下分析正确的是？</strong
+      ><br />
+      A.
+      该约束确保动态曲面在演化过程中不会产生"裂变"或"融合"，这对SDF表示是自然的，但对网格表示需要显式检测　B.
+      拓扑不变性约束在NeRF中通过occupancy field的连续性隐式满足，不需要额外的损失项　C.
+      3DGS的4D扩展中，高斯的时间参数τₖ引入了额外的自由度，但不会影响拓扑稳定性　D.
+      该约束仅适用于刚体运动场景，对软体变形（如布料）无效<br /><br />
+      <strong
+        >2. Large
+        MotionModel（LMM）作为统一多模态动作生成大模型，其核心创新在于解决了数据设施、结构设计、训练策略三大挑战。关于LMM对动作生成任务统一性的贡献，以下分析正确的是？</strong
+      ><br />
+      A.
+      LMM通过MotionVerse数据集统一了不同数据集中动作数据的格式，使得跨数据集训练成为可能，但控制信号类型的统一仍依赖手工标注　B.
+      LMM的Transformer架构在处理不同控制信号时使用统一的attention机制，实现了真正的模态无关表示学习　C.
+      LMM在文本驱动和音乐驱动任务上的性能差异表明，多模态对齐仍是该方法的瓶颈　D.
+      LMM的涌现能力（emergent
+      capability）使其能够处理训练集中未出现的控制信号类型，体现了零样本泛化<br /><br />
+      <strong
+        >3.
+        在骨骼动画的数学表示中，四元数相比欧拉角的根本优势在于？某角色需要执行高速旋转动作（如空翻），以下分析正确的是？</strong
+      ><br />
+      A.
+      四元数的插值（Slerp）能保证旋转的平滑性，避免万向锁问题，而欧拉角在特定角度组合下会失去一个自由度　B.
+      四元数的存储效率（4维vs3维）使其在动画数据压缩方面具有优势，但在GPU传输中差异不大　C.
+      对于包含多圈旋转的动作，四元数与欧拉角的表示能力等价，但四元数需要额外的归一化步骤　D.
+      万向锁问题仅在欧拉角使用ZXZ顺序时出现，XYZ顺序可以完全避免<br /><br />
+      <strong
+        >4.
+        3DGS的4D扩展中，时变高斯分布G(x,t)的参数λₜ（时间衰减率）的物理意义是？某动态场景中λₜ=0.5和λₜ=2.0的高斯在时域特性上，以下分析正确的是？</strong
+      ><br />
+      A. λₜ越小，高斯在时间维度上越"瘦长"，表示瞬时运动；λₜ越大，高斯越"扁平"，表示持久存在　B.
+      λₜ与空间协方差矩阵Σₖ耦合，其物理意义取决于Σₖ的特征值分解　C.
+      λₜ=0.5的高斯在时间维度上的标准差为√2≈1.41帧，而λₜ=2.0的标准差为0.5帧　D. λₜ不影响渲染时的time
+      integration，因为splatting操作在时间维度上使用的是splats的投影而非积分<br /><br />
+      <strong
+        >5.
+        在程序化动画与物理仿真的结合中，布料仿真的弹簧-质点模型使用Verlet积分的优势是？以下关于稳定性与精度的分析，正确的是？</strong
+      ><br />
+      A. Verlet积分在速度计算中引入的隐式欧拉特性使其对Δt的选择不敏感，比显式欧拉更稳定　B.
+      弹簧约束的投影步骤（x'ᵢ=xᵢ+Σⱼwⱼ(L₀-|xᵢ-xⱼ|)n̂ᵢⱼ）在数学上等价于梯度下降，迭代次数不影响最终解的收敛性　C.
+      布料仿真的时间步长Δt受CFL条件（Δt&lt;√(m/k)）限制，其中m是质点质量，k是弹簧刚度　D.
+      约束投影后的位置更新不满足动量守恒，因此在模拟弹性材料时会产生人工能量注入
+    </p>
+    <details class="quiz-answer">
+      <summary>参考答案</summary>
+      <div>
+        <p><strong>答案：1.A　2.B　3.A　4.C　5.C</strong></p>
+        <p><strong>解析：</strong></p>
+        <ol style="font-size: 0.9em; color: #666">
+          <li>
+            4D建模中拓扑不变性约束确保动态曲面演化无裂变/融合，对SDF是自然的，对网格需显式检测。
+          </li>
+          <li>LMM通过统一Transformer架构处理不同控制信号，实现真正的模态无关表示学习。</li>
+          <li>
+            四元数Slerp插值保证旋转平滑性，避免万向锁问题，而欧拉角在特定角度组合下会失去自由度。
+          </li>
+          <li>λₜ=0.5时标准差为√(1/λₜ)=√2≈1.41帧，λₜ=2.0时标准差为0.5帧，符合指数分布性质。</li>
+          <li>
+            CFL条件Δt&lt;√(m/k)是保证数值稳定性的必要条件，弹簧-质点系统的稳定性由质量-刚度比决定。
+          </li>
+        </ol>
+      </div>
+    </details>
+  </div>
+</section>

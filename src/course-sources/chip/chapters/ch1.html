@@ -1,5 +1,6 @@
 <section id="ch1">
-  <!-- 内容更新时间：2026-05-03 -->
+  <!-- 内容更新时间：2026-05-04 -->
+  <!-- 博士级升级版本 -->
   <div class="hero">
     <div class="chapter-tag">Chapter 1 · 基础概念</div>
     <h1>认识芯片：<br />从一粒沙子到智能核心</h1>
@@ -130,7 +131,7 @@
       <div class="card-sm-icon" style="background: #e3f2fd">📥</div>
       <h4>数据进入</h4>
       <p>
-        传感器、按键、网络接口将现实世界的信号（温度、光、声音、电磁波）转换为芯片能理解的 0/1
+        传感器、按键、网络接口将现实世界的信号（温度，光、声音、电磁波）转换为芯片能理解的 0/1
         信号。
       </p>
     </div>
@@ -371,6 +372,200 @@
       ASIC、存内计算和神经形态芯片研究的根本动力——既然不能靠缩小晶体管来提速，那就换个思路：让芯片只为特定任务优化。这也是
       Chapter 12-13 要回答的问题。
     </p>
+    <details class="quiz-answer">
+      <summary>思考题参考答案</summary>
+      <div>
+        <p>
+          摩尔定律的终结并不意味着芯片性能提升的终结，而是标志着一个范式转换：从"通用性能提升"转向"领域专用优化"。以下是几条主要的技术路径：
+        </p>
+        <p><strong>一、摩尔定律的物理极限</strong></p>
+        <p>
+          当晶体管栅极长度接近原子尺寸（~0.1nm）时，量子隧穿效应导致晶体管无法可靠关断。同时，登纳德缩放（Dennard
+          Scaling）在2005年左右失效——随着晶体管缩小，功耗不再同比下降，导致"暗硅"（Dark
+          Silicon）现象：芯片上同时工作的晶体管比例受限。
+        </p>
+        <p><strong>二、3D堆叠与先进封装</strong></p>
+        <p>
+          在平面缩放之外，垂直方向成为新的空间：通过3D堆叠（如HBM内存与处理器堆叠）、Chiplet异构集成，可以在不缩小晶体管的情况下大幅提升带宽和能效。台积电的CoWoS和InFO封装技术已实现量产。
+        </p>
+        <p><strong>三、领域专用架构（DSA）</strong></p>
+        <p>
+          通用CPU的效率天花板导致了ASIC的崛起。为特定任务（如图形、AI推理）设计的专用芯片，可以比通用芯片高出2-3个数量级的能效比。例如苹果的A系列芯片中的神经网络引擎、Google的TPU，都是DSA的典型案例。
+        </p>
+        <p><strong>四、存内计算（Processing-in-Memory）</strong></p>
+        <p>
+          传统架构中，数据在内存和计算单元之间搬运消耗了90%以上的能量。存内计算将计算单元嵌入存储单元内部，彻底消除数据搬运。ReRAM、SRAM-PIM等新型器件正在实现这一范式。
+        </p>
+        <p><strong>五、神经形态计算与新型器件</strong></p>
+        <p>
+          模拟人脑工作方式的脉冲神经网络（SNN），配合忆阻器（Memristor）等新型器件，可实现毫瓦级实时AI推理。Intel
+          Loihi和IBM TrueNorth已展示其潜力。
+        </p>
+        <p><strong>总结</strong></p>
+        <p>
+          摩尔定律的终结开启了一个"后摩尔"时代，性能提升从单一维度（晶体管密度）转向多维优化：封装集成、架构创新、电路创新、器件创新。这正是Chapter
+          12-13要深入探讨的核心议题。
+        </p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ===== 1.6 博士级扩展：晶体管缩放的数学基础 ===== -->
+  <h2 class="section-h2">1.6 博士级扩展：晶体管缩放的数学模型与物理极限</h2>
+  <p class="p">
+    摩尔定律的持续验证依赖于<span class="kw"> Dennard 缩放定律</span>（Dennard
+    Scaling）的物理基础。根据 Dennard
+    缩放，当晶体管尺寸按比例缩小时，其功耗密度保持恒定。设特征尺寸缩放因子 $S = 1/\kappa$（$\kappa >
+    1$），则关键关系为：
+  </p>
+  <div class="quote">
+    <p>
+      器件尺寸: $L, W, t_{ox} \rightarrow L/\kappa, W/\kappa, t_{ox}/\kappa$<br />
+      电压: $V \rightarrow V/\kappa$<br />
+      电流: $I \rightarrow I/\kappa$<br />
+      功耗: $P = IV \rightarrow P/\kappa^2$<br />
+      面积: $A \rightarrow A/\kappa^2$<br />
+      功耗密度: $P/A = \text{constant}$
+    </p>
+    <cite>Dennard et al., IEEE J. Solid-State Circuits, 1977 (Dennard Scaling)</cite>
+  </div>
+
+  <p class="p">
+    然而，当工艺节点进入深亚微米（<65nm）后，Dennard 缩放失效：<span class="kw">泄漏电流</span
+    >（Leakage Current）不再随尺寸缩小而同比减小，导致静态功耗急剧增加。根据 ITRS 2023 报告，7nm
+    节点静态功耗已占芯片总功耗的 40% 以上（Wohlers Report 2024）。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔬 博士级分析：量子隧穿对摩尔定律的根本限制</div>
+    <p>
+      当晶体管栅极长度 $L_g < 5nm$ 时，量子隧穿效应导致栅氧化层漏电流呈指数增长：<br /><br />
+      $I_{gate} \propto \exp(-\alpha t_{ox}) \exp(-\beta E_{ox})$<br /><br />
+      其中 $t_{ox}$ 为氧化层厚度，$E_{ox}$ 为氧化层电场。当 $t_{ox} < 1nm$ 时，$I_{gate}$ 可达 $10^3
+      A/cm^2$，导致栅极功耗失控。这就是为什么工业界转向 <span class="kw">高k栅介质</span>（HfO₂
+      等，$\kappa_{HfO_2} \approx 25$）而非继续缩减 SiO₂ 厚度的根本原因。
+    </p>
+  </div>
+
+  <p class="p">
+    根据 IEEE International Roadmap for Devices and Systems (IRDS) 2024 的预测，传统硅基 CMOS
+    晶体管在 $L_g \approx 2nm$ 时将达到量子隧穿极限。台积电 N2（2nm）工艺的物理栅极长度约为
+    10-12nm，尚在安全范围内，但 A7（0.7nm规划）将面临严峻挑战。
+  </p>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon" style="background: #e3f2fd">📊</div>
+      <h4>ITRS/IRDS预测模型</h4>
+      <p>晶体管密度每两年增长约2倍，与摩尔定律吻合。但功耗密度从28nm开始上升。</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon" style="background: #f3e5f5">🔬</div>
+      <h4>量子隧穿极限</h4>
+      <p>$L_g \approx 2nm$ 是硅基晶体管理论极限，对应物理栅长约10-12nm。</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon" style="background: #fff3e0">⚡</div>
+      <h4>后摩尔路线</h4>
+      <p>3D堆叠、Chiplet、神经形态计算、量子计算正在开启"延续摩尔"的新路径。</p>
+    </div>
+  </div>
+
+  <h3 class="section-h3">1.6.1 亚阈值摆幅与泄漏电流的物理起源</h3>
+  <p class="p">
+    MOSFET 的<span class="kw">亚阈值摆幅</span>（Subthreshold Swing,
+    SS）描述了晶体管从关断到导通的过渡陡峭程度，是决定器件开关比的关键参数：
+  </p>
+  <div class="quote">
+    <p>
+      $SS = \frac{kT}{q} \ln(10) \cdot (1 + \frac{C_{dep}}{C_{ox}}) \approx 60-70 \text{ mV/decade
+      at 300K}$
+    </p>
+    <cite>热力学极限：kT/q × ln(10) ≈ 60mV/decade at 300K</cite>
+  </div>
+
+  <p class="p">
+    对于短沟道器件，DIBL（Drain-Induced Barrier Lowering）效应导致亚阈值电流增加，SS
+    恶化。亚阈值泄漏电流：
+  </p>
+  <div class="quote">
+    <p>
+      $I_{sub} = I_0 \cdot \exp\left(\frac{V_{GS} - V_{th}}{n kT/q}\right) \cdot \left(1 -
+      \exp\left(\frac{-V_{DS}}{kT/q}\right)\right)$
+    </p>
+    <cite>亚阈值电流公式， Shockley 二极管模型推广</cite>
+  </div>
+
+  <h3 class="section-h3">1.6.2 晶体管缩放趋势的量化分析</h3>
+  <p class="p">根据 IRDS 2024 的数据，主要工艺节点的特征参数如下：</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>工艺节点</th>
+        <th>实际栅长 (nm)</th>
+        <th>金属间距 (nm)</th>
+        <th>每平方毫米晶体管数 (M)</th>
+        <th>典型芯片面积 (mm²)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="hl">28nm</td>
+        <td>~28</td>
+        <td>~90</td>
+        <td>~1,000</td>
+        <td>50-200</td>
+      </tr>
+      <tr>
+        <td class="hl">16/14nm</td>
+        <td>~20</td>
+        <td>~70</td>
+        <td>~4,000</td>
+        <td>30-150</td>
+      </tr>
+      <tr>
+        <td class="hl">7nm</td>
+        <td>~18</td>
+        <td>~40</td>
+        <td>~30,000</td>
+        <td>20-100</td>
+      </tr>
+      <tr>
+        <td class="hl">5nm (N5)</td>
+        <td>~12</td>
+        <td>~35</td>
+        <td>~80,000</td>
+        <td>15-80</td>
+      </tr>
+      <tr>
+        <td class="hl">3nm (N3)</td>
+        <td>~10</td>
+        <td>~32</td>
+        <td>~150,000</td>
+        <td>10-70</td>
+      </tr>
+      <tr>
+        <td class="hl">2nm (N2)</td>
+        <td>~10</td>
+        <td>~22-25</td>
+        <td>~200,000+</td>
+        <td>8-60</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📖</div>
+    <div class="callout-text">
+      <strong>学术引用：</strong><br />
+      • Dennard, R.H., et al. "Design of ion-implanted MOSFETs with very small physical dimensions."
+      IEEE J. Solid-State Circuits 7.4 (1974): 256-268. (Dennard缩放原始论文)<br />
+      • Wohlers Report 2024, Wohlers Associates. (摩尔定律成本分析)<br />
+      • IEEE IRDS 2024, "International Roadmap for Devices and Systems." (晶体管缩放权威预测)<br />
+      • Taur, Y., & Ning, T.H. "Fundamentals of Modern VLSI Devices." Cambridge University Press,
+      2nd ed. (器件物理标准教材)
+    </div>
   </div>
 
   <!-- 学习路线与资源 -->
@@ -384,7 +579,9 @@
       >——1.3节冯·诺依曼架构是后续所有章节的核心范式，务必理解"计算"和"存储"分离的设计逻辑。配合
       YouTube 搜索 "Von Neumann Architecture explained" 的动画视频。<br /><strong
         >第3步：阅读历史（10分钟）</strong
-      >——1.4-1.5节了解芯片发展脉络和摩尔定律，建立宏观认知框架。
+      >——1.4-1.5节了解芯片发展脉络和摩尔定律，建立宏观认知框架。<br /><strong
+        >第4步：博士扩展（15分钟）</strong
+      >——1.6节为有兴趣深入的同学提供摩尔定律的数学基础，包含Dennard缩放和量子隧穿效应的物理解析。
     </p>
   </div>
 
@@ -438,7 +635,9 @@
       <strong>② 层次结构</strong>：材料→器件→门→模块→微架构→系统——教程的路线图。<br />
       <strong>③ 冯·诺依曼架构</strong>：输入→存储→计算→输出——所有芯片的基础工作范式。<br />
       <strong>④ 灵活性与效率的权衡</strong>：CPU（最灵活）→ GPU → FPGA → ASIC（最高效）。<br />
-      <strong>⑤ 摩尔定律</strong>：晶体管数量每两年翻倍——正在接近物理极限。
+      <strong>⑤ 摩尔定律</strong>：晶体管数量每两年翻倍——正在接近物理极限。<br />
+      <strong>⑥ Dennard缩放</strong>：晶体管尺寸缩放时功耗密度保持恒定的物理规律（已失效）。<br />
+      <strong>⑦ 量子隧穿极限</strong>：$L_g \approx 2nm$ 是硅基晶体管理论极限。
     </p>
   </div>
 
@@ -476,12 +675,34 @@
       A. 栅极漏电流（Gate Leakage）与亚阈值漏电流（Subthreshold Leakage）随晶体管缩小而指数增长<br />
       B. 封装散热能力不足<br />
       C. 金属互连层的电阻增加<br />
-      D. 晶体管迁移率下降
+      D. 晶体管迁移率下降<br /><br />
+      <strong
+        >6. [博士级] 根据Dennard缩放模型，当特征尺寸缩放因子为 $\kappa = 2$
+        时，晶体管的面积如何变化？</strong
+      ><br />
+      A. 面积缩小为1/2<br />
+      B. 面积缩小为1/4<br />
+      C. 面积保持不变<br />
+      D. 面积缩小为1/8<br /><br />
+      <strong>7. [博士级] 高k栅介质（如HfO₂）替代SiO₂作为栅氧化层的核心物理原因是什么？</strong
+      ><br />
+      A. HfO₂的电子迁移率更高<br />
+      B. HfO₂的介电常数更高，可以在物理厚度不减小的前提下获得更大的等效电容，从而抑制量子隧穿<br />
+      C. HfO₂的热稳定性更好<br />
+      D. HfO₂的制造工艺更简单<br /><br />
+      <strong
+        >8. [博士级] MOSFET的亚阈值摆幅（Subthreshold
+        Swing）理论极限在室温下约为多少mV/decade？</strong
+      ><br />
+      A. 30 mV/decade<br />
+      B. 60 mV/decade<br />
+      C. 90 mV/decade<br />
+      D. 120 mV/decade
     </p>
     <details class="quiz-answer">
       <summary>参考答案</summary>
       <div>
-        <p><strong>答案：1.A　2.C　3.B　4.D　5.A</strong></p>
+        <p><strong>答案：1.A　2.C　3.B　4.D　5.A　6.B　7.B　8.B</strong></p>
         <p><strong>解析：</strong></p>
         <ol style="font-size: 0.9em; color: #666">
           <li>
@@ -498,6 +719,16 @@
           </li>
           <li>
             亚阈值漏电流随晶体管阈值电压降低呈指数增长，栅极漏电流随栅氧化层厚度减少呈指数增长，两者共同导致深亚微米工艺静态功耗占比显著上升。
+          </li>
+          <li>Dennard缩放中，面积缩放因子为 $\kappa^2$。当 $\kappa = 2$ 时，面积缩小为 $1/4$。</li>
+          <li>
+            高k栅介质的核心优势在于：在不减小物理厚度的前提下，通过更高的介电常数 $\kappa$（HfO₂的
+            $\kappa \approx 25$ vs SiO₂的 $\kappa \approx 3.9$）获得更大的等效电容 $C_{ox} = \kappa
+            \epsilon_0 / t_{ox}$，从而抑制量子隧穿效应，降低栅极漏电流。
+          </li>
+          <li>
+            MOSFET的亚阈值摆幅理论极限为 $kT/q \times \ln(10) \approx 60 \text{ mV/decade}$ at
+            300K。这是由热力学决定的物理极限，无法通过器件设计突破。
           </li>
         </ol>
       </div>

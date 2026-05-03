@@ -114,8 +114,11 @@
   <div class="hlbox">
     <div class="hlbox-title">🔑 非线性最小二乘目标函数</div>
     <p>
-      <strong>min_x Σᵢ ‖rᵢ(x)‖²</strong><br /><br />
-      其中 rᵢ(x) 是第 i 个因子的残差函数，衡量当前状态 x 满足该约束的程度。<br /><br />
+      <strong
+        >$\min_{\mathbf{x}} \sum_{i} \|\mathbf{r}_i(\mathbf{x})\|^2_{\mathbf{\Sigma}_i}$</strong
+      ><br /><br />
+      其中 $\mathbf{r}_i(\mathbf{x})$ 是第 $i$ 个因子的残差函数，$\mathbf{\Sigma}_i$
+      是对应的协方差矩阵（信息矩阵为 $\mathbf{\Sigma}_i^{-1}$）。<br /><br />
       残差越小，说明估计越符合观测约束。<br /><br />
       <strong>每个因子的残差函数设计：</strong><br />
       • IMU因子：IMU预积分的相对运动 vs 优化变量给出的相对运动之差<br />
@@ -123,6 +126,54 @@
       • GPS因子：估计位置 vs GPS观测位置之差<br /><br />
       <strong>为什么是平方？</strong
       >因为噪声被假设为高斯分布，对数似然最大化等价于残差平方和最小化——这就是第8章贝叶斯后验最大化的具体形式。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔬 因子图与概率推断的深层联系</div>
+    <p>因子图优化与概率推断之间存在深刻联系。设因子图对应的联合分布为：</p>
+    <p>$$p(\mathbf{x}) \propto \prod_{i} \phi_i(\mathbf{x}_i)$$</p>
+    <p>
+      其中 $\phi_i(\mathbf{x}_i) =
+      \exp(-\frac{1}{2}\|\mathbf{r}_i(\mathbf{x}_i)\|^2_{\mathbf{\Sigma}_i})$
+      是因子节点定义的势函数。
+    </p>
+    <p>最大化后验概率（MAP）等价于最小化负对数：</p>
+    <p>
+      $$\hat{\mathbf{x}} = \arg\min_{\mathbf{x}} \sum_i
+      \|\mathbf{r}_i(\mathbf{x}_i)\|^2_{\mathbf{\Sigma}_i}$$
+    </p>
+    <p>这正是非线性最小二乘的目标函数。</p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📐 Schur补与边缘化：因子分解的核心</div>
+    <p>
+      在因子图优化中，<span class="kw">Schur补</span
+      >是实现变量边缘化的关键数学工具。考虑将状态向量分割为 $\mathbf{x} = [\mathbf{x}_1^\top,
+      \mathbf{x}_2^\top]^\top$，Hessian矩阵为：
+    </p>
+    <p>
+      $$\mathbf{H} = \begin{bmatrix} \mathbf{H}_{11} & \mathbf{H}_{12} \\ \mathbf{H}_{21} &
+      \mathbf{H}_{22} \end{bmatrix}$$
+    </p>
+    <p>
+      Schur补定义为 $\mathbf{S} = \mathbf{H}_{22} -
+      \mathbf{H}_{21}\mathbf{H}_{11}^{-1}\mathbf{H}_{12}$。
+    </p>
+    <p>边缘化 $\mathbf{x}_1$ 后的等效正规方程为：</p>
+    <p>
+      $$\mathbf{S} \cdot \Delta\mathbf{x}_2 = -\mathbf{g}_2 +
+      \mathbf{H}_{21}\mathbf{H}_{11}^{-1}\mathbf{g}_1$$
+    </p>
+    <p>
+      其中 $\mathbf{g} = \nabla f(\mathbf{x})$
+      是梯度向量。这个操作使得我们可以在不直接求解大规模稠密线性系统的情况下，消除不需要直接优化的变量（如被边缘化的3D特征点）。
+    </p>
+    <p>
+      <strong>信息损失的问题：</strong>Schur补边缘化会引入近似——当 $\mathbf{H}_{11}$
+      不是对角占优时，$\mathbf{H}_{11}^{-1}$ 的计算误差会传播到 $\mathbf{x}_2$
+      的估计中。这也是为什么边缘化策略设计很重要。
     </p>
   </div>
 

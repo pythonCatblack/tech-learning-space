@@ -15,6 +15,61 @@
     DevOps强调开发和运维的协作，追求快速、可靠的软件交付。AI为DevOps带来了新的可能：智能监控、异常检测、自动告警、根因分析。传统的阈值告警只能发现"已知问题"，而AI可以发现"异常模式"，预测"潜在问题"。
   </p>
 
+  <h3 class="section-h3">10.1.1 DevOps理论基础与CALMS框架</h3>
+  <p class="p">
+    DevOps不仅仅是一种技术实践，更是一种文化和组织变革。理解DevOps的理论基础有助于更好地利用AI能力。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 CALMS：DevOps的评估框架</div>
+    <p><strong>CALMS</strong>是评估组织DevOps成熟度的框架：</p>
+    <ul>
+      <li><strong>Culture（文化）</strong> - 开发和运维团队之间的协作程度</li>
+      <li><strong>Automation（自动化）</strong> - 手动流程的自动化程度</li>
+      <li><strong>Lean（精益）</strong> - 消除浪费、优化流程的能力</li>
+      <li><strong>Measurement（度量）</strong> - 数据驱动的决策能力</li>
+      <li><strong>Sharing（共享）</strong> - 知识共享和跨团队协作</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 持续交付的理论基础</div>
+    <p><strong>持续交付（Continuous Delivery）</strong>的理论基础包括：</p>
+    <ul>
+      <li><strong>部署流水线（Deployment Pipeline）</strong> - 从提交到生产的自动化流程</li>
+      <li><strong>小批量（Small Batches）</strong> - 减少每次发布的风险</li>
+      <li><strong>构建质量（Build Quality In）</strong> - 在流水线中尽早发现缺陷</li>
+      <li><strong>基础设施即代码（IaC）</strong> - 环境管理的自动化</li>
+    </ul>
+    <p>AI可以优化部署流水线的多个环节：智能测试选择、预测性部署决策、自动回滚触发。</p>
+  </div>
+
+  <h3 class="section-h3">10.1.2 异常检测的理论模型</h3>
+  <p class="p">
+    智能监控的核心是异常检测。从统计过程控制到深度学习，研究界提出了多种异常检测方法。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 统计异常检测方法</div>
+    <p><strong>基于统计的过程控制（SPC）</strong>是最经典的异常检测方法：</p>
+    <ul>
+      <li><strong>控制图（Control Chart）</strong> - 设置上下控制限，当数据点超出限值时触发告警</li>
+      <li><strong>CUSUM控制图</strong> - 检测均值的微小持续偏移</li>
+      <li><strong>EWMA控制图</strong> - 指数加权移动平均，对近期数据赋予更高权重</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 深度学习异常检测</div>
+    <p>现代异常检测广泛使用深度学习方法：</p>
+    <ul>
+      <li><strong>Autoencoder</strong> - 训练模型重建正常数据，异常数据重建误差大</li>
+      <li><strong>LSTM-based</strong> - 使用LSTM学习时序数据的正常模式</li>
+      <li><strong>Isolation Forest</strong> - 通过随机划分隔离异常点，异常点更快被隔离</li>
+    </ul>
+    <p>AI异常检测的优势在于能够学习复杂的非线性模式，而传统的统计方法通常假设数据服从特定分布。</p>
+  </div>
+
   <h2 class="section-h2">10.2 CI/CD流水线的AI增强</h2>
 
   <p class="p">GitHub Actions是目前最流行的CI/CD平台之一，结合AI可以实现更智能的流水线。</p>

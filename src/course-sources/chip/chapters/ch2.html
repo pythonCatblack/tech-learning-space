@@ -223,6 +223,156 @@
     高空的无人机芯片，环境温度可能低于零下10度，迁移率反而提升了，但整个芯片时序设计必须考虑所有温度点的稳定性。
   </p>
 
+  <!-- ===== 2.6 博士级扩展：半导体物理的数学框架 ===== -->
+  <h2 class="section-h2">2.6 博士级扩展：半导体物理的数学框架</h2>
+  <p class="p">
+    本节为有兴趣深入理解半导体物理的同学提供完整的数学框架，包括费米-狄拉克统计、能带理论、漂移-扩散方程等核心公式的推导与应用。
+  </p>
+
+  <h3 class="section-h3">2.6.1 费米-狄拉克统计与载流子浓度</h3>
+  <p class="p">
+    在半导体中，电子占据能量状态 $E$ 的概率由<span class="kw">费米-狄拉克分布</span>描述：
+  </p>
+  <div class="quote">
+    <p>$f(E) = \frac{1}{1 + \exp\left(\frac{E - E_F}{kT}\right)}$</p>
+    <cite>费米-狄拉克分布函数，$E_F$ 为费米能级</cite>
+  </div>
+
+  <p class="p">
+    对于<span class="kw">本征半导体</span>（纯净硅），电子和空穴浓度相等，由下式给出：
+  </p>
+  <div class="quote">
+    <p>
+      $n_i = \sqrt{N_c N_v} \exp\left(\frac{-E_g}{2kT}\right)$<br /><br />
+      其中：<br />
+      $N_c = 2\left(\frac{2\pi m_n^* kT}{h^2}\right)^{3/2}$ 为导带有效态密度<br />
+      $N_v = 2\left(\frac{2\pi m_p^* kT}{h^2}\right)^{3/2}$ 为价带有效态密度<br />
+      $m_n^* = 1.08 m_0$, $m_p^* = 0.56 m_0$（硅的有效质量）
+    </p>
+    <cite>本征载流子浓度公式，$E_g = 1.12$ eV（硅在300K）</cite>
+  </div>
+
+  <p class="p">
+    在<span class="kw">非本征半导体</span>（掺杂半导体）中，载流子浓度由掺杂浓度决定：
+  </p>
+  <div class="quote">
+    <p>
+      N型（磷掺杂）：$n_n \approx N_D$（多数载流子），$p_n \approx
+      \frac{n_i^2}{N_D}$（少数载流子）<br />
+      P型（硼掺杂）：$p_p \approx N_A$（多数载流子），$n_p \approx \frac{n_i^2}{N_A}$（少数载流子）
+    </p>
+    <cite>质量作用定律：$np = n_i^2$</cite>
+  </div>
+
+  <h3 class="section-h3">2.6.2 能带理论：布洛赫波与有效质量</h3>
+  <p class="p">在晶体中，电子波函数满足<span class="kw">布洛赫定理</span>：</p>
+  <div class="quote">
+    <p>
+      $\psi_{n\mathbf{k}}(\mathbf{r}) = e^{i\mathbf{k} \cdot \mathbf{r}}
+      u_{n\mathbf{k}}(\mathbf{r})$<br /><br />
+      其中 $u_{n\mathbf{k}}(\mathbf{r})$ 具有晶格周期性，$\mathbf{k}$ 为波矢。
+    </p>
+    <cite>布洛赫定理，固体物理基础</cite>
+  </div>
+
+  <p class="p">
+    电子在能带中的能量 $E(\mathbf{k})$ 在<span class="kw">能带底（导带）</span>附近可近似为：
+  </p>
+  <div class="quote">
+    <p>$E(\mathbf{k}) = E_c + \frac{\hbar^2 k^2}{2m_n^*}$</p>
+    <cite>有效质量近似</cite>
+  </div>
+
+  <p class="p">类似地，在<span class="kw">能带顶（价带）</span>附近：</p>
+  <div class="quote">
+    <p>$E(\mathbf{k}) = E_v - \frac{\hbar^2 k^2}{2m_p^*}$</p>
+    <cite>空穴有效质量</cite>
+  </div>
+
+  <p class="p">硅的<span class="kw">禁带宽度</span>随温度变化：</p>
+  <div class="quote">
+    <p>$E_g(T) = 1.17 - \frac{4.73 \times 10^{-4} T^2}{T + 636}$（eV）</p>
+    <cite>Varshni 经验公式，描述硅禁带宽度随温度的变化</cite>
+  </div>
+
+  <h3 class="section-h3">2.6.3 漂移-扩散方程：载流子输运的物理模型</h3>
+  <p class="p">
+    半导体中的电流由两种机制贡献：<span class="kw">漂移</span>（由电场引起）和<span class="kw"
+      >扩散</span
+    >（由浓度梯度引起）。
+  </p>
+
+  <h4>电流密度方程</h4>
+  <div class="quote">
+    <p>
+      $\mathbf{J}_n = q n \mu_n \mathbf{E} + q D_n \nabla n$（电子）<br />
+      $\mathbf{J}_p = q p \mu_p \mathbf{E} - q D_p \nabla p$（空穴）<br /><br />
+      其中 $\mu$ 为迁移率，$D$ 为扩散系数，由<span class="kw">爱因斯坦关系</span>联系：<br />
+      $\frac{D}{\mu} = \frac{kT}{q} \approx 0.026$ V（室温）
+    </p>
+    <cite>漂移-扩散模型，半导体器件物理基础</cite>
+  </div>
+
+  <h4>连续性方程</h4>
+  <p class="p">载流子浓度随时间的变化满足连续性方程：</p>
+  <div class="quote">
+    <p>
+      $\frac{\partial n}{\partial t} = \frac{1}{q} \nabla \cdot \mathbf{J}_n - R_n + G_n$<br />
+      $\frac{\partial p}{\partial t} = -\frac{1}{q} \nabla \cdot \mathbf{J}_p - R_p + G_p$
+    </p>
+    <cite>半导体基本方程组之一，描述载流子守恒</cite>
+  </div>
+
+  <p class="p">
+    其中 $R$ 为复合率，$G$ 为产生率。对于<span class="kw">间接复合</span
+    >（通过复合中心），使用肖克利-里德-霍尔（SRH）复合模型：
+  </p>
+  <div class="quote">
+    <p>$R_{SRH} = \frac{pn - n_i^2}{\tau_p (n + n_i) + \tau_n (p + p_i)}$</p>
+    <cite>SRH复合模型，描述通过复合中心的载流子复合</cite>
+  </div>
+
+  <h3 class="section-h3">2.6.4 PN结的精确分析：泊松方程与耗尽近似</h3>
+  <p class="p">PN结的电势分布 $\psi(x)$ 满足<span class="kw">泊松方程</span>：</p>
+  <div class="quote">
+    <p>
+      $\frac{d^2 \psi}{dx^2} = -\frac{\rho(x)}{\varepsilon_s}$<br /><br />
+      在耗尽近似下，电荷密度为：<br />
+      $\rho(x) = \begin{cases} -q N_A & -x_p < x < 0 \\ q N_D & 0 < x < x_n \\ 0 & \text{其他}
+      \end{cases}$
+    </p>
+    <cite>泊松方程在PN结耗尽区的应用</cite>
+  </div>
+
+  <p class="p">解得<span class="kw">耗尽层宽度</span>：</p>
+  <div class="quote">
+    <p>
+      $W = x_n + x_p = \sqrt{\frac{2\varepsilon_s}{q} \left(\frac{N_A + N_D}{N_A N_D}\right) (V_{bi}
+      - V)}$
+    </p>
+    <cite>PN结耗尽层宽度公式</cite>
+  </div>
+
+  <p class="p">
+    其中 $V_{bi} = \frac{kT}{q} \ln\left(\frac{N_A N_D}{n_i^2}\right)$ 为<span class="kw"
+      >内建电势</span
+    >。
+  </p>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📖</div>
+    <div class="callout-text">
+      <strong>学术引用：</strong><br />
+      • Sze, S.M., & Ng, K.K. "Physics of Semiconductor Devices." 3rd ed., Wiley, 2006.
+      (半导体器件物理圣经)<br />
+      • Neamen, D.A. "Semiconductor Physics and Devices." 4th ed., McGraw-Hill, 2012.
+      (半导体物理与器件教材)<br />
+      • Ferry, D.K. "Quantum Mechanics." IOP Publishing, 2001. (量子力学在半导体中的应用)<br />
+      • Jacoboni, C., & Reggiani, L. "The Monte Carlo method for semiconductor transport." Rev. Mod.
+      Phys. 65, 1993. (输运物理)
+    </div>
+  </div>
+
   <div class="divider"></div>
 
   <!-- 学习路线与资源 -->

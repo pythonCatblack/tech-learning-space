@@ -20,6 +20,78 @@
     AGENT能够从多个维度辅助需求分析：自动提取用户故事、结构化非正式描述、识别潜在冲突、生成边界条件清单。在这一章，我们学习如何借助AI把模糊的想法转化为清晰的需求文档。
   </p>
 
+  <h3 class="section-h3">2.1.1 需求工程的理论基础</h3>
+  <p class="p">
+    需求工程是软件工程中最关键但也最具挑战性的阶段。研究表明，需求缺陷占所有软件缺陷的40%-60%，且需求阶段引入的缺陷修复成本是编码阶段的5-10倍。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 需求工程的五个核心活动</div>
+    <p>根据IEEE标准，需求工程包含以下核心活动：</p>
+    <ol>
+      <li><strong>需求获取（Elicitation）</strong> - 从利益相关者获取需求信息</li>
+      <li><strong>需求分析（Analysis）</strong> - 理解和管理需求复杂性</li>
+      <li><strong>需求规格（Specification）</strong> - 将需求文档化</li>
+      <li><strong>需求验证（Validation）</strong> - 确保需求正确反映用户意图</li>
+      <li><strong>需求管理（Management）</strong> - 处理需求变更</li>
+    </ol>
+    <p>
+      AI可以在每个活动中发挥辅助作用，但价值最大的是<strong>需求获取</strong>和<strong>需求分析</strong>阶段。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 形式化需求建模方法</div>
+    <p>需求可以采用多种形式化方法进行建模：</p>
+    <ul>
+      <li><strong>NL（自然语言）</strong> - 最灵活但最不精确</li>
+      <li><strong>结构化自然语言</strong> - 如用户故事格式（As a... I want... so that...）</li>
+      <li><strong>形式化规格语言</strong> - 如Z语言、VDM、B方法，具有数学语义</li>
+      <li><strong>图形化表示</strong> - UML用例图、活动图、状态图</li>
+    </ul>
+    <p>
+      AI的价值在于弥合自然语言需求与形式化表示之间的鸿沟——将模糊的自然语言转化为结构化的需求模型。
+    </p>
+  </div>
+
+  <h3 class="section-h3">2.1.2 决策理论视角下的需求优先级</h3>
+  <p class="p">
+    需求优先级排序是一个典型的<strong>多准则决策问题</strong>。在资源约束下如何最大化产品价值，需要系统的决策理论框架。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Kano Model：需求分类框架</div>
+    <p><strong>Noroshi Kano</strong>的双因素理论将产品需求分为三类：</p>
+    <ul>
+      <li><strong>基本需求（Must-be）</strong> - 不满足会导致强烈不满，满足后不会增加满意</li>
+      <li><strong>线性需求（One-dimensional）</strong> - 满足程度与满意程度线性相关</li>
+      <li><strong>兴奋需求（Attractive）</strong> - 不满足不会不满，但满足会带来惊喜</li>
+    </ul>
+    <p>
+      <strong>实践意义</strong
+      >：在资源有限的情况下，应该优先满足基本需求，然后是线性需求，最后考虑兴奋需求。AI可以通过分析用户反馈自动识别需求的Kano类别。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 MoSCoW与RICE：优先级框架</div>
+    <p><strong>MoSCoW</strong>是最常用的优先级框架：</p>
+    <ul>
+      <li><strong>Must have</strong> - 必须有，否则产品无法发布</li>
+      <li><strong>Should have</strong> - 应该有，重要但不紧急</li>
+      <li><strong>Could have</strong> - 可以有，如果资源允许</li>
+      <li><strong>Won't have (this time)</strong> - 这次不会做</li>
+    </ul>
+    <p><strong>RICE</strong>是更量化的框架：</p>
+    <p>RICE Score = (Reach × Impact × Confidence) / Effort</p>
+    <ul>
+      <li><strong>Reach</strong> - 影响多少用户</li>
+      <li><strong>Impact</strong> - 对用户的影响程度</li>
+      <li><strong>Confidence</strong> - 估计的可信度</li>
+      <li><strong>Effort</strong> - 所需人月</li>
+    </ul>
+  </div>
+
   <h2 class="section-h2">2.2 用户故事的AI辅助提取</h2>
 
   <p class="p">

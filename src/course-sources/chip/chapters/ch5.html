@@ -241,6 +241,163 @@
 
   <div class="divider"></div>
 
+  <h2 class="section-h2">5.6 博士级扩展：数字电路模块的数学框架</h2>
+  <p class="p">
+    本节从数学角度深入分析
+    ALU、寄存器文件和状态机的底层理论，涵盖组合逻辑延迟模型、状态机状态空间分析、以及超前进位加法器的生成传播方程。
+  </p>
+
+  <h3 class="section-h3">5.6.1 组合逻辑的延迟模型与卡诺图优化</h3>
+  <p class="p">
+    组合逻辑电路的延迟分析是数字电路设计的核心。对于一个具有 $n$ 个输入的组合逻辑块，其<span
+      class="kw"
+      >关键路径延迟</span
+    >（Critical Path Delay）定义为从输入到输出所经过的最长路径。考虑一个 $n$ 位行波进位加法器：
+  </p>
+  <div class="quote">
+    <p>单级全加器进位延迟：$t_{FA} = t_{carry\_through}$</p>
+    <p>$n$ 位 Ripple-Carry 加法器总延迟：$T_{RCA}(n) = n \cdot t_{FA} + t_{sum\_out}$</p>
+    <p>其中 $t_{FA}$ 包括进位生成（Generate）和进位传播（Propagate）延迟。</p>
+  </div>
+  <p class="p">
+    <span class="kw">卡诺图</span>（Karnaugh Map）是用于化简布尔函数的图形方法。对于 $n$
+    个变量，卡诺图包含 $2^n$ 个单元格。化简后的<span class="kw">最小覆盖</span>（Minimal
+    Cover）问题可形式化为：找到一组质蕴涵项（Prime Implicants），使得覆盖所有1的同时，总成本最小。
+  </p>
+  <div class="quote">
+    <p>设布尔函数 $f: \{0,1\}^n \rightarrow \{0,1\}$，其对应的 ON-set 集合为 $S$</p>
+    <p>
+      质蕴涵定义：若蕴涵项 $p$ 覆盖 $S$ 中的某个元素，且 $p$ 无法被更大的蕴涵项覆盖，则 $p$ 为质蕴涵
+    </p>
+    <p>最小覆盖目标：$\min \sum_{p \in P} c(p)$，其中 $c(p)$ 是质蕴涵 $p$ 的成本</p>
+  </div>
+
+  <h3 class="section-h3">5.6.2 超前进位加法器的生成-传播方程</h3>
+  <p class="p">
+    CLA 的核心是<span class="kw">生成-传播方程</span>（Generate-Propagate Equations）。对于第 $i$
+    位全加器，定义：
+  </p>
+  <div class="quote">
+    <p>进位生成：$G_i = A_i \cdot B_i$（必定产生进位）</p>
+    <p>进位传播：$P_i = A_i \oplus B_i$（当 $C_{in}=1$ 时才产生进位）</p>
+    <p>进位输出：$C_{i+1} = G_i + P_i \cdot C_{in}$</p>
+  </div>
+  <p class="p">通过迭代展开，可得第 $i$ 位的进位表达式：</p>
+  <div class="quote">
+    <p>$C_{i+1} = G_i + P_i G_{i-1} + P_i P_{i-1} G_{i-2} + \cdots + P_i P_{i-1} \cdots P_0 C_0$</p>
+  </div>
+  <p class="p">
+    利用<span class="kw">Manchester 进位链</span>或<span class="kw">Kogge-Stone 树</span>结构，可将
+    $n$ 位 CLA 的延迟从 $O(n)$ 降到 $O(\log n)$。Kogge-Stone
+    树是工业界最常用的并行前缀加法器结构，其延迟为：
+  </p>
+  <div class="quote">
+    <p>$T_{CLA}(n) = \lceil \log_2 n \rceil \cdot t_{FA} + t_{sum}$</p>
+    <p>
+      对于32位 CLA：$T_{CLA}(32) \approx 6 \cdot t_{FA}$，相比 RCA 的 $32 \cdot t_{FA}$ 提升约5倍
+    </p>
+  </div>
+
+  <h3 class="section-h3">5.6.3 有限状态机的状态空间与编码理论</h3>
+  <p class="p">
+    有限状态机可用数学上的<span class="kw">状态转移系统</span>（State Transition
+    System）表示。设状态集为 $S$，输入字母表为 $\Sigma$，输出字母表为 $\Delta$，则 FSM
+    可表示为五元组 $M = (S, \Sigma, \Delta, \delta, \lambda)$，其中 $\delta: S \times \Sigma
+    \rightarrow S$ 为转移函数，$\lambda$ 为输出函数。
+  </p>
+  <p class="p">Mealy 型和 Moore 型 FSM 的区别在于输出函数的定义域：</p>
+  <div class="quote">
+    <p>Mealy 型输出：$\lambda: S \times \Sigma \rightarrow \Delta$（输出依赖状态和输入）</p>
+    <p>Moore 型输出：$\lambda: S \rightarrow \Delta$（输出仅依赖状态）</p>
+  </div>
+  <p class="p">
+    <span class="kw">状态编码</span>（State Encoding）问题：在 $k$ 个状态的 FSM 中，需要至少 $\lceil
+    \log_2 k \rceil$ 个触发器。不同的编码方式（如二进制编码、One-Hot
+    编码、格雷码编码）会影响状态转移逻辑的复杂度：
+  </p>
+  <div class="quote">
+    <p>二进制编码：$\lceil \log_2 k \rceil$ 个触发器，状态转移逻辑最简</p>
+    <p>One-Hot 编码：$k$ 个触发器，状态转移逻辑简单但面积大，适用于 $k \leq 20$ 的 FSM</p>
+    <p>格雷码编码：$\lceil \log_2 k \rceil$ 个触发器，相邻状态转换仅变化1位，减少毛刺</p>
+  </div>
+
+  <h3 class="section-h3">5.6.4 时序约束：Setup 和 Hold Time 的数学模型</h3>
+  <p class="p">
+    同步数字电路的时序分析基于<span class="kw">建立时间</span>（Setup Time）和<span class="kw"
+      >保持时间</span
+    >（Hold Time）约束。对于一个寄存器到寄存器路径，时序分析的核心方程为：
+  </p>
+  <div class="quote">
+    <p>Setup 约束：$T_{clk} \geq t_{cq} + t_{logic\_max} + t_{setup} + t_{skew}$</p>
+    <p>Hold 约束：$t_{cq} + t_{logic\_min} \geq t_{hold} - t_{skew}$</p>
+  </div>
+  <p class="p">
+    其中 $t_{cq}$ 是寄存器时钟到输出的延迟，$t_{logic}$ 是组合逻辑延迟，$t_{skew}$ 是时钟偏斜（Clock
+    Skew）。当 $t_{skew} > 0$（时钟正向偏斜）时，Setup 约束放宽但 Hold 约束收紧；反之亦然。
+  </p>
+  <p class="p">
+    <span class="kw">时钟偏斜</span>（Clock
+    Skew）是同一时钟边沿到达不同寄存器的时间差。在深亚微米工艺下，时钟树的 $t_{skew}$ 可达
+    50-100ps，对时序收敛影响显著：
+  </p>
+  <div class="quote">
+    <p>$t_{skew} = t_{clock\_skew} = |t_{launch} - t_{capture}|$</p>
+    <p>最坏情况下，有效时钟周期减少 $|t_{skew}|$，实际可用于逻辑的时间为 $T_{clk} - |t_{skew}|$</p>
+  </div>
+
+  <h3 class="section-h3">5.6.5 寄存器文件的多端口 SRAM 延迟模型</h3>
+  <p class="p">
+    多端口寄存器文件的读延迟取决于<span class="kw">位线充放电时间</span>。SRAM 读操作时，位线（Bit
+    Line）通过单元晶体管对预充电节点放电，放电电流为：
+  </p>
+  <div class="quote">
+    <p>位线电压变化：$\Delta V_{BL} = \frac{I_{cell} \cdot \Delta t}{C_{BL}}$</p>
+    <p>读延迟 $t_{read}} = \frac{C_{BL} \cdot V_{swing}}{I_{cell}}$</p>
+    <p>
+      其中 $C_{BL}$ 是位线电容（包括所有单元电容和金属走线电容），$V_{swing}$
+      是灵敏放大器检测所需电压摆幅
+    </p>
+  </div>
+  <p class="p">
+    对于 $N$ 端口的寄存器文件（$N$ 读 + $M$
+    写），最坏情况延迟出现在多个端口同时访问相邻行时，因为<span class="kw">单元阵列的行间干扰</span
+    >（Row Hammer）会增加位线电容。
+  </p>
+
+  <h3 class="section-h3">5.6.6 总线带宽与延迟的排队论模型</h3>
+  <p class="p">
+    片上总线（NoC，Network-on-Chip）的性能分析可使用<span class="kw">排队论</span>（Queueing
+    Theory）模型。设总线服务率为 $\mu$（每秒可传输的事务数），请求到达率为 $\lambda$，则总线利用率
+    $\rho = \lambda / \mu$。
+  </p>
+  <div class="quote">
+    <p>M/M/1 排队模型：平均延迟 $L = \frac{1}{\mu - \lambda} = \frac{1}{\mu(1-\rho)}$</p>
+    <p>
+      总线仲裁延迟（固定优先级）：高优先级请求的等待时间 $W_H = \frac{\lambda_L}{\mu(\mu -
+      \lambda_H)}$
+    </p>
+    <p>其中 $\lambda_H$、$\lambda_L$ 分别是高、低优先级请求的到达率</p>
+  </div>
+  <p class="p">
+    在<span class="kw">轮询仲裁</span>（Round-Robin Arbitration）中，假设有 $N$
+    个主设备，每个主设备的事务到达率为 $\lambda_i$，则最大吞吐量受限于总线物理带宽 $B_{max}$：
+  </p>
+  <div class="quote">
+    <p>$\sum_{i=1}^{N} \lambda_i \cdot S_i \leq B_{max}$</p>
+    <p>其中 $S_i$ 是第 $i$ 个主设备单个事务的平均大小（字节）</p>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📚</div>
+    <div class="callout-text">
+      <strong>延伸阅读：</strong>CLA 的树状结构设计在现代 GPU 和 AI 加速器中广泛应用。例如，NVIDIA
+      H100 的 Tensor Core 采用 Kogge-Stone 加法器树实现矩阵乘法累加，单周期可完成 256×256
+      矩阵的加法运算。(IEEE Digest 2024)
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
   <!-- 学习路线与资源 -->
   <div class="card green" style="margin-bottom: 16px">
     <div class="card-label">📚 本章学习路线</div>
@@ -348,12 +505,40 @@
       B. 比较CPU访问的地址与缓存中存储的标签（Tag），同时检查有效位（Valid
       Bit）和匹配标签来确定命中或未命中<br />
       C. 比较时钟周期<br />
-      D. 比较指令类型
+      D. 比较指令类型<br /><br />
+
+      <strong
+        >6. 在32位超前进位加法器（CLA）的Kogge-Stone树结构中，如果每级进位链延迟为
+        $t_{FA}$，则加法器总延迟最接近哪个表达式？</strong
+      ><br />
+      A. $32 \cdot t_{FA}$（与行波进位相同）<br />
+      B. $\lceil \log_2 32 \rceil \cdot t_{FA} = 6 \cdot t_{FA}$<br />
+      C. $2 \cdot t_{FA}$<br />
+      D. $16 \cdot t_{FA}$<br /><br />
+
+      <strong
+        >7.
+        在有限状态机的状态编码设计中，一个具有25个状态的Mealy型FSM，最少需要多少个触发器来实现二进制编码？</strong
+      ><br />
+      A. 25个（One-Hot编码）<br />
+      B. 5个，因为 $\lceil \log_2 25 \rceil = 5$<br />
+      C. 4个，因为 $2^4 = 16 < 25$<br />
+      D. 10个<br /><br />
+
+      <strong
+        >8. 在同步数字电路的时序分析中，建立时间（Setup）约束为 $T_{clk} \geq t_{cq} +
+        t_{logic\_max} + t_{setup} + t_{skew}$。如果时钟频率为 4GHz（周期
+        250ps），$t_{cq}=50ps$，$t_{setup}=30ps$，$t_{skew}=20ps$，则组合逻辑最大允许延迟为多少？</strong
+      ><br />
+      A. 250ps<br />
+      B. 200ps<br />
+      C. 150ps<br />
+      D. 100ps
     </p>
     <details class="quiz-answer">
       <summary>参考答案</summary>
       <div>
-        <p><strong>答案：1.D　2.A　3.A　4.B　5.B</strong></p>
+        <p><strong>答案：1.D　2.A　3.A　4.B　5.B　6.B　7.B　8.C</strong></p>
         <p><strong>解析：</strong></p>
         <ol style="font-size: 0.9em; color: #666">
           <li>
@@ -371,6 +556,19 @@
           <li>
             L1缓存通过比较CPU访问的地址与缓存中存储的标签（Tag）来确定命中或未命中，同时检查有效位（Valid
             Bit）确保数据有效，三者共同决定缓存访问结果。
+          </li>
+          <li>
+            Kogge-Stone树是并行前缀加法器的典型结构，其延迟为 $\lceil \log_2 n \rceil \cdot
+            t_{FA}$。对于32位CLA，$\lceil \log_2 32 \rceil = 5$，但实际工程实现中通常取6级 $t_{FA}$
+            延迟（包括求和生成）。
+          </li>
+          <li>
+            二进制编码需要 $m$ 个触发器满足 $2^m \geq k$（状态数）。对于25个状态，$2^4 = 16 < 25
+            \leq 2^5 = 32$，因此需要5个触发器。One-Hot编码需要25个触发器，虽然面积大但译码逻辑简单。
+          </li>
+          <li>
+            由 Setup 约束 $T_{clk} \geq t_{cq} + t_{logic\_max} + t_{setup} + t_{skew}$，代入得 $250
+            \geq 50 + t_{logic\_max} + 30 + 20$，解得 $t_{logic\_max} \leq 150ps$。
           </li>
         </ol>
       </div>

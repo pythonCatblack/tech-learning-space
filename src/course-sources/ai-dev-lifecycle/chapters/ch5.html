@@ -46,6 +46,69 @@
     </div>
   </div>
 
+  <h3 class="section-h3">5.1.1 技术负债的理论基础</h3>
+  <p class="p">
+    <strong>技术负债（Technical Debt）</strong>是软件工程中最重要的隐喻之一，由Ward
+    Cunningham于1992年首次提出。技术负债描述了为加快短期交付而采取的折中方案所带来的长期成本。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 技术负债的分类学</div>
+    <p><strong>Cunningham的技术负债分类</strong>：</p>
+    <ul>
+      <li><strong>故意的债务（Deliberate）</strong> - 已知且有意的技术折中</li>
+      <li><strong>无意的债务（Inadvertent）</strong> - 由于缺乏经验或疏忽造成的设计缺陷</li>
+      <li><strong>傲慢的债务（Indifferent）</strong> - 明知有问题但选择忽视</li>
+      <li><strong>静态的债务（Static）</strong> - 不再活跃代码中的债务</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 技术负债的量化模型</div>
+    <p><strong>Martin Fowler</strong>的<strong>技术负债 quadrant</strong>提供了决策框架：</p>
+    <ul>
+      <li><strong> reckless & deliberate</strong> - "我们没有时间设计"（明知故犯）</li>
+      <li><strong> prudent & deliberate</strong> - "我们必须现在交付，事后重构"（战略性选择）</li>
+      <li><strong> reckless & inadvertent</strong> - "这是我们第一次这么做"（疏忽）</li>
+      <li><strong> prudent & inadvertent</strong> - "现在我们知道了更好的方法"（学习）</li>
+    </ul>
+    <p>
+      AI辅助开发可能引入新型技术债务：<strong>prompt债务</strong>（prompt质量低下导致AI生成质量不稳定）、<strong>AI依赖债务</strong>（过度依赖特定AI工具）。
+    </p>
+  </div>
+
+  <h3 class="section-h3">5.1.2 软件配置的数学模型</h3>
+  <p class="p">
+    可靠的工程环境需要系统的配置管理。从理论角度，配置管理是一个<strong>状态机问题</strong>。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📊 配置管理的形式化模型</div>
+    <p>配置项（Configuration Item）的状态转换可以用有限状态机描述：</p>
+    <ul>
+      <li><strong>状态</strong> - draft、review、approved、published、deprecated</li>
+      <li><strong>转换</strong> - 状态之间的合法转换路径</li>
+      <li><strong>不变量</strong> - 必须保持的约束条件</li>
+    </ul>
+    <p>
+      <strong>Dev Container</strong>确保开发环境与生产环境一致，消除了"works on my
+      machine"问题。数学上，这确保了环境配置的<strong>不变性（Invariance）</strong>。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📊 GitOps：声明式配置管理</div>
+    <p><strong>GitOps</strong>将Git的声明式特性与运维实践结合：</p>
+    <ul>
+      <li><strong>基础设施即代码（IaC）</strong> - 用代码声明基础设施状态</li>
+      <li><strong>不可变基础设施</strong> - 变更通过替换而非修改实现</li>
+      <li><strong>单一真相来源</strong> - Git仓库是系统期望状态的唯一来源</li>
+    </ul>
+    <p>
+      GitOps的核心数学原理是<strong>幂等性（Idempotence）</strong>——无论执行多少次相同操作，结果都是一致的。
+    </p>
+  </div>
+
   <h2 class="section-h2">5.2 容器化的开发环境</h2>
 
   <p class="p">为AI-TaskManager创建Docker开发环境：</p>

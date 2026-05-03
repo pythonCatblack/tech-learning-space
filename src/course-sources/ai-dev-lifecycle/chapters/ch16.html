@@ -38,6 +38,87 @@
     <p>AI系统需要大量数据训练，可能侵犯用户隐私。模型可能"记住"训练数据，在推理时泄露敏感信息。</p>
   </div>
 
+  <h3 class="section-h3">16.1.1 AI伦理的理论框架</h3>
+  <p class="p">AI伦理不是空洞的口号，而是有深厚的哲学基础和实用的工程指南。</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 功利主义与义务论的视角</div>
+    <p>AI伦理问题可以从不同的伦理理论角度审视：</p>
+    <ul>
+      <li>
+        <strong>功利主义（Utilitarianism）</strong> -
+        最大化整体福祉（如：AI自动化带来的经济收益是否超过失业成本？）
+      </li>
+      <li>
+        <strong>义务论（Deontology）</strong> -
+        某些行为本身就是错的（如：即使能提升效率，是否应该禁止面部识别用于监控？）
+      </li>
+      <li>
+        <strong>德性伦理（Virtue Ethics）</strong> -
+        AI开发者的品格和意图（如：开发AI武器是否符合职业道德？）
+      </li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 IEEE Ethically Aligned Design</div>
+    <p><strong>IEEE Ethically Aligned Design（EAD）</strong>是技术从业者最重要的AI伦理指南之一：</p>
+    <ul>
+      <li><strong>一般原则</strong> - 人权、福祉、透明度、问责制</li>
+      <li><strong>价值嵌入</strong> - 在设计阶段就嵌入伦理价值</li>
+      <li><strong>鲁棒性</strong> - AI系统应该对对抗性攻击具有鲁棒性</li>
+      <li><strong>隐私</strong> - 嵌入隐私保护原则</li>
+      <li><strong>职业责任</strong> - AI从业者的伦理责任</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 EU AI Act：全球首个综合AI法律框架</div>
+    <p>
+      <strong>欧盟AI法案（EU AI Act）</strong>（Regulation (EU) 2024/1689）于2024年8月1日正式生效：
+    </p>
+    <ul>
+      <li><strong>禁止类（Unacceptable Risk）</strong> - 社会评分、实时人脸识别（公共场所）等</li>
+      <li><strong>高风险（High Risk）</strong> - 招聘筛选、信贷审批、医疗设备、教育评估</li>
+      <li><strong>有限风险（Limited Risk）</strong> - 聊天机器人需透明化</li>
+      <li><strong>最小风险（Minimal Risk）</strong> - 垃圾邮件过滤等</li>
+    </ul>
+    <p>违规罚款最高可达全球年营业额的7%，对企业形成强有力的约束。</p>
+  </div>
+
+  <h3 class="section-h3">16.1.2 公平性量化的数学框架</h3>
+  <p class="p">AI公平性是一个多维度的概念，不同的数学定义适用于不同的场景。</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📊 统计公平性指标</div>
+    <p>
+      <strong>Demographic Parity（人口统计均等）</strong>：P(Ŷ=1|A=0) = P(Ŷ=1|A=1)<br />
+      预测positive的比例在保护属性A的各个组别间相等。
+    </p>
+    <p>
+      <strong>Equalized Odds（均等化赔率）</strong>：P(Ŷ=1|Y=y,A=a) = P(Ŷ=1|Y=y,A=a')<br />
+      在给定真实标签Y的条件下，预测分布在不同组别间相等。
+    </p>
+    <p>
+      <strong>Calibration（校准）</strong>：P(Y=1|Ŷ=1,A=a) = P(Y=1|Ŷ=1)<br />
+      无论在哪一个组别，预测为positive时真实为positive的概率相同。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📊 公平性的不可能三角</div>
+    <p>
+      <strong>公平性的不可能三角（Fairness Impossibility Theorem）</strong>：<br />
+      同时满足以下三个条件是不可能的：
+    </p>
+    <ul>
+      <li>校准（Calibration）</li>
+      <li>平衡正向类（Balanced Positive）</li>
+      <li>平衡负向类（Balanced Negative）</li>
+    </ul>
+    <p>这意味着在设计AI系统时，必须在不同的公平性定义之间进行权衡。</p>
+  </div>
+
   <h2 class="section-h2">16.2 AI公平性检测与修复</h2>
 
   <pre><code>提示词：

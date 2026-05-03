@@ -342,6 +342,140 @@
     </tbody>
   </table>
 
+  <h2 class="section-h2">7.6 博士级扩展：计算架构的定量分析模型</h2>
+  <p class="p">
+    本节建立 CPU、GPU、FPGA、ASIC 四种计算范式的<span class="kw">定量分析框架</span
+    >。通过数学模型可以精确比较它们的性能、功耗和面积（PPA）特性。
+  </p>
+
+  <h3 class="section-h3">7.6.1 Roofline 模型：计算密集度与性能上限</h3>
+  <p class="p">
+    <span class="kw">Roofline 模型</span>是评估计算架构性能上限的经典工具。设处理器的<span
+      class="kw"
+      >峰值浮点性能</span
+    >为 $P_{peak}$（FLOPS），内存带宽为 $B_{max}$（GB/s），则对于一个具有<span class="kw"
+      >计算密集度</span
+    >（Operational Intensity）$I = \frac{Flops}{Bytes}$ 的 kernels，其性能上限为：
+  </p>
+  <div class="quote">
+    <p>$P_{max} = \min(P_{peak}, I \times B_{max})$</p>
+  </div>
+  <p class="p">
+    当 $I > P_{peak} / B_{max}$ 时，系统受限于计算能力（计算 bound）；当 $I < P_{peak} / B_{max}$
+    时，系统受限于内存带宽（内存 bound）。
+  </p>
+  <p class="p">
+    以 NVIDIA H100 为例：$P_{peak} = 3958$ TFLOPS（FP16 Tensor Core），$B_{max} = 3.35$ TB/s，则：
+  </p>
+  <div class="quote">
+    <p>转折点：$I_{knee} = P_{peak} / B_{max} = 3958 / 3350 \approx 1.18$ FLOPS/Byte</p>
+    <p>这意味着：若 kernels 的计算密集度 $< 1.18$，则性能受限于内存带宽</p>
+  </div>
+
+  <h3 class="section-h3">7.6.2 Die Area 估算：晶体管预算的定量分配</h3>
+  <p class="p">
+    现代处理器的裸片面积（Die Area）与其<span class="kw">晶体管预算</span
+    >直接相关。设工艺节点的晶体管密度为 $D$（晶体管/mm$^2$），则处理器可用面积为：
+  </p>
+  <div class="quote">
+    <p>$A_{die} = N_{transistor} / D$</p>
+  </div>
+  <p class="p">以 TSMC N5 工艺为例，$D \approx 173$ MTr/mm$^2$。典型处理器裸片面积分配如下：</p>
+  <div class="quote">
+    <p>AMD Zen4 EPYC：$A_{die} \approx 70$ mm$^2$（8核心），$N_{transistor} \approx 12.1$ BTr</p>
+    <p>NVIDIA H100 SXM5：$A_{die} \approx 814$ mm$^2$，$N_{transistor} \approx 80$ BTr</p>
+    <p>Apple M2 Pro：$A_{die} \approx 200$ mm$^2$，$N_{transistor} \approx 25$ BTr</p>
+  </div>
+  <p class="p">
+    对于<span class="kw">GPU</span>，其大面积主要用于容纳大量计算单元（ALU）。以 H100 为例，其
+    Tensor Core 占用面积约为总裸片面积的 40%，互连网络占用 25%，缓存占用 20%。
+  </p>
+
+  <h3 class="section-h3">7.6.3 功耗模型：动态功耗与静态功耗的分解</h3>
+  <p class="p">
+    处理器的总功耗由<span class="kw">动态功耗</span>和<span class="kw">静态功耗</span
+    >（漏电流功耗）组成：
+  </p>
+  <div class="quote">
+    <p>$P_{total} = P_{dynamic} + P_{static} = \alpha C V^2 f + I_{leak} V$</p>
+    <p>
+      其中 $\alpha$ 为开关活动度，$C$ 为电容负载，$V$ 为供电电压，$f$ 为时钟频率，$I_{leak}$
+      为漏电流
+    </p>
+  </div>
+  <p class="p">
+    <span class="kw">CPU</span>的实际功耗分解（以 Intel Skylake 为例）：动态功耗约占
+    70-80%，静态功耗（漏电流）占 20-30%。在 7nm 以下工艺，静态功耗占比显著上升。
+  </p>
+  <p class="p">
+    <span class="kw">ASIC</span
+    >的功耗优势来自：消除无用功耗（分支预测、乱序执行的猜测功耗）、固定数据流无需缓存一致性维护、时钟门控更精细。典型
+    AI 推理 ASIC 的功耗效率为 1-10 TOPS/W，而 GPU 为 0.1-0.5 TOPS/W。
+  </p>
+
+  <h3 class="section-h3">7.6.4 每瓦性能（TOPS/W）的数学定义</h3>
+  <p class="p">
+    <span class="kw">能效比</span>（Performance-per-Watt）是评估 AI
+    加速器的关键指标。设推理任务的计算量为 $C_{ops}$（操作数），处理器功耗为 $P$（瓦），执行时间为
+    $T$（秒），则：
+  </p>
+  <div class="quote">
+    <p>$TOPS = \frac{C_{ops}}{T \times 10^{12}}$（每秒万亿次操作）</p>
+    <p>$TOPS/W = \frac{C_{ops}}{P \times T \times 10^{12}} = \frac{TOPS}{P}$</p>
+  </div>
+  <p class="p">
+    对于矩阵乘法 $Y = W \cdot X$，其中 $W \in \mathbb{R}^{m \times k}$，$X \in \mathbb{R}^{k \times
+    n}$，总操作数为 $2mkn$（乘加运算）。若采用<span class="kw">量化</span>（Quantization）至
+    INT8，则：
+  </p>
+  <div class="quote">
+    <p>$TOPS_{INT8} = \frac{2mkn}{T \times 10^{12}}$</p>
+    <p>相较于 FP16，INT8 量化可将 TOPS/W 提升约 4 倍（理论值）</p>
+  </div>
+
+  <h3 class="section-h3">7.6.5 延迟与吞吐量的排队论模型</h3>
+  <p class="p">
+    在批量推理（Batch Inference）场景下，系统的<span class="kw">平均延迟</span>（Latency）和<span
+      class="kw"
+      >吞吐量</span
+    >（Throughput）之间存在权衡。设任务到达率为 $\lambda$，服务率为 $\mu$，使用 M/M/1 排队模型：
+  </p>
+  <div class="quote">
+    <p>
+      平均延迟：$L = \frac{1}{\mu - \lambda} = \frac{1}{\mu(1-\rho)}$，其中 $\rho = \lambda / \mu$
+      为利用率
+    </p>
+    <p>吞吐量：$X = \lambda = \mu(1 - \frac{1}{L})$</p>
+  </div>
+  <p class="p">
+    当 $\rho \to 1$（高利用率）时，平均延迟急剧增加。因此，实际系统中通常保持 $\rho \approx
+    0.7-0.8$，以在延迟和吞吐量之间取得平衡。
+  </p>
+
+  <h3 class="section-h3">7.6.6 FPGA 资源利用率与时序收敛</h3>
+  <p class="p">
+    FPGA 的<span class="section-h3">资源利用率</span>（Utilization）和<span class="kw"
+      >时序收敛</span
+    >（Timing Closure）是设计的关键指标。设 FPGA 资源总量为 $R_{total}$，设计使用量为
+    $R_{used}$，则：
+  </p>
+  <div class="quote">
+    <p>$U = \frac{R_{used}}{R_{total}} \times 100\%$</p>
+  </div>
+  <p class="p">
+    当 $U > 80\%$ 时，布局布线（Place &
+    Route）难度显著增加，时序收敛困难。对于高速设计，通常建议保持 $U < 70\%$。Xilinx UltraScale+
+    VU13P 的资源总量约为：LUT = 2,520 K，FF = 5,040 K，BRAM = 68.4 Mb，DSP = 8,760。
+  </p>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📚</div>
+    <div class="callout-text">
+      <strong>延伸阅读：</strong>2024 年，NVIDIA 发布 Blackwell 架构 B200，FP16 Tensor Core 性能达
+      20 PFLOPS，HBM3e 内存带宽达 8 TB/s，能效比较 H100 提升 2.5 倍。(Wohlers Report 2024)
+    </div>
+  </div>
+
   <div class="divider"></div>
 
   <!-- 学习路线与资源 -->
@@ -442,12 +576,41 @@
       B.
       大芯片被拆分为多个小芯片（Chiplet），每个小芯片面积更小，缺陷落入单个芯片的概率显著降低，从而提升整体良率<br />
       C. Chiplet功耗更低<br />
-      D. Chiplet不需要封装
+      D. Chiplet不需要封装<br /><br />
+
+      <strong
+        >6. 在Roofline性能模型中，设处理器的峰值浮点性能为 $P_{peak}=3958$
+        TFLOPS（FP16），内存带宽为 $B_{max}=3.35$ TB/s。对于计算密集度 $I=2.5$
+        FLOPS/Byte的神经网络推理任务，其理论性能上限为多少 TFLOPS？</strong
+      ><br />
+      A. 3958 TFLOPS（受限于计算能力）<br />
+      B. 8375 TFLOPS（$I \times B_{max}$）<br />
+      C. 3350 TFLOPS（受限于内存带宽）<br />
+      D. 3.35 TB/s除以操作数<br /><br />
+
+      <strong
+        >7. 在功耗分析中，假设某AI推理芯片的供电电压 $V=0.8V$，电容负载 $C=2nF$，时钟频率
+        $f=2GHz$，开关活动度 $\alpha=0.3$。该芯片的动态功耗最接近多少瓦？</strong
+      ><br />
+      A. 0.768 W<br />
+      B. 0.96 W<br />
+      C. 1.92 W<br />
+      D. 2.56 W<br /><br />
+
+      <strong
+        >8. 对于矩阵乘法 $Y=W \cdot X$，其中 $W \in \mathbb{R}^{4096 \times 4096}$，$X \in
+        \mathbb{R}^{4096 \times
+        4096}$，采用INT8量化后执行该乘法的TOPS（每秒万亿次操作）如何计算？</strong
+      ><br />
+      A. $TOPS = 2 \times 4096^3 / (T \times 10^{12})$，其中 $T$ 为执行时间（秒）<br />
+      B. $TOPS = 4096^3 / (T \times 10^{12})$（仅考虑乘法）<br />
+      C. $TOPS = 4096^2 / (T \times 10^{12})$<br />
+      D. $TOPS = 4096^4 / (T \times 10^{12})$
     </p>
     <details class="quiz-answer">
       <summary>参考答案</summary>
       <div>
-        <p><strong>答案：1.D　2.B　3.A　4.D　5.B</strong></p>
+        <p><strong>答案：1.D　2.B　3.A　4.D　5.B　6.A　7.B　8.A</strong></p>
         <p><strong>解析：</strong></p>
         <ol style="font-size: 0.9em; color: #666">
           <li>
@@ -464,6 +627,19 @@
           </li>
           <li>
             Chiplet将大芯片拆分为多个小芯片，每个小芯片面积更小，缺陷落入单个芯片的概率显著降低，从而提升整体良率，这是其相比单芯片SoC的核心优势。
+          </li>
+          <li>
+            Roofline模型：$P_{max} = \min(P_{peak}, I \times B_{max})$。计算 $I \times B_{max} = 2.5
+            \times 3350 = 8375$ TFLOPS，但受限于 $P_{peak} = 3958$ TFLOPS，故答案为 3958 TFLOPS。
+          </li>
+          <li>
+            动态功耗公式 $P_{dynamic} = \alpha C V^2 f = 0.3 \times 2 \times 10^{-9} \times 0.8^2
+            \times 2 \times 10^9 = 0.96$ W。
+          </li>
+          <li>
+            矩阵乘法 $Y = W \cdot X$（$W, X \in \mathbb{R}^{4096 \times 4096}$）的总操作数为 $2mkn =
+            2 \times 4096^3$（每次乘加为2个操作），因此 $TOPS = 2 \times 4096^3 / (T \times
+            10^{12})$。
           </li>
         </ol>
       </div>

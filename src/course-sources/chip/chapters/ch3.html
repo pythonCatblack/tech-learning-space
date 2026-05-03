@@ -507,6 +507,148 @@
     </div>
   </div>
 
+  <!-- ===== 3.7 博士级扩展：MOSFET器件物理的数学框架 ===== -->
+  <h2 class="section-h2">3.7 博士级扩展：MOSFET器件物理的数学框架</h2>
+  <p class="p">
+    本节为深入理解MOSFET器件物理的同学提供完整的数学分析框架，包括I-V方程、短沟道效应建模、GAA晶体管理论等。
+  </p>
+
+  <h3 class="section-h3">3.7.1 MOSFET I-V特性的完整数学描述</h3>
+  <p class="p">
+    MOSFET的漏极电流 $I_D$ 在不同工作区有不同的表达式。<span class="kw">长沟道模型</span
+    >（忽略速度饱和和短沟道效应）如下：
+  </p>
+
+  <h4>线性区（Triode / Non-saturation）</h4>
+  <p class="p">当 $V_{DS} < V_{GS} - V_{th}$ 时：</p>
+  <div class="quote">
+    <p>
+      $I_D = \mu_n C_{ox} \frac{W}{L} \left[(V_{GS} - V_{th})V_{DS} - \frac{V_{DS}^2}{2}\right]
+      \left(1 + \lambda V_{DS}\right)$
+    </p>
+    <cite>MOSFET线性区电流方程，$\lambda$ 为沟道长度调制系数</cite>
+  </div>
+
+  <h4>饱和区（Saturation）</h4>
+  <p class="p">当 $V_{DS} \geq V_{GS} - V_{th}$ 时：</p>
+  <div class="quote">
+    <p>
+      $I_{D,sat} = \frac{1}{2} \mu_n C_{ox} \frac{W}{L} (V_{GS} - V_{th})^2 (1 + \lambda V_{DS})$
+    </p>
+    <cite>MOSFET饱和区电流方程</cite>
+  </div>
+
+  <p class="p">
+    其中 $C_{ox} = \varepsilon_{ox}/t_{ox}$ 为单位面积栅电容，$\mu_n$ 为电子迁移率，$W$
+    为沟道宽度，$L$ 为沟道长度。
+  </p>
+
+  <h3 class="section-h3">3.7.2 短沟道效应：VTCMOS建模</h3>
+  <p class="p">
+    当沟道长度缩短到深亚微米量级，<span class="kw">短沟道效应</span>（SCE）变得显著，主要包括：
+  </p>
+
+  <h4>DIBL效应的量化模型</h4>
+  <div class="quote">
+    <p>
+      $\Delta V_{th} = \Delta V_{th,DIBL} = \left(\frac{\partial V_{th}}{\partial V_{DS}}\right)
+      V_{DS} = \sigma V_{DS}$<br /><br />
+      其中 DIBL 系数 $\sigma \approx \frac{\varepsilon_{si}}{q N_a t_{ox} L} \cdot
+      \frac{\pi}{4}$（短沟道近似）
+    </p>
+    <cite>DIBL效应的解析模型</cite>
+  </div>
+
+  <h4>阈值电压的短沟道修正</h4>
+  <div class="quote">
+    <p>
+      $V_{th} = V_{th0} - \left(\frac{\varepsilon_{si}}{q N_a t_{ox}}\right)
+      \left(\frac{\pi}{4}\right) V_{DS} - \frac{2\varepsilon_{si} V_{DS}}{q N_a L^2}$
+    </p>
+    <cite>阈值电压的短沟道修正公式</cite>
+  </div>
+
+  <h3 class="section-h3">3.7.3 速度饱和与高电场效应</h3>
+  <p class="p">
+    当电场强度增加时，载流子速度不再与电场成正比，出现<span class="kw">速度饱和</span>：
+  </p>
+  <div class="quote">
+    <p>
+      $v = \frac{\mu_n \mathbf{E}}{1 + |\mathbf{E}|/E_c}$<br /><br />
+      当 $|\mathbf{E}| \gg E_c$ 时，$v \rightarrow v_{sat} \approx 10^7$ cm/s（硅中电子的饱和速度）
+    </p>
+    <cite>载流子速度-电场关系，经验模型</cite>
+  </div>
+
+  <p class="p">速度饱和导致饱和电流不再随 $V_{DS}$ 增大而增加，饱和区电流修正为：</p>
+  <div class="quote">
+    <p>$I_{D,sat} = v_{sat} C_{ox} W (V_{GS} - V_{th})$（强场近似）</p>
+    <cite>速度饱和条件下的饱和电流</cite>
+  </div>
+
+  <h3 class="section-h3">3.7.4 GAA晶体管：静电控制的终极形态</h3>
+  <p class="p">
+    对于<span class="kw">全环绕栅极</span
+    >（GAA）纳米片晶体管，静电控制能力达到最强。其亚阈值摆幅理论上可接近热力学极限60mV/decade。
+  </p>
+
+  <h4>GAA结构的等效沟道数</h4>
+  <p class="p">GAA纳米片晶体管的有效驱动电流可表示为多通道并联：</p>
+  <div class="quote">
+    <p>
+      $I_D = N_{sheets} \cdot I_{D,single}$<br /><br />
+      其中 $N_{sheets}$ 为纳米片数量，每个纳米片的电流由量子化限制的沟道厚度决定。
+    </p>
+    <cite>GAA多通道电流模型</cite>
+  </div>
+
+  <h4>量子化效应对沟道厚度的影响</h4>
+  <p class="p">当纳米片厚度 $t_{si} < 10$ nm 时，量子化效应显著，修正的沟道厚度：</p>
+  <div class="quote">
+    <p>
+      $E_{n_x, n_y} = \frac{\hbar^2 \pi^2}{2 m^*} \left(\frac{n_x^2}{t_{si}^2} +
+      \frac{n_y^2}{W_{si}^2}\right)$
+    </p>
+    <cite>量子化能量子级，限制纳米片的有效导电厚度</cite>
+  </div>
+
+  <h3 class="section-h3">3.7.5 隧穿泄漏电流的精确模型</h3>
+  <p class="p">
+    在先进工艺节点（<10nm），<span class="kw">直接隧穿</span>成为栅泄漏的主要机制。隧穿概率由<span
+      class="kw"
+      >WKB近似</span
+    >给出：
+  </p>
+  <div class="quote">
+    <p>
+      $T \approx \exp\left(-2 t_{ox} \sqrt{\frac{2m^* \phi_b}{\hbar^2}}\right) = \exp\left(-\frac{2
+      t_{ox}}{\lambda}\right)$<br /><br />
+      其中 $\phi_b$ 为势垒高度，$\lambda$ 为有效隧穿特征长度：<br />
+      $\lambda = \sqrt{\frac{\hbar^2}{2m^* \phi_b}}$
+    </p>
+    <cite>WKB隧穿概率模型</cite>
+  </div>
+
+  <p class="p">直接隧穿电流密度：</p>
+  <div class="quote">
+    <p>$J_{gate} = \frac{A}{t_{ox}} (V_{ox})^2 \exp\left(-\frac{B t_{ox}}{V_{ox}}\right)$</p>
+    <cite>栅极直接隧穿电流模型，A和B为与工艺相关的常数</cite>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📖</div>
+    <div class="callout-text">
+      <strong>学术引用：</strong><br />
+      • Taur, Y., & Ning, T.H. "Fundamentals of Modern VLSI Devices." 2nd ed., Cambridge, 2013.
+      (VLSI器件物理标准教材)<br />
+      • Chau, R., et al. "A 50nm depleted-substrate CMOS transistor." IEEE Electron Device Lett. 22,
+      2001. (DST晶体管原始论文)<br />
+      • Auth, C., et al. "A 22nm high performance and low-power CMOS technology." IEEE Trans.
+      Electron Devices, 2012. (FinFET工业化里程碑)<br />
+      • IEEE IRDS 2024, "International Roadmap for Devices and Systems." (器件技术发展路线图)
+    </div>
+  </div>
+
   <div class="card yellow">
     <div class="card-label">课后测验</div>
     <h3>第3章选择题</h3>

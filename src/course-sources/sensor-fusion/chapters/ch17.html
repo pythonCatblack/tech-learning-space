@@ -43,22 +43,29 @@
 <div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🚁</div><h4>KITTI Vision</h4><p>自动驾驶最权威数据集（汽车平台，但Lidar数据对无人机也有参考价值）。包含城市道路、乡村公路等场景。</p></div>
 </div>
 
-<h2 class="section-h2">17.5 行业动态与最新进展（2024-2025）</h2>
+<h2 class="section-h2">17.5 行业动态与最新进展（2025-2026）</h2>
 <p class="p">无人机传感器融合领域正在快速演进，以下是关键趋势：</p>
 
 <div class="card-grid">
-<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🤖</div><h4>Transformer融入VIO</h4><p>DIFT等Transformer-based方法开始替代传统CNN用于特征匹配，精度提升约15%，但计算量增加3-5倍。</p></div>
-<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📡</div><h4>4D毫米波雷达</h4><p>新一代4D成像雷达（Arbe、华为）开始量产，提供点云+速度+高度信息，有效弥补视觉/Lidar在雨雾天的不足。</p></div>
-<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🧠</div><h4>神经辐射场（NeRF）辅助SLAM</h4><p>NeRF用于稠密建图和语义标注，但计算量巨大，目前主要处于研究阶段。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🤖</div><h4>Transformer融入VIO</h4><p>DIFT、SuperPoint+SuperGlue等Transformer-based方法替代传统CNN用于特征匹配，精度提升约15%，但计算量增加3-5倍。OV2SLAM等已将Transformer集成到前端，提升在低纹理场景的鲁棒性。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3f5f5">📡</div><h4>4D毫米波雷达</h4><p>新一代4D成像雷达（Arbe Phoenix、华为、Mobileye）开始量产，提供点云+速度+高度信息，有效弥补视觉/Lidar在雨雾天的不足。4D雷达与Lidar的异构融合成为全天候感知的新范式。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🧠</div><h4>神经辐射场（NeRF）与3D Gaussian Splatting</h4><p>NeRF和3DGS用于稠密建图、语义标注和新视图合成。MobileDiffusion等将NeRF知识蒸馏到轻量模型，实现在机载GPU上的实时渲染。但端到端NeRF-SLAM（如Nerf vio）仍处于研究阶段。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">⚡</div><h4>Event Camera与异步感知</h4><p>事件相机与传统相机的异构融合解决高速飞行时的运动模糊问题。 Prophesee Metavision与VIO的结合已在100km/h无人机上验证，延迟<1ms。异步感知（Asynchronous Perception）正在替代传统的固定帧率范式。</p></div>
+</div>
+
+<div class="hlbox"><div class="hlbox-title">🔬 KFSLAM与最新SLAM算法进展</div><p><strong>KFSLAM（Kalman Filter SLAM）：</strong>传统EKF-SLAM在大尺度场景存在一致性问题（线性化误差累积）。iSAM2和因子图优化取代了批处理EKF，但KFCFAR等变体仍在实时性要求高的场景使用。</p>
+<p><strong>LIO-SAM的演进：</strong>LIO-SAM目前仍是户外激光雷达融合的主流方案。其最新改进包括：集成在线外参标定、动态物体过滤（使用Maplab2的动态点移除）、以及与视觉重约束的紧耦合集成。</p>
+<p><strong>Fast-LIO2：</strong>采用增量平滑（iEKF）架构，40Hz扫描频率，在AGV和无人机上广泛部署。其优势在于将Lidar特征提取与状态估计紧耦合，减少了计算延迟。</p>
 </div>
 
 <table class="tbl">
-<thead><tr><th>技术方向</th><th>成熟度</th><th>代表成果</th><th>2025年预测</th></tr></thead>
+<thead><tr><th>技术方向</th><th>成熟度</th><th>代表成果</th><th>2025-2026年预测</th></tr></thead>
 <tbody>
-<tr><td class="hl">VIO（LIO-SAM/VINS）</td><td class="hl">⭐⭐⭐⭐⭐ 成熟</td><td>LIO-SAM已成为户外标配</td><td>边缘芯片固化成为趋势</td></tr>
-<tr><td class="hl">多机协同SLAM</td><td class="hl">⭐⭐⭐ 发展中</td><td>ETH的MapLab2</td><td>达到10机以上规模</td></tr>
-<tr><td class="hl">端到端感知规划</td><td class="hl">⭐⭐ 研究中</td><td>UC Berkeley的DON</td><td>部分商业落地</td></tr>
-<tr><td class="hl">事件相机融合</td><td class="hl">⭐⭐ 研究中</td><td>Dynamic Vision Sensor</td><td>高动态场景成为标配</td></tr>
+<tr><td class="hl">VIO（LIO-SAM/VINS）</td><td class="hl">⭐⭐⭐⭐⭐ 成熟</td><td>LIO-SAM已成为户外标配</td><td>边缘芯片固化成为趋势，芯片原厂固化算法成为主流</td></tr>
+<tr><td class="hl">多机协同SLAM</td><td class="hl">⭐⭐⭐ 发展中</td><td>ETH的MapLab2、CAVS</td><td>达到10机以上规模，分布式因子图成为研究方向</td></tr>
+<tr><td class="hl">端到端感知规划</td><td class="hl">⭐⭐ 研究中</td><td>UC Berkeley的DON、DLL等</td><td>部分商业落地，但可解释性仍是瓶颈</td></tr>
+<tr><td class="hl">事件相机融合</td><td class="hl">⭐⭐ 研究中</td><td>Prophesee + VIO</td><td>高动态场景（>50km/h）开始实用化</td></tr>
+<tr><td class="hl">4D雷达融合</td><td class="hl">⭐⭐ 发展中</td><td>Arbe Phoenix + Lidar</td><td>全天候感知的新标准配置</td></tr>
 </tbody>
 </table>
 

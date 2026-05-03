@@ -38,6 +38,86 @@
     </div>
   </div>
 
+  <h3 class="section-h3">7.1.1 软件生命周期模型</h3>
+  <p class="p">
+    理解软件生命周期模型对于设计有效的AI辅助开发策略至关重要。不同的生命周期模型对AI辅助的需求和效果各不相同。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 瀑布模型与迭代模型</div>
+    <p><strong>瀑布模型（Waterfall Model）</strong>将开发过程分为严格的阶段：</p>
+    <ul>
+      <li>需求 → 设计 → 实现 → 验证 → 维护</li>
+      <li>每个阶段完成后才进入下一阶段</li>
+      <li>适用于需求稳定、技术成熟的项目</li>
+    </ul>
+    <p><strong>迭代模型（Iterative Model）</strong>采用循环递增的开发方式：</p>
+    <ul>
+      <li>每次迭代包含完整的生命周期阶段</li>
+      <li>每次迭代交付可用的产品增量</li>
+      <li>支持渐进式的需求澄清</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 螺旋模型与敏捷模型</div>
+    <p><strong>螺旋模型（Spiral Model）</strong>（Boehm, 1988）将风险分析与迭代开发结合：</p>
+    <ul>
+      <li>每次迭代包含：目标确定 → 风险分析 → 开发验证 → 评审</li>
+      <li>风险驱动的大型项目首选</li>
+      <li>AI辅助可以加速风险评估和原型开发</li>
+    </ul>
+    <p><strong>敏捷模型</strong>以Scrum和XP为代表：</p>
+    <ul>
+      <li>短周期迭代（Sprint）</li>
+      <li>持续集成、持续交付</li>
+      <li>AI辅助在敏捷环境中价值最大——因为反馈循环短、变更频繁</li>
+    </ul>
+  </div>
+
+  <h3 class="section-h3">7.1.2 AI辅助的代码生成理论</h3>
+  <p class="p">
+    AI代码生成涉及多种技术，从简单的模板填充到复杂的语义理解。理解这些技术有助于更好地使用AI工具。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 代码生成的概率模型</div>
+    <p>现代AI代码生成基于<strong>自回归语言模型（Autoregressive Language Model）</strong>：</p>
+    <p>P(code | context) = ∏ₜ P(tokenₜ | token₁, token₂, ..., tokenₜ₋₁, context)</p>
+    <ul>
+      <li>给定上下文，模型预测下一个最可能的token</li>
+      <li>通过温度采样（Temperature Sampling）控制创造性</li>
+      <li>通过Top-k或Top-p采样平衡多样性和质量</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 代码特定预训练的作用</div>
+    <p>代码生成模型通常在代码语料库上进行<strong>持续预训练（Continual Pretraining）</strong>：</p>
+    <ul>
+      <li><strong>Codex</strong> - 在GitHub代码上训练</li>
+      <li><strong>PaLM-Coder</strong> - 在多编程语言代码上训练</li>
+      <li><strong>StarCoder</strong> - 开源代码模型，80+编程语言</li>
+    </ul>
+    <p>研究表明，代码特定预训练使模型在编程任务上的准确率提升20-40%。</p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 代码补全的beam search与n-gram模型</div>
+    <p><strong>Beam Search</strong>是代码补全中常用的解码策略：</p>
+    <ul>
+      <li>在每个位置保留k个最优候选</li>
+      <li>避免贪婪解码的局部最优问题</li>
+      <li>平衡计算成本和解码质量</li>
+    </ul>
+    <p>传统<strong>n-gram模型</strong>在代码补全中仍有价值：</p>
+    <ul>
+      <li>计算效率高，适合实时补全</li>
+      <li>作为beam search的"draft model"</li>
+      <li>Speculative Decoding中用于加速</li>
+    </ul>
+  </div>
+
   <h2 class="section-h2">7.2 框架代码的AI生成</h2>
 
   <p class="p"><strong>使用Fastify + TypeScript创建REST API</strong></p>

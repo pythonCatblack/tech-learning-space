@@ -19,6 +19,30 @@
     >（Sensor Fusion）——正是无人机从"能飞"进化到"能看见、能理解、能自主"的核心技术。
   </p>
 
+  <!-- ===== 博士级数学基础 ===== -->
+  <div class="hlbox">
+    <div class="hlbox-title">🔬 博士级数学基础：传感器融合的信息论框架</div>
+    <p>从<span class="kw">信息论</span>角度，传感器融合的核心任务是：<strong>最小化状态估计的后验熵</strong>。设真实状态为 $\mathbf{x} \in \mathbb{R}^n$，传感器观测为 $\mathbf{z}_1, \mathbf{z}_2, \ldots, \mathbf{z}_m$，融合的目的是在给定所有观测的条件下，获得 $\mathbf{x}$ 的后验分布 $p(\mathbf{x}|\mathbf{z}_{1:m})$。</p>
+    <p>根据<span class="kw">Cramér-Rao下界（CRLB）</span>，任何无偏估计量 $\hat{\mathbf{x}}$ 的协方差矩阵满足：</p>
+    <p>$$\mathbf{P}_{\hat{\mathbf{x}}} \succeq \mathbf{J}^{-1}(\mathbf{x})$$</p>
+    <p>其中 $\mathbf{J}(\mathbf{x}) = -\mathbb{E}\left[\nabla_{\mathbf{x}}^2 \log p(\mathbf{z}_{1:m}|\mathbf{x})\right]$ 是<span class="kw">Fisher信息矩阵（FIM）</span>，$\mathbf{A} \succeq \mathbf{B}$ 表示 $\mathbf{A} - \mathbf{B}$ 为半正定矩阵。</p>
+    <p><strong>融合增益的数学表达：</strong>设单传感器的Fisher信息为 $\mathbf{J}_i$，则融合后的总信息矩阵为 $\mathbf{J}_{\text{fused}} = \sum_{i=1}^{m} \mathbf{J}_i$。这意味着：<strong>信息矩阵是可加的</strong>——当传感器误差分布相互独立时，融合后的估计方差必然小于任一单传感器的估计方差。</p>
+    <p>对于两个高斯传感器观测 $z_1 \sim \mathcal{N}(\mathbf{H}_1\mathbf{x}, \mathbf{R}_1)$ 和 $z_2 \sim \mathcal{N}(\mathbf{H}_2\mathbf{x}, \mathbf{R}_2)$，融合后的估计协方差为：</p>
+    <p>$$\mathbf{P}_{\text{fused}} = \left(\mathbf{H}_1^\top \mathbf{R}_1^{-1} \mathbf{H}_1 + \mathbf{H}_2^\top \mathbf{R}_2^{-1} \mathbf{H}_2\right)^{-1} \preceq \min(\mathbf{P}_1, \mathbf{P}_2)$$</p>
+    <p>其中 $\mathbf{P}_i = (\mathbf{H}_i^\top \mathbf{R}_i^{-1} \mathbf{H}_i)^{-1}$ 是单传感器估计协方差。这从信息论层面严格证明了传感器融合的理论优势。</p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔬 贝叶斯推理框架下的传感器融合</div>
+    <p>传感器融合的完整数学框架建立在<span class="kw">贝叶斯推理</span>之上。设系统状态为 $\mathbf{x}_k$，观测为 $\mathbf{z}_k$，则贝叶斯滤波递推为：</p>
+    <p><strong>预测步（Chapman-Kolmogorov方程）：</strong></p>
+    <p>$$p(\mathbf{x}_k|\mathbf{z}_{1:k-1}) = \int p(\mathbf{x}_k|\mathbf{x}_{k-1}) \cdot p(\mathbf{x}_{k-1}|\mathbf{z}_{1:k-1}) \, d\mathbf{x}_{k-1}$$</p>
+    <p><strong>更新步（贝叶斯法则）：</strong></p>
+    <p>$$p(\mathbf{x}_k|\mathbf{z}_{1:k}) = \frac{p(\mathbf{z}_k|\mathbf{x}_k) \cdot p(\mathbf{x}_k|\mathbf{z}_{1:k-1})}{p(\mathbf{z}_k|\mathbf{z}_{1:k-1})}$$</p>
+    <p>其中 $p(\mathbf{z}_k|\mathbf{x}_k)$ 是似然函数，$p(\mathbf{x}_k|\mathbf{x}_{k-1})$ 是状态转移概率。</p>
+    <p><strong>信念传播（Belief Propagation）：</strong>在因子图表示中，每个因子节点计算局部消息：$\mu_{f \to x}(\mathbf{x}) = \int f(\mathbf{x}, \mathbf{y}) \prod_{y_i \in \text{nbr}(f) \setminus x} \mu_{y_i \to f}(\mathbf{y}_i) \, d\mathbf{y}_i$。消息在因子图上传递，最终得到每个变量的边缘后验分布。这构成了第10章因子图优化的理论基础。</p>
+  </div>
+
   <!-- ===== 1.1 什么是传感器融合 ===== -->
   <h2 class="section-h2">1.1 什么是传感器融合？</h2>
   <p class="p">
@@ -352,6 +376,58 @@
     >，实现了令人震撼的自主避障。此后，VIO（视觉惯性里程计）、LIO-SAM等开源算法将多传感器融合带入了每个研究者和工程师的桌面。
   </p>
 
+  <!-- ===== 1.6 状态-of-the-Art研究前沿 ===== -->
+  <h2 class="section-h2">1.6 传感器融合研究前沿与最新进展</h2>
+
+  <h3 class="section-h3">1.6.1 从传统滤波到端到端深度学习</h3>
+  <p class="p">传感器融合正在经历从<span class="kw">传统几何方法</span>到<span class="kw">端到端深度学习</span>的范式转变。传统方法（EKF/UKF/因子图）具有可解释性强、理论分析完备的优势，但面对复杂动态场景时适应性有限。深度学习方法通过数据驱动学习最优融合策略。</p>
+
+  <div class="card-grid">
+    <div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🧠</div><h4>CNN-LSTM for IMU-Visual Fusion</h4><p>CNN提取图像空间特征，LSTM建模时序IMU-视觉融合。DeepVIO（2019）等系统在恶劣视觉条件下优于传统VIO，但泛化性存疑。</p></div>
+    <div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">⚡</div><h4>Transformer for Feature Matching</h4><p>DIFT（2022）等Transformer-based方法替代传统CNN进行特征匹配，精度提升约15%。SuperPoint+SuperGlue组合已在VIO中广泛应用。</p></div>
+    <div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">🎯</div><h4>Event Camera Fusion</h4><p>事件相机（Dynamic Vision Sensor）与传统相机融合，解决高速飞行时的运动模糊问题。 Prophesee + VIO融合是当前前沿方向。</p></div>
+  </div>
+
+  <h3 class="section-h3">1.6.2 4D毫米波雷达：下一代感知核心</h3>
+  <p class="p">传统3D毫米波雷达只能测量方位角+距离+速度。新一代<span class="kw">4D成像雷达</span>（Arbe Phoenix、华为下一代车载雷达）新增俯仰角测量，可以输出真实的空间三维点云。</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔑 4D雷达 vs 传统Lidar</div>
+    <p><strong>4D雷达优势：</strong><br>
+    • 雨雾穿透性强（77GHz衰减 < 1dB/km in heavy rain）<br>
+    • 速度测量直接来自多普勒（无需差分）<br>
+    • 成本低（量产价格 $100-300 vs Lidar $1000+）<br>
+    • 无运动畸变（每帧瞬时完成）<br><br>
+    <strong>4D雷达劣势：</strong><br>
+    • 角分辨率低（通常1-2° vs Lidar 0.1-0.2°）<br>
+    • 点云密度约1000-5000点/帧 vs Lidar 64线13万点/帧<br>
+    • 杂波噪声仍高于Lidar<br><br>
+    <strong>融合策略：</strong>4D雷达作为Lidar在恶劣天气下的冗余传感器，与视觉形成"全天候感知对"。</p>
+  </div>
+
+  <h3 class="section-h3">1.6.3 神经辐射场（NeRF）辅助SLAM</h3>
+  <p class="p">NeRF通过隐式场景表示实现超稠密建图和语义标注。iMAP（2021）、Nice-SLAM等将NeRF引入SLAM系统，实现实时建图与定位。当前局限：计算量巨大（需要GPU），主要处于研究阶段。</p>
+
+  <h3 class="section-h3">1.6.4 观测性分析与可观测性约束</h3>
+  <p class="p">传感器融合系统的<span class="kw">可观测性（Observability）</span>分析是确保状态估计器正确工作的数学基础。不可观测的状态无法从观测数据中恢复。</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔑 可观测性分析的数学框架</div>
+    <p>对于非线性系统 $\dot{\mathbf{x}} = f(\mathbf{x}, \mathbf{u})$，$\mathbf{y} = h(\mathbf{x})$，可观测性矩阵为：</p>
+    <p>$$\mathcal{O} = \begin{bmatrix} \frac{\partial \mathcal{L}_f^0 h}{\partial \mathbf{x}} \\ \frac{\partial \mathcal{L}_f^1 h}{\partial \mathbf{x}} \\ \vdots \\ \frac{\partial \mathcal{L}_f^{n-1} h}{\partial \mathbf{x}} \end{bmatrix}$$</p>
+    <p>其中 $\mathcal{L}_f^i h$ 是第 $i$ 阶Lie导数。若 $\text{rank}(\mathcal{O}) < n$，系统不可观测。</p>
+    <p><strong>VIO系统的不可观测方向：</strong>单目VIO有4个不可观测方向——重力旋转（绕重力轴）、尺度漂移、绕重力轴旋转、外部位置偏移。这是因为单目视觉无法观测绝对尺度和重力方向。</p>
+  </div>
+
+  <h3 class="section-h3">1.6.5 故障检测与Graceful Degradation</h3>
+  <p class="p>真实无人机系统必须具备<span class="kw">故障检测与诊断（FDD）</span>能力，在传感器失效时能够检测并降级运行。</p>
+
+  <div class="card-grid">
+    <div class="card-sm"><div class="card-sm-icon" style="background:#fce4ec">⚠️</div><h4>传感器级故障检测</h4><p>基于新息序列的卡方检验（$\chi^2$ test）：$d = \mathbf{z}^\top \mathbf{S}^{-1}\mathbf{z} \gtrless \gamma$，其中 $\mathbf{S} = \mathbf{HPH}^\top + \mathbf{R}$ 是新息协方差。</p></div>
+    <div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🔄</div><h4>一致性检测</h4><p>多传感器冗余时，用似然比检验（likelihood ratio test）区分传感器故障与环境变化。</p></div>
+    <div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🛡️</div><h4>降级运行策略</h4><p>当Lidar失效时，自动切换到纯VIO模式；当视觉失效时，切换到LIO-SAM缺失视觉因子模式。系统保证"不完全失效"。</p></div>
+  </div>
+
   <div class="card green">
     <div class="card-label">技术演进路线图</div>
     <h3>从冷战到消费级：传感器融合的民主化</h3>
@@ -413,6 +489,13 @@
   </table>
 
   <!-- 学习路线 -->
+  <div class="callout callout-info">
+    <div class="callout-icon">🔗</div>
+    <div class="callout-text">
+      <strong>跨课程关联：</strong>传感器融合的硬件基础是 AI 芯片。想理解为什么无人机需要专用芯片、视觉 AI 的硬件加速路径、以及大疆等厂商的芯片选择策略，请参阅 <a href="../chip/chapters/ch11">芯片设计 Ch11（AI芯片与Taalas）</a>。
+    </div>
+  </div>
+
   <div class="card green">
     <div class="card-label">📚 本章学习路线</div>
     <h3>建立传感器融合的宏观认知框架</h3>

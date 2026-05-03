@@ -1,0 +1,797 @@
+<section id="ch11">
+  <!-- 内容更新时间：2026-05-04 -->
+  <div class="hero">
+    <div class="chapter-tag">Chapter 11 · 高级进阶篇</div>
+    <h1>逆向工程与点云处理</h1>
+    <p class="sub">从扫描到模型、点云处理算法、CAD模型重建</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">📖 约60分钟阅读</span>
+      <span class="hero-meta-item">📡 点云技术</span>
+    </div>
+  </div>
+
+  <p class="lead">
+    逆向工程（Reverse
+    Engineering）通过3D扫描获取物理对象的点云数据，进而重建为可编辑的CAD模型。本章将深入探讨点云处理的数学基础、扫描技术、分割算法、以及如何利用AI从点云自动重建3D模型。这些技术在质量检测、文物修复、产品逆向设计等领域具有广泛应用。
+  </p>
+
+  <h2 class="section-h2">11.1 3D扫描技术体系</h2>
+
+  <h3 class="section-h3">11.1.1 扫描技术分类</h3>
+
+  <p class="p">3D扫描技术基于不同的物理原理，主要分为接触式和非接触式两大类：</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>类型</th>
+        <th>技术</th>
+        <th>原理</th>
+        <th>精度</th>
+        <th>适用场景</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="2"><strong>接触式</strong></td>
+        <td>CMM（三坐标测量机）</td>
+        <td>探头接触表面测量</td>
+        <td>±0.002mm</td>
+        <td>精密零件</td>
+      </tr>
+      <tr>
+        <td>接触式扫描臂</td>
+        <td>关节角度+探头位置</td>
+        <td>±0.01mm</td>
+        <td>小中型零件</td>
+      </tr>
+      <tr>
+        <td rowspan="3"><strong>非接触式</strong></td>
+        <td>结构光扫描</td>
+        <td>投影图案+三角测量</td>
+        <td>±0.01mm</td>
+        <td>中小型物体</td>
+      </tr>
+      <tr>
+        <td>激光三角测量</td>
+        <td>激光线+相机角度</td>
+        <td>±0.05mm</td>
+        <td>工业检测</td>
+      </tr>
+      <tr>
+        <td>Photogrammetry</td>
+        <td>多视角图像匹配</td>
+        <td>±0.02mm</td>
+        <td>大型物体/场景</td>
+      </tr>
+      <tr>
+        <td rowspan="2"><strong>主动光学</strong></td>
+        <td>LiDAR</td>
+        <td>飞行时间测距</td>
+        <td>±1mm</td>
+        <td>地形/建筑</td>
+      </tr>
+      <tr>
+        <td>TOF相机</td>
+        <td>脉冲光往返时间</td>
+        <td>±1cm</td>
+        <td>实时建模</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="section-h3">11.1.2 激光三角测量原理</h3>
+
+  <p class="p">激光三角测量是工业3D扫描的核心原理，其数学基础是三角测量：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 激光三角测量数学</div>
+    <pre><code>几何配置：
+          激光发射器
+              \
+               \ α (入射角)
+                \
+    ────────────○──────────── 物体表面
+                /
+               / β (散射角)
+              /
+           相机
+
+基本方程（余弦定理）：
+d = B · sin(β) / sin(α + β)
+
+其中：
+- B：基线距离（激光-相机）
+- α：入射角
+- β：散射角
+- d：被测点深度
+
+分辨率推导：
+Δd = d² · cos(β) / (B · sin(α))
+
+关键洞察：
+- 基线B越大，深度分辨率Δd越小（精度越高）
+- 但B过大会导致遮挡问题
+- 存在最优α+β=90°配置</code></pre>
+  </div>
+
+  <h3 class="section-h3">11.1.3 结构光扫描原理</h3>
+
+  <div class="flow">
+    <div class="flow-box">
+      <div class="flow-box-title">投影</div>
+      <div class="flow-box-desc">DLP投影仪投射编码图案</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">拍摄</div>
+      <div class="flow-box-desc">相机同步采集变形图案</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">解码</div>
+      <div class="flow-box-desc">相位展开+三角测量</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">重建</div>
+      <div class="flow-box-desc">点云生成</div>
+    </div>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 格雷码+相移法</div>
+    <pre><code>格雷码编码（空间解包裹）：
+- 二进制图案投射n次
+- 每个像素获得唯一二进制码
+- 范围：0到2ⁿ-1
+
+相移法（相位展开）：
+φ(x,y) = arctan2(Σ Iₖ·sin(2πk/n), Σ Iₖ·cos(2πk/n))
+
+其中：
+- Iₖ：第k帧投影强度
+- n：相移步数（通常4-8）
+
+绝对相位计算：
+Ψ(x,y) = φ(x,y) + 2π·N(x,y)
+
+其中N(x,y)是级次（由格雷码确定）
+
+深度计算：
+Z = f·B / (d + f·tan(α))
+
+其中d是相机主点到匹配点的横向偏移</code></pre>
+  </div>
+
+  <h2 class="section-h2">11.2 点云数学基础</h2>
+
+  <h3 class="section-h3">11.2.1 点云的数据表示</h3>
+
+  <p class="p">点云是3D空间中离散采样点的集合：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 点云数据结构</div>
+    <pre><code>点云 P = {p₁, p₂, ..., pₙ} ⊂ ℝ³
+
+每个点pᵢ可附带属性：
+pᵢ = {x, y, z, r, g, b, nx, ny, nz, ...}
+
+属性维度：
+- 几何：x, y, z（位置）
+- 颜色：r, g, b（RGB）
+- 法线：nx, ny, nz（单位法向量）
+- 强度：I（反射强度）
+- 时间戳：t（扫描时间）
+
+存储格式：
+├── PLY（Polygon File Format）
+├── LAS/LAZ（LiDAR点云）
+├── PCD（Point Cloud Library）
+├── XYZ（纯文本）
+└── HDF5（大规模科学数据）</code></pre>
+  </div>
+
+  <h3 class="section-h3">11.2.2 空间数据结构</h3>
+
+  <p class="p">高效的点云处理需要空间索引结构：</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>数据结构</th>
+        <th>复杂度</th>
+        <th>适用操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>KD-Tree</strong></td>
+        <td>O(log n)最近邻</td>
+        <td>最近邻搜索、半径查询</td>
+      </tr>
+      <tr>
+        <td><strong>Octree</strong></td>
+        <td>O(log n)体素查询</td>
+        <td>空间分割、体素化</td>
+      </tr>
+      <tr>
+        <td><strong>BSP-Tree</strong></td>
+        <td>O(log n)</td>
+        <td>室内场景分割</td>
+      </tr>
+      <tr>
+        <td><strong>R-Tree</strong></td>
+        <td>O(log n + k)范围查询</td>
+        <td>地理信息系统</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="section-h3">11.2.3 曲面法线估计</h3>
+
+  <p class="p">法线估计是点云处理的基础操作，用于曲面重建和可视化：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 PCA法线估计</div>
+    <pre><code>算法步骤：
+1. 对点p的k近邻构建局部邻域集合N(p)
+2. 计算协方差矩阵C：
+   C = (1/k) Σ_{q∈N(p)} (q - p)(q - p)ᵀ
+
+3. 对C进行特征值分解：
+   C·vᵢ = λᵢ·vᵢ,  λ₁ ≥ λ₂ ≥ λ₃ ≥ 0
+
+4. 法线方向 = 最小特征值对应的特征向量
+   n = v₃
+
+朝向约束：
+- 如果已存在参考点（如相机），确保n·(p - camera) > 0
+- 或使用视图中多数法线朝向一致的约束
+
+数学意义：
+- λ₁, λ₂, λ₃表示点云在三个主方向的方差
+- 最小特征值方向是局部曲面法线方向
+- λ₃/(λ₁+λ₂+λ₃) 可作为平面度指标</code></pre>
+  </div>
+
+  <h2 class="section-h2">11.3 点云处理算法</h2>
+
+  <h3 class="section-h3">11.3.1 噪声过滤与离群点移除</h3>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">📊</div>
+      <h4>统计离群点移除</h4>
+      <p>基于邻域点距离的统计分布</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🎯</div>
+      <h4>半径滤波</h4>
+      <p>邻域内点数少于阈值则移除</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📏</div>
+      <h4>条件滤波</h4>
+      <p>基于几何条件的硬过滤</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🗑️</div>
+      <h4>条件统计滤波</h4>
+      <p>投影后分析密度分布</p>
+    </div>
+  </div>
+
+  <h3 class="section-h3">11.3.2 点云下采样</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>方法</th>
+        <th>原理</th>
+        <th>特点</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>体素网格下采样</strong></td>
+        <td>每体素保留重心</td>
+        <td>均匀分布，保持结构</td>
+      </tr>
+      <tr>
+        <td><strong>最远点采样(FPS)</strong></td>
+        <td>迭代选择最远点</td>
+        <td>均匀覆盖，适合点云学习</td>
+      </tr>
+      <tr>
+        <td><strong>均匀下采样</strong></td>
+        <td>每隔N个点取一个</td>
+        <td>简单，不保持结构</td>
+      </tr>
+      <tr>
+        <td><strong>曲率下采样</strong></td>
+        <td>高曲率区域保留更多点</td>
+        <td>保留特征</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="section-h3">11.3.3 点云配准</h3>
+
+  <p class="p">点云配准是将多个视角的点云对齐到统一坐标系的过程：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 ICP（Iterative Closest Point）算法</div>
+    <pre><code>目标：找到变换(R, t)使得：
+argmin_{R,t} Σ ||R·pᵢ + t - qᵢ||²
+
+其中qᵢ是pᵢ的最近对应点
+
+算法流程：
+1. 对每个点pᵢ，在目标点云中找最近邻qᵢ
+2. 用SVD计算最优变换(R, t)：
+   - 计算中心：μₚ = mean(P), μ_q = mean(Q)
+   - 去中心：P' = P - μₚ, Q' = Q - μ_q
+   - 协方差：H = P' · Q'^T
+   - SVD：H = U·Σ·Vᵀ
+   - 最优旋转：R = V·Uᵀ
+   - 若det(R) < 0，则R = V·diag(1,1,det(V·Uᵀ))·Uᵀ
+   - 平移：t = μ_q - R·μₚ
+3. 应用变换，迭代直到收敛
+
+收敛判定：
+- 均方误差变化 < 阈值
+- 迭代次数达到上限
+- 对应点距离均值 < 阈值</code></pre>
+  </div>
+
+  <h2 class="section-h2">11.4 深度学习点云处理</h2>
+
+  <h3 class="section-h3">11.4.1 PointNet架构</h3>
+
+  <p class="p">PointNet是点云深度学习的里程碑工作，直接处理无序点集：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 PointNet网络架构</div>
+    <pre><code>输入：n × 3 点云（n个点，xyz坐标）
+       ↓
+共享MLP (64) → n × 64
+       ↓
+T-Net (3×3) → 变换对齐
+       ↓
+共享MLP (64) → n × 64
+       ↓
+共享MLP (64) → n × 64
+       ↓
+T-Net (64×64) → 特征对齐
+       ↓
+共享MLP (128) → n × 128
+       ↓
+共享MLP (1024) → n × 1024
+       ↓
+Max Pooling → 1 × 1024（全局特征）
+       ↓
+FC (512) → 1 × 512
+       ↓
+FC (256) → 1 × 256
+       ↓
+分类头 / 分割头
+
+关键创新：
+- Max Pooling实现置换不变性
+- T-Net学习几何变换
+- 理论保证：PointNet可以逼近任何连续集合函数</code></pre>
+  </div>
+
+  <h3 class="section-h3">11.4.2 PointNet++层次化点云处理</h3>
+
+  <p class="p">
+    PointNet++通过FPS+Ball Query实现层次化特征学习，解决了PointNet无法捕获局部结构的问题：
+  </p>
+
+  <div class="flow">
+    <div class="flow-box">
+      <div class="flow-box-title">Set Abstraction(SA)</div>
+      <div class="flow-box-desc">Sampling + Grouping + PointNet</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">SA Level 1</div>
+      <div class="flow-box-desc">FPS选N₁个中心点</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">SA Level 2</div>
+      <div class="flow-box-desc">N₂个更大邻域</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">SA Level 3</div>
+      <div class="flow-box-desc">全局特征</div>
+    </div>
+  </div>
+
+  <h3 class="section-h3">11.4.3 点云分割网络</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>网络</th>
+        <th>核心思想</th>
+        <th>分割mIoU</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>PointNet</strong></td>
+        <td>置换不变性+全局特征</td>
+        <td>83.7%</td>
+      </tr>
+      <tr>
+        <td><strong>PointNet++</strong></td>
+        <td>层次化局部特征</td>
+        <td>90.7%</td>
+      </tr>
+      <tr>
+        <td><strong>DGCNN</strong></td>
+        <td>动态图卷积</td>
+        <td>90.8%</td>
+      </tr>
+      <tr>
+        <td><strong>PCT</strong></td>
+        <td>Transformer架构</td>
+        <td>91.2%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="section-h2">11.5 点云到CAD模型重建</h2>
+
+  <h3 class="section-h3">11.5.1 曲面重建方法</h3>
+
+  <p class="p">从点云重建连续曲面是逆向工程的核心问题：</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>方法</th>
+        <th>原理</th>
+        <th>适用场景</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Poisson Surface Reconstruction</strong></td>
+        <td>求解梯度约束的泊松方程</td>
+        <td>均匀采样物体</td>
+      </tr>
+      <tr>
+        <td><strong>Ball Pivoting Algorithm</strong></td>
+        <td>球体滚动确定网格连接</td>
+        <td>有孔物体</td>
+      </tr>
+      <tr>
+        <td><strong>Delaunay三角化</strong></td>
+        <td>Alpha Shapes理论</td>
+        <td>二维截面重建</td>
+      </tr>
+      <tr>
+        <td><strong>TSDF融合</strong></td>
+        <td>符号距离函数加权平均</td>
+        <td>多视角融合</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="section-h3">11.5.2 Poisson Surface Reconstruction</h3>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 泊松曲面重建数学</div>
+    <pre><code>输入：点云P，带法线nᵢ
+目标：找到指示函数χ使得∇χ ≈ nᵢ
+
+泊松方程：
+∇²f = ∇·n
+
+其中：
+- f：平滑的标量场
+- n：法线场（视为梯度约束）
+
+数值求解：
+1. 构建八叉树空间划分
+2. 在节点上定义基函数Φ
+3. 最小二乘求解：min Σ||∇(Σ cⱼΦⱼ) - nⱼ||²
+4. 提取等值面（Marching Cubes）
+
+参数选择：
+- Depth：八叉树深度（影响精度）
+- Solver_Tolerance：求解器精度
+- Weight：法线权重（平滑度）</code></pre>
+  </div>
+
+  <h3 class="section-h3">11.5.3 CAD模型重建</h3>
+
+  <p class="p">从网格/点云重建参数化CAD模型是逆向工程的最终目标：</p>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">📐</div>
+      <h4>拟合基元</h4>
+      <p>从点云拟合平面、圆柱、球等基元</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔲</div>
+      <h4>分割与标注</h4>
+      <p>将点云分割为不同几何基元</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⚙️</div>
+      <h4>约束求解</h4>
+      <p>建立几何约束，求解参数</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📝</div>
+      <h4>特征识别</h4>
+      <p>识别倒角、槽、孔等制造特征</p>
+    </div>
+  </div>
+
+  <h2 class="section-h2">11.6 AI驱动的点云分析</h2>
+
+  <h3 class="section-h3">11.6.1 Point2CAD：点云到CAD重建</h3>
+
+  <p class="p">CVPR 2024的Point2CAD工作实现了从点云直接重建参数化CAD模型：</p>
+
+  <div class="flow">
+    <div class="flow-box">
+      <div class="flow-box-title">输入点云</div>
+      <div class="flow-box-desc">3D扫描数据</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">几何分割</div>
+      <div class="flow-box-desc">PointNet++分割</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">基元拟合</div>
+      <div class="flow-box-desc">每段拟合参数化曲面</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">CAD输出</div>
+      <div class="flow-box-desc">STEP/IGES格式</div>
+    </div>
+  </div>
+
+  <h3 class="section-h3">11.6.2 点云补全</h3>
+
+  <p class="p">由于扫描遮挡，点云往往不完整。AI点云补全技术可以预测缺失部分：</p>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🔧</div>
+      <h4>PF-Net</h4>
+      <p>点云GAN补全</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🌐</div>
+      <h4>TopNet</h4>
+      <p>基于树结构的生成</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📦</div>
+      <h4>Point-BERT</h4>
+      <p>Transformer自监督预训练</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🎯</div>
+      <h4>Voxel-based</h4>
+      <p>体素化后3D卷积</p>
+    </div>
+  </div>
+
+  <h2 class="section-h2">11.7 点云质量评估与后处理</h2>
+
+  <h3 class="section-h3">11.7.1 质量评估指标</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>指标</th>
+        <th>公式</th>
+        <th>含义</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>RMSE</strong></td>
+        <td>√(Σdᵢ²/n)</td>
+        <td>均方根误差</td>
+      </tr>
+      <tr>
+        <td><strong>MAE</strong></td>
+        <td>Σ|dᵢ|/n</td>
+        <td>平均绝对误差</td>
+      </tr>
+      <tr>
+        <td><strong>CD(Chamfer Distance)</strong></td>
+        <td>Σmin||p-q||²+Σmin||q-p||²</td>
+        <td>双向最近邻距离</td>
+      </tr>
+      <tr>
+        <td><strong>Hausdorff</strong></td>
+        <td>max(min||p-q||)</td>
+        <td>最大最小距离</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="section-h3">11.7.2 网格后处理</h3>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🔧</div>
+      <h4>孔洞修复</h4>
+      <p>填补扫描盲区造成的孔洞</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📐</div>
+      <h4>网格简化</h4>
+      <p>减少面数同时保持形状</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">✨</div>
+      <h4>光顺处理</h4>
+      <p>减少噪声同时保持特征</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔄</div>
+      <h4>重网格化</h4>
+      <p>生成高质量四边形网格</p>
+    </div>
+  </div>
+
+  <h2 class="section-h2">11.8 实战项目：文物扫描与模型重建</h2>
+
+  <h3 class="section-h3">11.8.1 项目概述</h3>
+
+  <p class="p">对青铜器文物进行3D扫描，重建高精度的CAD模型，用于数字存档和复制：</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>多视角扫描</h4>
+        <p>使用结构光扫描仪获取20+视角点云</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>点云配准</h4>
+        <p>ICP算法全局对齐所有视角</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>去噪与精简</h4>
+        <p>统计滤波+体素下采样</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>曲面重建</h4>
+        <p>Poisson重建生成mesh</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>CAD重建</h4>
+        <p>Geomagic识别几何特征，重建参数化模型</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-h2">11.9 本章小结</h2>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 核心要点</div>
+    <ol>
+      <li>激光三角测量基于余弦定理，深度分辨率Δd与基线B成正比，与距离d²成反比</li>
+      <li>结构光扫描结合格雷码空间编码和相移法时间编码实现高精度深度测量</li>
+      <li>KD-Tree和Octree是点云处理的核心空间索引结构，支持O(log n)查询</li>
+      <li>PCA法线估计基于协方差矩阵特征分解，最小特征值方向即为法线方向</li>
+      <li>ICP算法通过迭代最近点对应和SVD分解求解最优刚体变换</li>
+      <li>PointNet通过Max Pooling实现置换不变性，理论保证可逼近任意连续集合函数</li>
+      <li>泊松曲面重建将法线场作为梯度约束求解泊松方程，提取等值面得到网格</li>
+    </ol>
+  </div>
+
+  <div class="card green">
+    <div class="card-label">课后练习</div>
+    <h3>第十一章技能测试</h3>
+    <p>
+      <strong>实操任务：</strong>使用MeshLab进行点云处理和曲面重建<br />
+      <strong>要求：</strong><br />
+      1. 下载公开点云数据集（如Stanford Bunny）<br />
+      2. 进行噪声过滤（统计离群点移除）<br />
+      3. 估计法线（MLS方法）<br />
+      4. 执行泊松曲面重建<br />
+      5. 进行网格简化（保持100K面）<br />
+      6. 导出为STL和OBJ格式<br />
+      <strong>评估标准：</strong>处理流程完整性30%、参数选择合理性30%、结果质量40%
+    </p>
+  </div>
+
+  <div class="card yellow">
+    <div class="card-label">课后测验</div>
+    <h3>第十一章选择题</h3>
+    <p>
+      <strong
+        >1.
+        激光三角测量系统中，深度分辨率Δd=d²·cos(β)/(B·sin(α))。当被测物体距离d增加时，以下分析正确的是？</strong
+      ><br />
+      A. 深度分辨率单调恶化（Δd增加），这解释了为何远程激光雷达精度较低　B.
+      深度分辨率与d成正比，因此距离增加2倍意味着分辨率降低2倍　C.
+      当α+β=90°时，sin(α)和cos(β)均取最大值，此时分辨率最优　D.
+      增加基线B可以提高分辨率，但过大的B会导致近处物体出现遮挡<br /><br />
+      <strong
+        >2. PointNet中Max
+        Pooling实现置换不变性的数学本质是？该设计使得PointNet能够理论上保证什么？</strong
+      ><br />
+      A. Max Pooling是 symmetrized 函数，其输出与输入顺序无关；理论上可保证逼近任何连续集合函数　B.
+      Max Pooling选择最大值点，丢弃了其他点的信息；理论上可保证点云的拓扑识别　C. Max
+      Pooling是排列不变函数，但其效果受限于MLP的容量；理论上可保证100%分割精度　D. Max
+      Pooling对所有点平等对待，不区分几何和颜色属性；理论上可保证语义分割的类别平衡<br /><br />
+      <strong
+        >3.
+        ICP算法的收敛性分析中，SVD分解求解最优旋转R=V·Uᵀ的数学依据是？当存在异常对应点时，该方法的鲁棒性如何？</strong
+      ><br />
+      A.
+      SVD分解保证R是行列式为1的正交矩阵，且最小化Frobenius范数意义下的误差；存在异常点时需要预处理剔除　B.
+      SVD分解求得的是最小二乘意义下的最优解；但该解在存在>50%异常点时可能完全错误　C.
+      SVD分解的几何意义是找到使两点集对齐的正交变换；该方法对异常点天然免疫，不需要额外处理　D.
+      SVD分解的复杂度O(n³)，其中n是点数；这限制了ICP在大规模点云中的应用<br /><br />
+      <strong
+        >4.
+        泊松曲面重建中，指示函数χ的梯度∇χ被约束逼近法线场n。该约束的数学来源是？当八叉树深度增加时，重建结果如何变化？</strong
+      ><br />
+      A.
+      泊松方程∇²f=∇·n来源于物理学中的守恒定律；深度增加使基函数更精细，细节更丰富但计算量指数增长　B.
+      指示函数的梯度应指向法线方向这一约束来自曲面的微分几何；深度增加会导致过拟合噪声　C.
+      泊松约束是最小化平滑项和拟合项的加权和；深度增加会提高收敛速度但不影响最终精度　D.
+      该约束是隐式曲面表示的自然推广；深度Depth的取值应等于点云密度的对数<br /><br />
+      <strong
+        >5. 在点云质量评估中，Chamfer
+        Distance和Hausdorff距离的本质区别是？给定两个点云A和B，以下分析正确的是？</strong
+      ><br />
+      A. Chamfer
+      Distance是双向的最近邻距离之和/平均，具有对称性；Hausdorff是单向最大最小距离，不对称　B.
+      Chamfer Distance是O(n²)复杂度，适合大规模点云；Hausdorff是O(n log n)，适合实时应用　C.
+      两种距离都是度量空间中的真实距离，满足三角不等式；因此可以相互替代使用　D. Chamfer
+      Distance对局部噪声敏感，Hausdorff对整体偏差敏感；实际评估应结合两者
+    </p>
+    <details class="quiz-answer">
+      <summary>参考答案</summary>
+      <div>
+        <p><strong>答案：1.A　2.A　3.B　4.A　5.D</strong></p>
+        <p><strong>解析：</strong></p>
+        <ol style="font-size: 0.9em; color: #666">
+          <li>深度分辨率Δd与d²成正比，距离增加导致分辨率恶化；这是远程激光雷达精度较低的原因。</li>
+          <li>
+            Max Pooling是置换不变函数，PointNet理论上可以逼近任意连续集合函数，这是其数学基础。
+          </li>
+          <li>SVD分解是最小二乘解，当异常点超过50%时，该解可能完全错误，需要鲁棒估计方法。</li>
+          <li>泊松方程源于物理守恒定律，深度增加使基函数更精细，但计算量指数增长（2^depth）。</li>
+          <li>
+            Chamfer Distance对局部噪声敏感，Hausdorff对整体偏差敏感，两者结合可全面评估点云质量。
+          </li>
+        </ol>
+      </div>
+    </details>
+  </div>
+</section>

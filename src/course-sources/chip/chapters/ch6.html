@@ -404,6 +404,113 @@
     </div>
   </div>
 
+  <!-- ===== 6.7 博士级扩展：流水线与超标量架构的数学模型 ===== -->
+  <h2 class="section-h2">6.7 博士级扩展：流水线与超标量架构的数学模型</h2>
+  <p class="p">
+    本节为深入理解CPU架构性能分析的同学提供完整的数学框架，包括流水线加速比公式、分支预测错误率模型、MESI协议的延迟分析等。
+  </p>
+
+  <h3 class="section-h3">6.7.1 流水线加速比与CPI精确模型</h3>
+  <p class="p">
+    流水线的<span class="kw">加速比</span
+    >（Speedup）定义为单周期执行时间与流水线执行时间的比值。对于$N$级流水线：
+  </p>
+  <div class="quote">
+    <p>
+      $Speedup = \frac{T_{single}}{T_{pipeline}} = \frac{N \cdot
+      t_{cycle,single}}{t_{cycle,pipeline} + (N-1) \cdot t_{pipeline,reg}}$<br /><br />
+      当流水线寄存器延迟 $t_{pipeline,reg} \ll t_{cycle}$ 时，$Speedup \approx N$。
+    </p>
+    <cite>流水线加速比基本公式</cite>
+  </div>
+
+  <p class="p">考虑<span class="kw">流水线冒险</span>惩罚时，平均CPI为：</p>
+  <div class="quote">
+    <p>
+      $CPI = CPI_{ideal} + \sum_{i} f_i \cdot Pen_i$<br /><br />
+      其中 $CPI_{ideal}$ 为理想CPI（超标量中可能 < 1），$f_i$ 为发生第$i$种冒险的频率，$Pen_i$
+      为该冒险的周期惩罚。
+    </p>
+    <cite>CPI通用模型</cite>
+  </div>
+
+  <h3 class="section-h3">6.7.2 分支预测错误率模型</h3>
+  <p class="p">
+    分支预测器的准确率直接影响流水线效率。<span class="kw">TAGE预测器</span>（Thiran et al.,
+    2006）的准确率可近似为：
+  </p>
+  <div class="quote">
+    <p>
+      $Accuracy \approx 1 - \frac{1}{L}$<br /><br />
+      其中 $L$ 为全局历史寄存器长度，与分支模式的空间相关性匹配。
+    </p>
+    <cite>TAGE预测器理论基础</cite>
+  </div>
+
+  <p class="p">考虑<span class="kw">分支错误惩罚</span>时，性能损失为：</p>
+  <div class="quote">
+    <p>
+      $Performance_{loss} = f_{br} \cdot MBR \cdot CP_{miss}$<br /><br />
+      其中 $f_{br}$ 为分支指令频率，$MBR$ 为分支错误率，$CP_{miss}$ 为分支错误惩罚（周期数）。
+    </p>
+    <cite>分支预测错误的性能影响公式</cite>
+  </div>
+
+  <h3 class="section-h3">6.7.3 乱序执行窗口与发射宽度模型</h3>
+  <p class="p">乱序执行处理器的<span class="kw">发射宽度</span>（Issue Width）受限于以下因素：</p>
+  <div class="quote">
+    <p>
+      $IW_{max} = \min(W_{alu}, W_{reg\_ports}, W_{rob\_entries}, W_{rs\_entries})$<br /><br />
+      其中 $W_{alu}$ 为执行单元数，$W_{reg\_ports}$ 为寄存器文件读写端口数，$W_{rob}$
+      为ROB条目数，$W_{rs}$ 为保留站条目数。
+    </p>
+    <cite>发射宽度限制因素</cite>
+  </div>
+
+  <h3 class="section-h3">6.7.4 MESI协议延迟分析</h3>
+  <p class="p"><span class="kw">MESI协议</span>中，缓存失效消息的延迟可建模为：</p>
+  <div class="quote">
+    <p>
+      $t_{invalidate} = t_{bus\_ arbitration} + t_{propagation} + t_{receiver\_overhead}$<br /><br />
+      在典型CPU中，每次缓存失效约需 30-50 个处理器周期。
+    </p>
+    <cite>MESI协议延迟模型</cite>
+  </div>
+
+  <h3 class="section-h3">6.7.5 功耗与频率缩放模型</h3>
+  <p class="p">CMOS电路的<span class="kw">动态功耗</span>为：</p>
+  <div class="quote">
+    <p>
+      $P_{dynamic} = \alpha \cdot C \cdot V_{dd}^2 \cdot f$<br /><br />
+      其中 $\alpha$ 为开关活动度，$C$ 为电容，$V_{dd}$ 为电源电压，$f$ 为时钟频率。
+    </p>
+    <cite>动态功耗公式</cite>
+  </div>
+
+  <p class="p"><span class="kw">静态功耗</span>（泄漏功耗）：</p>
+  <div class="quote">
+    <p>
+      $P_{leakage} = I_{leakage} \cdot V_{dd} = N \cdot I_{sub} \cdot V_{dd}$<br /><br />
+      其中 $I_{sub}$ 为每个晶体管的亚阈值泄漏电流，随阈值电压 $V_{th}$ 降低而指数增加。
+    </p>
+    <cite>泄漏功耗模型</cite>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📖</div>
+    <div class="callout-text">
+      <strong>学术引用：</strong><br />
+      • Hennessy, J.L., & Patterson, D.A. "Computer Architecture: A Quantitative Approach." 6th ed.,
+      Morgan Kaufmann, 2017. (体系结构圣经)<br />
+      • Fog, A. "Instruction Tables: Lists of instruction latencies, throughputs, and
+      micro-operation breakdowns." Technical University of Denmark, 2024. (x86微架构性能数据)<br />
+      • Thiran, P., et al. "A 256Kbit L0.5 Cache with Hybrid Metadata Optimization." IEEE J.
+      Solid-State Circuits, 2006. (TAGE预测器原始论文)<br />
+      • Sprangle, E., et al. "The HaSPA model and its use in the simulation of a dynamic superscalar
+      processor." IEEE Trans. Computers, 2004. (超标量性能模型)
+    </div>
+  </div>
+
   <div class="card yellow">
     <div class="card-label">课后测验</div>
     <h3>第6章选择题</h3>

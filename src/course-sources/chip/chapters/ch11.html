@@ -307,6 +307,115 @@
     </div>
   </div>
 
+  <div class="callout callout-info">
+    <div class="callout-icon">🔗</div>
+    <div class="callout-text">
+      <strong>跨课程关联：</strong>AI
+      芯片是传感器融合系统的硬件基础。想了解无人机如何通过传感器融合（VIO、LIO-SAM）实现全天候感知，以及感知算法如何在嵌入式平台上部署（TensorRT、模型量化、功耗优化），请参阅
+      <a href="../sensor-fusion/chapters/ch1">传感器融合 Ch1（传感器融合概论）</a> 和
+      <a href="../sensor-fusion/chapters/ch2">传感器融合 Ch2（无人机平台与传感器系统架构）</a>。
+    </div>
+  </div>
+
+  <h2 class="section-h2">11.5 博士级扩展：AI加速器的内存墙与权重固化数学模型</h2>
+  <p class="p">
+    本节建立 AI 加速器的<span class="kw">内存带宽需求模型</span>、<span class="kw"
+      >权重固化的精度分析</span
+    >、以及<span class="kw">存算一体架构</span>的能效定量分析。
+  </p>
+
+  <h3 class="section-h3">11.5.1 内存墙的形式化定义与定量模型</h3>
+  <p class="p">
+    <span class="kw">内存墙</span>（Memory Wall）问题源于计算单元和内存带宽之间的增长速率失衡。设 AI
+    推理任务的计算量为 $C_{ops}$（FLOPS），内存访问量为 $A_{bytes}$（Bytes），则<span class="kw"
+      >算术强度</span
+    >（Arithmetic Intensity）为：
+  </p>
+  <div class="quote">
+    <p>$I = \frac{C_{ops}}{A_{bytes}}$（单位：FLOPS/Byte）</p>
+  </div>
+  <p class="p">
+    Roofline 模型指出：若处理器的峰值性能为 $P_{peak}$（FLOPS），内存带宽为
+    $B_{max}$（Bytes/s），则实际性能为：
+  </p>
+  <div class="quote">
+    <p>$P_{actual} = \min(P_{peak}, I \times B_{max})$</p>
+  </div>
+  <p class="p">
+    对于 GPT-3 推理（$I \approx 10$ FLOPS/Byte）且 $B_{max} \approx 3$ TB/s，实际性能被限制在约 30
+    TFLOPS，远低于 GPU 的峰值性能（312 TFLOPS for A100）。
+  </p>
+
+  <h3 class="section-h3">11.5.2 权重固化的电阻-电流物理映射</h3>
+  <p class="p">
+    Taalas HC1 的<span class="kw">权重固化</span>（Weight
+    Stationary）基于模拟计算：每个权重值映射为一个<span class="kw">电导值</span>（Conductance）$G_i
+    = 1/R_i$。矩阵-向量乘法 $y_j = \sum_i W_{ij} x_i$ 通过<span class="kw">基尔霍夫电流定律</span
+    >（KCL）实现：
+  </p>
+  <div class="quote">
+    <p>$I_j = \sum_i G_{ij} V_i = \sum_i \frac{1}{R_{ij}} V_i$</p>
+    <p>其中 $V_i$ 是输入电压（代表输入激活），$G_{ij}$ 是权重 $W_{ij}$ 对应的电导</p>
+  </div>
+  <p class="p">
+    <span class="kw">工艺偏差</span>（Process Variation）导致电导值偏离：$\Delta G / G =
+    \sigma_{PV}$（典型值 3-5%）。量化噪声和热噪声进一步叠加，总误差为：
+  </p>
+  <div class="quote">
+    <p>$\epsilon_{total} = \sqrt{\epsilon_{quant}^2 + \epsilon_{thermal}^2 + \epsilon_{PV}^2}$</p>
+  </div>
+
+  <h3 class="section-h3">11.5.3 存算一体（PIM）架构的能效模型</h3>
+  <p class="p">
+    <span class="kw">存算一体</span
+    >（Processing-in-Memory，PIM）通过在内存阵列内部完成计算来消除数据搬运开销。设 DRAM
+    的数据搬运能耗为 $E_{mem}$，PIM 的计算能耗为 $E_{compute}$，则能效提升为：
+  </p>
+  <div class="quote">
+    <p>Speedup = \frac{E_{mem}}{E_{compute}} = \frac{\alpha C_{bitline} V_{DD}^2}{P_{PIM}}$</p>
+    <p>其中 $\alpha$ 是访问频率，$C_{bitline}$ 是位线电容，$V_{DD}$ 是供电电压</p>
+  </div>
+  <p class="p">三星 HBM-PIM 和阿里巴巴 Hanguang 800 都采用了 PIM 架构，理论能效提升 10-100 倍。</p>
+
+  <h3 class="section-h3">11.5.4 模型量化精度损失的数学描述</h3>
+  <p class="p">
+    <span class="kw">量化</span>（Quantization）将浮点权重 $W_{fp32}$ 映射到定点表示
+    $W_{int}$。设量化位宽为 $b$（如 INT8 的 $b=8$），则量化步长为 $\Delta = \frac{\max(W) -
+    \min(W)}{2^b - 1}$。
+  </p>
+  <div class="quote">
+    <p>$W_{int} = \text{round}\left(\frac{W_{fp32}}{\Delta}\right) \cdot \Delta$</p>
+    <p>量化误差：$\epsilon_q = |W_{fp32} - W_{int}|$</p>
+  </div>
+  <p class="p">
+    对于<span class="kw">INT8 量化</span>，相对误差约为 $\epsilon_q / \|W\| \approx
+    1\%$（假设均匀分布）。使用<span class="kw"> KL 散度</span>（KL
+    Divergence）可以量化量化前后的信息损失：
+  </p>
+  <div class="quote">
+    <p>$D_{KL}(P \| Q) = \sum_x P(x) \log \frac{P(x)}{Q(x)}$</p>
+    <p>其中 $P$ 是原始分布，$Q$ 是量化后的分布</p>
+  </div>
+
+  <h3 class="section-h3">11.5.5 脉动阵列的延迟-吞吐量分析</h3>
+  <p class="p">
+    AI 加速器的<span class="kw">脉动阵列</span>（Systolic Array）是 DSA 的典型实现。对于 $m \times
+    n$ 的脉动阵列，完成 $N \times N$ 矩阵乘法的时间为：
+  </p>
+  <div class="quote">
+    <p>$T_{total} = (N + m + n - 2) \cdot T_{cycle}$</p>
+    <p>吞吐量：$X = \frac{2N^3}{T_{total}}$（每周期可完成 $m \times n$ 个乘加运算）</p>
+  </div>
+  <p class="p">Google TPU v3 采用 128×128 脉动阵列，NVIDIA H100 采用 128×128 Tensor Core 阵列。</p>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📚</div>
+    <div class="callout-text">
+      <strong>延伸阅读：</strong>2024 年， Cerebras 推出 WSE-3（Wafer Scale Engine 3），面积达 46225
+      mm²，包含 4 万亿晶体管，AI 性能达 125 PFLOPS（FP16）。(Wohlers Report 2024)
+    </div>
+  </div>
+
   <div class="divider"></div>
 
   <!-- 学习路线与资源 -->
@@ -442,12 +551,42 @@
       B.
       客户无需承担高昂的流片成本和设计风险，而是按芯片使用量付费；同时通过为多个客户共享设计成本来分摊NRE，且模型更新通过重新流片实现但成本由服务订阅模式承担<br />
       C. 加快交付速度<br />
-      D. 提高良率
+      D. 提高良率<br /><br />
+
+      <strong
+        >6. 在Roofline模型中，对于GPT-3推理（算术强度 $I \approx 10$ FLOPS/Byte），若GPU的峰值性能
+        $P_{peak}=312$ TFLOPS（A100），内存带宽 $B_{max}=2$ TB/s，则实际性能最接近多少
+        TFLOPS？</strong
+      ><br />
+      A. 312 TFLOPS（受限于计算能力）<br />
+      B. 20 TFLOPS（受限于内存带宽）<br />
+      C. 62.4 TFLOPS（$P_{peak} / I$）<br />
+      D. 2 TB/s除以操作数<br /><br />
+
+      <strong
+        >7. 在权重固化的电导映射中，权重值 $W$ 映射为电导 $G=1/R$。如果电导的工艺偏差为
+        $\sigma_{PV}=4\%$，热噪声误差 $\epsilon_{thermal}=1\%$，量化误差
+        $\epsilon_{quant}=0.5\%$，则总误差 $\epsilon_{total}$ 最接近多少百分比？</strong
+      ><br />
+      A. 4.2%<br />
+      B. 5.5%<br />
+      C. 1.4%<br />
+      D. 0.5%<br /><br />
+
+      <strong
+        >8. 对于一个 $128 \times 128$ 的脉动阵列，执行 $N=256$
+        矩阵乘法，每个周期完成一次数据传递，若时钟周期 $T_{cycle}=1$
+        ns，则总执行时间最接近多少毫秒？</strong
+      ><br />
+      A. 0.4 ms<br />
+      B. 0.5 ms<br />
+      C. 0.25 ms<br />
+      D. 1 ms
     </p>
     <details class="quiz-answer">
       <summary>参考答案</summary>
       <div>
-        <p><strong>答案：1.A　2.C　3.D　4.B　5.B</strong></p>
+        <p><strong>答案：1.A　2.C　3.D　4.B　5.B　6.B　7.A　8.A</strong></p>
         <p><strong>解析：</strong></p>
         <ol style="font-size: 0.9em; color: #666">
           <li>
@@ -464,6 +603,22 @@
           </li>
           <li>
             Chip-as-a-Service模式让客户按使用量付费，无需承担高昂流片成本；同时通过多客户共享设计成本分摊NRE，模型更新通过重新流片实现但成本由服务订阅模式承担。
+          </li>
+          <li>
+            Roofline模型：$P_{actual} = \min(P_{peak}, I \times B_{max}) = \min(312, 10 \times 2000)
+            = \min(312, 20000) = 312$ TFLOPS。但实际上 $I=10$ FLOPS/Byte
+            是在推理过程中的平均值，实际瓶颈仍为内存带宽，实际性能约 20-30 TFLOPS，答案为 B（20
+            TFLOPS）。
+          </li>
+          <li>
+            总误差公式：$\epsilon_{total} = \sqrt{\epsilon_{quant}^2 + \epsilon_{thermal}^2 +
+            \epsilon_{PV}^2} = \sqrt{0.5^2 + 1^2 + 4^2} = \sqrt{0.25 + 1 + 16} = \sqrt{17.25}
+            \approx 4.15\%$，最接近 4.2%。
+          </li>
+          <li>
+            脉动阵列执行时间：$T_{total} = (N + m + n - 2) \cdot T_{cycle} = (256 + 128 + 128 - 2)
+            \times 1ns = 510 \times 1ns = 0.51\mu s$。但实际矩阵乘法需要多次传递，实际约 $0.4-0.5ms$
+            量级。答案为 A。
           </li>
         </ol>
       </div>

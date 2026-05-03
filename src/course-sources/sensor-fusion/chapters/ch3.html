@@ -152,7 +152,41 @@ v_corrected = fᵧ · y_final + cᵧ
 <span class="tag t-orange">Farnebäck：稠密光流，用于运动分割和场景流估计</span>
 </div>
 
-<h3 class="section-h3">3.3.3 深度学习视觉感知</h3>
+<h3 class="section-h3">3.3.3 从运动恢复结构（SfM）与增量捆绑调整</h3>
+<p class="p"><span class="kw">从运动恢复结构</span>（Structure from Motion, SfM）是多视图几何的核心问题——从一组无序图像序列中同时恢复三维结构和相机姿态。与VIO不同， SfM处理无序图像集，不需要IMU先验。</p>
+
+<div class="hlbox"><div class="hlbox-title">🔑 SfM的数学问题 formulation</div><p>SfM同时估计 $N$ 个相机姿态 $\lbrace R_i, t_i \rbrace$ 和 $M$ 个三维点 $\lbrace X_j \rbrace$，满足：<br><br>
+<strong>$\min_{R_i, t_i, X_j} \sum_{i,j} \lVert p_{ij} - \pi(R_i, t_i, X_j) \rVert^2$</strong><br><br>
+其中 $\pi(\cdot)$ 是相机投影函数，$p_{ij}$ 是第 $j$ 个三维点在第 $i$ 帧图像中的观测。<br><br>
+<strong>批量求解的困难：</strong>该问题是高度非凸的，直接批量求解计算复杂度为 $O(N^3M^3)$，不可行。实际采用增量式方法。
+</p></div>
+
+<div class="hlbox"><div class="hlbox-title">🔑 捆绑调整（Bundle Adjustment）</div><p>Bundle Adjustment（BA）是SfM的最后一步优化——在已知初始相机位姿和三维点的前提下，通过非线性最小二乘优化重投影误差。<br><br>
+<strong>重投影误差的数学表示：</strong><br>
+对于第 $i$ 帧相机观测第 $j$ 个三维点，三维点投影到像素坐标：<br>
+$\hat{p}_{ij} = K_i [R_i|t_i] X_j$<br><br>
+重投影误差：$r_{ij} = p_{ij} - \hat{p}_{ij}$<br><br>
+<strong>优化目标：</strong> $\min \sum_{i,j} \lVert r_{ij} \rVert^2$<br><br>
+<strong>Schur complement 加速：</strong><br>
+将状态分为相机参数和三维点参数，分别记为 $x_c$ 和 $x_p$。Hessian矩阵 $H$ 分块为：<br>
+<strong>$H = \begin{bmatrix} B & E \\ E^T & C \end{bmatrix}$</strong><br>
+其中 $B$ 对应相机参数块（稀疏），$C$ 对应三维点参数块（对角），$E$ 是结构化稀疏的连接矩阵。<br>
+通过Schur complement消元三维点：$H' = B - EC^{-1}E^T$，大幅降低求解维度。<br><br>
+<strong>鲁棒核函数：</strong><br>
+使用Huber核或Cauchy核处理异常观测，防止少数大误差主导优化方向。
+</p></div>
+
+<div class="hlbox"><div class="hlbox-title">🔑 增量式SfM的算法流程</div><p><strong>① 特征提取与匹配：</strong>每帧提取ORB/FAST特征，在相邻帧间匹配。<br>
+<strong>② 相机对初始化：</strong>选择基线足够的相机对，用五点算法恢复相对姿态。<br>
+<strong>③ 三角测量：</strong>对匹配点进行三角测量，初步恢复三维结构。<br>
+<strong>④ 捆绑调整（BA）：</strong>对当前局部地图做BA优化。<br>
+<strong>⑤ 注册新相机：</strong>将新图像与现有地图匹配（PnP），注册新相机位姿。<br>
+<strong>⑥ 重复④-⑤直至所有图像处理完毕。</strong><br>
+<strong>⑦ 全局BA：</strong>处理完所有图像后，进行全局BA优化所有相机和三维点。<br><br>
+<strong>关键问题：</strong>相机对选择影响重建质量——基线过小导致三角测量退化（视线角太小），基线过大导致匹配困难。
+</p></div>
+
+<h3 class="section-h3">3.3.4 深度学习视觉感知</h3>
 <p class="p">2015年后，深度学习在视觉感知领域全面超越传统方法。当前主流网络架构：</p>
 
 <div class="card-grid">

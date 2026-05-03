@@ -43,6 +43,50 @@
     </div>
   </div>
 
+  <h3 class="section-h3">9.1.1 代码质量度量的理论基础</h3>
+  <p class="p">
+    代码质量度量是软件工程研究的重要方向。从McCabe的圈复杂度到Halstead的科学度量学，研究者们建立了系统的代码质量量化方法。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 代码复杂度的度量模型</div>
+    <p>
+      <strong>圈复杂度（Cyclomatic Complexity）</strong>（McCabe,
+      1976）是最广泛使用的代码复杂度度量：
+    </p>
+    <p>M = E - N + 2P</p>
+    <ul>
+      <li>E = 图中的边数</li>
+      <li>N = 图中的节点数</li>
+      <li>P = 连通分量的数量</li>
+    </ul>
+    <p>复杂度越高，测试难度越大，出错可能性越高。AI可以自动计算圈复杂度并建议重构时机。</p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Halstead科学度量法</div>
+    <p><strong>Halstead度量</strong>基于程序源代码的物理特征：</p>
+    <ul>
+      <li><strong>n₁</strong> = 不同运算符的数量</li>
+      <li><strong>n₂</strong> = 不同操作数的数量</li>
+      <li><strong>N₁</strong> = 总运算符数量</li>
+      <li><strong>N₂</strong> = 总操作数数量</li>
+    </ul>
+    <p>
+      派生指标包括：程序长度、体积、难度、Effort等。Halstead度量在代码理解和预测缺陷方面有研究价值。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 软件熵与代码健康度</div>
+    <p><strong>软件熵（Software Entropy）</strong>借鉴热力学概念：</p>
+    <ul>
+      <li>低熵 = 代码结构良好、易于维护</li>
+      <li>高熵 = 代码混乱、技术债务累积</li>
+    </ul>
+    <p>AI可以综合多种度量指标（圈复杂度、代码重复率、依赖复杂度等）计算代码的"健康度评分"。</p>
+  </div>
+
   <h2 class="section-h2">9.2 GitHub Copilot Code Review</h2>
 
   <p class="p">Copilot内置的代码审查功能可以提供初步审查意见：</p>

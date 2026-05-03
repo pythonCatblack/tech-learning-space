@@ -27,7 +27,7 @@
 <div class="hlbox"><div class="hlbox-title">🔑 协方差矩阵</div><p>协方差矩阵 Σ 是对称正定矩阵：<strong>Σ = E[(x-μ)(x-μ)ᵀ]</strong><br><br>
 • 对角线元素：每个维度的方差（Var(x), Var(y), Var(z)）<br>
 • 非对角线元素：维度之间的相关程度（Cov(x,y), Cov(y,z), Cov(x,z)）<br><br>
-在二维平面上，协方差矩阵决定高斯分布的<span class="kw">误差椭圆</strong>——长轴是最大不确定方向。<br><br>
+在二维平面上，协方差矩阵决定高斯分布的<span class="kw">误差椭圆</span>——长轴是最大不确定方向。<br><br>
 <strong>实战含义：</strong>如果x方向和y方向的协方差>0，说明这两个方向的误差倾向于同向偏离（正相关）；如果<0，说明倾向于反向偏离。
 </p></div>
 
@@ -76,7 +76,26 @@
 </div>
 
 <div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>Mahalanobis距离：</strong>判断一个新观测是否"可信"的标准方法。计算观测残差与预测协方差的Mahalanobis距离，如果超过阈值（如χ²分布的95%分位点），则判定为异常观测并降低其权重。这正是VIO和LIO-SAM处理外点的核心机制。<br><br>
-<strong>公式：</strong>d_M = √((z - ẑ)ᵀ · S⁻¹ · (z - ẑ))<br>其中 S = HPHᵀ + R 是"新息协方差"。如果 d_M > χ²(α, n) 则判定为外点。</div></div>
+<strong>公式：</strong>$d_M = \sqrt{(\mathbf{z} - \hat{\mathbf{z}})^\top \cdot \mathbf{S}^{-1} \cdot (\mathbf{z} - \hat{\mathbf{z}})}$<br>其中 $\mathbf{S} = \mathbf{HPH}^\top + \mathbf{R}$ 是"新息协方差"。如果 $d_M > \chi^2(\alpha, n)$ 则判定为外点。</div></div>
+
+<div class="hlbox"><div class="hlbox-title">🔬 Fisher信息与Cramér-Rao下界</div><p>Fisher信息矩阵（FIM）是估计理论中的核心概念，描述了观测数据 $\mathbf{z}$ 携带的关于未知参数 $\mathbf{x}$ 的信息量：</p>
+<p>$$\mathbf{J}(\mathbf{x}) = -\mathbb{E}\left[\nabla_{\mathbf{x}}^2 \log p(\mathbf{z}|\mathbf{x})\right]$$</p>
+<p><strong>Cramér-Rao下界（CRLB）</strong>给出了任何无偏估计量 $\hat{\mathbf{x}}$ 的协方差矩阵下界：</p>
+<p>$$\mathbf{P}_{\hat{\mathbf{x}}} \succeq \mathbf{J}^{-1}(\mathbf{x})$$</p>
+<p>其中 $\mathbf{A} \succeq \mathbf{B}$ 表示 $\mathbf{A} - \mathbf{B}$ 为半正定矩阵。</p>
+<p><strong>多传感器融合的信息论解释：</strong>设两个独立传感器的Fisher信息分别为 $\mathbf{J}_1$ 和 $\mathbf{J}_2$，则融合后的总信息矩阵为 $\mathbf{J}_{\text{fused}} = \mathbf{J}_1 + \mathbf{J}_2$。因此：</p>
+<p>$$\mathbf{P}_{\text{fused}} \preceq \min\left(\mathbf{J}_1^{-1}, \mathbf{J}_2^{-1}\right)$$</p>
+<p>这意味着融合后的估计方差必然小于等于任一单传感器的估计方差——从信息论层面严格证明了传感器融合的优势。</p>
+</div>
+
+<div class="hlbox"><div class="hlbox-title">🔬 信息增益与熵的量化关系</div><p>在贝叶斯滤波中，观测带来的<span class="kw">信息增益</span>等于熵的减少量：</p>
+<p>$$\Delta H = H(\mathbf{x}_{k|k-1}) - H(\mathbf{x}_k|\mathbf{z}_{1:k})$$</p>
+<p>其中 $H(\mathbf{x}) = -\int p(\mathbf{x}) \log p(\mathbf{x}) d\mathbf{x}$ 是微分熵。对于高斯分布，熵为：</p>
+<p>$$H(\mathcal{N}(\boldsymbol{\mu}, \mathbf{P})) = \frac{1}{2}\log\left((2\pi e)^n |\mathbf{P}|\right)$$</p>
+<p>因此，协方差从 $\mathbf{P}_{k|k-1}$ 更新到 $\mathbf{P}_{k|k}$ 时，熵的变化为：</p>
+<p>$$\Delta H = \frac{1}{2}\log\frac{|\mathbf{P}_{k|k-1}|}{|\mathbf{P}_{k|k}|} \geq 0$$</p>
+<p>这说明更新步必然使熵减少——信息增益永远为正。</p>
+</div>
 
 <!-- ===== 🛠️ 动手实践 ===== -->
 <div class="card green"><div class="card-label">🛠️ 动手实践</div><h3>用Python实现一维贝叶斯递推</h3><p><strong>目标：</strong>用Python模拟贝叶斯递推，观察预测步如何增加方差（熵增），更新步如何减小方差（信息增益）。<br><br>

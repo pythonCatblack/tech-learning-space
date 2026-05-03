@@ -1,0 +1,725 @@
+<section id="ch10">
+  <!-- 内容更新时间：2026-05-04 -->
+  <div class="hero">
+    <div class="chapter-tag">Chapter 10 · 高级进阶篇</div>
+    <h1>程序化建模与节点式生成</h1>
+    <p class="sub">Blender Geometry Nodes、Houdini VEX、参数化设计</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">📖 约60分钟阅读</span>
+      <span class="hero-meta-item">🔧 程序化建模</span>
+    </div>
+  </div>
+
+  <p class="lead">
+    程序化建模（Procedural
+    Modeling）通过算法和规则自动生成3D几何体，实现了"参数驱动设计"的理念。Blender Geometry
+    Nodes和Houdini代表了当代程序化建模的最高水平。本章将深入探讨程序化建模的数学基础、节点式工作流的工程实践，以及如何利用AI增强程序化建模能力。
+  </p>
+
+  <h2 class="section-h2">10.1 程序化建模的数学基础</h2>
+
+  <h3 class="section-h3">10.1.1 形式语言与L-系统</h3>
+
+  <p class="p">
+    程序化建模的核心思想源于Chomsky形式语法，最经典的实例是Lindenmayer系统（L-系统），用于描述植物形态的递归生成：
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 L-系统的数学定义</div>
+    <pre><code>L-系统是一个三元组 G = (V, ω, P)：
+
+V：字母表（符号集合）
+ω：初始串（公理）
+P：产生式规则集合
+
+示例：植物分支结构
+字母表：V = {F, +, -, [, ]}
+初始串：ω = "F"
+产生式：P = {
+  F → F[+F]F[-F]F,
+  + → "+",
+  - → "-"
+}
+
+解释：
+- F：向前画线
+- +：左转60度
+- -：右转60度
+- [：保存状态
+- ]：恢复状态
+
+迭代3次后的字符串推导：
+F → F[+F]F[-F]F → ...
+该字符串被解释为 turtle graphics 绘图指令</code></pre>
+  </div>
+
+  <h3 class="section-h3">10.1.2 噪声函数与程序化纹理</h3>
+
+  <p class="p">程序化内容生成（PCG）广泛使用噪声函数作为基础构建块：</p>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🌊</div>
+      <h4>Perlin噪声</h4>
+      <p>梯度噪声，在n维空间定义连续随机函数</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📊</div>
+      <h4>Simplex噪声</h4>
+      <p>Perlin的优化版，消除方向性偏差</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⚡</div>
+      <h4>Worley噪声</h4>
+      <p>基于Voronoi图的细胞噪声</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🌀</div>
+      <h4>分形布朗运动(fBM)</h4>
+      <p>多八度噪声叠加：fBM(p) = Σᵢ aⁱ·noise(2ⁱp)</p>
+    </div>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 分形布朗运动与1/f谱特性</div>
+    <pre><code>fBM的核心性质：功率谱遵循1/f^α规律
+
+数学定义：
+fBM(p; octaves, lacunarity, gain) = Σ_{i=0}^{octaves-1} gainⁱ · noise(lacunarityⁱ · p)
+
+其中：
+- octaves：叠加层数（典型值4-8）
+- lacunarity：频率倍增（典型值2.0）
+- gain：振幅衰减（典型值0.5）
+
+Hurst参数H与分形维数D的关系：
+D = n + 1 - H （n是拓扑维数）
+H = 1 - α/2
+
+在程序化地形中：
+- H ≈ 0.5：山脉地形
+- H ≈ 0.7：崎岖地形
+- H ≈ 0.9：极端崎岖地形</code></pre>
+  </div>
+
+  <h2 class="section-h2">10.2 Blender Geometry Nodes</h2>
+
+  <h3 class="section-h3">10.2.1 节点系统架构</h3>
+
+  <p class="p">Geometry Nodes是Blender 2.92+引入的基于节点的几何处理框架，采用数据流编程范式：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 Geometry Nodes核心概念</div>
+    <pre><code>几何数据（Geometry Data）：
+├── 顶点（Vertices）：位置、法线、UV
+├── 边（Edges）：连接关系
+├── 面（Faces）：拓扑信息
+└── 点（Points）：实例化粒子
+
+节点类型层次：
+├── Input Nodes：Object Info, Group Input, Collection Info
+├── Output Nodes：Group Output
+├── Geometry Nodes：
+│   ├── Mesh Operations：Subdivision, Decimate, Triangulate
+│   ├── Point Operations：Point Distribute, Point Instance
+│   └── Curve Operations：Curve to Mesh, Resample Curve
+├── Attribute Nodes：
+│   ├── Attribute Sample Texture
+│   ├── Attribute Vector Math
+│   └── Named Attribute
+└── Utility Nodes：
+    ├── Join Geometry
+    ├── Capture Attribute
+    └── Random Value
+
+数据流：
+[Input] → [Node A] → [Node B] → [Node C] → [Output]
+                ↓
+          中间几何数据通过匿名属性传递</code></pre>
+  </div>
+
+  <h3 class="section-h3">10.2.2 字段（Field）系统与上下文</h3>
+
+  <p class="p">
+    Geometry Nodes最难理解的概念是"字段"——在几何元素上定义的函数。菱形节点插座表示字段输入：
+  </p>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">◆</div>
+      <h4>◆ 菱形（字段输入）</h4>
+      <p>在几何元素的每个元素上求值</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">○</div>
+      <h4>○ 圆形（单值）</h4>
+      <p>整个节点执行一次</p>
+    </div>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 字段上下文的隐式推断</div>
+    <pre><code>示例：Set Material节点
+
+Material输入（◆）是字段：
+→ 在几何体的每个面/点/边上独立求值
+→ 上下文字典推断自输入几何
+
+如果输入是面上下文：
+Material = Attribute（面属性）
+
+如果输入是点上下文：
+Material = Attribute（点属性）
+
+如果输入是编辑后的几何：
+Material在编辑后重新求值
+
+关键理解：
+- 菱形端口的"空"输入不等于无数据
+- 上下文由上游连接的线决定
+- 在哪里使用决定了如何解释</code></pre>
+  </div>
+
+  <h3 class="section-h3">10.2.3 实战：程序化建筑生成</h3>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>基础体量</h4>
+        <p>使用Cube节点创建基础体量，通过参数控制尺寸</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>网格细分</h4>
+        <p>Subdivide Mesh节点增加顶点数，Noise Texture驱动位移</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>立面分割</h4>
+        <p>Duplication Elements创建窗户阵列，Random Value控制开洞</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>细节添加</h4>
+        <p>Point Instance在表面散布装饰元素</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>材质驱动</h4>
+        <p>Capture Attribute记录楼层高度，驱动不同材质</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-h2">10.3 Houdini程序化建模</h2>
+
+  <h3 class="section-h3">10.3.1 Houdini架构概览</h3>
+
+  <p class="p">Houdini采用节点网络+参数面板的双重界面，其核心是SOP（Surface Operators）层级：</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>层级</th>
+        <th>全称</th>
+        <th>应用场景</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>SOP</strong></td>
+        <td>Surface Operators</td>
+        <td>几何体创建与编辑</td>
+      </tr>
+      <tr>
+        <td><strong>POP</strong></td>
+        <td>Particle Operators</td>
+        <td>粒子系统</td>
+      </tr>
+      <tr>
+        <td><strong>DOP</strong></td>
+        <td>Dynamic Operators</td>
+        <td>刚体/柔体动力学</td>
+      </tr>
+      <tr>
+        <td><strong>COP</strong></td>
+        <td>Composite Operators</td>
+        <td>图像合成</td>
+      </tr>
+      <tr>
+        <td><strong>VOP</strong></td>
+        <td>Vector Operators</td>
+        <td>程序化材质/噪声</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="section-h3">10.3.2 VEX：Houdini的表达式语言</h3>
+
+  <p class="p">VEX（Vector Expression）是Houdini的高性能向量表达式语言，用于编写自定义节点：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💻 VEX代码示例：程序化岩石生成</div>
+    <pre><code>// wrangle节点中的VEX代码
+// 上下文：detail（每个基元执行一次）
+
+// 获取当前点的位置
+vector pos = @P;
+
+// 生成基于位置的噪声位移
+float noise_scale = ch("noise_scale");
+float displacement = ch("displacement");
+
+// 使用curl noise保持流体特性
+vector noise_pos = pos * noise_scale;
+float n = noise(noise_pos);
+
+// 沿法线方向位移
+@P += @N * n * displacement;
+
+// 添加第二层细节
+float detail = noise(pos * noise_scale * 3.0);
+@P += @N * detail * displacement * 0.3;
+
+// 随机旋转
+float angle = rand(@ptnum) * 3.14159 * 2;
+vector axis = normalize(pos);
+@P =qrotate(@P, axis, angle * 0.1);
+
+// 导出属性供材质使用
+f@displacement_value = n;</code></pre>
+  </div>
+
+  <h3 class="section-h3">10.3.3 Houdini与Blender的对比</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>维度</th>
+        <th>Houdini</th>
+        <th>Blender Geometry Nodes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>架构哲学</td>
+        <td>程序化优先，节点网络即资产</td>
+        <td>程序化增强传统建模工作流</td>
+      </tr>
+      <tr>
+        <td>表达力</td>
+        <td>完整编程语言（VEX）</td>
+        <td>可视化节点，简化子集</td>
+      </tr>
+      <tr>
+        <td>适用场景</td>
+        <td>电影特效、大规模场景</td>
+        <td>产品设计、建筑可视化</td>
+      </tr>
+      <tr>
+        <td>学习曲线</td>
+        <td>陡峭（6-12个月精通）</td>
+        <td>中等（1-3个月）</td>
+      </tr>
+      <tr>
+        <td>成本</td>
+        <td>商业许可（约$2000/年）</td>
+        <td>免费开源</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="section-h2">10.4 参数化设计方法论</h2>
+
+  <h3 class="section-h3">10.4.1 参数化设计的形式化</h3>
+
+  <p class="p">参数化设计将设计意图编码为数学约束和参数关系：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 参数化设计的数学框架</div>
+    <pre><code>设计空间（Design Space）：
+D = {d₁, d₂, ..., dₙ}  // n个设计参数
+
+约束空间（Constraint Space）：
+C = {c₁, c₂, ..., cₘ}  // m个约束条件
+
+设计问题：
+Find d ∈ D
+Such that: C(d) = 0 (等式约束)
+         C(d) ≥ 0 (不等式约束)
+         Optimize: F(d) (目标函数)
+
+示例：参数化椅设计
+D = {seat_height, seat_depth, back_angle, leg_width, ...}
+C = {
+  seat_height ∈ [40, 50]cm,
+  seat_depth ∈ [40, 50]cm,
+  back_angle ∈ [95, 110]°,
+  structural_stress(seat_height, leg_width) ≤ σ_max
+}
+F = manufacturing_cost + weight</code></pre>
+  </div>
+
+  <h3 class="section-h3">10.4.2 约束传播与依赖管理</h3>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🔗</div>
+      <h4>直接约束</h4>
+      <p>A = f(B)，A直接由B计算</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔄</div>
+      <h4>循环约束</h4>
+      <p>需要迭代求解（如力学平衡）</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⚖️</div>
+      <h4>约束优先级</h4>
+      <p>多层约束的求解顺序</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🎯</div>
+      <h4>敏感性分析</h4>
+      <p>参数变化对输出的影响度</p>
+    </div>
+  </div>
+
+  <h2 class="section-h2">10.5 AI增强的程序化建模</h2>
+
+  <h3 class="section-h3">10.5.1 程序化建模的局限性</h3>
+
+  <div class="callout callout-warn">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-text">
+      <strong>程序化建模的痛点：</strong>
+      <ul>
+        <li>手工编码规则难以覆盖多样化现实世界形态</li>
+        <li>参数空间庞大，非专家难以探索</li>
+        <li>规则冲突和边缘情况处理复杂</li>
+        <li>缺乏语义理解能力</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="section-h3">10.5.2 AI辅助参数生成</h3>
+
+  <p class="p">AI可以从参考图像或草图自动推断参数：</p>
+
+  <div class="flow">
+    <div class="flow-box">
+      <div class="flow-box-title">参考图像</div>
+      <div class="flow-box-desc">设计参考或草图</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">AI分析</div>
+      <div class="flow-box-desc">CNN提取视觉特征</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">参数预测</div>
+      <div class="flow-box-desc">MLP回归参数向量</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">程序化生成</div>
+      <div class="flow-box-desc">Geometry Nodes执行</div>
+    </div>
+  </div>
+
+  <h3 class="section-h3">10.5.3 程序化建模与生成式AI的协同</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>方向</th>
+        <th>方法</th>
+        <th>优势</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>AI→程序化</strong></td>
+        <td>AI生成草图→程序化规则推断</td>
+        <td>结合AI创意与程序化可控性</td>
+      </tr>
+      <tr>
+        <td><strong>程序化→AI</strong></td>
+        <td>程序化生成训练数据→AI学习</td>
+        <td>无限变化的训练样本</td>
+      </tr>
+      <tr>
+        <td><strong>混合架构</strong></td>
+        <td>AI生成+程序化约束修正</td>
+        <td>质量与效率的平衡</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="section-h2">10.6 程序化材质与纹理</h2>
+
+  <h3 class="section-h3">10.6.1 Shader Nodes数学</h3>
+
+  <p class="p">
+    Blender的Shader
+    Nodes本质上是在UV坐标上定义的数学函数。理解这些运算的数学本质对于高级材质创作至关重要：
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 程序化材质节点图论</div>
+    <pre><code>材质定义为一个有向无环图（DAG）：
+M = (V, E, A)
+其中：
+- V：节点集合（操作）
+- E：边集合（数据流）
+- A：属性集合（常量参数）
+
+每个节点v∈V是一个函数：
+f_v : (Input₁, Input₂, ...) → Output
+
+示例节点图：
+[Noise Texture] → [Color Ramp] → [Principled BSDF]
+      ↓
+[Coordinate] ──────────→ [Mapping] → [Image Texture]
+
+语义等价于：
+color = color_ramp(noise_texture(coord))
+material = principled_bsdf(color)</code></pre>
+  </div>
+
+  <h3 class="section-h3">10.6.2 Voronoi与程序化纹理</h3>
+
+  <p class="p">Worley噪声（Voronoi）是程序化纹理的核心构建块：</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">💡 Voronoi图与Worley噪声</div>
+    <pre><code>给定点集P={p₁,p₂,...,pₙ}，Voronoi单元：
+V(pᵢ) = {x ∈ ℝⁿ | dist(x,pᵢ) ≤ dist(x,pⱼ), ∀j≠i}
+
+Worley噪声Fₖ(x)：
+Fₖ(x) = 第k近邻点pᵢ的距离 = dist(x, pᵢₖ)
+
+变体：
+- F₁：最近邻距离（细胞核心）
+- F₂-F₁：到最近边距离（细胞边界）
+- F₃：第三近邻距离
+
+应用：
+- 岩石/石材：F₂-F₁作为细节mask
+- 泡沫：F₁作为单元格
+- 织物：F₂-F₁配合低octaves</code></pre>
+  </div>
+
+  <h2 class="section-h2">10.7 程序化建模的工程实践</h2>
+
+  <h3 class="section-h3">10.7.1 节点资产管理</h3>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">📦</div>
+      <h4>节点组</h4>
+      <p>封装为可复用节点</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🗂️</div>
+      <h4>资产浏览器</h4>
+      <p>Blender Asset Browser管理</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📤</div>
+      <h4>导出为资产</h4>
+      <p>标记为可发布资产</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔄</div>
+      <h4>版本控制</h4>
+      <p>节点图的Git管理</p>
+    </div>
+  </div>
+
+  <h3 class="section-h3">10.7.2 性能优化</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>优化策略</th>
+        <th>方法</th>
+        <th>预期收益</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>节点简化</td>
+        <td>合并冗余节点，减少数据传输</td>
+        <td>30-50%速度提升</td>
+      </tr>
+      <tr>
+        <td>缓存在线评估</td>
+        <td>Separation节点避免重复计算</td>
+        <td>视复杂度而定</td>
+      </tr>
+      <tr>
+        <td>精度降级</td>
+        <td>视口预览用低精度</td>
+        <td>5-10倍预览速度</td>
+      </tr>
+      <tr>
+        <td>增量计算</td>
+        <td>仅重计算变化的部分</td>
+        <td>取决于修改范围</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="section-h2">10.8 实战项目：程序化城市生成系统</h2>
+
+  <h3 class="section-h3">10.8.1 项目概述</h3>
+
+  <p class="p">构建一个程序化城市生成系统，能够根据参数生成多样化的城市建筑群：</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>基础网格</h4>
+        <p>创建城市用地的Voronoi分割</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>建筑类型分配</h4>
+        <p>基于区域类型（商业/住宅/工业）分配建筑模板</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>参数化变形</h4>
+        <p>使用噪声控制高度、退阶、旋转</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>立面程序化</h4>
+        <p>Geometry Nodes生成窗户幕墙</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>批量导出</h4>
+        <p>每个建筑单独导出为glTF</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-h2">10.9 本章小结</h2>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 核心要点</div>
+    <ol>
+      <li>L-系统是形式语言理论在程序化建模中的应用，通过递归产生式规则生成复杂形态</li>
+      <li>分形布朗运动(fBM)的多八度叠加产生1/f^α功率谱，是自然形态程序化生成的理论基础</li>
+      <li>Blender Geometry Nodes采用数据流编程范式，字段系统在几何元素上定义位置相关函数</li>
+      <li>Geometry Nodes的菱形端口表示字段输入，其实际值取决于上下文推断</li>
+      <li>Houdini VEX是高性能向量表达式语言，支持在SOP层级编写自定义节点</li>
+      <li>参数化设计将设计问题形式化为约束优化问题，实现设计空间的系统探索</li>
+      <li>AI与程序化建模的结合（AI→程序化或程序化→AI）可发挥两者优势</li>
+    </ol>
+  </div>
+
+  <div class="card green">
+    <div class="card-label">课后练习</div>
+    <h3>第十章技能测试</h3>
+    <p>
+      <strong>实操任务：</strong>使用Blender Geometry Nodes创建程序化石柱生成器<br />
+      <strong>要求：</strong><br />
+      1. 暴露参数：高度、直径、分段数、表面粗糙度<br />
+      2. 使用噪声驱动表面不规则性<br />
+      3. 实现底部粗、顶部细的锥度变化<br />
+      4. 添加程序化裂缝细节<br />
+      5. 将节点组封装为可复用资产<br />
+      <strong>评估标准：</strong>参数完整性20%、程序化质量40%、节点效率20%、资产可用性20%
+    </p>
+  </div>
+
+  <div class="card yellow">
+    <div class="card-label">课后测验</div>
+    <h3>第十章选择题</h3>
+    <p>
+      <strong
+        >1.
+        L-系统的数学框架(G={V,ω,P})中，迭代产生的字符串长度增长速率为指数级。关于L-系统与Chomsky语法层次的关系及其在植物形态模拟中的适用性，以下分析正确的是？</strong
+      ><br />
+      A. L-系统是0型语法（无限制语法），可生成任意复杂度的结构，但植物形态通常只用上下文无关子集　B.
+      L-系统中"["和"]"操作符的引入使系统超越了点阵自动机的表达能力　C.
+      典型的植物分支结构可以用L-系统生成，但无法表达对称性（如花瓣）　D.
+      L-系统的字符串长度增长不影响其作为物理植物生长模型的有效性，因为植物生长是并行的<br /><br />
+      <strong
+        >2.
+        分形布朗运动fBM(p;octaves,lacunarity,gain)=Σgainⁱ·noise(lacunarityⁱ·p)的Hurst参数H与分形维数D的关系D=n+1-H(n为拓扑维数)。对于二维地形模拟，以下Hurst参数与地形特征的分析，正确的是？</strong
+      ><br />
+      A. H=0.5时，功率谱为1/f²（布朗噪声），表现为中等崎岖的地形　B.
+      H值越小，地形越崎岖；H值越大，地形越平滑　C. H=1时，地形退化为完全平滑的平面　D.
+      Hurst参数与lacunarity参数在控制地形细节频谱上是等价的<br /><br />
+      <strong
+        >3.
+        BlenderGeometryNodes中，"字段"系统的核心特征是菱形端口表示在几何元素上求值的函数。关于字段上下文的隐式推断规则，以下分析错误的是？</strong
+      ><br />
+      A. 菱形端口的"空"输入不等于无数据，而是使用该端口的默认值　B.
+      字段输入的求值上下文由上游连接的输出端口决定　C.
+      CaptureAttribute节点允许在几何通过时保存字段值供后续节点使用　D.
+      在MeshCircle节点中，位置属性存在于顶点上下文中，因此可以在顶点上对位置进行运算<br /><br />
+      <strong
+        >4.
+        程序化材质中，Voronoi图（worley噪声）的F₂-F₁变体表示到最近Voronoi边界的距离。关于该变体的数学性质与纹理应用，以下分析正确的是？</strong
+      ><br />
+      A. F₂-F₁的值域为[0, r]，其中r是最近邻与次近邻点的最大可能距离　B.
+      F₂-F₁在Voronoi单元内部是线性函数，在边界处梯度不连续　C.
+      当应用于程序化岩石纹理时，F₂-F₁可用作mask来生成裂缝效果，因为其梯度在边界最大　D.
+      Voronoi噪声的方向各向同性使其无法表达木材年轮等具有方向性的纹理<br /><br />
+      <strong
+        >5.
+        在参数化设计框架中，约束传播算法处理循环约束时需要迭代求解。关于循环约束的数值稳定性与求解方法，以下分析正确的是？</strong
+      ><br />
+      A. 循环约束总是存在唯一解，因为设计参数数量等于约束数量　B.
+      雅可比矩阵的奇异值分解（SVD）可以判断约束系统的病态程度　C.
+      梯度下降法在约束优化中总是比牛顿法收敛更快，因为不需要计算二阶导数　D.
+      惩罚函数法将约束转化为目标函数项，但会导致病态优化 landscape
+    </p>
+    <details class="quiz-answer">
+      <summary>参考答案</summary>
+      <div>
+        <p><strong>答案：1.A　2.B　3.A　4.C　5.B</strong></p>
+        <p><strong>解析：</strong></p>
+        <ol style="font-size: 0.9em; color: #666">
+          <li>
+            L-系统是0型语法（无限制语法），植物形态通常只用上下文无关子集，这是L系统理论的基础。
+          </li>
+          <li>H值越小（接近0），地形越崎岖；H值越大（接近1），地形越平滑，符合1/f^α噪声理论。</li>
+          <li>
+            菱形端口的"空"输入不等于无数据，而是使用该节点内部的默认值/常量，而非依赖于上下文。
+          </li>
+          <li>
+            F₂-F₁在Voronoi边界处梯度最大，可用作mask生成裂缝效果，这是程序化纹理中的常用技术。
+          </li>
+          <li>
+            雅可比矩阵的SVD分解可以分析约束系统的条件数，判断病态程度，这对约束求解器的稳定性至关重要。
+          </li>
+        </ol>
+      </div>
+    </details>
+  </div>
+</section>

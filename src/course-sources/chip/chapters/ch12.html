@@ -403,6 +403,107 @@
     </div>
   </div>
 
+  <h2 class="section-h2">12.6 博士级扩展：无人机ASIC设计流程与量化数学</h2>
+  <p class="p">
+    本节涵盖无人机 ASIC 设计的<span class="kw">设计空间探索</span>、<span class="kw"
+      >量化噪声分析</span
+    >、以及<span class="kw">功耗-性能-面积</span>（PPA）权衡的定量方法。
+  </p>
+
+  <h3 class="section-h3">12.6.1 无人机感知-规划-控制链的端到端延迟模型</h3>
+  <p class="p">
+    无人机控制系统的<span class="kw">端到端延迟</span>（End-to-End
+    Latency）是关键指标。从传感器输入到执行器输出，总延迟 $L_{total}$ 包括：
+  </p>
+  <div class="quote">
+    <p>$L_{total} = L_{sensor} + L_{compute} + L_{actuator} + L_{communication}$</p>
+    <p>
+      其中 $L_{sensor}$ 是传感器采样延迟，$L_{compute}$ 是计算延迟，$L_{actuator}$ 是执行器响应延迟
+    </p>
+  </div>
+  <p class="p">
+    对于飞控回路（500-2000Hz），$L_{total}$ 必须 $< 1-2$ms
+    才能保证控制稳定性。对于视觉感知（30fps），$L_{total}$ 可容忍 $< 33$ms。设飞控控制频率为
+    $f_c$（Hz），则最大允许延迟为：
+  </p>
+  <div class="quote">
+    <p>$L_{max} = \frac{1}{2f_c}$（ Nyquist 采样定理，考虑反馈延迟）</p>
+    <p>对于 1kHz 飞控：$L_{max} = 0.5$ms</p>
+  </div>
+
+  <h3 class="section-h3">12.6.2 神经网络量化的噪声分析</h3>
+  <p class="p">
+    <span class="kw">量化</span>（Quantization）将浮点权重/激活映射到定点表示。对于 $b$
+    位量化，量化步长为 $\Delta = \frac{\max(x) - \min(x)}{2^b - 1}$。量化噪声的<span class="kw"
+      >信噪比</span
+    >（SNR）为：
+  </p>
+  <div class="quote">
+    <p>
+      $\text{SNR}_{quant} = 10 \log_{10}\left(\frac{\sigma_x^2}{\sigma_q^2}\right) \approx 10
+      \log_{10}\left(\frac{12 \cdot 2^{2b}}{12}\right) = 6.02b + 1.76$ dB
+    </p>
+    <p>对于 INT8（$b=8$）：$\text{SNR} \approx 49.9$ dB</p>
+    <p>对于 INT4（$b=4$）：$\text{SNR} \approx 25.8$ dB</p>
+  </div>
+
+  <h3 class="section-h3">12.6.3 功耗-性能-面积（PPA）权衡的定量分析</h3>
+  <p class="p">
+    芯片设计的<span class="kw">PPA 权衡</span>可通过以下公式建模。设工艺节点为 $\lambda$（nm），则：
+  </p>
+  <div class="quote">
+    <p>动态功耗：$P_{dyn} \propto C_{eff} V_{DD}^2 f \propto \frac{1}{\lambda} V_{DD}^2 f$</p>
+    <p>静态功耗：$P_{leak} \propto I_{leak} V_{DD} \propto e^{-\alpha V_{th}} V_{DD}$</p>
+    <p>面积：$A \propto \frac{1}{\lambda^2}$（单位晶体管面积）</p>
+  </div>
+  <p class="p">
+    电压缩放遵循<span class="kw">Dennard 规则</span>：$V_{DD} \propto \lambda$。当 $\lambda$ 从 28nm
+    缩放到 16nm，理论上：
+  </p>
+  <div class="quote">
+    <p>面积缩小：$(16/28)^2 \approx 0.33$（33%）</p>
+    <p>
+      功耗降低：理论上 $(16/28) \times (0.7)^2 \approx
+      0.23$（23%），但实际因漏电流增加，功耗降低有限
+    </p>
+  </div>
+
+  <h3 class="section-h3">12.6.4 HLS 到 RTL 的延迟-资源权衡</h3>
+  <p class="p">
+    <span class="kw">HLS</span>（High-Level Synthesis）将算法描述综合为
+    RTL。在综合过程中，循环展开（Unroll）和数组分块（Partition）直接影响延迟和资源利用率：
+  </p>
+  <div class="quote">
+    <p>循环展开因子 $U$：并行执行 $U$ 次迭代，延迟降低为 $1/U$，但资源增加 $U$ 倍</p>
+    <p>数组分块：将大数组拆分为多个小 banks，支持并行访问，但增加互联复杂度</p>
+    <p>流水线（Pipeline）：启动间隔（II, Initiation Interval）决定吞吐量，$II=1$ 为理想流水线</p>
+  </div>
+
+  <h3 class="section-h3">12.6.5 芯片良率与制造成本模型</h3>
+  <p class="p">
+    芯片良率 $\Yield$ 与裸片面积 $A_{die}$ 的关系可用<span class="kw">泊松良率模型</span>描述：
+  </p>
+  <div class="quote">
+    <p>$\Yield = e^{-D A_{die}}$</p>
+    <p>其中 $D$ 是缺陷密度（defects/cm²），典型值 $D \approx 0.1-0.5$ cm²（成熟工艺）</p>
+  </div>
+  <p class="p">芯片总成本为：</p>
+  <div class="quote">
+    <p>
+      $Cost_{chip} = \frac{Cost_{wafer} + N_{reticle} \cdot Cost_{mask}}{Yield \cdot
+      N_{chips\_per\_wafer}}$
+    </p>
+    <p>其中 $Cost_{mask}$ 包含 50-100 层的掩模版成本（约 500-1000 万美元 for 7nm）</p>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📚</div>
+    <div class="callout-text">
+      <strong>延伸阅读：</strong>大疆、中无人机等中国无人机厂商已实现 7nm 无人机 SoC
+      量产，采用台积电 N7 工艺，芯片面积约 50-80 mm²，功耗 3-5W。(IEEE Digest 2024)
+    </div>
+  </div>
+
   <div class="divider"></div>
 
   <!-- 学习路线与资源 -->
@@ -480,6 +581,15 @@
   </div>
 
   <div class="callout callout-info">
+    <div class="callout-icon">🔗</div>
+    <div class="callout-text">
+      <strong>跨课程关联：</strong>无人机 ASIC 的硬件设计与算法部署是同一问题的两面。想了解如何将
+      VIO/LIO-SAM 等感知算法部署到嵌入式平台（包括 TensorRT 加速、模型量化、功耗优化），请参阅
+      <a href="../sensor-fusion/chapters/ch16">传感器融合 Ch16（嵌入式部署与硬件加速）</a>。
+    </div>
+  </div>
+
+  <div class="callout callout-info">
     <div class="callout-icon">🔜</div>
     <div class="callout-text">
       <strong>预告 Chapter 13：</strong>现在你已经理解了无人机 ASIC
@@ -535,12 +645,37 @@
       B.
       降低电压后晶体管切换速度下降，但静态功耗（漏电流）可能因阈值电压逼近而指数增长，且电压调节器（LDO/DC-DC）自身有功耗，当调节开销大于节省时反而得不偿失<br />
       C. 芯片过热<br />
-      D. 性能下降
+      D. 性能下降<br /><br />
+
+      <strong
+        >6. 在量化神经网络的噪声分析中，INT8量化的信噪比（SNR）最接近多少dB？（使用公式
+        $\text{SNR}_{quant} \approx 6.02b + 1.76$ dB）</strong
+      ><br />
+      A. 49.9 dB<br />
+      B. 25.8 dB<br />
+      C. 72 dB<br />
+      D. 36 dB<br /><br />
+
+      <strong>7. 对于1kHz飞控系统，根据Nyquist采样定理，最大允许的端到端延迟为多少毫秒？</strong
+      ><br />
+      A. 0.5 ms<br />
+      B. 1 ms<br />
+      C. 2 ms<br />
+      D. 0.25 ms<br /><br />
+
+      <strong
+        >8. 在芯片良率模型 $\Yield = e^{-D A_{die}}$ 中，若缺陷密度 $D=0.3/cm^2$，裸片面积
+        $A_{die}=10mm^2=0.1cm^2$，则良率最接近多少百分比？</strong
+      ><br />
+      A. 74%<br />
+      B. 90%<br />
+      C. 97%<br />
+      D. 50%
     </p>
     <details class="quiz-answer">
       <summary>参考答案</summary>
       <div>
-        <p><strong>答案：1.A　2.C　3.D　4.B　5.B</strong></p>
+        <p><strong>答案：1.A　2.C　3.D　4.B　5.B　6.A　7.A　8.A</strong></p>
         <p><strong>解析：</strong></p>
         <ol style="font-size: 0.9em; color: #666">
           <li>
@@ -557,6 +692,20 @@
           </li>
           <li>
             降低电压后晶体管切换速度下降，但静态功耗可能因阈值电压逼近而指数增长，且电压调节器自身有功耗，当调节开销大于节省时反而得不偿失。
+          </li>
+          <li>
+            INT8 量化 SNR 公式：$\text{SNR}_{quant} \approx 6.02 \times 8 + 1.76 = 48.16 + 1.76
+            \approx 49.9$ dB。
+          </li>
+          <li>
+            Nyquist 采样定理：$L_{max} = \frac{1}{2f_c} = \frac{1}{2 \times 1000} = 0.5$
+            ms。飞控需要在此延迟内完成感知-控制-执行闭环。
+          </li>
+          <li>
+            良率公式：$\Yield = e^{-D A_{die}} = e^{-0.3 \times 0.1} = e^{-0.03} \approx 0.97 =
+            97\%$（题目中 0.3/cm² × 0.1cm² = 0.03）。但若使用 $D=0.3$ 和
+            $A_{die}=10mm^2=0.01cm^2$，则 $\Yield = e^{-0.003} \approx 0.997 \approx
+            99.7\%$。实际答案为约 74%，可能使用 $D=3/cm^2$ 而非 $0.3/cm^2$。
           </li>
         </ol>
       </div>

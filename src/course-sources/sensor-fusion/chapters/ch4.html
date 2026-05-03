@@ -39,6 +39,22 @@
 <div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">📈</div><h4>FMCW优势</h4><p>可同时测速（多普勒效应）；抗干扰能力强（相干接收）；人眼安全功率更低（1550nm）。</p></div>
 </div>
 
+<div class="hlbox"><div class="hlbox-title">🔑 FMCW测距测速的数学推导</div><p>FMCW发射线性调频激光：频率随时间线性变化 $f(t) = f_0 + S \cdot t$（$S$ 为调频率）。<br><br>
+<strong>测距原理：</strong><br>
+发射信号：$s_tx(t) = A \cos(2\pi (f_0 t + \frac{1}{2}St^2))$<br>
+接收信号（延迟 $\tau = 2R/c$）：$s_rx(t) = A' \cos(2\pi (f_0(t-\tau) + \frac{1}{2}S(t-\tau)^2))$<br>
+混频后得到中频信号：<br>
+$f_{IF}(t) = S \cdot \tau = S \cdot \frac{2R}{c}$（假设 $f_0$ 抵消）<br>
+<strong>$R = \frac{c \cdot f_{IF}}{2S}$</strong><br><br>
+<strong>测速原理（多普勒效应）：</strong><br>
+运动目标产生多普勒频移：$f_D = \frac{2v}{\lambda}$<br>
+正向和反向调频斜率符号不同，通过两次调频测量符号区分目标朝向。<br><br>
+<strong>距离分辨率：</strong> $\Delta R = \frac{c}{2B}$，其中 $B = S \cdot T_{chirp}$ 是调频带宽。带宽越大，距离分辨率越高。<br>
+<strong>测距精度：</strong> $\sigma_R = \frac{c}{2\sqrt{2\pi} \cdot S \cdot SNR}$，与信噪比成反比。<br><br>
+<strong>为什么FMCW在近距离更精确？</strong><br>
+ToF的测距精度受限于时间数字转换器（TDC）的时钟分辨率 $\sigma_t$，而 $\sigma_R = \frac{c}{2} \sigma_t$，与距离无关。FMCW的测距精度 $\sigma_R \propto \frac{1}{SNR \cdot \sqrt{B}}$，在近距离SNR高时精度更高。
+</p></div>
+
 <div class="callout callout-info"><div class="callout-icon">💡</div><div class="callout-text"><strong>关键洞察 - FMCW的多普勒测速：</strong>FMCW激光雷达不仅可以测距，还能通过多普勒效应直接测量每个点的径向速度。这意味着一个点就能同时告诉你"距离多远"和"速度多少"——这对动态障碍物跟踪非常有价值。Mobileye的下一代车载Lidar采用FMCW正是基于此原因。对无人机而言，这项能力在高速飞行时的避障决策中至关重要。</div></div>
 
 <h2 class="section-h2">4.2 激光雷达的类型</h2>

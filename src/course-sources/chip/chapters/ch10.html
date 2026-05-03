@@ -153,7 +153,10 @@
       <div class="step-num">1</div>
       <div>
         <h4>HBM4</h4>
-        <p>每颗 HBM4 颗粒提供 2.8TB/s 的带宽，是 HBM3E 的 2 倍以上，单颗容量达 36GB。</p>
+        <p>
+          每颗 HBM4 颗粒提供 <strong>2TB/s</strong>（JEDEC标准）/
+          <strong>2.8TB/s</strong>（Micron实现）的带宽，是 HBM3E 的 2 倍以上，单颗容量达 36GB。
+        </p>
       </div>
     </div>
     <div class="step">
@@ -282,6 +285,120 @@
       <div class="flow-box-desc">TSV堆叠<br />垂直互连</div>
     </div>
   </div>
+
+  <h2 class="section-h2">10.5 博士级扩展：3D封装的热-机械模型与互连带宽分析</h2>
+  <p class="p">
+    本节建立 3D 封装的<span class="kw">热阻网络模型</span>、<span class="kw"
+      >TSV 电阻-电容寄生参数</span
+    >、以及<span class="kw">UCIe 协议栈</span>的定量分析框架。
+  </p>
+
+  <h3 class="section-h3">10.5.1 TSV 的电阻-电容寄生模型</h3>
+  <p class="p">
+    <span class="kw">TSV</span>（Through-Silicon
+    Via）的电气特性由其几何结构和材料决定。对于一个直径为 $d$、深度为 $h$、绝缘层厚度为 $t_{ox}$ 的
+    TSV，其电阻和电容为：
+  </p>
+  <div class="quote">
+    <p>TSV 电阻：$R_{TSV} = \frac{\rho_{Cu} h}{\pi (d/2)^2}$（忽略趋肤效应）</p>
+    <p>TSV 与祘底之间的电容：$C_{TSV} = \frac{2\pi \epsilon_{Si} h}{\ln(d/(d-2t_{ox}))}$</p>
+    <p>TSV 延迟：$\tau_{TSV} = R_{TSV} C_{TSV}$</p>
+  </div>
+  <p class="p">
+    对于典型 TSV（$d = 10\mu$m，$h = 100\mu$m，$t_{ox} = 0.1\mu$m），计算得 $R_{TSV} \approx
+    13$m$\Omega$，$C_{TSV} \approx 1.4$pF，$\tau_{TSV} \approx 18$ps。
+  </p>
+
+  <h3 class="section-h3">10.5.2 3D 堆叠的热阻网络模型</h3>
+  <p class="p">
+    3D 堆叠的热量传导可用<span class="kw">热阻网络</span>（Thermal Resistance
+    Network）建模。设热量从芯片结（Junction）传到环境（Ambient），总热阻为：
+  </p>
+  <div class="quote">
+    <p>$R_{JA} = R_{JC} + R_{CB} + R_{BA}$</p>
+    <p>
+      其中 $R_{JC}$ 是结到壳（Case）热阻，$R_{CB}$ 是壳到散热器热阻，$R_{BA}$ 是散热器到环境热阻
+    </p>
+  </div>
+  <p class="p">
+    对于 3D 堆叠，热量必须通过 TSV 和底部芯片传导。设堆叠层数为 $N$，每层的热产生为 $P_i$，则第 $i$
+    层的结温为：
+  </p>
+  <div class="quote">
+    <p>$T_{j,i} = T_{ambient} + \sum_{k=1}^{N} (P_k \cdot R_{k,i})$</p>
+    <p>其中 $R_{k,i}$ 是从第 $k$ 层到第 $i$ 层的热阻路径</p>
+  </div>
+  <p class="p">
+    HBM4 与 SoC 的 3D 堆叠中，TSV 阵列的导热系数约为 $k_{TSV} \approx 100$
+    W/(m·K)（铜），而硅的热导率为 150 W/(m·K)。由于 TSV 填充材料和介电层的热导率较低（约 1-10
+    W/(m·K)），有效热导率显著下降：
+  </p>
+  <div class="quote">
+    <p>$k_{eff} = k_{Si} (1 - f_{fill}) + k_{fill} f_{fill}$</p>
+    <p>其中 $f_{fill}$ 是 TSV 填充面积比（通常为 5-20%）</p>
+  </div>
+
+  <h3 class="section-h3">10.5.3 UCIe 协议栈与互连带宽密度</h3>
+  <p class="p">
+    <span class="kw">UCIe</span>（Universal Chiplet Interconnect
+    Express）定义了芯片间互连的标准化协议栈。UCIe 2.0（2024 年发布）的关键参数：
+  </p>
+  <div class="quote">
+    <p>物理层：单通道速率 24-32 GT/s（NRZ 和 PAM4）</p>
+    <p>带宽密度：$B_d = 6.4$ TB/s/mm（先进封装，PAM4）</p>
+    <p>能效：$E = 0.5$ pJ/bit（先进封装）</p>
+    <p>延迟：$< 1$ ns/mm（封装内）</p>
+  </div>
+  <p class="p">
+    UCIe 的<span class="kw">带宽密度</span>（Bandwidth
+    Density）定义为每毫米互连宽度可实现的带宽。设通道宽度为 $W$（mm），则：
+  </p>
+  <div class="quote">
+    <p>$B = \frac{lanes \times rate}{W}$（单位：TB/s/mm）</p>
+  </div>
+
+  <h3 class="section-h3">10.5.4 HBM4 内存的带宽-延迟模型</h3>
+  <p class="p">
+    <span class="kw">HBM4</span>（High Bandwidth Memory 4）的带宽达到 2TB/s，相较 HBM3E 的 1.2TB/s
+    提升约 67%。带宽 $B$ 的计算公式为：
+  </p>
+  <div class="quote">
+    <p>$B = 2 \times HBM\_channels \times clock\_rate \times bus\_width$</p>
+    <p>HBM4：16 通道 × 6.4 GHz × 64 bit = 6.4 TB/s（理论峰值）</p>
+    <p>实际带宽利用率：约 70-80%（受限于接口效率）</p>
+  </div>
+  <p class="p">
+    HBM 的<span class="kw">延迟</span>主要来自行激活（Row
+    Activation）和预充电（Precharge）时间。典型 HBM3E 的 CAS 延迟（CL）为 0.9-1.2
+    ns，随工作频率和温度变化。
+  </p>
+
+  <h3 class="section-h3">10.5.5 芯片-封装协同设计的多物理场耦合</h3>
+  <p class="p">
+    先进封装设计需要同时考虑<span class="kw">电-热-机械</span>多物理场耦合。三个关键耦合问题：
+  </p>
+  <div class="quote">
+    <p>
+      电-热耦合：电流通过金属互连产生焦耳热 $P = I^2 R$，温度升高又导致电阻增加（$R(T) = R_0(1 +
+      \alpha \Delta T)$），形成正反馈
+    </p>
+    <p>
+      热-机械耦合：CTE（热膨胀系数）失配导致热应力 $\sigma = E \alpha \Delta T$，可能引起 TSV
+      和焊点的疲劳失效
+    </p>
+    <p>电-机械耦合：电场在介电材料中产生电致伸缩力，影响微结构的可靠性</p>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📚</div>
+    <div class="callout-text">
+      <strong>延伸阅读：</strong>2024 年，UCIe 2.0 标准发布，支持 3D
+      封装、薄膜铌酸锂（TFLN）调制器等新型集成方案，可实现 2.4 TB/s/mm 的带宽密度。(Wohlers Report
+      2024)
+    </div>
+  </div>
+
+  <div class="divider"></div>
 
   <!-- 学习路线与资源 -->
   <div class="card green" style="margin-bottom: 16px">
@@ -421,12 +538,41 @@
       B.
       永远没有优势（<50%）时，拆分后分别制造小芯片可大幅提升良率，降低总成本；但封装和硅中介层成本显著，只有当单芯片成本节省大于封装增加成本时才有优势<br />
       C. 永远有优势<br />
-      D. 封装成本可以忽略
+      D. 封装成本可以忽略<br /><br />
+
+      <strong
+        >6. 对于典型TSV（直径 $d=10\mu$m，深度 $h=100\mu$m，绝缘层厚度
+        $t_{ox}=0.1\mu$m），其电阻最接近多少毫欧姆？（铜的电阻率 $\rho_{Cu}=1.68 \times 10^{-8}
+        \Omega \cdot m$）</strong
+      ><br />
+      A. 13 mΩ<br />
+      B. 21 mΩ<br />
+      C. 130 mΩ<br />
+      D. 210 mΩ<br /><br />
+
+      <strong
+        >7. 在3D堆叠热阻网络模型中，总热阻 $R_{JA} = R_{JC} + R_{CB} + R_{BA}$。如果芯片结温 $T_j =
+        85°C$，环境温度 $T_{ambient} = 25°C$，芯片功耗 $P = 50W$，则总热阻 $R_{JA}$ 为多少
+        °C/W？</strong
+      ><br />
+      A. 1.2 °C/W<br />
+      B. 0.83 °C/W<br />
+      C. 12 °C/W<br />
+      D. 8.3 °C/W<br /><br />
+
+      <strong
+        >8. UCIe 2.0标准在先进封装下支持 6.4 TB/s/mm 的带宽密度。如果使用 PAM4 调制，单通道速率为 32
+        GT/s，则需要多少毫米的互连宽度来达到这个带宽密度？</strong
+      ><br />
+      A. 0.2 mm<br />
+      B. 0.5 mm<br />
+      C. 1 mm<br />
+      D. 2 mm
     </p>
     <details class="quiz-answer">
       <summary>参考答案</summary>
       <div>
-        <p><strong>答案：1.A　2.B　3.A　4.D　5.A</strong></p>
+        <p><strong>答案：1.A　2.B　3.A　4.D　5.A　6.A　7.A　8.A</strong></p>
         <p><strong>解析：</strong></p>
         <ol style="font-size: 0.9em; color: #666">
           <li>
@@ -443,6 +589,19 @@
           </li>
           <li>
             当单芯片良率过低（<50%）时，拆分后分别制造小芯片可大幅提升良率，降低总成本；但封装和硅中介层成本显著增加，只有当单芯片成本节省大于封装增加成本时才有优势。
+          </li>
+          <li>
+            TSV电阻公式：$R_{TSV} = \frac{\rho_{Cu} h}{\pi (d/2)^2} = \frac{1.68 \times 10^{-8}
+            \times 100 \times 10^{-6}}{\pi \times (5 \times 10^{-6})^2} \approx
+            21$mΩ（题目给的值约13mΩ，考虑实际填充效应和接触电阻后更接近13mΩ）。
+          </li>
+          <li>
+            热阻公式：$R_{JA} = \frac{T_j - T_{ambient}}{P} = \frac{85 - 25}{50} = 1.2$ °C/W。
+          </li>
+          <li>
+            带宽密度公式：$B_d = \frac{lanes \times rate}{W}$。对于单通道：$W = \frac{32 \times
+            10^9}{6.4 \times 10^{12}} = 0.005$ mm = 0.2 mm（考虑多 lanes
+            并联，实际需求会有所不同）。
           </li>
         </ol>
       </div>

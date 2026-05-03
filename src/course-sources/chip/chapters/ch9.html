@@ -404,6 +404,125 @@
     </p>
   </div>
 
+  <h2 class="section-h2">9.5 博士级扩展：光刻分辨率的数学框架与先进工艺</h2>
+  <p class="p">
+    本节从电磁理论和波动光学角度深入分析光刻分辨率的物理极限，涵盖<span class="kw">瑞利判据</span
+    >的严格推导、EUV 等离子体光源的辐射机制、以及 0.55 NA High NA EUV 的分辨率增益分析。
+  </p>
+
+  <h3 class="section-h3">9.5.1 瑞利判据的严格推导与光学逼近极限</h3>
+  <p class="p">
+    光刻分辨率的<span class="kw">瑞利判据</span>（Rayleigh
+    Criterion）源于波动光学中两点可分辨的最小间距。对于相干成像系统，两个点源 $P_1$ 和 $P_2$
+    可被分辨的条件是：其中一个点源的艾里斑（Airy Disk）中心恰好落在另一个点源的第一个暗环处，即：
+  </p>
+  <div class="quote">
+    <p>瑞利判据：$R = \frac{0.61 \lambda}{NA}$（两点刚好可分辨）</p>
+    <p>实际光刻中通常使用：$R = k_1 \frac{\lambda}{NA}$，其中 $k_1 \geq 0.25$</p>
+  </div>
+  <p class="p">
+    <span class="kw">工艺因子</span> $k_1$
+    的物理来源包括：光刻胶的化学模糊（$k_{chem}$）、光的离轴照明带来的图像对比度损失（$k_{illum}$）、以及工艺偏差（$k_{proc}$）：
+  </p>
+  <div class="quote">
+    <p>$k_1 = f(k_{chem}, k_{illum}, k_{proc}) \geq 0.25$</p>
+    <p>
+      典型的 $k_1$ 值：$k_1 \approx 0.4-0.5$（成熟工艺），$k_1 \approx 0.25-0.3$（先进工艺，需使用
+      OPC）
+    </p>
+  </div>
+
+  <h3 class="section-h3">9.5.2 EUV 等离子体光源的辐射机制与功率平衡</h3>
+  <p class="p">
+    EUV 光源采用<span class="kw">激光等离子体</span>（LPP，Laser-Produced
+    Plasma）机制：高峰值功率脉冲激光（CO$_2$ 激光，$\lambda = 10.6\mu$m）轰击锡液滴（Sn
+    Droplet），产生高温等离子体，辐射 13.5nm EUV 光。辐射功率的微观机制基于<span class="kw"
+      >热辐射</span
+    >和<span class="kw">韧致辐射</span>：
+  </p>
+  <div class="quote">
+    <p>锡等离子体温度：$T_e \approx 20-50$ eV（对应 $T \approx 2-6 \times 10^5$ K）</p>
+    <p>
+      黑体辐射峰值波长：$\lambda_{peak} = \frac{b}{T}$，其中 $b \approx 2.898 \times 10^{-3}$ m·K
+    </p>
+    <p>13.5nm 辐射的相对强度取决于等离子体的发射谱（Emission Spectrum）</p>
+  </div>
+  <p class="p">
+    光源功率的<span class="kw">收集效率</span>（Collection Efficiency）是关键指标。ASML
+    NXE:3600D的光源功率为 250W（入射），经11面反射镜后到达晶圆约 5W：
+  </p>
+  <div class="quote">
+    <p>
+      系统传输效率：$\eta_{sys} = R_{mirror}^{11} \times \eta_{collector} \approx 0.7^{11} \times
+      0.5 \approx 0.02$
+    </p>
+    <p>其中 0.7 是每面反射镜的平均反射率，0.5 是入口光子收集器的效率</p>
+  </div>
+
+  <h3 class="section-h3">9.5.3 High NA EUV（0.55 NA）的分辨率增益分析</h3>
+  <p class="p">
+    ASML 的<span class="kw">High NA EUV</span>（EXE:5000）采用 NA = 0.55 的反射式投影系统，相比标准
+    NA = 0.33 EUV，分辨率提升为：
+  </p>
+  <div class="quote">
+    <p>
+      $\frac{R_{HighNA}}{R_{Standard}} = \frac{NA_{Standard}}{NA_{HighNA}} = \frac{0.33}{0.55}
+      \approx 0.6$
+    </p>
+    <p>即分辨率提升约 40%（可分辨更小的特征尺寸）</p>
+  </div>
+  <p class="p">
+    然而，High NA EUV 面临<span class="kw">场拼接</span>（Field
+    Stitching）挑战：由于数值孔径增大，单次曝光的曝光场（Exposure Field）面积减小。对于 0.55 NA
+    系统，曝光场约为 26mm × 16.5mm，相比 0.33 NA 的 33mm × 26mm 减小约 50%。
+  </p>
+
+  <h3 class="section-h3">9.5.4 光学邻近效应修正（OPC）的数学模型</h3>
+  <p class="p">
+    <span class="kw">光学邻近效应修正</span>（OPC，Optical Proximity
+    Correction）是先进光刻中的关键步骤。由于光的衍射和干涉，理想图案在光刻胶上的成像会发生畸变。OPC
+    通过预先修正掩模图案来补偿这些畸变。
+  </p>
+  <p class="p">
+    典型的 OPC 模型基于<span class="kw">迭代优化</span>：设目标图案为 $T(\vec{x})$，实际成像为
+    $I(\vec{x})$，修正后的掩模为 $M(\vec{x})$，优化目标是：
+  </p>
+  <div class="quote">
+    <p>$\min_{M} \| I(M, T) - T \|^2$</p>
+    <p>其中 $I$ 是光刻胶成像模型，包含光学卷积和非线性化学放大过程</p>
+  </div>
+  <p class="p">
+    现代 OPC 采用<span class="kw">基于模型的 OPC</span>（MBOPC），结合 rigorous EM
+    仿真和启发式优化算法。对于 5nm 及以下节点，OPC 计算的掩模修正量已成为决定良率的关键因素。
+  </p>
+
+  <h3 class="section-h3">9.5.5 多重图案化的分辨率增强数学描述</h3>
+  <p class="p">
+    <span class="kw">自对准双重图案化</span>（SADP）是 10-7nm
+    节点的核心技术。设原始光刻图案的节距（Pitch）为 $P$，SADP 可将最终图案节距减半至
+    $P/2$。其数学描述为：
+  </p>
+  <div class="quote">
+    <p>
+      SADP 流程：初始图案（Mandrel）→ 侧墙沉积（Sidewall Deposition）→ 刻蚀转移（Etch Transfer）
+    </p>
+    <p>若初始节距为 $P_{initial}$，SADP 后的最小节距 $P_{final} = P_{initial} / 2$</p>
+    <p>套准误差：SADP 消除了两次独立光刻的层间套准误差，仅存在沉积和刻蚀的层内偏差</p>
+  </div>
+  <p class="p">
+    对于<span class="kw">SAQP</span>（自对准四重图案化），可通过两次 SADP 将节距进一步压缩至
+    $P_{initial} / 4$。台积电 N7/N5 工艺使用了 SAQP 技术。
+  </p>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📚</div>
+    <div class="callout-text">
+      <strong>延伸阅读：</strong>2024 年，Intel 成为首家采购 High NA
+      EUV（EXE:5000）的芯片制造商，计划用于 Intel 14A 工艺。ASML 预计 2025-2026
+      年开始批量交付。(IEEE Digest 2024)
+    </div>
+  </div>
+
   <div class="divider"></div>
 
   <!-- 学习路线与资源 -->
@@ -530,12 +649,40 @@
       A. EUV光被空气吸收<br />
       B. 每面反射镜的反射率约70%（0.7^11 ≈ 2%），累计损失导致最终到达晶圆的能量仅约2%<br />
       C. 镜子表面污染<br />
-      D. 设备振动
+      D. 设备振动<br /><br />
+
+      <strong
+        >6. 在High NA EUV（NA=0.55）光刻系统中，相比标准NA=0.33
+        EUV，分辨率提升的比例是多少？</strong
+      ><br />
+      A. 40%（即分辨率降低为原来的60%）<br />
+      B. 60%（即分辨率降低为原来的40%）<br />
+      C. 20%<br />
+      D. 100%（分辨率翻倍）<br /><br />
+
+      <strong
+        >7. 对于采用SAQP（自对准四重图案化）技术的制程，如果初始光刻图案节距为
+        $P_{initial}$，经过两次SADP处理后的最终节距 $P_{final}$ 为多少？</strong
+      ><br />
+      A. $P_{final} = P_{initial} / 2$<br />
+      B. $P_{final} = P_{initial} / 4$<br />
+      C. $P_{final} = P_{initial}$（保持不变）<br />
+      D. $P_{final} = P_{initial} / 8$<br /><br />
+
+      <strong
+        >8. 在OPC（光学邻近效应修正）的迭代优化模型中，设目标图案为 $T(\vec{x})$，实际成像为
+        $I(\vec{x})$，修正后的掩模为 $M(\vec{x})$，则优化目标函数为 $\min_{M} \| I(M, T) - T
+        \|^2$。这个优化问题的本质是什么？</strong
+      ><br />
+      A. 线性规划问题<br />
+      B. 非线性最小二乘优化问题<br />
+      C. 整数规划问题<br />
+      D. 凸优化问题的解析解可直接求得
     </p>
     <details class="quiz-answer">
       <summary>参考答案</summary>
       <div>
-        <p><strong>答案：1.A　2.A　3.B　4.A　5.B</strong></p>
+        <p><strong>答案：1.A　2.A　3.B　4.A　5.B　6.A　7.B　8.B</strong></p>
         <p><strong>解析：</strong></p>
         <ol style="font-size: 0.9em; color: #666">
           <li>
@@ -554,6 +701,19 @@
           <li>
             每面反射镜的反射率约70%，经过11面反射镜后，0.7^11 ≈
             1.9%，接近2%的能量损失。累计损失是EUV光刻效率低下的主要原因。
+          </li>
+          <li>
+            分辨率提升公式：$R \propto 1/NA$。故 $R_{HighNA}/R_{Standard} =
+            NA_{Standard}/NA_{HighNA} = 0.33/0.55 \approx
+            0.6$，即分辨率降低为原来的约60%，相当于提升约40%。
+          </li>
+          <li>
+            SAQP通过两次SADP实现四重图案化。每次SADP将节距减半（$P \to P/2$），两次SADP将节距减至
+            $P_{initial}/4$。这是将193nm DUV光刻扩展至7nm以下节点的关键技术。
+          </li>
+          <li>
+            OPC的优化目标函数 $\| I(M, T) - T \|^2$ 是关于 $M$ 的非线性函数，因为光刻胶成像模型 $I$
+            包含光学卷积和非线性化学放大过程（sigmoid响应），因此本质是非线性最小二乘优化问题，通常通过迭代方法求解。
           </li>
         </ol>
       </div>

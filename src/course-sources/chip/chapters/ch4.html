@@ -413,6 +413,111 @@
     </div>
   </div>
 
+  <!-- ===== 4.6 博士级扩展：逻辑努力理论与电路延迟模型 ===== -->
+  <h2 class="section-h2">4.6 博士级扩展：逻辑努力理论与电路延迟模型</h2>
+  <p class="p">
+    本节为深入理解数字电路延迟优化和电路设计的同学提供完整的数学框架，包括<span class="kw"
+      >逻辑努力</span
+    >（Logical Effort）理论和<span class="kw">RC延迟</span>模型。
+  </p>
+
+  <h3 class="section-h3">4.6.1 逻辑努力理论（Logical Effort）</h3>
+  <p class="p">
+    <span class="kw">逻辑努力理论</span>（Sutherland, Sproull,
+    1991）提供了一种分析CMOS电路延迟的系统方法。门的延迟表示为：
+  </p>
+  <div class="quote">
+    <p>
+      $d = \tau \cdot (g \cdot h + p)$<br /><br />
+      其中：<br />
+      $\tau = 3RC$ 为单位反相器的延迟基准<br />
+      $g$ = 逻辑努力（Logical Effort），描述门的输出电流能力相对于反相器的比值<br />
+      $h$ = 电气努力（Electrical Effort），$= C_{out}/C_{in}$（输出电容/输入电容）<br />
+      $p$ = 固有延迟（Intrinsic Delay），与工艺相关
+    </p>
+    <cite>Sutherland & Sproull, "Logical Effort", 1991</cite>
+  </div>
+
+  <h4>常见逻辑门的逻辑努力</h4>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>逻辑门</th>
+        <th>逻辑努力 $g$（从同相输入）</th>
+        <th>固有延迟 $p$（$\tau$ 单位）</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="hl">反相器</td>
+        <td>1</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td class="hl">NAND2</td>
+        <td>4/3</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td class="hl">NOR2</td>
+        <td>5/3</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td class="hl">AND/NAND（2输入）</td>
+        <td>g(NAND) + 1</td>
+        <td>p(NAND) + 1</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="section-h3">4.6.2 RC延迟模型与Elmore延迟</h3>
+  <p class="p">
+    互连线的延迟由<span class="kw">RC延迟</span>模型描述。对于RC树，<span class="kw"
+      >Elmore延迟</span
+    >是分析延迟的标准近似：
+  </p>
+  <div class="quote">
+    <p>
+      $t_{pd} = \sum_{i} R_i C_{i+1}$<br /><br />
+      其中 $R_i$ 是从源端到节点 $i$ 的总电阻，$C_{i+1}$ 是节点 $i$ 到地电容的总和。
+    </p>
+    <cite>Elmore延迟公式，RC网络延迟分析的基础</cite>
+  </div>
+
+  <p class="p">
+    对于均匀传输线，特性阻抗 $Z_0 = \sqrt{L/C}$，传播延迟 $t_{prop} = \sqrt{LC} \cdot l$。
+  </p>
+
+  <h3 class="section-h3">4.6.3 电路延迟优化</h3>
+  <p class="p">对于给定级数的逻辑路径，最优电气努力为：</p>
+  <div class="quote">
+    <p>
+      $h_{opt} = \left(\frac{G}{P}\right)^{1/(N+1)}$<br /><br />
+      其中 $G = \prod g_i$（总逻辑努力），$P = \prod p_i$（总固有延迟），$N$ 为级数。
+    </p>
+    <cite>最优级数与电气努力的关系</cite>
+  </div>
+
+  <p class="p">最小延迟为：</p>
+  <div class="quote">
+    <p>$D_{min} = (N+1) \cdot \tau \cdot \left(\frac{G \cdot P}{N^N}\right)^{1/(N+1)}$</p>
+    <cite>最小延迟公式</cite>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📖</div>
+    <div class="callout-text">
+      <strong>学术引用：</strong><br />
+      • Sutherland, I., Sproull, B., & Harris, D. "Logical Effort: Designing Fast CMOS Circuits."
+      Morgan Kaufmann, 1999. (逻辑努力理论原始著作)<br />
+      • Rubinstein, J., et al. "Signal Propagation Delay in RC Interconnect." IEEE Trans. CAS, 1983.
+      (Elmore延迟模型)<br />
+      • Bakoglu, H.B. "Circuits, Interconnections, and Packaging for VLSI." Addison-Wesley, 1990.
+      (互连延迟的经典教材)
+    </div>
+  </div>
+
   <div class="card yellow">
     <div class="card-label">课后测验</div>
     <h3>第4章选择题</h3>

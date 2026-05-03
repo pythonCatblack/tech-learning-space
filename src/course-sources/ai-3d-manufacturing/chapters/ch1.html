@@ -14,6 +14,80 @@
     你是否曾想过，只需要用文字描述一个想法，就能生成一个可以打印出来的3D模型？AI技术正在让这一切成为现实。本章将带你了解AI在3D建模领域的最新发展支势干，掌握主流工具，为后续学习打下坚实基础。
   </p>
 
+  <!-- ===== 博士级数学基础 ===== -->
+  <div class="hlbox">
+    <div class="hlbox-title">🔬 博士级数学基础：3D生成的数学框架</div>
+    <p>
+      从数学角度，AI
+      3D生成涉及将低维隐空间映射到高维3D几何空间的核心问题。这一过程的数学本质是：给定一个2D图像或文本描述
+      $\mathbf{y} \in \mathbb{R}^{H \times W \times C}$，学习一个生成器 $G: \mathbb{R}^d \rightarrow
+      \mathcal{M} \subset \mathbb{R}^3$，其中 $\mathcal{M}$ 表示3D流形。
+    </p>
+    <p>
+      <strong>隐式表示（Implicit Representation）：</strong
+      >现代3D生成模型（如NeRF、SDF）使用隐式函数 $F_\theta: \mathbb{R}^3 \rightarrow \mathbb{R}$
+      表示3D表面，其中 $F_\theta(\mathbf{x}) = 0$
+      定义了表面。对于神经辐射场，密度和颜色函数为：$\mathbf{c}(\mathbf{x}, \mathbf{d}) = (R, G, B,
+      \sigma)$，其中 $\mathbf{x}$ 是3D位置，$\mathbf{d}$ 是观察方向。
+    </p>
+    <p>
+      <strong>三平面表示（Triplane Representation）：</strong>TripoSR等模型使用三平面表示 $T_{xy},
+      T_{yz}, T_{xz}: \mathbb{R}^2 \rightarrow \mathbb{R}^C$
+      分别表示三个正交平面，通过体渲染积分：$\mathbf{C} = \int_{t_n}^{t_f} T(t) \cdot
+      \exp\left(-\int_{t_n}^{t} T(s) ds\right) dt$ 合成2D图像。
+    </p>
+    <p>
+      <strong>扩散模型在3D空间的扩展：</strong>Score-based 3D生成通过在3D空间中定义前向噪声过程
+      $p_t(\mathbf{x})$ 和逆向去噪过程。3D对象的score函数 $\nabla_{\mathbf{x}} \log p_t(\mathbf{x})$
+      需要在高维3D网格（通常 $256^3$ 或更高分辨率）上估计，计算复杂度为 $O(N^3)$。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔬 信息论视角：跨模态3D生成</div>
+    <p>
+      从信息论角度，文本到3D的跨模态转换可以建模为：最大化条件互信息 $I(G(\mathbf{z}_t); \mathbf{x}
+      | \mathbf{c})$，其中 $\mathbf{z}_t$ 是文本嵌入，$\mathbf{x}$
+      是生成的3D表示。这等价于最小化条件分布 $p(\mathbf{x}|\mathbf{c})$ 与生成分布 $q(\mathbf{x})$
+      之间的KL散度。
+    </p>
+    <p>
+      <strong>跨模态对齐的数学形式化：</strong
+      >使用CLIP对比学习框架，文本-图像-3D的对齐通过InfoNCE损失实现：$\mathcal{L} = -\log
+      \frac{\exp(\text{sim}(\mathbf{z}_3D, \mathbf{z}_{text})/\tau)}{\sum_j
+      \exp(\text{sim}(\mathbf{z}_3D, \mathbf{z}_j)/\tau)}$，其中 $\tau$ 是温度参数。
+    </p>
+    <p>
+      <strong>生成质量的信息论界限：</strong
+      >根据数据处理不等式，生成3D模型的质量受限于：$I(\mathbf{x}_{3D}; \mathbf{x}_{2D}) \leq
+      \min(I(\mathbf{x}_{3D}; \mathbf{z}), I(\mathbf{z};
+      \mathbf{x}_{2D}))$。这解释了为什么多视角图像重建比单目估计更鲁棒。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Scaling Laws与计算最优性</div>
+    <p>
+      类似于大语言模型的Scaling
+      Laws，3D生成模型也存在计算-质量权衡关系。TRELLIS.2的40亿参数模型在H100上实现3秒级生成，背后是：
+    </p>
+    <ul>
+      <li>
+        <strong>参数规模定律：</strong>$L(N) \approx L_\infty + \frac{a}{N^\alpha}$，其中 $N$
+        是参数量，$\alpha \approx 0.07$ 是规模指数
+      </li>
+      <li>
+        <strong>计算最优性：</strong>训练FLOPs $C$ 与模型性能的关系：$L(C) \approx L_\infty +
+        \frac{b}{C^\beta}$，$\beta \approx 0.05$
+      </li>
+      <li>
+        <strong>推理效率优化：</strong>TripoSR通过early
+        exit策略在0.5秒内完成生成，本质是条件计算（conditional computation）：$p(\text{exit} |
+        \mathbf{x}) = \sigma(\mathbf{w}^T \mathbf{h}_t + b)$
+      </li>
+    </ul>
+  </div>
+
   <h2 class="section-h2">1.1 为什么AI正在颠覆3D建模行业</h2>
 
   <p class="p">
@@ -419,5 +493,72 @@
         </ol>
       </div>
     </details>
+  </div>
+
+  <h2 class="section-h2">1.7 博士级扩展：3D生成的前沿研究方向</h2>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔬 前沿研究：2024-2025年3D生成技术进展</div>
+    <p>
+      <strong>1. Transformer架构在3D生成中的崛起：</strong
+      >2024年见证了Transformer完全替代GAN/VAE成为3D生成主流架构的范式转换。TRELLIS.2基于统一Transformer处理稀疏体素，实现4096×4096×4096空间分辨率的PBR材质生成。
+    </p>
+    <p>
+      <strong>2. 4D生成（时空一致性）：</strong
+      >从静态3D到动态4D（3D+时间）的演进是当前核心挑战。OmniFuture和全球最大4D数据集OpenSora-Plan致力于解决时空一致性：$\mathcal{L}_{4D}
+      = \mathcal{L}_{spatial} + \lambda_t \mathcal{L}_{temporal}$，其中 $\mathcal{L}_{temporal}$
+      强制相邻帧的运动平滑性。
+    </p>
+    <p><strong>3. 3D生成质量评估指标：</strong>学术界提出多维评估体系：</p>
+    <ul>
+      <li><strong>FID（Fréchet Inception Distance）：</strong>衡量生成与真实分布的差异</li>
+      <li><strong>MQoR（Mesh Quality over Runtime）：</strong>TripoSR提出的质量-速度综合指标</li>
+      <li><strong>Chamfer Distance：</strong>双向点云匹配误差</li>
+      <li><strong>IoU（Intersection over Union）：</strong>3D包围盒重叠率</li>
+    </ul>
+    <p><strong>4. 工业落地关键挑战：</strong></p>
+    <ul>
+      <li>几何精度 vs 纹理质量的权衡</li>
+      <li>生成速度 vs 推理成本的帕累托最优</li>
+      <li>可控生成（Controllable Generation）的精确控制问题</li>
+      <li>物理仿真一致性（Physics-consistent Generation）</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 推荐阅读与学术资源</div>
+    <p>以下资源来自CVPR 2025、ICML 2025、NeurIPS 2024等顶级会议：</p>
+    <ul>
+      <li>
+        <strong>TRELLIS.2</strong> - "Scaling Implicit Neural Representations for Industrial 3D
+        Asset Generation" (Microsoft Research, 2025)
+      </li>
+      <li>
+        <strong>TripoSR</strong> - "TripoSR: Fast 3D Object Reconstruction from Single Images"
+        (Stability AI + VAST, CVPR 2024)
+      </li>
+      <li>
+        <strong>Hunyuan3D 2.1</strong> - "Hunyuan3D: Large-scale 3D Generation from Single Image"
+        (Tencent, CVPR 2025)
+      </li>
+      <li>
+        <strong>Gaussian Splatting</strong> - "3D Gaussian Splatting for Real-Time Radiance Field
+        Rendering" (INRIA, SIGGRAPH 2024)
+      </li>
+      <li>
+        <strong>DreamFusion</strong> - "DreamFusion: Text-to-3D using 2D Diffusion" (Google
+        Research, NeurIPS 2022 - foundational work)
+      </li>
+    </ul>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">💡</div>
+    <div class="callout-text">
+      <strong>学术思维训练：</strong>建议学生对比阅读TRELLIS.2和TripoSR的论文，注意两者在：<br />
+      1) 3D表示选择（稀疏体素 vs 三平面）上的本质差异<br />
+      2) 训练策略（是否使用多视角数据增强）的权衡<br />
+      3) 推理效率优化（early exit vs 蒸馏）的工程取舍
+    </div>
   </div>
 </section>

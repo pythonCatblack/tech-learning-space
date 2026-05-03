@@ -71,6 +71,16 @@
 修正后定位精度：水平 ±1-2cm，垂直 ±2-3cm（双频 L1+L2 接收机）。需固件支持双频 + 多系统（GPS+BDS+Galileo+GLONASS）联合定位。
 </p></div>
 
+<div class="hlbox"><div class="hlbox-title">🔬 RTK的数学模型：模糊度固定与双差观测</div><p>RTK的核心是<span class="kw">载波相位观测</span>而非伪距观测。载波相位测量比伪距精度高100倍，但存在整数模糊度（Ambiguity）问题。</p>
+<p><strong>载波相位观测方程（流动站r，基准站b，卫星s）：</strong></p>
+<p>$$\phi_r^s = \rho_r^s + c(\delta t_r - \delta t^s) - I_r^s + T_r^s + N_r^s + \epsilon$$</p>
+<p>其中 $N_r^s$ 是载波相位模糊度（整数），$\rho_r^s$ 是几何距离。</p>
+<p><strong>双差观测（消除卫星钟差和电离层一阶项）：</strong></p>
+<p>$$\nabla\Delta\phi_{rb}^{ss'} = \nabla\Delta\rho_{rb}^{ss'} + \nabla\Delta T_{rb}^{ss'} + \nabla\Delta N_{rb}^{ss'} + \nabla\Delta\epsilon$$</p>
+<p>双差后，卫星钟差被消除，电离层延迟在对流层延迟在短基线（<10km）时可忽略。此时模糊度 $\nabla\Delta N$ 成为整数，必须正确固定才能获得厘米级精度。</p>
+<p><strong>模糊度固定策略：</strong>使用LAMBDA（Least-squares AMBiguity Decorrelation Adjustment）算法进行模糊度搜索，在线固定整周模糊度。固定成功后，定位精度从米级跃升到厘米级。</p>
+</div>
+
 <h3 class="section-h3">6.2.3 RTK实战部署清单</h3>
 
 <div class="steps">

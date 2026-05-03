@@ -22,6 +22,51 @@
 
   <p class="p">一个好的产品指标体系应该包含：业务指标、技术指标、用户行为指标。</p>
 
+  <h3 class="section-h3">15.1.1 A/B测试的理论基础</h3>
+  <p class="p">A/B测试是数据驱动产品的核心方法。其理论基础涉及统计学、实验设计和决策理论。</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 假设检验的统计理论</div>
+    <p>A/B测试基于<strong>假设检验（Hypothesis Testing）</strong>的统计框架：</p>
+    <ul>
+      <li><strong>零假设（H₀）</strong> - 实验组和对照组没有差异</li>
+      <li><strong>备择假设（H₁）</strong> - 实验组和对照组存在差异</li>
+      <li><strong>第一类错误（α）</strong> - 错误地拒绝H₀（假阳性）</li>
+      <li><strong>第二类错误（β）</strong> - 错误地接受H₀（假阴性）</li>
+    </ul>
+    <p>统计功效（Power）= 1 - β，表示在存在真实差异时正确检测到的概率。</p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Multi-Armed Bandit与自适应实验</div>
+    <p>
+      传统A/B测试是<strong>固定-horizon</strong>实验，需要预先确定样本量。但这种方法在长时间运行时会损失机会成本。<strong
+        >Multi-Armed Bandit（MAB）</strong
+      >提供了自适应 alternatives：
+    </p>
+    <ul>
+      <li><strong>Epsilon-Greedy</strong> - 小概率探索，大部分时间利用已知最优</li>
+      <li><strong>Thompson Sampling</strong> - 从Beta分布采样，平衡探索与利用</li>
+      <li><strong>UCB1</strong> - 使用置信上界，数学上更严格</li>
+    </ul>
+    <p>MAB方法可以减少30-50%的机会成本损失，特别适合需要持续优化的产品功能。</p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 因果推断与实验设计</div>
+    <p>正确的A/B测试需要<strong>随机化</strong>来保证因果有效性。但在实践中，经常遇到：</p>
+    <ul>
+      <li><strong>选择偏差</strong> - 用户非随机选择参与实验</li>
+      <li><strong>干扰效应</strong> - 实验组和对照组用户之间存在相互影响</li>
+      <li><strong>网络效应</strong> - 用户规模越大，网络效应越明显</li>
+    </ul>
+    <p>
+      <strong>倾向得分匹配（Propensity Score Matching）</strong>和<strong
+        >差分隐私（Differential Privacy）</strong
+      >是处理这些问题的常用技术。
+    </p>
+  </div>
+
   <pre><code>提示词：
 "为一个任务管理SaaS产品设计指标体系：
 

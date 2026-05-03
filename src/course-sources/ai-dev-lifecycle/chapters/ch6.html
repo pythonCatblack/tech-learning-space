@@ -31,6 +31,93 @@
     </div>
   </div>
 
+  <h3 class="section-h3">6.1.1 AI编码助手的认知科学原理</h3>
+  <p class="p">
+    理解AI编码助手的工作原理需要结合认知科学和机器学习的视角。AI代码生成本质上是<strong
+      >序列建模（Sequence Modeling）</strong
+    >问题——给定代码的上下文，预测下一个最可能的token。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 代码补全的认知模型</div>
+    <p>
+      从认知科学角度，代码补全可以被建模为人类的<strong>预测加工（Predictive Processing）</strong
+      >机制：
+    </p>
+    <ul>
+      <li><strong>自上而下推理</strong> - 基于对整体代码结构的理解预测</li>
+      <li><strong>自下而上匹配</strong> - 基于局部模式的统计匹配</li>
+      <li><strong>注意力机制</strong> - 确定哪些上下文信息最相关</li>
+    </ul>
+    <p>
+      现代LLM的注意力机制在数学上与认知科学的<strong
+        >特征整合理论（Feature Integration Theory）</strong
+      >有相似之处——都通过选择性注意来整合信息。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 上下文窗口与工作记忆</div>
+    <p>
+      人类工作记忆容量有限（约7±2个chunk），AI的上下文窗口也有类似限制。理解这一限制对于有效使用AI编码助手至关重要。
+    </p>
+    <ul>
+      <li><strong>Claude 4</strong> - 200K tokens上下文窗口</li>
+      <li><strong>GPT-4 Turbo</strong> - 128K tokens上下文窗口</li>
+      <li><strong>Gemini 1.5</strong> - 1M tokens上下文窗口</li>
+    </ul>
+    <p>
+      超过上下文窗口的信息会被"遗忘"——这就是为什么工程实践中的<strong>模块化设计</strong>对AI辅助开发尤为重要。
+    </p>
+  </div>
+
+  <h3 class="section-h3">6.1.2 提示词工程的科学研究进展</h3>
+  <p class="p">
+    提示词工程（Prompt
+    Engineering）已经从经验技巧发展成为一门科学。研究界提出了多种提升AI能力的系统化方法。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Zero-Shot与Few-Shot学习</div>
+    <p>
+      <strong>Zero-shot learning</strong>指模型在没有特定任务示例的情况下完成任务：<br />
+      Prompt: "Translate this to French: Hello world"
+    </p>
+    <p>
+      <strong>Few-shot learning</strong>通过在prompt中提供2-5个示例来引导模型：<br />
+      Prompt: "Translate to French: Hello→Bonjour, Good morning→Bonjour, Thank you→?"
+    </p>
+    <p>研究表明，Few-shot在处理复杂模式识别任务时准确率比Zero-shot平均提升15-25%。</p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Chain-of-Thought的科学基础</div>
+    <p>
+      如第一章所述，<strong>Chain-of-Thought（CoT）</strong>通过引入中间推理步骤提升复杂推理能力。科学研究揭示了CoT有效的条件：
+    </p>
+    <ul>
+      <li><strong>模型规模</strong> - CoT对小型模型（<10B参数）效果有限，对大型模型效果显著</li>
+      <li>
+        <strong>任务类型</strong> -
+        CoT对多步骤推理任务（如算术、逻辑）效果明显，对事实回忆类任务效果有限
+      </li>
+      <li><strong>触发机制</strong> - 简单添加"let's think step by step"可以触发CoT行为</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Tree-of-Thought与主动探索</div>
+    <p>
+      <strong>Tree-of-Thought（ToT）</strong>将CoT扩展为树搜索，允许模型探索多个推理路径。适用场景：
+    </p>
+    <ul>
+      <li><strong>创意写作</strong> - 生成多个开头，选择最佳发展</li>
+      <li><strong>复杂规划</strong> - 探索多种解决方案</li>
+      <li><strong>代码调试</strong> - 探索多种可能的根因</li>
+    </ul>
+    <p>ToT的计算成本高于CoT（需要生成和评估多个路径），适用于对质量要求高、对延迟不敏感的场景。</p>
+  </div>
+
   <h2 class="section-h2">6.2 ChatGPT在开发中的使用模式</h2>
 
   <h3 class="section-h3">模式一：代码解释与学习</h3>

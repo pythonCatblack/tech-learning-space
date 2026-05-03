@@ -200,24 +200,57 @@
   </p>
 
   <div class="hlbox">
-    <div class="hlbox-title">🔑 IMU预积分的数学</div>
+    <div class="hlbox-title">🔑 IMU预积分的数学（完整推导）</div>
     <p>
-      设IMU角速度和加速度测量为 $\hat{\omega}(t) = \omega(t) + b_\omega(t) + n_\omega$ 和
-      $\hat{a}(t) = a(t) + b_a(t) + n_a$。<br /><br />
+      设IMU角速度和加速度测量为 $\hat{\boldsymbol{\omega}}(t) = \boldsymbol{\omega}(t) +
+      \mathbf{b}_\omega(t) + \mathbf{n}_\omega$ 和 $\hat{\mathbf{a}}(t) =
+      \mathbf{R}^\top(\mathbf{a}(t) - \mathbf{g}) + \mathbf{b}_a(t) + \mathbf{n}_a$。<br /><br />
       预积分在IMU体坐标系下计算相对运动（不依赖世界坐标系）：<br /><br />
       <strong
-        >$$\Delta R_{ij} = \iint R(t) \cdot \hat{\omega}(t) \, dt \quad
-        \text{（相对旋转）}$$</strong
-      ><br /><br />
+        >$$\Delta \mathbf{R}_{ij} = \prod_{k=i}^{j-1} \exp\left(\left(\hat{\boldsymbol{\omega}}(t_k)
+        - \mathbf{b}_\omega\right)\Delta t\right)_\wedge$$</strong
+      ><br />
       <strong
-        >$$\Delta v_{ij} = \iint R(t) \cdot \hat{a}(t) \, dt \quad \text{（相对速度）}$$</strong
-      ><br /><br />
+        >$$\Delta \mathbf{v}_{ij} = \sum_{k=i}^{j-1} \Delta \mathbf{R}_{ik} \hat{\mathbf{a}}(t_k)
+        \Delta t$$</strong
+      ><br />
       <strong
-        >$$\Delta p_{ij} = \iint R(t) \cdot \hat{a}(t) \, dt \quad \text{（相对位置）}$$</strong
+        >$$\Delta \mathbf{p}_{ij} = \sum_{k=i}^{j-1}\left[\Delta \mathbf{v}_{ik} \Delta t +
+        \frac{1}{2}\Delta \mathbf{R}_{ik}\hat{\mathbf{a}}(t_k)\Delta t^2\right]$$</strong
       ><br /><br />
-      实践中使用中点积分或RK4积分，并对零偏做一阶近似修正。<br /><br />
-      <strong>关键性质：</strong>预积分结果 $\Delta R$, $\Delta v$, $\Delta p$ 只依赖于 $[t_i, t_j]$
+      其中 $\exp(\cdot)_\wedge$ 是从李代数到李群的指数映射，$\Delta \mathbf{R}_{ik} = \Delta
+      \mathbf{R}_{i(i+1)} \cdots \Delta \mathbf{R}_{(k-1)k}$。<br /><br />
+      <strong>关键性质：</strong>预积分结果 $\Delta \mathbf{R}$, $\Delta \mathbf{v}$, $\Delta
+      \mathbf{p}$ 只依赖于 $[t_i, t_j]$
       时间段内的IMU测量，与世界坐标系下的绝对位姿无关——这正是预积分的核心价值：在优化过程中改变位姿时，不需要重新积分。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔬 预积分误差传播与协方差矩阵</div>
+    <p>预积分的<span class="kw">协方差传播</span>是VIO滤波器设计的关键。设预积分误差为：</p>
+    <p>
+      $$\boldsymbol{\delta}_{ij} = \begin{bmatrix} \delta\boldsymbol{\theta}_{ij} \\
+      \delta\Delta\mathbf{v}_{ij} \\ \delta\Delta\mathbf{p}_{ij} \\ \delta\mathbf{b}_{\omega,ij} \\
+      \delta\mathbf{b}_{a,ij} \end{bmatrix}$$
+    </p>
+    <p>误差状态传播方程（一阶扰动）：</p>
+    <p>
+      $$\delta\boldsymbol{\theta}_{j} = \mathbf{J}_r(\Delta \boldsymbol{\theta}_{ij})
+      \delta\boldsymbol{\theta}_{i} + \mathbf{J}_{\omega}\mathbf{n}_\omega \Delta t$$
+    </p>
+    <p>
+      $$\delta\Delta\mathbf{v}_{ij} = \mathbf{R}_{ij}\left[\mathbf{n}_a -
+      \delta\mathbf{b}_{a,ij}\right]\Delta t$$
+    </p>
+    <p>
+      $$\delta\Delta\mathbf{p}_{ij} = \delta\Delta\mathbf{v}_{ij}\Delta t + \mathbf{n}_a \Delta t^2
+      / 2$$
+    </p>
+    <p>
+      其中 $\mathbf{J}_r(\cdot)$ 是旋转扰动的左雅可比矩阵。协方差通过 $\mathbf{P}_{ij} =
+      \mathbf{\Phi}_{ij}\mathbf{P}_{ii}\mathbf{\Phi}_{ij}^\top + \mathbf{Q}_d$ 传播，其中
+      $\mathbf{\Phi}_{ij}$ 是状态转移矩阵，$\mathbf{Q}_d$ 是离散时间过程噪声协方差。
     </p>
   </div>
 

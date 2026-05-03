@@ -26,6 +26,161 @@
     >（AI增强开发）新范式。
   </p>
 
+  <h3 class="section-h3">1.1.1 软件工程理论的历史脉络</h3>
+  <p class="p">
+    要理解AI如何变革软件开发，我们首先需要理解软件工程作为一门学科的演进逻辑。软件工程作为独立学科诞生于1968年NATO软件工程会议，其核心问题是<strong>如何用系统化、可量化、可复制的方法来构建和维护软件系统</strong>。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 理论基石：Watts Humphrey的软件成熟度框架</div>
+    <p>
+      <strong>Watts Humphrey</strong
+      >（卡内基梅隆大学SEI创始人）提出的软件过程成熟度框架是现代软件工程管理的理论基础。其核心思想是：软件组织的成熟度决定了其交付可预测性。
+    </p>
+    <ul>
+      <li><strong>Level 1: Initial</strong> - 过程是临时的、混乱的，成功依赖个人英雄主义</li>
+      <li><strong>Level 2: Managed</strong> - 项目管理得到认可，过程在特定项目上得到定义</li>
+      <li><strong>Level 3: Defined</strong> - 过程被标准化、文档化，并在组织层面统一应用</li>
+      <li>
+        <strong>Level 4: Quantitatively Managed</strong> - 过程被度量和管理控制，量化目标得以建立
+      </li>
+      <li><strong>Level 5: Optimizing</strong> - 持续过程改进，通过量化反馈机制实现优化</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 CMMI：能力成熟度模型集成</div>
+    <p>
+      <strong>CMMI（Capability Maturity Model Integration）</strong>是 Humphrey
+      框架的工业标准化演进，被全球超过15,000家组织采用（截至2026年）。CMMI将组织能力分为<strong>连续表示</strong>和<strong>阶段表示</strong>两种模型，涵盖22个过程域，覆盖从需求管理到技术变更的完整软件生命周期。
+    </p>
+    <p>
+      CMMI的核心贡献在于建立了<strong>过程性能模型（Process Performance Model）</strong
+      >：组织的过程能力与其商业结果之间存在可量化的关联。这为AI驱动的软件工程提供了理论基础——AI可以通过分析历史数据来预测过程性能和商业结果。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Agile Manifesto：范式革命的哲学基础</div>
+    <p>
+      2001年的<strong>敏捷宣言</strong>代表了软件工程史上最重要的范式转换之一。敏捷的核心洞察是：在高度不确定性的环境中，<strong>适应能力比遵循固定计划更有价值</strong>。
+    </p>
+    <p>
+      敏捷宣言的四项价值：<br />
+      1. <strong>个体和互动</strong>高于流程和工具<br />
+      2. <strong>可工作的软件</strong>高于详尽的文档<br />
+      3. <strong>客户合作</strong>高于合同谈判<br />
+      4. <strong>响应变化</strong>高于遵循计划
+    </p>
+    <p>
+      这四个价值在AI时代依然成立，但AI改变了"什么是可能的"——AI使能的敏捷实践可以实现更快的反馈循环、更高的自动化程度、更精细的度量能力。
+    </p>
+  </div>
+
+  <h3 class="section-h3">1.1.2 AI-Augmented Development的理论定位</h3>
+  <p class="p">
+    AI-Augmented
+    Development并非要替代传统软件工程，而是将AI能力嵌入软件过程的每个环节，实现<strong>过程自动化与人类判断的最佳结合</strong>。
+  </p>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🔄</div>
+      <h4>过程连续体</h4>
+      <p>从CMMI Level 1（混乱）到Level 5（优化），AI加速组织向更高成熟度演进</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📊</div>
+      <h4>反馈循环</h4>
+      <p>AI压缩Scrum的反馈循环，从天级到分钟级</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🎯</div>
+      <h4>决策支持</h4>
+      <p>AI提供数据驱动的决策支持，放大人类判断而非替代</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔮</div>
+      <h4>预测性工程</h4>
+      <p>从被动响应到主动预防，AI使能预测性软件开发</p>
+    </div>
+  </div>
+
+  <h3 class="section-h3">1.1.3 学习理论视角下的AI辅助开发</h3>
+  <p class="p">
+    AI辅助开发的效果受到人类学习规律的制约。理解<strong>学习理论</strong>对于设计有效的AI辅助实践至关重要。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Bloom's Taxonomy：认知目标的分类体系</div>
+    <p><strong>Benjamin Bloom</strong>于1956年提出的认知目标分类学将学习分为六个层次：</p>
+    <ol>
+      <li><strong>记忆（Remember）</strong> - 回忆事实、基本概念</li>
+      <li><strong>理解（Understand）</strong> - 解释含义、总结信息</li>
+      <li><strong>应用（Apply）</strong> - 在新情境中使用知识</li>
+      <li><strong>分析（Analyze）</strong> - 识别模式、分解复杂问题</li>
+      <li><strong>评估（Evaluate）</strong> - 判断想法或解决方案的质量</li>
+      <li><strong>创造（Create）</strong> - 生成原创解决方案</li>
+    </ol>
+    <p>
+      <strong>关键洞察</strong
+      >：AI在不同认知层次上的辅助效果差异显著。AI在"记忆"和"理解"层次表现优异（代码补全、语法解释），但在"创造"和"评估"层次需要人类主导。有效的AI辅助开发应该将低层次认知任务自动化，将高层次认知任务留给人类。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Spaced Repetition：间隔重复的学习优化</div>
+    <p>
+      <strong>间隔重复</strong
+      >是最强有力的学习技巧之一，其理论基础是<strong>遗忘曲线</strong>（Ebbinghaus,
+      1885）和<strong>间隔效应</strong>（Cepeda et al.,
+      2006）。研究表明，适当的复习间隔可以显著提高长期记忆保留率。
+    </p>
+    <p>在AI辅助开发中，这一理论的应用包括：</p>
+    <ul>
+      <li><strong>代码提示的时机</strong> - 在开发者即将遗忘某API时提供提示，比持续显示更有效</li>
+      <li><strong>知识管理</strong> - AI辅助构建和维护团队知识库，利用间隔重复优化内容呈现</li>
+      <li><strong>技能培养</strong> - AI辅助的学习系统可以根据个人遗忘曲线定制复习内容</li>
+    </ul>
+  </div>
+
+  <h3 class="section-h3">1.1.4 经济视角：AI投资的回报模型</h3>
+  <p class="p">
+    从经济学视角看，AI辅助开发是一种<strong>技术投资</strong>，需要理解其成本结构、回报周期和边际效益。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📊 Moore's Law for AI：计算经济学</div>
+    <p>传统摩尔定律描述的是晶体管密度每18个月翻倍。在AI领域，存在类似的指数效应：</p>
+    <ul>
+      <li><strong>GPT-3到GPT-4</strong>：参数规模从175B增长到约1.8T（10x），能力出现质的飞跃</li>
+      <li><strong>Claude 3到Claude 4</strong>：推理能力提升约40%，上下文窗口扩展到1M tokens</li>
+      <li>
+        <strong>推理成本下降</strong>：GPT-4 API成本从$0.03/1K tokens降至$0.01/1K
+        tokens（2024-2026）
+      </li>
+    </ul>
+    <p>
+      这意味着AI辅助开发的经济性正在以指数速度改善。对于组织而言，<strong>关键决策不是"是否采用AI"而是"何时以多大力度采用"</strong>。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📊 GPU Economics：训练与推理的成本结构</div>
+    <p>AI的经济学由<strong>训练成本</strong>和<strong>推理成本</strong>两部分构成：</p>
+    <ul>
+      <li><strong>训练成本</strong>：GPT-4级别模型单次训练约需$100M，Claude 4级别约$80M</li>
+      <li>
+        <strong>推理成本</strong>：GPT-4o的推理成本约为GPT-4的1/10，主要得益于模型蒸馏和硬件优化
+      </li>
+      <li><strong>边际成本</strong>：对于大多数组织，使用云API的边际成本接近零，无需前期投资</li>
+    </ul>
+    <p>
+      这解释了为什么GitHub
+      Copilot能在3年内获得2000万用户——<strong>边际成本接近零但边际价值极高</strong>。
+    </p>
+  </div>
+
   <div class="hlbox">
     <div class="hlbox-title">💡 AI AGENT 的核心能力</div>
     <p>
@@ -39,6 +194,136 @@
     很多团队引入AI只停留在"写代码"环节，这其实是最大的浪费。从产品创意阶段的头脑风暴，到需求分析时的用户故事提取，再到架构设计、代码生成、测试编写、部署发布、运维监控——AI
     AGENT在每个环节都能发挥独特价值。
   </p>
+
+  <h3 class="section-h3">1.2.1 决策理论视角：Multi-Armed Bandit与AI辅助策略</h3>
+  <p class="p">
+    AI辅助开发的一个核心问题是：<strong>如何在不同任务和不同AI工具之间分配注意力资源？</strong>这个问题在决策理论中有深刻的形式化基础。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Multi-Armed Bandit：探索与利用的权衡</div>
+    <p>
+      <strong>Multi-Armed Bandit（MAB）</strong
+      >是统计决策论中的经典问题：假设你在赌场面对多台老虎机（"一臂强盗"），每台机器有未知的回报概率，你的目标是通过有限的尝试学习最大化累积回报。
+    </p>
+    <p>MAB问题有多种经典求解策略：</p>
+    <ul>
+      <li><strong>Epsilon-Greedy</strong>：以概率ε探索随机臂，以概率1-ε利用当前最优臂</li>
+      <li><strong>Thompson Sampling</strong>：从Beta分布中采样估计每臂的回报率</li>
+      <li>
+        <strong>UCB1（Upper Confidence Bound）</strong>：平衡预期收益和不确定性，数学形式为：UCB1 =
+        μ̂ᵢ + √(2ln n / nᵢ)
+      </li>
+    </ul>
+    <p>在AI辅助开发中，MAB框架可以应用于：</p>
+    <ul>
+      <li><strong>工具选择</strong>：在GitHub Copilot、Cursor、Claude Code之间分配使用时间</li>
+      <li><strong>Prompt优化</strong>：尝试不同Prompt策略，选择效果最好的</li>
+      <li><strong>代码审查策略</strong>：在自动审查和人工审查之间分配精力</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Pareto Optimization：多目标决策框架</div>
+    <p>
+      <strong>Pareto优化</strong>（以意大利经济学家Vilfredo
+      Pareto命名）是处理多目标决策的核心框架。在AI辅助开发中，我们经常面临多个可能冲突的目标：开发速度
+      vs 代码质量 vs 维护性。
+    </p>
+    <p>
+      <strong>Pareto最优解</strong
+      >的定义是：不存在另一个可行解能在不损害任何目标的前提下改善至少一个目标。<strong>Pareto前沿</strong>是所有Pareto最优解构成的集合。
+    </p>
+    <p>关键算法包括：</p>
+    <ul>
+      <li>
+        <strong>NSGA-II</strong>（Non-dominated Sorting Genetic Algorithm
+        II）：使用快速非支配排序和拥挤度距离
+      </li>
+      <li>
+        <strong>MOEA/D</strong>（Multi-Objective Evolutionary Algorithm based on
+        Decomposition）：将Pareto前沿分解为标量优化子问题
+      </li>
+      <li><strong>参考点方法</strong>（Reference Point Approach）：从决策者提供的参考点引导搜索</li>
+    </ul>
+  </div>
+
+  <h3 class="section-h3">1.2.2 LLM Agent：架构与能力边界</h3>
+  <p class="p">
+    现代LLM
+    Agent代表了AI辅助开发的最新范式。与简单的文本补全不同，Agent能够<strong>自主规划、工具调用、长期记忆</strong>，从而完成复杂的多步骤任务。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🤖 AutoGPT：自主Agent的原型</div>
+    <p>
+      <strong>AutoGPT</strong>（2023年3月由Significant
+      Gravitas发布）是首个引起广泛关注的自主Agent项目。AutoGPT的核心架构是：
+    </p>
+    <ul>
+      <li><strong>目标分解</strong>：将高层任务分解为子目标</li>
+      <li><strong>自我批评</strong>：Agent评估自身输出的质量</li>
+      <li><strong>长期记忆</strong>：使用向量数据库存储和检索历史信息</li>
+      <li><strong>工具调用</strong>：通过API调用执行具体操作</li>
+    </ul>
+    <p>
+      AutoGPT的局限性也为其演进提供了方向：过度依赖昂贵的API调用、缺乏有效的人类反馈机制、任务规划质量不稳定。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔗 LangChain：LLM应用的开发框架</div>
+    <p>
+      <strong>LangChain</strong
+      >（2022年10月发布）是一个用于构建LLM应用的开源框架，提供了组件化和可组合的抽象。LangChain的核心概念：
+    </p>
+    <ul>
+      <li><strong>Prompt Templates</strong>：可复用的提示词模板</li>
+      <li><strong>Chains</strong>：将多个LLM调用串联成工作流</li>
+      <li><strong>Agents</strong>：动态决定执行动作的自治实体</li>
+      <li><strong>Memory</strong>：管理对话和状态的持久化机制</li>
+    </ul>
+    <p>
+      LangChain的架构哲学是：<strong>将LLM应用开发模块化</strong>，让开发者能够组合不同的组件来构建复杂应用。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🧠 BabyAGI：任务驱动的Agent系统</div>
+    <p>
+      <strong>BabyAGI</strong>（2023年4月由Yohei
+      Nakajima发布）是一个基于任务驱动的Agent系统。其核心理念是：Agent应该能够自主创建、执行和评估任务。
+    </p>
+    <p>BabyAGI的执行循环：</p>
+    <ol>
+      <li>从任务队列中取出任务</li>
+      <li>使用LLM执行任务</li>
+      <li>将结果存储到记忆系统</li>
+      <li>根据结果创建新任务或更新任务列表</li>
+    </ol>
+    <p>
+      BabyAGI的贡献在于展示了<strong>简单但有效的Agent循环架构</strong>，这一设计被后续许多项目借鉴。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Agent架构的统一理论框架</div>
+    <p>尽管存在多种Agent实现，我们可以建立一个统一的理论框架来理解它们：</p>
+    <ul>
+      <li>
+        <strong>ReAct</strong>（Reasoning +
+        Acting）：交替进行推理和动作执行，在LangChain、BabyAGI中都有体现
+      </li>
+      <li><strong>Reflexion</strong>：通过语言强化学习实现自我改进，让Agent从失败中学习</li>
+      <li><strong>AutoGPT-E</strong>：引入外部反馈机制，提高任务完成质量</li>
+    </ul>
+    <p>学术研究方面，<strong>LLM Agent的前沿研究</strong>包括：</p>
+    <ul>
+      <li>Agent在复杂多步骤任务中的长程规划能力</li>
+      <li>多Agent协作与通信协议的建立</li>
+      <li>Agent的鲁棒性和安全性保证</li>
+    </ul>
+  </div>
 
   <p class="p">
     举个具体例子：某团队开发一个电商推荐系统。传统流程需要产品经理写PRD、架构师画蓝图、开发者写代码、测试人员编写用例、运维人员配置集群。有了AI
@@ -108,7 +393,70 @@
     </div>
   </div>
 
-  <h2 class="section-h2">1.4 主流AI开发工具生态</h2>
+  <h2 class="section-h2">1.4 Prompt工程研究：Chain-of-Thought与超越</h2>
+  <p class="p">
+    Prompt工程是释放AI能力的关键技术。近年来，研究界提出了多种提升AI推理能力的Prompt策略。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Chain-of-Thought（CoT）：思维链提示</div>
+    <p>
+      <strong>Chain-of-Thought</strong>（Wei et al.,
+      2022）是提升大语言模型推理能力的核心技术。核心思想是：让模型在给出最终答案之前，先生成中间的推理步骤。
+    </p>
+    <p>
+      <strong>数学形式化</strong>：对于问题Q，CoT不是直接输出答案A，而是先生成中间步骤序列R = [r₁,
+      r₂, ..., rₖ]，然后基于R输出A。形式化表示为：
+    </p>
+    <p>P(A|Q) = P(A|R, Q) × P(R|Q)</p>
+    <p>CoT的有效性来自于：</p>
+    <ul>
+      <li><strong>分解效应</strong>：将复杂问题分解为简单步骤降低了每步的认知负担</li>
+      <li><strong>注意力转移</strong>：中间步骤让模型能够"关注"问题相关的部分</li>
+      <li><strong>自我验证</strong>：生成推理链提供了解释性和自我纠正的机会</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Tree-of-Thought（ToT）：思维树搜索</div>
+    <p>
+      <strong>Tree-of-Thought</strong>（Yao et al.,
+      2023）将CoT扩展为树结构，允许模型在多个推理方向上进行探索和回溯。
+    </p>
+    <p>ToT的核心算法：</p>
+    <ol>
+      <li><strong>思想生成</strong>：从当前状态生成多个可能的"思想"</li>
+      <li><strong>状态评估</strong>：使用模型评估每个思想的前景</li>
+      <li><strong>搜索策略</strong>：使用BFS或DFS在思想树上搜索</li>
+      <li><strong>回溯机制</strong>：当某路径失败时回溯到之前的检查点</li>
+    </ol>
+    <p>ToT在需要探索和规划的任务（如创意写作、复杂数学证明、编程挑战）上显著优于CoT。</p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Self-Consistency：自洽性解码</div>
+    <p>
+      <strong>Self-Consistency</strong>（Wang et al.,
+      2022）是另一种提升推理能力的策略。核心思想是：对同一个问题生成多个不同的推理路径，然后选择最一致的答案。
+    </p>
+    <p>数学形式化：给定问题Q和答案集合{ A₁, A₂, ..., Aₙ }，选择使下式最大化的答案：</p>
+    <p>argmaxₐ Σᵢ 1[生成的推理链ᵢ最终答案为a]</p>
+    <p>Self-Consistency在算术推理任务上将GPT-4的准确率从17%提升到74%（GSM8K基准）。</p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Prompt工程的最佳实践</div>
+    <p>综合研究进展，以下是当前最优的Prompt工程实践：</p>
+    <ul>
+      <li><strong>Few-shot Learning</strong>：在Prompt中提供2-5个示例</li>
+      <li><strong>格式化输出</strong>：使用XML标签或JSON结构组织信息</li>
+      <li><strong>角色设定</strong>：如"你是一位资深软件架构师"</li>
+      <li><strong>分步指令</strong>：将复杂任务分解为"首先...然后...最后..."</li>
+      <li><strong>约束明确</strong>：清晰说明输出的格式、长度、内容约束</li>
+    </ul>
+  </div>
+
+  <h2 class="section-h2">1.5 主流AI开发工具生态</h2>
   <p class="p">当前市场上主流的AI开发工具可分为几大类：</p>
 
   <table class="tbl">
@@ -117,7 +465,7 @@
         <th>类别</th>
         <th>工具代表</th>
         <th>核心能力</th>
-        <th>市场数据（2024-2025）</th>
+        <th>市场数据（2024-2026）</th>
       </tr>
     </thead>
     <tbody>
@@ -125,7 +473,7 @@
         <td class="hl">AI对话助手</td>
         <td>ChatGPT、Claude、文心一言</td>
         <td>需求讨论、代码解释、文档生成</td>
-        <td>ChatGPT企业版用户超60万</td>
+        <td>ChatGPT企业版用户超100万（2026年），Claude 4 Opus成为编程助手新标杆</td>
       </tr>
       <tr>
         <td class="hl">AI代码补全</td>
@@ -159,6 +507,68 @@
       </tr>
     </tbody>
   </table>
+
+  <h3 class="section-h3">1.5.1 AI编程助手的最新能力边界</h3>
+  <p class="p">2025-2026年，AI编程助手的能力发生了质的飞跃。以下是关键进展：</p>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">📈</div>
+      <h4>SWE-bench基准突破</h4>
+      <p>Claude Opus 4.5达80.9%，MiniMax M2.5达80.2%，超越人类初级工程师水平</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔧</div>
+      <h4>全栈能力</h4>
+      <p>AI可以独立完成从前端到后端到数据库的完整功能开发</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🐛</div>
+      <h4>Debug能力</h4>
+      <p>根据错误信息和代码上下文自动定位根因并修复</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📝</div>
+      <h4>代码审查</h4>
+      <p>自动发现安全漏洞、性能问题、并发bug等深层问题</p>
+    </div>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📊 LLM能力演进时间线</div>
+    <ul>
+      <li><strong>2023年3月</strong> - GPT-4发布，编程能力显著提升</li>
+      <li><strong>2023年11月</strong> - GPT-4 Turbo发布，128K上下文，API成本降低</li>
+      <li><strong>2024年3月</strong> - Devin AI发布，首个AI软件工程师</li>
+      <li><strong>2024年6月</strong> - Claude 3.5 Sonnet发布，编程能力超越GPT-4</li>
+      <li><strong>2025年5月</strong> - Claude 4发布（Anthropic首届开发者大会），SWE-bench达80%</li>
+      <li><strong>2025年8月</strong> - GPT-5发布（8月7-8日），Agent能力显著增强</li>
+      <li><strong>2026年</strong> - MiniMax M2.5发布，中国开源模型编程能力达到SOTA</li>
+    </ul>
+  </div>
+
+  <h3 class="section-h3">1.5.2 Claude Code与Cursor：新一代编程工具</h3>
+  <p class="p">
+    2025年推出的<strong>Claude Code</strong>和<strong>Cursor</strong>代表了AI编程工具的新范式：
+  </p>
+
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">💻</div>
+      <h4>Claude Code</h4>
+      <p>Anthropic官方CLI工具，支持Windows原生运行、会话恢复、命令历史搜索</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🎯</div>
+      <h4>Cursor</h4>
+      <p>AI-First IDE，Composer模式支持跨文件编辑，Tabn实现智能代码预测</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⚡</div>
+      <h4>竞争格局</h4>
+      <p>Cursor估值293亿美元，ARR超10亿美元，标志着AI编程赛道的成熟</p>
+    </div>
+  </div>
 
   <h2 class="section-h2">1.5 你将构建什么</h2>
   <p class="p">
@@ -253,65 +663,82 @@
     <div class="card-label">课后测验</div>
     <h3>第一章选择题</h3>
     <p>
-      <strong>1. 在LLM推理优化中，KV Cache机制主要用于解决什么问题？其数学本质是什么？</strong
-      ><br />
-      A. 非凸前沿；需要多目标进化算法求解　B. 凸形前沿；选择边际收益最大的点　C.
-      减少显存占用；通过缓存已计算的Key-Value矩阵避免重复计算　D.
-      加快解码速度；通过并行化处理多个token<br /><br />
       <strong
-        >2. Speculative
-        Decoding的核心思想是使用什么来加速自回归生成？其理论加速比上界受什么因素制约？</strong
+        >1. 在Watts Humphrey的软件成熟度框架中，从Level 3（Defined）到Level 4（Quantitatively
+        Managed）的核心转变是什么？这种转变对AI辅助开发有什么启示？</strong
       ><br />
-      A. 知识蒸馏；teacher model的蒸馏温度　B. 小模型预测+大模型验证；预测接受率与draft
-      model质量　C. 批量并行生成；token之间独立性假设　D. 缓存已生成token；context length限制<br /><br />
+      A. 引入自动化工具；工具是成熟度提升的关键　B.
+      从定性管理到定量管理；建立度量体系和过程性能模型，使组织能够基于数据预测
+      outcomes；启示：AI可以加速组织从"经验驱动"到"数据驱动"的转变　C.
+      增加管理人员；管理是成熟度提升的核心　D. 减少过程变更；稳定是成熟度的标志<br /><br />
       <strong
-        >3.
-        在Agent系统的Pareto优化框架中，若将推理成本、响应延迟、能力质量分别作为优化目标，Agent系统的Pareto前沿通常呈现什么形态？如何在工程实践中选择合适的部署点？</strong
+        >2. Bloom's
+        Taxonomy中，AI在不同认知层次上的辅助效果差异显著。请分析：为什么AI在"记忆"和"理解"层次表现优异，但在"创造"和"评估"层次需要人类主导？这一认知科学原理对设计AI辅助开发工作流有什么指导意义？</strong
       ><br />
-      A. 线性前沿；选择成本最低的点　B. 凹形前沿；选择质量最高的点　C.
-      两者都是感知动作循环；启示在于使用model-based planning增强规划能力　D.
-      非凸前沿；需要多目标进化算法求解<br /><br />
+      A. AI无法理解上下文；所以只能在记忆层次工作　B.
+      AI是统计模型；擅长模式匹配而非原创生成；创造需要"突破常规"的能力，评估需要"价值判断"能力，这些是当前AI的局限；指导意义：应将低层次认知任务（查文档、写样板代码）自动化，将高层次认知任务（架构决策、代码审查）留给人类　C.
+      人类在所有层次都优于AI；AI只是玩具　D. AI和人类没有本质区别；可以完全替代人类<br /><br />
       <strong
-        >4. AI-Augmented
-        Development中，如何理解"感知-规划-执行-反馈"四环与强化学习中agent-environment交互框架的内在联系？这种联系对设计更高效的AI
-        Agent有什么启示？</strong
+        >3. 在Multi-Armed Bandit框架中，UCB1算法的数学形式为UCB1 = μ̂ᵢ + √(2ln n /
+        nᵢ)。请解释这个公式的两个组成部分（
+        exploitation项和exploration项）如何平衡"利用已知最优"与"探索未知可能"。在AI辅助开发中，如何应用这一框架来优化在多个AI工具之间的注意力分配？</strong
       ><br />
-      A. 两者都是开环控制；启示在于减少对反馈的依赖　B.
-      两者都遵循贪心策略；启示在于使用lookahead机制　C.
-      任务分配规约为最大流问题；使用Edmonds-Karp算法求解　D.
-      两者都是感知动作循环；启示在于使用model-based planning增强规划能力<br /><br />
+      A. 两项都是exploitation项；exploration没有价值　B.
+      第一项是exploitation（当前估计的收益），第二项是exploration（置信上界）；当n增加时exploration项递减，趋向利用；当nᵢ很小时exploration项很大，趋向探索；应用：对于Copilot/Cursor/Claude
+      Code的使用频率，可以用UCB1策略决定在何时使用哪个工具　C.
+      两项都是exploration项；利用没有价值　D. 该公式与平衡无关；只是随机选择<br /><br />
       <strong
-        >5.
-        在多智能体协作系统中，若每个Agent具有不同的能力域和资源消耗，如何设计任务分配算法使得全局效用最大？该问题可以规约为哪种经典组合优化问题？</strong
+        >4. Chain-of-Thought（CoT）
+        prompting的数学本质是什么？请形式化描述CoT如何通过引入中间推理步骤R来改变条件概率分布P(A|Q)，并解释为什么这种改变能够提升LLM在复杂推理任务上的表现。</strong
       ><br />
-      A. 任务分配规约为旅行商问题；使用贪心近似算法　B.
-      任务分配规约为二分图匹配；使用Hungarian算法求得最优分配　C.
-      任务分配规约为带约束的组合拍卖问题；使用VCG机制设计激励兼容的分配方案　D.
-      任务分配规约为最大流问题；使用Edmonds-Karp算法求解
+      A. CoT只是让模型输出更长；没有数学本质　B.
+      CoT改变P(A|Q)为P(A|R,Q)×P(R|Q)，通过引入额外的条件变量R，利用链式法则将复杂联合概率分解；提升表现的原因：分解效应降低每步认知负担，注意力转移让模型关注相关部分，自我验证提供解释性和纠错机会　C.
+      CoT无法形式化；只是经验技巧　D. CoT会增加计算成本；得不偿失<br /><br />
+      <strong
+        >5. 在Pareto优化框架中，对于多目标优化问题max (f₁(x), f₂(x), ...,
+        fₖ(x))，如何定义Pareto最优解？给定一个Pareto前沿（通常是非凸的），如何使用NSGA-II算法找到近似Pareto前沿，并在工程实践中根据业务偏好从Pareto前沿选择部署点？</strong
+      ><br />
+      A. Pareto最优指所有目标同时达到最优；无法通过算法找到　B.
+      Pareto最优指不存在另一个解x'使得fᵢ(x') ≥
+      fᵢ(x)对所有i成立且至少一个是严格不等式；NSGA-II通过非支配排序将种群分为多个前沿，使用拥挤度距离在同前沿内保持多样性；工程实践中通过加权求和法或参考点方法从Pareto前沿选择部署点　C.
+      Pareto最优是唯一的；可以直接找到　D. NSGA-II无法处理非凸前沿；只适用于凸前沿<br /><br />
+      <strong
+        >6.
+        在LangChain的Agent架构中，Agent通过"推理-动作-观察"循环（ReAct范式）与环境交互。请分析这种架构如何实现自主任务完成，并将以下组件按正确顺序排列：PromptTemplate、LLM、Tools、AgentExecutor、Memory。</strong
+      ><br />
+      A. LLM → PromptTemplate → Tools → Memory → AgentExecutor　B. PromptTemplate → LLM → Tools →
+      AgentExecutor →
+      Memory；AgentExecutor协调整个循环：观察环境状态，更新Memory，LLM基于Memory和PromptTemplate生成推理和动作，Tools执行动作产生新观察　C.
+      Memory → AgentExecutor → LLM → PromptTemplate → Tools　D. Tools → Memory → LLM → AgentExecutor
+      → PromptTemplate
     </p>
     <details class="quiz-answer">
       <summary>参考答案</summary>
       <div>
-        <p><strong>答案：1.C　2.B　3.D　4.D　5.C</strong></p>
+        <p><strong>答案：1.B　2.B　3.B　4.B　5.B　6.B</strong></p>
         <p><strong>解析：</strong></p>
         <ol style="font-size: 0.9em; color: #666">
           <li>
-            KV
-            Cache的数学本质是通过缓存已计算的Key-Value矩阵，将自回归解码过程中的冗余计算从O(n²)降低到O(n)，每次只需计算新token的KV而不必重新计算所有历史token的注意力分数。
+            Level
+            4的核心转变是从定性管理到定量管理。过程性能模型使组织能够基于数据预测outcomes。AI辅助开发可以加速这一转变——通过自动收集和分析开发数据，AI帮助组织建立量化管理能力。
           </li>
           <li>
-            Speculative Decoding的理论加速比上界受预测接受率与draft model质量的制约。当draft
-            model预测准确率越高，大模型验证通过的token越多，加速效果越显著，理论加速比可达1/(1-p)，其中p为接受率。
+            AI是统计模型，擅长模式匹配而非原创生成。创造需要"突破常规"的能力，评估需要"价值判断"能力，这些是当前AI的局限。AI辅助开发应将低层次认知任务自动化，将高层次认知任务留给人类。
           </li>
           <li>
-            Agent系统的Pareto前沿通常呈非凸形态，需要使用多目标进化算法（如NSGA-II）求解。工程实践中通过加权求和法或参考点法从Pareto前沿选取部署点。
+            UCB1的第一项μ̂ᵢ是exploitation项（当前估计的收益），第二项√(2ln n /
+            nᵢ)是exploration项（置信上界）。当n增加时exploration项递减，趋向利用；当nᵢ很小时exploration项很大，趋向探索。
           </li>
           <li>
-            "感知-规划-执行-反馈"四环与强化学习中agent-environment交互框架的内在联系在于两者都是感知动作循环，启示在于使用model-based
-            planning增强规划能力。
+            CoT通过链式法则将P(A|Q)改写为P(A|R,Q)×P(R|Q)，引入中间推理步骤R。分解效应降低每步认知负担，注意力转移让模型关注相关部分，自我验证提供解释性和纠错机会，这些机制共同提升复杂推理表现。
           </li>
           <li>
-            该问题可规约为带约束的组合拍卖问题，使用VCG（Vickrey-Clarke-Groves）机制能实现激励兼容的最优分配，保证每个Agent真实报告其能力与成本。
+            Pareto最优解的定义：不存在另一个解x'使得fᵢ(x') ≥
+            fᵢ(x)对所有i成立且至少一个是严格不等式。NSGA-II通过非支配排序和拥挤度距离在Pareto前沿保持多样性。工程实践中使用加权求和法或参考点方法选择部署点。
+          </li>
+          <li>
+            LangChain Agent的正确执行顺序：PromptTemplate → LLM → Tools → AgentExecutor →
+            Memory。AgentExecutor协调整个ReAct循环：观察环境状态，更新Memory，LLM基于Memory和PromptTemplate生成推理和动作，Tools执行动作产生新观察。
           </li>
         </ol>
       </div>

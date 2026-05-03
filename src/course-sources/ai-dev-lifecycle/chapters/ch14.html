@@ -41,6 +41,65 @@
     <p>学习系统的"正常模式"，当行为偏离正常时告警。这种方法可以发现传统阈值无法检测的异常。</p>
   </div>
 
+  <h3 class="section-h3">14.1.1 时间序列分析与预测理论</h3>
+  <p class="p">
+    智能监控的核心是时序数据的分析与预测。理解时间序列分析的理论基础有助于更好地设计AIOps系统。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 时间序列分解模型</div>
+    <p>经典时间序列分解将观测值分解为以下成分：</p>
+    <ul>
+      <li><strong>趋势（Trend）</strong> - 长期变化方向</li>
+      <li><strong>季节性（Seasonality）</strong> - 周期性波动</li>
+      <li><strong>残差（Residual）</strong> - 随机波动</li>
+    </ul>
+    <p>
+      乘法模型：Y(t) = T(t) × S(t) × R(t)<br />
+      加法模型：Y(t) = T(t) + S(t) + R(t)
+    </p>
+    <p>分解后的残差用于异常检测——超出正常残差范围的观测被标记为异常。</p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Prophet：Facebook的时间序列预测框架</div>
+    <p><strong>Prophet</strong>是Facebook开源的时间序列预测工具，基于加法模型：</p>
+    <p>y(t) = g(t) + s(t) + h(t) + ε(t)</p>
+    <ul>
+      <li>g(t) = 趋势函数（线性或逻辑斯蒂）</li>
+      <li>s(t) = 季节性分量（傅里叶级数）</li>
+      <li>h(t) = 节假日效应</li>
+      <li>ε(t) = 噪声项</li>
+    </ul>
+    <p>Prophet在具有强季节性和节假日效应的业务数据上表现优异，是AIOps中的常用工具。</p>
+  </div>
+
+  <h3 class="section-h3">14.1.2 根因分析的因果推断理论</h3>
+  <p class="p">
+    根因分析是AIOps中最具挑战性的问题之一。理解因果推断的理论有助于设计更有效的根因分析系统。
+  </p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 相关性vs因果性</div>
+    <p><strong>相关性不等于因果性</strong>是数据分析中最重要的警示之一：</p>
+    <ul>
+      <li><strong>相关</strong>：X和Y共同变化，但不知道谁影响谁</li>
+      <li><strong>因果</strong>：X的变化直接导致Y的变化</li>
+    </ul>
+    <p>在系统故障分析中，<strong>因</strong>和<strong>果</strong>的混淆会导致错误的修复方向。</p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 Pearl的因果层次</div>
+    <p><strong>Judea Pearl</strong>的因果层级理论（2019 Turing Award）：</p>
+    <ul>
+      <li><strong>第一层（关联）</strong> - 观察：P(Y|X)，看到X时Y的概率</li>
+      <li><strong>第二层（干预）</strong> - 行动：P(Y|do(X))，强制设置X时Y的概率</li>
+      <li><strong>第三层（反事实）</strong> - 想象：如果X没有发生，Y会怎样？</li>
+    </ul>
+    <p>大多数机器学习模型停留在第一层，只能学习相关性。根因分析需要第二、第三层的因果推理能力。</p>
+  </div>
+
   <pre><code>提示词：
 "作为AIOps专家，请设计一个智能告警系统：
 

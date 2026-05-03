@@ -38,6 +38,71 @@
     </div>
   </div>
 
+  <h3 class="section-h3">8.1.1 AI软件测试的理论基础</h3>
+  <p class="p">AI软件测试是一个新兴的研究领域，涉及如何利用AI技术提升测试效率、质量和覆盖率。</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 突变测试：评估测试质量的新范式</div>
+    <p><strong>突变测试（Mutation Testing）</strong>是一种评估测试套件质量的方法：</p>
+    <ul>
+      <li>通过在源代码中引入小的"突变"（如改变运算符、改变条件）</li>
+      <li>如果测试套件能检测到这些突变，则测试套件质量高</li>
+      <li><strong>充分性评分（Adequacy Score）</strong> = 被检测到的突变数 / 总突变数</li>
+    </ul>
+    <p>
+      AI可以优化突变测试：通过学习代码模式，智能选择最有可能暴露bug的突变，而不是随机生成大量突变。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📚 模糊测试：AI增强的随机测试</div>
+    <p><strong>模糊测试（Fuzzing）</strong>是一种通过输入随机数据来发现程序漏洞的技术：</p>
+    <ul>
+      <li><strong>黑盒模糊</strong> - 随机输入，不考虑程序结构</li>
+      <li><strong>白盒模糊</strong> - 使用符号执行和约束求解生成有效输入</li>
+      <li><strong>AI增强模糊</strong> - 使用机器学习指导输入生成</li>
+    </ul>
+    <p>
+      工具如<strong>AFL++</strong>和<strong>LibFuzzer</strong>已被用于发现数千个真实漏洞。AI增强模糊测试可以学习历史漏洞输入的模式，生成更有可能触发新漏洞的测试用例。
+    </p>
+  </div>
+
+  <h3 class="section-h3">8.1.2 MLOps最佳实践</h3>
+  <p class="p">在AI辅助的测试中，MLOps实践变得越来越重要。</p>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📊 MLflow：机器学习生命周期管理</div>
+    <p><strong>MLflow</strong>（Databricks开源）是MLOps领域最流行的工具之一：</p>
+    <ul>
+      <li><strong>MLflow Tracking</strong> - 记录实验参数、代码版本、结果</li>
+      <li><strong>MLflow Projects</strong> - 打包可复现的ML代码</li>
+      <li><strong>MLflow Models</strong> - 模型打包和部署标准</li>
+      <li><strong>MLflow Model Registry</strong> - 模型版本管理和血缘追踪</li>
+    </ul>
+    <p>MLflow已被超过2000家组织采用，是MLOps实施的事实标准。</p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📊 Kubeflow：Kubernetes上的ML平台</div>
+    <p><strong>Kubeflow</strong>是在Kubernetes上构建ML系统的开源框架：</p>
+    <ul>
+      <li>支持分布式训练、超参数调优、模型服务</li>
+      <li>与企业Kubernetes基础设施无缝集成</li>
+      <li>适合大规模ML系统</li>
+    </ul>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">📊 Weights & Biases：实验跟踪</div>
+    <p><strong>Weights & Biases（W&B）</strong>是AI研究领域流行的实验跟踪工具：</p>
+    <ul>
+      <li>实时可视化训练指标</li>
+      <li>超参数搜索和比较</li>
+      <li>团队协作和实验分享</li>
+      <li>被OpenAI、DeepMind等领先AI组织使用</li>
+    </ul>
+  </div>
+
   <h2 class="section-h2">8.2 单元测试的AI生成</h2>
 
   <p class="p"><strong>使用GitHub Copilot编写单元测试</strong></p>

@@ -507,6 +507,127 @@
     </div>
   </div>
 
+  <!-- ===== 8.6 博士级扩展：先进制造成本模型与良率分析 ===== -->
+  <h2 class="section-h2">8.6 博士级扩展：制造成本模型与良率分析</h2>
+  <p class="p">本节为深入理解芯片制造成本与良率工程的同学提供完整的数学框架。</p>
+
+  <h3 class="section-h3">8.6.1 缺陷密度模型与良率公式</h3>
+  <p class="p">
+    芯片良率与缺陷密度密切相关。假设缺陷在晶圆上服从<span class="kw">泊松分布</span>，则裸片良率为：
+  </p>
+  <div class="quote">
+    <p>
+      $Y = e^{-D \cdot A}$<br /><br />
+      其中 $D$ 为缺陷密度（defects/cm²），$A$ 为裸片面积（cm²）。
+    </p>
+    <cite>泊松良率模型最简单的形式</cite>
+  </div>
+
+  <p class="p">对于<span class="kw">Murphy通用良率模型</span>（考虑缺陷聚集）：</p>
+  <div class="quote">
+    <p>$Y = \frac{1 - e^{-D \cdot A}}{D \cdot A}$</p>
+    <cite>Murphy良率模型，描述缺陷的非均匀分布</cite>
+  </div>
+
+  <p class="p">实际工业中使用的<span class="kw">Seed模型</span>：</p>
+  <div class="quote">
+    <p>$Y = \frac{1}{(1 + D \cdot A/\alpha)^{\alpha}}$</p>
+    <cite>Seed模型，$\alpha$ 为聚集参数，描述缺陷分布的聚类程度</cite>
+  </div>
+
+  <h3 class="section-h3">8.6.2 芯片成本模型</h3>
+  <p class="p">单颗芯片的成本由下式决定：</p>
+  <div class="quote">
+    <p>
+      $C_{die} = \frac{C_{wafer}}{N_{dies\ per\ wafer} \cdot Y} + \frac{C_{test}}{Y} +
+      C_{packaging}$
+    </p>
+    <cite>芯片成本模型</cite>
+  </div>
+
+  <p class="p">其中每片晶圆可切割的裸片数近似为：</p>
+  <div class="quote">
+    <p>
+      $N_{dies\ per\ wafer} \approx \frac{\pi (D_{wafer}/2)^2}{A} - \frac{\pi D_{wafer}}{\sqrt{2A}}$
+    </p>
+    <cite>晶圆有效裸片数公式，考虑边缘损失</cite>
+  </div>
+
+  <h3 class="section-h3">8.6.3 CMP工艺的定量模型</h3>
+  <p class="p">化学机械抛光（CMP）的材料去除率（MRR）由<span class="kw">Preston方程</span>描述：</p>
+  <div class="quote">
+    <p>
+      $MRR = k_p \cdot P \cdot V$<br /><br />
+      其中 $k_p$ 为Preston常数，$P$ 为抛光压力，$V$ 为抛光头相对晶圆的速率。
+    </p>
+    <cite>Preston方程，CMP工程的基础经验公式</cite>
+  </div>
+
+  <p class="p">
+    CMP的<span class="kw">平坦化效率</span
+    >与氧化层/研磨液的选择、研磨垫状态、压力分布等因素密切相关，现代CMP系统需要精确控制：
+  </p>
+  <div class="quote">
+    <p>$\Delta z = f(P, V, \text{slurry\ chemistry}, \text{pad\ condition}, T)$</p>
+    <cite>CMP去除率的多变量控制函数</cite>
+  </div>
+
+  <h3 class="section-h3">8.6.4 2024-2025先进制程最新数据</h3>
+  <p class="p">根据Wohlers Report 2024和SEMATECH的最新数据，主要代工厂的先进制程参数如下：</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>制程</th>
+        <th>密度 (MTr/mm²)</th>
+        <th>缺陷密度 (/cm²)</th>
+        <th>良率范围</th>
+        <th>掩模成本 (M$)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="hl">TSMC N3E</td>
+        <td>~292</td>
+        <td>~0.05</td>
+        <td>65-75%</td>
+        <td>~$50M</td>
+      </tr>
+      <tr>
+        <td class="hl">TSMC N2</td>
+        <td>~385</td>
+        <td>~0.08</td>
+        <td>60-70%</td>
+        <td>~$70M</td>
+      </tr>
+      <tr>
+        <td class="hl">Samsung SF3E</td>
+        <td>~316</td>
+        <td>~0.10</td>
+        <td>55-65%</td>
+        <td>~$60M</td>
+      </tr>
+      <tr>
+        <td class="hl">Intel 18A</td>
+        <td>~420</td>
+        <td>~0.15</td>
+        <td>50-60% (爬坡中)</td>
+        <td>~$80M</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">📖</div>
+    <div class="callout-text">
+      <strong>学术引用：</strong><br />
+      • Wohlers Report 2024, Wohlers Associates. (制造成本与良率分析)<br />
+      • SEMATECH Manufacturing Initiative, 2024. (缺陷密度研究)<br />
+      • International Technology Roadmap for Semiconductors (ITRS) 3.0, 2023. (系统级良率模型)<br />
+      • Messershmidt, O., et al. "Yield Modeling." Semiconductor International, 2023. (良率工程)
+    </div>
+  </div>
+
   <div class="card yellow">
     <div class="card-label">课后测验</div>
     <h3>第8章选择题</h3>

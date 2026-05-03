@@ -156,6 +156,46 @@
     </p>
   </div>
 
+  <div class="hlbox">
+    <div class="hlbox-title">📐 AX=XB的数学求解与奇异性分析</div>
+    <p>
+      将刚体变换用李代数表示：$\mathbf{A} = \exp(\mathbf{a}^\wedge)$，$\mathbf{B} =
+      \exp(\mathbf{b}^\wedge)$，$\mathbf{X} = \exp(\mathbf{x}^\wedge)$，其中 $\mathbf{a},
+      \mathbf{b}, \mathbf{x} \in \mathfrak{se}(3)$。
+    </p>
+    <p>方程 $\mathbf{AX} = \mathbf{XB}$ 在李代数上等价于：</p>
+    <p>
+      $$\mathbf{a} + \mathbf{J}_l(\mathbf{x})^{-1}\mathbf{x} =
+      \mathbf{J}_r(\mathbf{x})^{-1}\mathbf{x} + \mathbf{b}$$
+    </p>
+    <p>
+      其中 $\mathbf{J}_l, \mathbf{J}_r$
+      是左/右雅可比矩阵。通过多组观测联立求解，得到最小二乘意义下的 $\mathbf{x}$。
+    </p>
+    <p>
+      <strong>奇异性条件：</strong
+      >当所有运动的旋转轴平行时，方程的旋转部分可解但平移部分不可解——这是因为平移估计依赖旋转的激励。解决方案：进行多轴复合运动（滚动+俯仰+偏航），确保旋转轴在三维空间充分分布。
+    </p>
+  </div>
+
+  <div class="hlbox">
+    <div class="hlbox-title">🔬 标定的不可观测性与可观测性分析</div>
+    <p>
+      标定结果的精度与系统<span class="kw">可观测性（Observability）</span
+      >直接相关。如果某个参数在标定过程中没有得到充分的激励，该参数就是不可观测的，标定结果会发散。
+    </p>
+    <p>对于相机-IMU标定，不可观测的方向包括：</p>
+    <p>
+      • <strong>尺度</strong>（单目相机无绝对尺度）<br />
+      • <strong>重力方向</strong>（当相机-IMU相对旋转仅绕重力轴时）<br />
+      • <strong>外参平移</strong>（当运动仅涉及纯旋转时）
+    </p>
+    <p>
+      <strong>可观测性分析方法：</strong>计算系统的可观测性矩阵 $\mathcal{O}$，检验其秩。若
+      $\text{rank}(\mathcal{O}) < n$，则系统不可观测，需要设计激励充分的标定轨迹。
+    </p>
+  </div>
+
   <h3 class="section-h3">7.2.3 Kalibr 工具链全流程</h3>
   <p class="p">
     <span class="kw">Kalibr</span> 是ETHZ ASL实验室开发的权威标定工具，支持多相机 + IMU 联合标定。
