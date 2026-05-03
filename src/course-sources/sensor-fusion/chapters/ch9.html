@@ -1,4 +1,5 @@
 ﻿<section id="ch9">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 9 · 融合算法</div>
 <h1>卡尔曼滤波与EKF/UKF：<br>传感器融合的"主轴算法"</h1>
@@ -239,5 +240,38 @@ plt.grid(True); plt.show()
 </pre>
 </div>
 </div><div class="card blue"><div class="card-label">本章关键概念</div><h3>卡尔曼滤波家族</h3><p><strong>① 卡尔曼滤波五公式：</strong>预测两步（状态+协方差）+ 更新三步（增益+状态+协方差）。<br><strong>② 卡尔曼增益 Kₖ：</strong>动态权衡"信任预测"还是"信任观测"。<br><strong>③ EKF：</strong>通过雅可比矩阵做一阶泰勒展开，将KF推广到非线性系统。<br><strong>④ UKF：</strong>用Sigma点采样避免雅可比计算，对强非线性更鲁棒。<br><strong>⑤ Q/R调参：</strong>工程中最关键的步骤，决定滤波器的动态响应和鲁棒性。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第9章选择题</h3>
+<p><strong>1. 卡尔曼滤波的五个公式中，预测步有几个？</strong><br>
+A. 1个<br>
+B. 2个<br>
+C. 3个<br>
+D. 5个<br><br>
+
+<strong>2. 卡尔曼增益K的大小取决于什么？</strong><br>
+A. 状态向量的维度<br>
+B. Q和R的比值<br>
+C. 系统的非线性程度<br>
+D. 滤波器的迭代次数<br><br>
+
+<strong>3. EKF与KF的主要区别是什么？</strong><br>
+A. EKF使用更多的状态变量<br>
+B. EKF通过雅可比矩阵处理非线性<br>
+C. EKF计算速度更快<br>
+D. EKF不需要噪声协方差<br><br>
+
+<strong>4. UKF使用什么方法处理非线性？</strong><br>
+A. 泰勒展开<br>
+B. 粒子滤波<br>
+C. Sigma点采样<br>
+D. 傅里叶变换<br><br>
+
+<strong>5. Q/R调参中，Q过大会导致什么？</strong><br>
+A. 滤波器响应变慢但更平滑<br>
+B. 滤波器响应变快但噪声大<br>
+C. 滤波器无法收敛<br>
+D. 滤波器精度提高</p></div>
 
 </section>

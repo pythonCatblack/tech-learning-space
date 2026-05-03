@@ -1,4 +1,5 @@
 <section id="ch11">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 11 · 融合算法</div>
 <h1>视觉惯性融合(VIO)：<br>IMU+Camera的黄金组合</h1>
@@ -167,5 +168,38 @@ rosbag play MH_01_easy.bag</code><br><br>
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第12章 · Lidar-视觉融合）：</strong>VIO使用相机作为主要几何传感器，但相机在低光、低纹理场景性能下降。激光雷达提供精确的深度几何——但它是稀疏和无纹理的。将Lidar加入融合系统，可以显著提升定位精度和鲁棒性。LIO-SAM是当前最流行的Lidar-IMU融合系统，理解它的因子图结构需要本章的因子图基础。</div></div>
 
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>VIO：IMU+Camera的最优融合</h3><p><strong>① IMU预积分：</strong>将高频IMU数据压缩为帧间相对运动约束，避免重复积分。<br><strong>② MSCKF：</strong>滤波路线代表，状态向量保存多个历史位姿而非特征点，EKF更新。<br><strong>③ VINS-Mono：</strong>优化路线代表，因子图优化，回环检测修正漂移。<br><strong>④ 滑动窗口：</strong>限制优化规模，旧数据边缘化为先验约束。<br><strong>⑤ 初始化：</strong>静止初始化或动态初始化，解决尺度/重力/偏差的初始估计问题。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第11章选择题</h3>
+<p><strong>1. VIO中，IMU预积分的主要作用是什么？</strong><br>
+A. 提高IMU采样率<br>
+B. 将高频IMU数据压缩为帧间相对运动约束<br>
+C. 减少IMU功耗<br>
+D. 标定IMU偏差<br><br>
+
+<strong>2. MSCKF与VINS-Mono的主要区别是什么？</strong><br>
+A. MSCKF使用因子图优化<br>
+B. MSCKF状态向量保存多个历史位姿而非特征点<br>
+C. VINS-Mono使用滤波方法<br>
+D. 两者使用相同的融合策略<br><br>
+
+<strong>3. VINS-Mono使用什么方法检测回环？</strong><br>
+A. Scan Context<br>
+B. 词袋模型(DBoW2)<br>
+C. ICP<br>
+D. 卡尔曼滤波<br><br>
+
+<strong>4. VIO初始化失败最常见的表现是什么？</strong><br>
+A. 特征点数量不足<br>
+B. 重力方向估计错误，轨迹倾斜<br>
+C. IMU数据丢失<br>
+D. 相机曝光过度<br><br>
+
+<strong>5. VINS-Mono的滑动窗口大小默认是多少？</strong><br>
+A. 3<br>
+B. 5<br>
+C. 10<br>
+D. 20</p></div>
 
 </section>

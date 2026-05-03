@@ -1,4 +1,5 @@
 <section id="ch11">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 11 · 前沿应用</div><h1>AI芯片与 Taalas：<br>当权重成为电路</h1>
 <p class="sub">深入解析 Taalas HC1 的"权重固化"技术路线——理解为什么把神经网络"刻"进硅片能实现100倍能效提升。</p>
@@ -121,5 +122,20 @@
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>权重固化：AI芯片的终极形态？</h3><p><strong>① 内存墙</strong>：AI推理90%能耗用于数据搬运，而非计算。<br><strong>② 权重固化</strong>：把权重"刻"进芯片连线，消除内存读取，能效提升100倍。<br><strong>③ 模拟计算</strong>：利用电路的物理规律（基尔霍夫定律）完成矩阵乘法。<br><strong>④ Taalas HC1</strong>：为Transformer定制的固化ASIC，7B模型，~1W功耗。<br><strong>⑤ 局限</strong>：无法更新模型、精度受限、研发成本高——适合模型稳定的场景。<br><strong>⑥ 无人机启示</strong>：小模型（1M-10M参数）的固化ASIC可用成熟工艺，成本可控。</p></div>
 
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>预告 Chapter 12：</strong>现在你已经理解了权重固化的原理和 Taalas 的技术路线。下一步是把这套理论应用到无人机——理解为什么无人机需要 ASIC、无人机上的 AI 任务有什么特点、以及从 FPGA 原型到 ASIC 量产的完整路径。大疆、Skydio 等厂商的芯片选择将揭示：在电池和重量的严格约束下，ASIC 是唯一的终极答案。</div></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第11章选择题</h3>
+<p><strong>1. AI 推理中，90%的能耗用于什么？</strong><br>
+A. 实际矩阵乘法计算　B. 数据搬运（内存↔计算单元）　C. 控制逻辑　D. 输出结果写入内存<br><br>
+<strong>2. Taalas HC1 的"权重固化"技术把权重信息存储在哪里？</strong><br>
+A. SRAM 存储器　B. DRAM 存储器　C. 芯片的金属连线连接方式中　D. 外部 Flash<br><br>
+<strong>3. Taalas HC1 相比 GPU 能效提升约多少倍？</strong><br>
+A. 10倍　B. 50倍　C. 100倍　D. 1000倍<br><br>
+<strong>4. 权重固化 ASIC 的主要局限是？</strong><br>
+A. 功耗太高　B. 精度过高无法商用　C. 芯片制造完成后模型权重无法更改　D. 只能使用在最先进工艺<br><br>
+<strong>5. Taalas HC1 使用的计算精度约为多少 bit？</strong><br>
+A. 4-6bit　B. 8-10bit　C. 16bit　D. 32bit</p>
+</div>
 
 </section>

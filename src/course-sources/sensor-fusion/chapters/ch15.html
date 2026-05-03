@@ -1,4 +1,5 @@
 <section id="ch15">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 15 · 应用与部署</div>
 <h1>集群协同感知：<br>从单机智能到群体智能</h1>
@@ -84,5 +85,38 @@
 <strong>常见陷阱③ - 编队规模超过通信容量：</strong>N架无人机的全连通拓扑需要N(N-1)/2条通信链路。10架全连通=45条！实践中用k近邻拓扑（每架只与最近的k架通信）以保证可扩展性。</div></div>
 
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>群体智能</h3><p><strong>① 协同定位：</strong>多机共享相对位置信息，扩大感知基线，提高定位精度。<br><strong>② 分布式建图：</strong>各机构建局部地图，共同特征点估计相对变换，通信融合为全局地图。<br><strong>③ 一致性算法：</strong>xᵢ(k+1) = xᵢ(k) + εΣⱼ(xⱼ(k)-xᵢ(k))，处理通信延迟和丢包。<br><strong>④ Leader-Follower / 虚拟结构：</strong>两种主要编队控制方法，各有权衡。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第15章选择题</h3>
+<p><strong>1. 一致性算法的核心公式中，当邻居状态比自己大时，无人机会如何行动？</strong><br>
+A. 保持不动<br>
+B. 向邻居方向移动<br>
+C. 远离邻居<br>
+D. 悬停等待<br><br>
+
+<strong>2. N架无人机全连通拓扑需要多少条通信链路？</strong><br>
+A. N<br>
+B. N-1<br>
+C. N(N-1)/2<br>
+D. 2N<br><br>
+
+<strong>3. 编队控制中，Leader-Follower方法的主要缺点是什么？</strong><br>
+A. 实现复杂<br>
+B. 领导者故障整个编队失效<br>
+C. 通信延迟大<br>
+D. 精度低<br><br>
+
+<strong>4. 分布式建图的主要挑战是什么？</strong><br>
+A. 算力不足<br>
+B. 坐标系对齐<br>
+C. 电池容量<br>
+D. GPS信号弱<br><br>
+
+<strong>5. 任务分配中，匈牙利算法适用于什么场景？</strong><br>
+A. 大规模动态任务<br>
+B. 小规模静态任务分配<br>
+C. 实时避障<br>
+D. 路径规划</p></div>
 
 </section>

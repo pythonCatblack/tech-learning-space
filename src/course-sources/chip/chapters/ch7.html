@@ -1,4 +1,5 @@
 <section id="ch7">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 7 · 设计架构</div>
 <h1>CPU、GPU、FPGA、ASIC：<br>四种计算范式的终极对比</h1>
@@ -16,10 +17,10 @@
 <h3 class="section-h3">7.1.1 CPU 的"通用税"</h3>
 <p class="p">CPU 为了"通用性"付出了哪些代价？</p>
 <div class="card-grid">
-<div class="card-sm"><div class="card-sm-icon">🎯</div><h4>分支预测</h4><p>15-25%的晶体管用于预测程序走向。猜错一次惩罚10-20周期。</p></div>
-<div class="card-sm"><div class="card-sm-icon">🔄</div><h4>乱序执行</h4><p>ROB、保留站、寄存器重命名——30-40%的晶体管用于打破指令顺序。</p></div>
-<div class="card-sm"><div class="card-sm-icon">💾</div><h4>大缓存</h4><p>L1/L2/L3 缓存占芯片面积40-60%。缓存未命中时性能骤降。</p></div>
-<div class="card-sm"><div class="card-sm-icon">🌐</div><h4>缓存一致性</h4><p>多核之间的 MESI 协议消耗总线带宽和功耗。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e3f2fd">🎯</div><h4>分支预测</h4><p>15-25%的晶体管用于预测程序走向。猜错一次惩罚10-20周期。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#f3e5f5">🔄</div><h4>乱序执行</h4><p>ROB、保留站、寄存器重命名——30-40%的晶体管用于打破指令顺序。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#fff3e0">💾</div><h4>大缓存</h4><p>L1/L2/L3 缓存占芯片面积40-60%。缓存未命中时性能骤降。</p></div>
+<div class="card-sm"><div class="card-sm-icon" style="background:#e8f5e9">🌐</div><h4>缓存一致性</h4><p>多核之间的 MESI 协议消耗总线带宽和功耗。</p></div>
 </div>
 
 <div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>关键洞察：</strong>对于 AI 推理这样的"数据流任务"（输入→层层计算→输出，没有分支、没有乱序、数据访问完全可预测），CPU 的所有通用机制都是<strong>纯粹的开销</strong>。分支预测器永远猜对（因为没有分支），乱序执行没有东西可乱序，大缓存不需要（数据流是顺序访问）。这就是为什么 ASIC 可以把效率提升到 CPU 的100倍以上。</div></div>
@@ -121,5 +122,20 @@
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>四种计算范式的核心要点</h3><p><strong>① CPU（瑞士军刀）</strong>：优化单线程延迟，配备分支预测、乱序执行、大缓存。适合通用任务，但"通用税"高。<br><strong>② GPU（美术刀阵）</strong>：优化吞吐量，SIMT 架构用并行掩盖延迟。适合并行任务，但功耗高。<br><strong>③ FPGA（万能积木）</strong>：可重构硬件，LUT+BRAM+DSP。适合原型验证，介于灵活性和效率之间。<br><strong>④ ASIC（专用模具）</strong>：为特定任务定制，效率最高。适合量产产品，但灵活性最低。</p></div>
 
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>预告 Chapter 8：</strong>ASIC 的高效率是有代价的——它需要经历极其复杂的芯片制造流程。下一章将带你走进晶圆厂，理解芯片如何从"设计图纸"变成"真实硅片"——光刻、刻蚀、离子注入、CVD、CMP……数百道工序。</div></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第7章选择题</h3>
+<p><strong>1. CPU 相比 ASIC 的主要优势是？</strong><br>
+A. 功耗更低　B. 成本更低　C. 灵活性更高，可处理任意程序　D. 速度更快<br><br>
+<strong>2. GPU 使用的 SIMT 架构中，一个 Warp 包含多少个线程？</strong><br>
+A. 8个　B. 16个　C. 32个　D. 64个<br><br>
+<strong>3. FPGA 的全称是？</strong><br>
+A. 快速可编程逻辑阵列　B. 现场可编程门阵列　C. 灵活可编程门阵列　D. 现场可编程逻辑门<br><br>
+<strong>4. ASIC 在能效上相比 GPU 的提升约为多少倍？</strong><br>
+A. 10倍　B. 50倍　C. 100倍　D. 1000倍<br><br>
+<strong>5. FPGA 相比 ASIC 的主要缺点是？</strong><br>
+A. 不可编程　B. 功耗高、频率低、成本高　C. 开发周期更长　D. 无法做原型验证</p>
+</div>
 
 </section>

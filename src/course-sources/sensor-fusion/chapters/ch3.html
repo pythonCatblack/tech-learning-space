@@ -1,4 +1,5 @@
 ﻿<section id="ch3">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 3 · 单传感器深度</div>
 <h1>相机与计算机视觉基础：<br>无人机的"眼睛"</h1>
@@ -225,5 +226,38 @@ print(f"畸变系数: {dist}")
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第4章 · 激光雷达）：</strong>相机依赖光线——夜间、强光、雨雾都会严重影响性能。激光雷达（Lidar）用主动光的方式直接测量距离，完全不依赖环境光照。但Lidar数据是稀疏的三维点云而非密集图像，需要专门的算法处理。理解Lidar的测距原理和数据特性，是设计鲁棒感知系统的关键——特别是第12章 Lidar-视觉融合，需要同时掌握两种传感器的优劣。</div></div>
 
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>视觉感知的物理与算法基础</h3><p><strong>① 针孔模型：</strong>三维点投影为二维像素，Z·p = K·[R|t]·P。<br><strong>② 内参标定：</strong>Zhang方法标定内参和畸变参数，是所有视觉算法的第一步。<br><strong>③ 单目尺度缺失：</strong>单目无法从单帧恢复绝对尺度，需要IMU或额外传感器解决。<br><strong>④ 双目视差测距：</strong>Z = f·b/d，视差越小深度估计越不准确。<br><strong>⑤ 事件相机：</strong>只输出亮度变化事件，极低延迟、极高动态范围，是高速无人机的前沿方向。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第3章选择题</h3>
+<p><strong>1. 相机投影方程中，Z·p = K·[R|t]·P 代表什么？</strong><br>
+A. 相机内参标定过程<br>
+B. 三维点到二维像素的投影关系<br>
+C. 双目立体匹配过程<br>
+D. 特征点检测过程<br><br>
+
+<strong>2. 单目视觉无法从单帧图像恢复什么？</strong><br>
+A. 颜色信息<br>
+B. 纹理信息<br>
+C. 绝对尺度<br>
+D. 物体轮廓<br><br>
+
+<strong>3. 双目视差测距中，深度Z与什么成反比？</strong><br>
+A. 焦距f<br>
+B. 基线距离b<br>
+C. 视差d<br>
+D. 像素坐标u<br><br>
+
+<strong>4. 事件相机与传统相机的主要区别是什么？</strong><br>
+A. 事件相机输出固定帧率的图像<br>
+B. 事件相机只输出亮度变化的事件<br>
+C. 事件相机分辨率更高<br>
+D. 事件相机更便宜<br><br>
+
+<strong>5. 深度学习视觉感知中，YOLO系列主要用于什么任务？</strong><br>
+A. 深度估计<br>
+B. 光流估计<br>
+C. 目标检测<br>
+D. 语义分割</p></div>
 
 </section>

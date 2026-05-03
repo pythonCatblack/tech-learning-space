@@ -1,4 +1,5 @@
 <section id="ch16">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 16 · 应用与部署</div>
 <h1>嵌入式部署与硬件加速：<br>把算法装进无人机</h1>
@@ -94,5 +95,38 @@ trtexec \
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第17章 · 开源工具链）：</strong>理论和实践都已掌握——最后一章将整理最实用的开源项目、仿真平台和数据集，帮助你从零搭建第一套无人机感知系统。</div></div>
 
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>嵌入式部署的核心挑战</h3><p><strong>① 模型量化：</strong>FP32→FP16/INT8，4-8倍加速，精度损失需验证。<br><strong>② TensorRT：</strong>NVIDIA推理优化框架，算子融合+内核调优，5-10倍加速。<br><strong>③ DVFS：</strong>动态电压频率调节，根据负载实时调整功耗。<br><strong>④ ROS2实时化：</strong>确定性通信+实时调度，确保感知-决策-控制链路的实时性。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第16章选择题</h3>
+<p><strong>1. FP32模型转换为INT8可以带来多少倍的加速？</strong><br>
+A. 1-2倍<br>
+B. 2-4倍<br>
+C. 4-8倍<br>
+D. 10-20倍<br><br>
+
+<strong>2. TensorRT的主要优化手段不包括什么？</strong><br>
+A. 算子融合<br>
+B. 内核自动调优<br>
+C. 模型结构搜索<br>
+D. 内存优化<br><br>
+
+<strong>3. DVFS代表什么？</strong><br>
+A. 分布式视觉特征融合<br>
+B. 动态电压频率调节<br>
+C. 深度视觉特征提取<br>
+D. 双目视觉融合<br><br>
+
+<strong>4. Orin Nano在密闭无人机机体内可能触发什么问题？</strong><br>
+A. GPS信号干扰<br>
+B. 热保护降频<br>
+C. 电机过载<br>
+D. 通信中断<br><br>
+
+<strong>5. CUDA内存泄漏的解决方法是什么？</strong><br>
+A. 增加内存容量<br>
+B. 每帧处理完后显式调用cudaFree<br>
+C. 使用更大的GPU<br>
+D. 降低处理频率</p></div>
 
 </section>

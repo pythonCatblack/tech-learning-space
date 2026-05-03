@@ -1,4 +1,5 @@
 <section id="ch4">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 4 · 单传感器深度</div>
 <h1>激光雷达原理与点云处理：<br>无人机的"精准触角"</h1>
@@ -169,5 +170,38 @@ o3d.visualization.draw_geometries([pcd_clean])
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第5章 · IMU）：</strong>本章我们看到了Lidar的几何优势（精确XYZ）和劣势（稀疏、无纹理）。IMU——惯性测量单元——提供了完全不同的感知维度：以1kHz以上的高频采样，直接测量机体的旋转和加速度。但IMU的积分误差会随时间二次方增长，这就是为什么需要融合。本章的IMU预积分理论是第11章 VIO 和第10章 因子图优化的核心数学工具。</div></div>
 
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>Lidar感知的技术栈</h3><p><strong>① ToF测距原理：</strong>R = c·Δt/2，光速×时间差/2。<br><strong>② FMCW：</strong>调频连续波，同时测距和测速，抗干扰强，是下一代Lidar方向。<br><strong>③ 固态Lidar：</strong>无机械旋转，可靠性高、成本低，但视场角和分辨率受限。<br><strong>④ 点云特性：</strong>精确XYZ+Intensity，但稀疏无纹理，有运动畸变。<br><strong>⑤ 运动畸变校正：</strong>用IMU插值姿态，逆向投影到统一时刻，是Lidar SLAM的关键预处理。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第4章选择题</h3>
+<p><strong>1. Lidar测距公式R = c·Δt/2中，Δt代表什么？</strong><br>
+A. 光从发射到返回的总时间<br>
+B. 光从发射到返回的单程时间<br>
+C. 激光脉冲的宽度<br>
+D. 接收器的响应时间<br><br>
+
+<strong>2. FMCW Lidar相比ToF Lidar的主要优势是什么？</strong><br>
+A. 成本更低<br>
+B. 可同时测速<br>
+C. 体积更小<br>
+D. 功耗更低<br><br>
+
+<strong>3. 机械旋转式Lidar的主要缺点是什么？</strong><br>
+A. 测距精度低<br>
+B. 重量大、功耗高、成本高<br>
+C. 可靠性高<br>
+D. 无法360度扫描<br><br>
+
+<strong>4. 点云运动畸变校正的核心思想是什么？</strong><br>
+A. 对点云进行滤波处理<br>
+B. 利用IMU或里程计的姿态信息，对每个点进行逆向时间变换<br>
+C. 对点云进行下采样<br>
+D. 将点云从球坐标转换到笛卡尔坐标<br><br>
+
+<strong>5. Livox Lidar的扫描模式特点是什么？</strong><br>
+A. 均匀扫描<br>
+B. 棰状扫描，中心区域停留时间更长<br>
+C. 线性扫描<br>
+D. 随机扫描</p></div>
 
 </section>

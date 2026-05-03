@@ -1,4 +1,5 @@
 <section id="ch2">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 2 · 基础概念</div>
 <h1>无人机平台与传感器<br>系统架构</h1>
@@ -145,5 +146,38 @@
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>预告 Chapter 3-6：</strong>接下来四章我们将逐一深入每种核心传感器的物理原理、数据特性和算法基础——相机（第3章）、激光雷达（第4章）、IMU（第5章）、GPS与毫米波雷达（第6章）。这些是传感器融合的"原材料"，理解它们才能理解融合算法。</div></div>
 
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>平台约束决定融合方案</h3><p><strong>① 多旋翼全向机动</strong>：所有方向运动都会产生姿态变化，对感知动态范围要求极高。<br><strong>② 分层飞控架构</strong>：传感器层→感知层→决策层→控制层，每层有明确职责。<br><strong>③ 实时性是生死线</strong>：感知延迟超过50ms会直接影响飞行稳定性。<br><strong>④ 算力-功耗权衡</strong>：Jetson Orin Nano是当前最流行的VIO/LIO-SAM运行平台，15-40W功耗。<br><strong>⑤ PTP时间同步</strong>：亚微秒级同步是多传感器数据对齐的标准方案。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第2章选择题</h3>
+<p><strong>1. 多旋翼无人机对感知系统的主要挑战是什么？</strong><br>
+A. 飞行高度太高<br>
+B. 全方向运动都会产生姿态变化，对感知动态范围要求极高<br>
+C. 电池容量有限<br>
+D. 螺旋桨遮挡传感器<br><br>
+
+<strong>2. 飞控系统的分层架构中，感知层的主要功能是什么？</strong><br>
+A. 电机控制<br>
+B. 传感器融合、定位、目标检测<br>
+C. 地面控制站通信<br>
+D. 飞行日志记录<br><br>
+
+<strong>3. 感知延迟超过多少毫秒会直接影响飞行稳定性？</strong><br>
+A. 5ms<br>
+B. 20ms<br>
+C. 50ms<br>
+D. 100ms<br><br>
+
+<strong>4. Jetson Orin Nano的典型功耗范围是多少？</strong><br>
+A. 1-5W<br>
+B. 5-10W<br>
+C. 15-40W<br>
+D. 50-100W<br><br>
+
+<strong>5. PTP时间同步协议的精度能达到多少？</strong><br>
+A. 1秒<br>
+B. 1毫秒<br>
+C. 1微秒<br>
+D. 1纳秒</p></div>
 
 </section>

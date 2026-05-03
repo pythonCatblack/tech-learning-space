@@ -1,4 +1,5 @@
 <section id="ch4">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 4 · 设计架构</div>
 <h1>逻辑门与数字电路：<br>晶体管如何变成 0 和 1</h1>
@@ -126,5 +127,23 @@
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>从晶体管到数字电路</h3><p><strong>① 布尔代数</strong>：AND、OR、NOT 三种运算构成一切数字逻辑。<br><strong>② NAND/NOR 是万能门</strong>：任何逻辑门都可以用它们组合出来，且 CMOS 实现更省晶体管。<br><strong>③ 组合逻辑</strong>：输出仅取决于当前输入（加法器、MUX、译码器）。<br><strong>④ 时序逻辑</strong>：引入时钟和存储元件，让电路具有记忆（触发器、寄存器）。<br><strong>⑤ 建立/保持时间</strong>：时序分析的核心约束，违反会导致功能错误。<br><strong>⑥ 时钟域</strong>：复杂芯片有多个时钟，跨域传输需要同步器防止亚稳态。</p></div>
 
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>预告 Chapter 5：</strong>现在你已经掌握了逻辑门和时序电路。下一步是把这些"积木"搭建成更大的结构——<strong>数字电路模块</strong>：ALU（算术逻辑单元）、寄存器文件、状态机。这些模块是 Chapter 6（芯片架构设计）中构建 CPU 和 SoC 的"预制件"。</div></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第4章选择题</h3>
+<p><strong>1. CMOS NAND 门需要几个晶体管？</strong><br>
+A. 2个　B. 4个　C. 6个　D. 8个<br><br>
+<strong>2. 组合逻辑与时序逻辑的主要区别是？</strong><br>
+A. 速度不同　B. 是否有时钟信号　C. 是否有记忆能力　D. 功耗不同<br><br>
+<strong>3. 触发器（Flip-Flop）是在时钟的什么边沿采样输入？</strong><br>
+A. 高电平　B. 低电平　C. 上升沿或下降沿　D. 任意时刻<br><br>
+<strong>4. 建立时间（Setup Time）是指？</strong><br>
+A. 时钟边沿后输入必须稳定的最短时间<br>
+B. 时钟边沿前输入必须稳定的最短时间<br>
+C. 信号从输入到输出的传播延迟<br>
+D. 触发器响应输入的最短时间<br><br>
+<strong>5. 为什么数字电路设计倾向于使用 NAND 和 NOR 而不是 AND 和 OR？</strong><br>
+A. NAND/NOR 更美观　B. NAND/NOR 晶体管更少，效率更高　C. AND/OR 兼容性差　D. NAND/NOR 是更标准的设计</p>
+</div>
 
 </section>

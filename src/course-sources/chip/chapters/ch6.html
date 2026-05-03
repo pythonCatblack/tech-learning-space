@@ -1,4 +1,5 @@
 <section id="ch6">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 6 · 设计架构</div>
 <h1>芯片架构设计：<br>从流水线到乱序执行</h1>
@@ -126,5 +127,21 @@
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>现代 CPU 的性能密码</h3><p><strong>① 流水线</strong>：把指令执行分成多个阶段，每个周期完成一条指令。<br><strong>② 超标量</strong>：每个周期发射多条指令，需要多个并行执行单元。<br><strong>③ 分支预测</strong>：猜测分支走向，猜对满载运行，猜错清空流水线。<br><strong>④ 乱序执行</strong>：打破指令顺序，数据就绪即执行，最大化硬件利用率。<br><strong>⑤ 缓存一致性</strong>：MESI 协议保证多核缓存数据一致，但有性能开销。</p></div>
 
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>预告 Chapter 7：</strong>现在你已经理解了现代 CPU 的复杂架构。但 CPU 只是芯片家族的一员——GPU 用完全不同的架构哲学处理图形和并行计算，ASIC 把专用任务做到极致效率。下一章将对比 CPU、GPU、FPGA、ASIC 的架构差异，并解释为什么无人机最终需要 ASIC。</div></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第6章选择题</h3>
+<p><strong>1. CPU 五级流水线的五个阶段依次是？</strong><br>
+A. 取指→译码→执行→访存→写回　B. 取指→执行→译码→访存→写回<br>
+C. 译码→取指→执行→访存→写回　D. 取指→访存→译码→执行→写回<br><br>
+<strong>2. 流水线冒险不包括以下哪种类型？</strong><br>
+A. 数据冒险　B. 控制冒险　C. 结构冒险　D. 频率冒险<br><br>
+<strong>3. 分支预测猜错时，CPU 需要执行什么操作？</strong><br>
+A. 暂停流水线　B. 清空流水线并重新取指　C. 降低时钟频率　D. 切换到备用寄存器<br><br>
+<strong>4. 乱序执行中，重排序缓冲区（ROB）的作用是？</strong><br>
+A. 加速内存访问　B. 按程序顺序提交指令结果，保证正确性　C. 预测分支方向　D. 管理缓存一致性<br><br>
+<strong>5. MESI 协议中，哪个状态表示缓存行已被修改且独占？</strong><br>
+A. S（Shared）　B. E（Exclusive）　C. M（Modified）　D. I（Invalid）</p>
+</div>
 
 </section>

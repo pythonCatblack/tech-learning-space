@@ -1,4 +1,5 @@
 <section id="ch12">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 12 · 前沿应用</div><h1>ASIC 与无人机硬件加速：<br>从 FPGA 原型到 ASIC 量产</h1>
 <p class="sub">理解无人机为什么需要专用芯片、飞控与视觉 AI 的硬件加速路径、以及大疆等厂商的芯片选择策略。</p>
@@ -145,5 +146,21 @@
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>无人机芯片的"最优解"</h3><p><strong>① 算力需求</strong>：飞控（500-2000Hz）+ 视觉AI（30fps，&lt;10ms延迟）+ 视频编码（4K60fps）。<br><strong>② 功耗约束</strong>：电子系统总预算3-7W，视觉AI预算2-3W——GPU完全不适合。<br><strong>③ 演进路径</strong>：通用ARM → ARM+协处理器 → 集成NPU的SoC → 自研ASIC。<br><strong>④ 开发路径</strong>：FPGA原型验证 → RTL设计 → 综合 → 物理设计 → 流片 → 测试。<br><strong>⑤ 工艺选择</strong>：28nm是消费级无人机视觉AI的"甜点"——成本可控、功耗足够低。<br><strong>⑥ 设计要点</strong>：流水线数据流、零拷贝、时钟/电源门控、DVFS、数据重用。</p></div>
 
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>预告 Chapter 13：</strong>现在你已经理解了无人机 ASIC 的完整设计路径。最后一章将上升到"研究前沿"——探索小模型固化硬件的最新研究方向：量化、剪枝、知识蒸馏、存内计算、忆阻器、神经形态芯片。这些技术将定义未来5-10年无人机 AI 芯片的发展方向。</div></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第12章选择题</h3>
+<p><strong>1. 无人机飞控系统的控制频率通常在什么范围？</strong><br>
+A. 1-10Hz　B. 50-200Hz　C. 500-2000Hz　D. 10-50kHz<br><br>
+<strong>2. 消费级无人机的总功耗预算中，电子系统（不含电机）通常分配到多少瓦？</strong><br>
+A. 10-20W　B. 3-7W　C. 20-30W　D. 0.5-1W<br><br>
+<strong>3. FPGA 验证在 ASIC 开发流程中的作用是？</strong><br>
+A. 替代所有 ASIC 设计步骤　B. 流片前的原型验证和架构迭代　C. 最终产品形态　D. 降低成本的手段<br><br>
+<strong>4. 消费级无人机视觉 AI ASIC 的最佳工艺节点是？</strong><br>
+A. 7nm　B. 16nm　C. 28nm　D. 40nm<br><br>
+<strong>5. 无人机视觉处理流水线的总延迟约 9ms，满足实时性要求。该流水线的模块顺序是？</strong><br>
+A. ISP→预处理→NPU→后处理→输出　B. NPU→ISP→预处理→后处理→输出<br>
+C. 预处理→ISP→NPU→后处理→输出　D. ISP→NPU→预处理→后处理→输出</p>
+</div>
 
 </section>

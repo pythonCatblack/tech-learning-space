@@ -1,4 +1,5 @@
 <section id="ch13">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 13 · 前沿研究</div><h1>小模型固化硬件研究：<br>把AI"刻"进硅片</h1>
 <p class="sub">深入研究小模型（<10B参数）的硬件固化技术：量化、剪枝、知识蒸馏、存内计算、忆阻器、近感计算——无人机AI芯片的未来方向。</p>
@@ -162,5 +163,21 @@
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>小模型固化：边缘AI的终极答案</h3><p><strong>① 模型压缩</strong>：量化（INT8/INT4）、剪枝（结构化/非结构化）、知识蒸馏（教师→学生）。<br><strong>② 数字ASIC固化</strong>：权重映射到金属连线，成熟可靠，但流片成本高。<br><strong>③ 存内计算</strong>：ReRAM/SRAM-PIM/FeFET，消除数据搬运，但精度和成熟度受限。<br><strong>④ FPGA验证</strong>：流片前的必经之路，3-5轮迭代优化架构。<br><strong>⑤ 神经形态</strong>：忆阻器+SNN，毫瓦级推理，但算法生态不成熟。<br><strong>⑥ 无人机实践</strong>：28nm是甜点，MobileNetV3级模型，功耗&lt;2W，延迟&lt;5ms。</p></div>
 
 <div class="callout callout-good"><div class="callout-icon">🎓</div><div class="callout-text"><strong>教程总结：</strong>恭喜你完成了从"沙子到智能飞行"的完整旅程！你现在掌握了：<br>• 半导体物理（能带、掺杂、PN结）<br>• 晶体管原理（MOSFET、CMOS、FinFET）<br>• 数字电路（逻辑门、ALU、FSM、总线）<br>• 芯片架构（流水线、超标量、分支预测、乱序执行）<br>• 制造流程（光刻、刻蚀、离子注入、封装）<br>• AI芯片（内存墙、权重固化、Taalas HC1）<br>• 无人机应用（ASIC设计路径、FPGA验证、流片量产）<br>• 前沿研究（量化、剪枝、蒸馏、存内计算、神经形态）<br><br>这些知识构成了理解芯片设计与制造的完整框架。无论你是想深入研究硬件加速、还是想在无人机领域创业、还是单纯满足好奇心——这套知识体系都将是你坚实的起点。</div></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第13章选择题</h3>
+<p><strong>1. INT8 量化将模型从 FP32 压缩，压缩比例约为？</strong><br>
+A. 2倍　B. 4倍　C. 8倍　D. 16倍<br><br>
+<strong>2. 知识蒸馏中，教师模型（Teacher）的作用是？</strong><br>
+A. 提供硬标签（正确答案）　B. 提供软预测（类别置信度分布）指导学生模型训练<br>
+C. 验证学生模型精度　D. 压缩学生模型体积<br><br>
+<strong>3. 存内计算（Processing-in-Memory）主要解决什么瓶颈？</strong><br>
+A. 计算速度瓶颈　B. 内存墙瓶颈（数据搬运能耗）　C. 存储容量瓶颈　D. 制造工艺瓶颈<br><br>
+<strong>4. Intel Loihi 神经形态芯片使用的是哪种神经网络？</strong><br>
+A. 卷积神经网络（CNN）　B. 循环神经网络（RNN）　C. 脉冲神经网络（SNN）　D. Transformer<br><br>
+<strong>5. 对于消费级无人机视觉 AI ASIC，为什么 28nm 是甜点工艺节点？</strong><br>
+A. 28nm 功耗最低　B. 28nm 是最先进节点　C. 28nm 成本可控、功耗足够、性能良好达到平衡　D. 28nm 良率最高</p>
+</div>
 
 </section>

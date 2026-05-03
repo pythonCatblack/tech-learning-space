@@ -1,4 +1,5 @@
 <section id="ch13">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 13 · 应用与部署</div>
 <h1>融合定位与建图：<br>从里程计到完整SLAM系统</h1>
@@ -180,5 +181,38 @@ rosrun rtabmap_util rtabmap_util \
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第14章 · 路径规划）：</strong>有了全局一致的地图和精确的定位，无人机就能规划从当前位置到目标的路径。第14章将讲解A*/RRT*等全局路径规划算法，以及DWA/MPC等局部避障算法。</div></div>
 
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>完整SLAM系统的设计</h3><p><strong>① 累积误差：</strong>里程计积分误差复合增长，需要回环检测来修正。<br><strong>② 回环检测：</strong>视觉用DBoW2词袋模型；Lidar用Scan Context。都需要几何验证防止误检。<br><strong>③ 因子图全局优化：</strong>回环因子加入因子图，所有历史轨迹节点同时优化，误差分摊。<br><strong>④ 重定位：</strong>在已有地图中恢复当前位姿，是长期自主导航的关键能力。<br><strong>⑤ 动态融合策略：</strong>根据GPS信号质量动态选择GPS+IMU vs VIO/LIO-SAM模式。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第13章选择题</h3>
+<p><strong>1. SLAM中，累积误差问题的根本原因是什么？</strong><br>
+A. 传感器精度不足<br>
+B. 里程计积分误差复合增长<br>
+C. 地图分辨率太低<br>
+D. 通信延迟<br><br>
+
+<strong>2. 视觉SLAM中，DBoW2主要用于什么？</strong><br>
+A. 特征点检测<br>
+B. 回环检测<br>
+C. 深度估计<br>
+D. 相机标定<br><br>
+
+<strong>3. 回环检测后，全局优化会将误差如何处理？</strong><br>
+A. 删除有误差的轨迹段<br>
+B. 将误差分摊到整条轨迹<br>
+C. 忽略误差<br>
+D. 只修正最近的轨迹<br><br>
+
+<strong>4. 重定位的作用是什么？</strong><br>
+A. 构建新地图<br>
+B. 在已有地图中恢复当前位姿<br>
+C. 规划飞行路径<br>
+D. 控制无人机飞行<br><br>
+
+<strong>5. 长期运行时地图过大的问题如何解决？</strong><br>
+A. 增加内存<br>
+B. 使用更快的CPU<br>
+C. 工作内存管理，将早期数据压缩为子图<br>
+D. 降低地图分辨率</p></div>
 
 </section>

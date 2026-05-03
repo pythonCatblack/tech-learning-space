@@ -1,4 +1,5 @@
 <section id="ch10">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 10 · 融合算法</div>
 <h1>因子图与非线性优化：<br>批量全局最优的融合范式</h1>
@@ -91,5 +92,38 @@ LM的自适应策略：如果某次迭代使目标函数下降，则增大 $\lam
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第11章 · VIO）：</strong>现在你有了因子图的基础，就可以理解VINS-Mono和OKVIS的完整工作流程了。VIO = IMU预积分因子 + 视觉残差因子 + 滑动窗口边缘化 + 回环检测——这就是现代视觉惯性融合系统的全部要素。</div></div>
 
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>因子图优化范式</h3><p><strong>① 因子图表示：</strong>圆形=变量节点（状态），方形=因子节点（约束），二分图结构。<br><strong>② 典型因子：</strong>IMU预积分因子（连接相邻位姿）、视觉残差因子（连接位姿+3D点）、GPS绝对因子。<br><strong>③ 非线性最小二乘：</strong>因子图优化转化为 min Σ‖rᵢ(x)‖²，用LM或高斯-牛顿迭代求解。<br><strong>④ 增量平滑iSAM2：</strong>只更新受影响变量而非全局重新优化，解决计算量随时间增长的问题。<br><strong>⑤ 局部+全局策略：</strong>局部实时优化 + 全局回环优化，是LIO-SAM等工程系统的标准做法。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第10章选择题</h3>
+<p><strong>1. 因子图中，圆形节点代表什么？</strong><br>
+A. 约束/观测<br>
+B. 状态变量<br>
+C. 传感器数据<br>
+D. 控制输入<br><br>
+
+<strong>2. 因子图优化最终转化为什么问题？</strong><br>
+A. 线性最小二乘<br>
+B. 非线性最小二乘<br>
+C. 整数规划<br>
+D. 动态规划<br><br>
+
+<strong>3. LM算法中，当λ很大时接近什么方法？</strong><br>
+A. 高斯-牛顿<br>
+B. 梯度下降<br>
+C. 牛顿法<br>
+D. 坐标下降<br><br>
+
+<strong>4. iSAM2的主要优势是什么？</strong><br>
+A. 计算精度更高<br>
+B. 只更新受新观测影响的变量<br>
+C. 支持更多传感器<br>
+D. 内存占用更小<br><br>
+
+<strong>5. LIO-SAM使用什么求解器？</strong><br>
+A. 卡尔曼滤波<br>
+B. 粒子滤波<br>
+C. ISAM2<br>
+D. 梯度下降</p></div>
 
 </section>

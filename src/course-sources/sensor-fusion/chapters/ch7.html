@@ -1,4 +1,5 @@
 <section id="ch7">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 7 · 融合算法</div>
 <h1>时空标定实战：<br>传感器融合的"第一道工序"</h1>
@@ -85,5 +86,38 @@ X：我们要标定的未知外参（从 P 到 O 的刚体变换）<br><br>
 <strong>常见陷阱③ - 时间同步标定时 IMU 数据质量差：</strong>如果 IMU 在标定时温度迅速变化（从室内拿到室外），零偏会随时间漂移——交叉相关法会把零偏漂移当作时间偏移，给出错误估计。标定前让 IMU 预热 5 分钟。</div></div>
 
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>时空标定：融合的地基</h3><p><strong>① 时间同步：</strong>硬件触发 (<1μs) > PTP (<1μs) > 软件交叉相关 (<0.5ms)。<br><strong>② 手眼标定：</strong>AX = XB 方程，多组运动联立求解 sensor间的外参矩阵。<br><strong>③ Kalibr：</strong>ETHZ权威标定工具，支持多相机+IMU联合标定+时间偏移估算。<br><strong>④ 标定准确性：</strong>重投影误差 < 1像素、外参平移误差 < 1cm → 合格标定。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第7章选择题</h3>
+<p><strong>1. 时间同步中，精度最高的方法是？</strong><br>
+A. 软件交叉相关<br>
+B. NTP协议<br>
+C. PTP (IEEE 1588)<br>
+D. GPS同步<br><br>
+
+<strong>2. 手眼标定的核心方程是什么？</strong><br>
+A. AX = B<br>
+B. AX = XB<br>
+C. AB = X<br>
+D. A + B = X<br><br>
+
+<strong>3. Kalibr工具主要用于什么？</strong><br>
+A. 目标检测<br>
+B. 多相机+IMU联合标定<br>
+C. 路径规划<br>
+D. 点云处理<br><br>
+
+<strong>4. 好的标定结果，重投影误差应该小于多少像素？</strong><br>
+A. 10像素<br>
+B. 5像素<br>
+C. 1像素<br>
+D. 0.1像素<br><br>
+
+<strong>5. IMU和相机之间的时间同步误差应该小于多少毫秒？</strong><br>
+A. 10ms<br>
+B. 5ms<br>
+C. 2ms<br>
+D. 0.5ms</p></div>
 
 </section>

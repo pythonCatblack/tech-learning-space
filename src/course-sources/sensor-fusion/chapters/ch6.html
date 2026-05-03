@@ -1,4 +1,5 @@
 <section id="ch6">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 6 · 单传感器深度</div>
 <h1>GPS/GNSS与绝对定位：<br>从三角测量到RTK厘米级</h1>
@@ -155,5 +156,38 @@ print(f"解析到 {len(coords)} 个GPS点")
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第7章 · 时空标定）：</strong>GPS 给出了绝对位置的"已知坐标"——但这个坐标是哪个传感器的？所有传感器的数据必须对齐到<span class="kw">同一个时间</span>和<span class="kw">同一个空间坐标系</span>。下一章将讲述多传感器系统的"对齐工作"——标定（Calibration）。</div></div>
 
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>GNSS定位：绝对位置的技术栈</h3><p><strong>① 伪距方程：</strong>ρ = |SV-RX| + c·Δt + ε，4个以上卫星联立求解。<br><strong>② 标准GPS精度：</strong>3-5m CEP，受电离层延迟（10-50m）主导。双频接收机可消除。支持4系统（GPS+BDS+Galileo+GLONASS）的接收机在户外可追踪 20+ 颗卫星。<br><strong>③ RTK：</strong>通过近距基准站的高精度差分，GPS → 2cm 水平 / 3cm 垂直。基线<20km，延迟<1s，用于测绘无人机。<br><strong>④ GPS+IMU 融合：</strong>EKF 的标准 "Hello World"——GPS提供绝对位置更新，IMU提供姿态高频传播。<br><strong>⑤ 毫米波雷达：</strong>全天候感知，77GHz，雨雾穿透好，每个点自带速度——是 Lidar 在恶劣天气的重要兜底。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第6章选择题</h3>
+<p><strong>1. GPS伪距方程中，为什么需要至少4颗卫星？</strong><br>
+A. 信号覆盖需要<br>
+B. 消除电离层延迟<br>
+C. 求解3个坐标+1个时钟偏差共4个未知数<br>
+D. 美国政府要求<br><br>
+
+<strong>2. RTK定位的典型精度是？</strong><br>
+A. 1-5米<br>
+B. 10-50厘米<br>
+C. 1-2厘米<br>
+D. 1毫米<br><br>
+
+<strong>3. GPS+IMU融合采用什么滤波方法？</strong><br>
+A. 卡尔曼滤波<br>
+B. 粒子滤波<br>
+C. 贝叶斯滤波<br>
+D. 均值滤波<br><br>
+
+<strong>4. 毫米波雷达的主要优势是什么？</strong><br>
+A. 分辨率高<br>
+B. 全天候感知，穿透雨雾<br>
+C. 成本低<br>
+D. 不受多径影响<br><br>
+
+<strong>5. 双频GPS接收机相比单频的主要优势是什么？</strong><br>
+A. 功耗更低<br>
+B. 可以消除电离层延迟<br>
+C. 体积更小<br>
+D. 搜星更快</p></div>
 
 </section>

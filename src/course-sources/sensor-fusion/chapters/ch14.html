@@ -1,4 +1,5 @@
 <section id="ch14">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 14 · 应用与部署</div>
 <h1>路径规划与避障：<br>从感知到决策的最后一公里</h1>
@@ -191,5 +192,38 @@ if path:
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第15章 · 集群协同感知）：</strong>单机智能终有极限——多架无人机协同可以扩大感知范围、增强鲁棒性。第15章讲解多机集群的协同定位、分布式建图和编队控制。</div></div>
 
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>感知→决策→控制</h3><p><strong>① A*算法：</strong>全局最优启发式搜索，f(n)=g(n)+h(n)，h必须可采纳。<br><strong>② RRT*：</strong>随机采样高维空间规划，渐近最优（时间越长路径越优）。<br><strong>③ MPC：</strong>滚动时域优化，处理非线性约束，是无人机控制的主流方法。<br><strong>④ 栅格/VO/ESDF：</strong>三种实时避障策略，权衡精度与速度。<br><strong>⑤ 分层规划：</strong>A*全局方向 + DWA局部执行，避免各自缺点。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第14章选择题</h3>
+<p><strong>1. A*算法的评估函数f(n)等于什么？</strong><br>
+A. g(n)<br>
+B. h(n)<br>
+C. g(n) + h(n)<br>
+D. g(n) - h(n)<br><br>
+
+<strong>2. A*算法中，启发函数h(n)必须满足什么条件？</strong><br>
+A. 始终高估真实代价<br>
+B. 始终低估真实代价（可采纳）<br>
+C. 必须为0<br>
+D. 必须为常数<br><br>
+
+<strong>3. RRT*算法相比RRT的主要改进是什么？</strong><br>
+A. 计算速度更快<br>
+B. 渐近最优<br>
+C. 内存占用更小<br>
+D. 适用于低维空间<br><br>
+
+<strong>4. MPC（模型预测控制）的核心思想是什么？</strong><br>
+A. 一次性计算全局最优控制序列<br>
+B. 滚动时域优化，只执行第一步<br>
+C. 使用PID控制<br>
+D. 不考虑约束条件<br><br>
+
+<strong>5. DWA的主要缺点是什么？</strong><br>
+A. 计算量太大<br>
+B. 容易陷入局部最优<br>
+C. 不支持动态障碍物<br>
+D. 精度太低</p></div>
 
 </section>

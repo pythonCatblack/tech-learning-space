@@ -1,4 +1,5 @@
 <section id="ch5">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 5 · 设计架构</div>
 <h1>数字电路基础：<br>从模块到子系统</h1>
@@ -104,5 +105,20 @@
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>数字电路的"器官"</h3><p><strong>① ALU</strong>：执行算术和逻辑运算，核心组件是超前进位加法器（CLA）。<br><strong>② 寄存器文件</strong>：CPU 的高速工作台，基于 SRAM，支持同时读写。<br><strong>③ FSM</strong>：有限状态机，实现决策逻辑，CPU 控制单元是最大的 FSM。<br><strong>④ 总线</strong>：芯片内部通信的"高速公路"，包含地址、数据、控制三组信号。<br><strong>⑤ 存储器层次</strong>：寄存器→L1→L2→L3→DRAM 的金字塔结构，平衡速度、容量、成本。</p></div>
 
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>预告 Chapter 6：</strong>现在你已经理解了 ALU、寄存器、FSM、总线和存储器层次。下一步是把这些"器官"组合成一个完整的"身体"——<strong>芯片架构设计</strong>。你将看到流水线、超标量、乱序执行、分支预测等高级技术如何让 CPU 的性能提升数十倍。</div></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第5章选择题</h3>
+<p><strong>1. ALU 的全称是？</strong><br>
+A. 算术逻辑单元　B. 存储控制单元　C. 地址生成单元　D. 异步逻辑单元<br><br>
+<strong>2. 超前进位加法器（CLA）的主要优势是？</strong><br>
+A. 占用面积更小　B. 将串行进位变为并行计算，大幅降低延迟　C. 功耗更低　D. 设计更简单<br><br>
+<strong>3. 寄存器文件比内存（DRAM）快很多的原因不包括？</strong><br>
+A. 距离 CPU 核心更近　B. 基于 SRAM 不需要刷新　C. 支持多端口同时读写　D. 容量更大<br><br>
+<strong>4. 有限状态机（FSM）中，Moore 型与 Mealy 型的主要区别是？</strong><br>
+A. 状态数量不同　B. 输出是否仅依赖于当前状态　C. 是否有时钟　D. 使用的触发器数量不同<br><br>
+<strong>5. 存储器层次结构中，速度最快、容量最小的一层是？</strong><br>
+A. L1缓存　B. 寄存器　C. DRAM　D. L2缓存</p>
+</div>
 
 </section>

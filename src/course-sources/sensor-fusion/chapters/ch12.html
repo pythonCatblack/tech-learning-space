@@ -1,4 +1,5 @@
 <section id="ch12">
+<!-- 内容更新时间：2026-05-03 -->
 <div class="hero">
 <div class="chapter-tag">Chapter 12 · 融合算法</div>
 <h1>激光雷达与视觉融合：<br>几何与语义的深度协同</h1>
@@ -112,5 +113,38 @@ rosbag play uli_ground_truth.bag</code><br><br>
 <div class="callout callout-info"><div class="callout-icon">🔜</div><div class="callout-text"><strong>下一章预告（第13章 · 融合定位与建图）：</strong>VIO和LIO-SAM解决了局部里程计问题，但累积误差仍然存在。回环检测（检测"回到已访问区域"）是消除累积误差的关键——第13章将把这些知识串联为完整的SLAM系统。</div></div>
 
 <div class="card blue"><div class="card-label">本章关键概念</div><h3>激光雷达与视觉的协同</h3><p><strong>① 特征层融合：</strong>最常用——Lidar提几何约束（线/面/边缘点），相机提语义/纹理信息。<br><strong>② LIO-SAM：</strong>因子图框架，IMU预积分 + Lidar里程计 + GPS + 回环，ISAM2求解器。<br><strong>③ LOAM边缘线匹配：</strong>点-线距离最小化，用于Lidar运动估计。<br><strong>④ LVI-SAM：</strong>在LIO-SAM基础上增加视觉因子，增强低特征环境鲁棒性。<br><strong>⑤ Scan Context：</strong>基于点云整体形状的回环检测方法，对Lidar点云特别有效。</p></div>
+
+<div class="card yellow">
+<div class="card-label">课后测验</div>
+<h3>第12章选择题</h3>
+<p><strong>1. Lidar-视觉融合中，最常用的融合层次是？</strong><br>
+A. 原始数据层<br>
+B. 特征层<br>
+C. 决策层<br>
+D. 应用层<br><br>
+
+<strong>2. LIO-SAM的因子图中，不包含以下哪个因子？</strong><br>
+A. IMU预积分因子<br>
+B. GPS因子<br>
+C. 视觉特征因子<br>
+D. Lidar里程计因子<br><br>
+
+<strong>3. LOAM/LIO-SAM中，边缘点匹配使用什么距离？</strong><br>
+A. 欧氏距离<br>
+B. 点到线的距离<br>
+C. 马氏距离<br>
+D. 曼哈顿距离<br><br>
+
+<strong>4. Scan Context主要用于什么？</strong><br>
+A. 深度估计<br>
+B. Lidar回环检测<br>
+C. 目标跟踪<br>
+D. 语义分割<br><br>
+
+<strong>5. LVI-SAM与LIO-SAM的主要区别是什么？</strong><br>
+A. LVI-SAM不支持GPS<br>
+B. LVI-SAM增加了视觉因子<br>
+C. LVI-SAM不支持IMU<br>
+D. LVI-SAM使用不同的SLAM算法</p></div>
 
 </section>
