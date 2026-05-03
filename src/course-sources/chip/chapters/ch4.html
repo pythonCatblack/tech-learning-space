@@ -131,19 +131,31 @@
 <div class="card yellow">
 <div class="card-label">课后测验</div>
 <h3>第4章选择题</h3>
-<p><strong>1. CMOS NAND 门需要几个晶体管？</strong><br>
-A. 2个　B. 4个　C. 6个　D. 8个<br><br>
-<strong>2. 组合逻辑与时序逻辑的主要区别是？</strong><br>
-A. 速度不同　B. 是否有时钟信号　C. 是否有记忆能力　D. 功耗不同<br><br>
-<strong>3. 触发器（Flip-Flop）是在时钟的什么边沿采样输入？</strong><br>
-A. 高电平　B. 低电平　C. 上升沿或下降沿　D. 任意时刻<br><br>
-<strong>4. 建立时间（Setup Time）是指？</strong><br>
-A. 时钟边沿后输入必须稳定的最短时间<br>
-B. 时钟边沿前输入必须稳定的最短时间<br>
-C. 信号从输入到输出的传播延迟<br>
-D. 触发器响应输入的最短时间<br><br>
-<strong>5. 为什么数字电路设计倾向于使用 NAND 和 NOR 而不是 AND 和 OR？</strong><br>
-A. NAND/NOR 更美观　B. NAND/NOR 晶体管更少，效率更高　C. AND/OR 兼容性差　D. NAND/NOR 是更标准的设计</p>
+<p><strong>1. 在CMOS逻辑门设计中，NAND门比AND门少用2个晶体管的原因是什么？</strong><br>
+A. AND门需要额外的反相器级联<br>
+B. NAND门的逻辑表达式更简洁<br>
+C. AND门在CMOS实现中需要NMOS上拉网络，而NAND门只需2个NMOS串联，节省了晶体管<br>
+D. 制造工艺限制<br><br>
+<strong>2. 组合逻辑电路与时序逻辑电路的本质区别在于时序电路包含了什么关键要素？</strong><br>
+A. 更复杂的布尔表达式<br>
+B. 存储元件（触发器或锁存器）和时钟信号，使输出具有"记忆"先前输入状态的能力<br>
+C. 更多的逻辑门<br>
+D. 更高的时钟频率<br><br>
+<strong>3. 主从型（Master-Slave）触发器为什么要用两个级联的锁存器来实现边沿触发？</strong><br>
+A. 增加电路的可靠性<br>
+B. 在时钟的某个电平期间主锁存器跟踪输入，从锁存器保持稳定；在时钟翻转时主锁存器冻结，从锁存器捕获主锁存器的状态，从而实现边沿采样<br>
+C. 降低功耗<br>
+D. 减少晶体管数量<br><br>
+<strong>4. 在时序分析中，建立时间（Setup Time）和保持时间（Hold Time）违例后，可能导致什么后果？</strong><br>
+A. 芯片直接烧毁<br>
+B. 触发器可能采样到亚稳态（Metastable）输出，在0和1之间悬停，导致后续电路逻辑错误传播<br>
+C. 时钟信号失真<br>
+D. 功耗增加<br><br>
+<strong>5. 在超前进位加法器（CLA）中，如何实现将32位加法的进位计算从32级门延迟降低到约6级？</strong><br>
+A. 使用更快的晶体管<br>
+B. 采用树状结构并行计算所有位的生成信号（Generate）和传播信号（Propagate），通过分层进位生成逻辑实现并行进位传播<br>
+C. 减少加法器位数<br>
+D. 增加时钟频率</p>
 </div>
 
 </section>

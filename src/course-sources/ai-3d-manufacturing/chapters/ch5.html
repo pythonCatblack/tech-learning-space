@@ -216,16 +216,16 @@
 <div class="card yellow">
 <div class="card-label">课后测验</div>
 <h3>第五章选择题</h3>
-<p><strong>1. 三点照明中的主光源（Key Light）一般设置在？</strong><br>
-A. 相机正前方　B. 与相机约45度角　C. 模型正下方　D. 模型正后方<br><br>
-<strong>2. HDRI的全称是？</strong><br>
-A. High Definition Render Image　B. High Dynamic Range Image　C. High Detail Reality Index　D. Hyper Digital Rendering Input<br><br>
-<strong>3. Web 3D展示推荐导出格式是？</strong><br>
-A. OBJ　B. STL　C. GLB/GLTF　D. MAX<br><br>
-<strong>4. Blender Cycles是什么类型的渲染器？</strong><br>
-A. 实时渲染器　B. 路径追踪渲染器　C. 游戏引擎　D. 建模软件<br><br>
-<strong>5. 渲染质量与速度的关系是？</strong><br>
-A. 正相关（质量高则速度快）　B. 负相关（质量高则速度慢）　C. 无关系　D. 对数关系</p>
+<p><strong>1. Blender Cycles作为路径追踪渲染器，其实质是基于Monte Carlo积分的光线传输模拟。在实际生产中，当采样数（samples）从64增至512时，噪点减少的边际效益呈对数衰减。以下关于采样策略的优化分析，正确的是？</strong><br>
+A. AI降噪器（如Intel Open Image Denoise）的引入可使采样数降至16而不损失可接受的视觉质量　B. 在交互式预览阶段，应使用路径追踪而非光栅化，因为前者可实现实时降噪　C. 采样数的最优值与场景复杂度无关，仅取决于输出分辨率　D. Cycles的BPT（双向路径追踪）相比SPM（单通道路径追踪）在室内场景中收敛更快<br><br>
+<strong>2. HDRI（High Dynamic Range Image）在渲染中的作用不仅是环境光照，还涉及颜色空间与动态范围的映射。以下关于HDRI使用中的关键技术问题，分析正确的是？</strong><br>
+A. HDRI的亮度值通常以EV（曝光值）为单位存储，需要通过线性化才能用于物理渲染　B. Poly Haven提供的HDRI已进行色调映射，可直接用于游戏引擎的移动平均光照计算　C. 在室内场景中，使用HDRI作为主光源时，其角度范围应覆盖可见天空弧度　D. HDRI的反射球（reflection sphere）与辐射球（irradiance sphere）在球谐函数展开时收敛阶数相同<br><br>
+<strong>3. 在Web 3D展示场景中，GLB/GLTF格式的选定涉及渲染管线兼容性、传输效率与视觉保真度的综合权衡。以下分析中，错误的是？</strong><br>
+A. GLB将二进制数据嵌入GLTF JSON中，避免了外部文件依赖，简化了CDN分发　B. GLTF 2.0的PBR扩展（PBR_COMMON）相比1.0的材质定义增加了金属度/粗糙度工作流支持　C. 在移动端WebGL 2.0环境下，GLB的DRACO压缩解压是CPU瓶颈而非GPU瓶颈　D. GLB导出时嵌入的KHR_meshquantization扩展可用于优化GPU顶点处理效率<br><br>
+<strong>4. 三点照明设计中，主光源（Key Light）的45度布置不仅是美学传统，更有其光学物理依据。该角度下主光源与相机形成的几何关系主要影响？</strong><br>
+A. 镜面反射（高光）在观察者视角的可见性，以及阴影落在模型侧面的比例分配　B. 漫反射分量的空间分布均匀性，与相机视角无关　C. 环境光遮蔽（AO）的计算精度，因为光线追踪角度会影响遮蔽判断　D. 材质的双向反射分布函数（BRDF）的漫反射分量响应<br><br>
+<strong>5. 在渲染参数优化中，"渲染质量与速度呈负相关"是线性假设的简化描述。某项目需要在渲染质量（以感知质量指标PSNR衡量）与渲染时间之间寻找帕累托最优解。以下参数组合策略的效率分析，正确的是？</strong><br>
+A. 使用NVIDIA Omniverse RTX渲染器时，启用DLSS 3.0可在同质量下获得4倍加速，因此采样数不再是瓶颈　B. 在云渲染平台（如Renderbus）上，时间成本与实例数量的关系在达到某临界点后从线性转为平方增长　C. 降噪器（denoiser）的引入会在减少噪点的同时引入高频细节损失，该trade-off在AI降噪中尤为明显　D. 分辨率缩放（resolution scaling）与采样数调整在降低渲染时间上具有等价效果</p>
 </div>
 
 </section>

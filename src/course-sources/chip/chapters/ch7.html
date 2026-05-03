@@ -126,16 +126,31 @@
 <div class="card yellow">
 <div class="card-label">课后测验</div>
 <h3>第7章选择题</h3>
-<p><strong>1. CPU 相比 ASIC 的主要优势是？</strong><br>
-A. 功耗更低　B. 成本更低　C. 灵活性更高，可处理任意程序　D. 速度更快<br><br>
-<strong>2. GPU 使用的 SIMT 架构中，一个 Warp 包含多少个线程？</strong><br>
-A. 8个　B. 16个　C. 32个　D. 64个<br><br>
-<strong>3. FPGA 的全称是？</strong><br>
-A. 快速可编程逻辑阵列　B. 现场可编程门阵列　C. 灵活可编程门阵列　D. 现场可编程逻辑门<br><br>
-<strong>4. ASIC 在能效上相比 GPU 的提升约为多少倍？</strong><br>
-A. 10倍　B. 50倍　C. 100倍　D. 1000倍<br><br>
-<strong>5. FPGA 相比 ASIC 的主要缺点是？</strong><br>
-A. 不可编程　B. 功耗高、频率低、成本高　C. 开发周期更长　D. 无法做原型验证</p>
+<p><strong>1. CPU的分支预测单元需要消耗大量晶体管预算（15-25%），但在AI推理等数据流密集型任务中，这些晶体管资源完全被浪费了。请分析根本原因：为什么分支预测对数据流任务无效？</strong><br>
+A. 分支预测器无法处理矩阵运算<br>
+B. 数据流任务具有确定性的控制流，没有条件分支，分支预测器始终预测"不跳转"成功，但预测逻辑仍消耗动态功耗<br>
+C. CPU时钟频率太低<br>
+D. 缓存容量不足<br><br>
+<strong>2. GPU的SIMT（Single Instruction, Multiple Threads）架构通过Warp调度来掩盖内存延迟。请分析：如果Warp内的32个线程访问的内存地址恰好在同一个缓存行（Cache Line）内，会产生什么性能问题？</strong><br>
+A. 缓存命中，访问加速<br>
+B. 缓存冲突（Bank Conflict）或未命中，内存访问串行化，无法有效并行掩盖延迟，导致GPU计算单元stall<br>
+C. 线程死锁<br>
+D. 功耗降低<br><br>
+<strong>3. FPGA的可编程互连网络（Interconnect Network）相比ASIC的固定金属互连，其功耗代价主要来自哪里？</strong><br>
+A. FPGA的互连开关（Pass Transistor/MUX）数量庞大且每个开关都有漏电流，同时可编程路由的线延迟远大于ASIC的定制优化布线，导致更高动态功耗<br>
+B. LUT表查询<br>
+C. BRAM访问<br>
+D. DSP计算<br><br>
+<strong>4. 在AI推理场景中，ASIC相比GPU能实现100倍能效提升的核心原因是什么？</strong><br>
+A. ASIC使用更先进的工艺节点<br>
+B. ASIC的专用数据通路消除了GPU中的猜测执行、分支预测和乱序执行的功耗开销，且固定数据流无需通用缓存，权重复用在硬件中硬编码实现<br>
+C. ASIC时钟频率更高<br>
+D. GPU功耗本来就高<br><br>
+<strong>5. 从系统架构角度分析，为什么Chiplet技术相比单芯片SoC在良率控制上具有优势？</strong><br>
+A. Chiplet使用成熟工艺<br>
+B. 大芯片被拆分为多个小芯片（Chiplet），每个小芯片面积更小，缺陷落入单个芯片的概率显著降低，从而提升整体良率<br>
+C. Chiplet功耗更低<br>
+D. Chiplet不需要封装</p>
 </div>
 
 </section>

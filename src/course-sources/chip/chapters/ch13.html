@@ -167,17 +167,31 @@
 <div class="card yellow">
 <div class="card-label">课后测验</div>
 <h3>第13章选择题</h3>
-<p><strong>1. INT8 量化将模型从 FP32 压缩，压缩比例约为？</strong><br>
-A. 2倍　B. 4倍　C. 8倍　D. 16倍<br><br>
-<strong>2. 知识蒸馏中，教师模型（Teacher）的作用是？</strong><br>
-A. 提供硬标签（正确答案）　B. 提供软预测（类别置信度分布）指导学生模型训练<br>
-C. 验证学生模型精度　D. 压缩学生模型体积<br><br>
-<strong>3. 存内计算（Processing-in-Memory）主要解决什么瓶颈？</strong><br>
-A. 计算速度瓶颈　B. 内存墙瓶颈（数据搬运能耗）　C. 存储容量瓶颈　D. 制造工艺瓶颈<br><br>
-<strong>4. Intel Loihi 神经形态芯片使用的是哪种神经网络？</strong><br>
-A. 卷积神经网络（CNN）　B. 循环神经网络（RNN）　C. 脉冲神经网络（SNN）　D. Transformer<br><br>
-<strong>5. 对于消费级无人机视觉 AI ASIC，为什么 28nm 是甜点工艺节点？</strong><br>
-A. 28nm 功耗最低　B. 28nm 是最先进节点　C. 28nm 成本可控、功耗足够、性能良好达到平衡　D. 28nm 良率最高</p>
+<p><strong>1. INT4量化相比INT8量化在模型压缩上更进一步（8倍 vs 4倍压缩），但实际部署中为何INT4的精度损失比INT8严重得多？量化感知训练（QAT）在其中如何缓解这一问题？</strong><br>
+A. INT4精度天然更低<br>
+B. INT4只有16个离散值，表征能力严重不足，且前向传播的量化误差在反向传播中累积；QAT通过在训练中模拟量化效应，让网络学习对量化噪声鲁棒的权重分布<br>
+C. INT4计算更慢<br>
+D. INT4功耗更高<br><br>
+<strong>2. 知识蒸馏中，教师的"暗知识"（Dark Knowledge）——即软标签（Soft Labels）中包含的类别间相似性信息——为何比硬标签（Hard Labels）对学生模型的学习更有价值？请从信息论角度分析。</strong><br>
+A. 软标签更准确<br>
+B. 软标签的概率分布（0.7猫、0.2狗、0.05虎、0.05豹）编码了类别间的语义相似性结构，这种结构化信息比单一硬标签（猫/非猫）包含的互信息量大得多，使学生模型能够学习到更丰富的特征表示<br>
+C. 硬标签无法用于训练<br>
+D. 软标签更易计算<br><br>
+<strong>3. 存内计算（PIM）通过在存储器阵列内部完成矩阵向量乘法（MVU）来消除内存墙，但面临"模拟计算精度限制"和"工艺成熟度"两大挑战。请分析：ReRAM-based PIM在实现高精度（>6bit）乘加运算时，主要受限于什么物理效应？</strong><br>
+A. ReRAM器件一致性问题<br>
+B. ReRAM的阻值状态受工艺偏差（Variation）、噪声（Noise）和温度漂移（Drift）影响，导致多位精度的乘加运算误差累积超过可接受范围，且读写 endurance 限制校准频率<br>
+C. 成本太高<br>
+D. 产能不足<br><br>
+<strong>4. 脉冲神经网络（SNN）与传统人工神经网络（ANN）相比，在硬件实现上具有潜在能效优势。请分析：SNN中"时间编码"（Temporal Coding）相比ANN的"频率编码"（Rate Coding），在硬件层面实现更省电的原因是什么？</strong><br>
+A. SNN使用更少的晶体管<br>
+B. SNN中信息编码在稀疏的时间点（少量spike），而非持续的浮点值激活；稀疏的spike活动使平均开关活动（Switching Activity）大幅降低，且SNN的积分-放电（Integrate-and-Fire）神经元模型比ANN的矩阵乘法更简单<br>
+C. SNN工艺更先进<br>
+D. ANN无法实现<br><br>
+<strong>5. 在小模型固化硬件的完整设计流程中，"模型压缩→硬件架构设计→FPGA验证→ASIC流片"是一个迭代优化过程。请分析：如果在FPGA验证阶段发现加速器架构存在数据流瓶颈（如某个模块成为计算吞吐量的限制因素），此时改变架构是否还来得及？为什么？</strong><br>
+A. 来得及<br>
+B. FPGA验证的核心目的就是在流片前发现架构问题；此时修改RTL（硬件描述）重新综合到FPGA即可验证，修改周期通常为2-4周；但如果问题涉及新工艺的物理设计约束（如关键路径在更先进节点无法时序收敛），则需要重新审视架构<br>
+C. 不可能修改<br>
+D. FPGA验证是最终确认</p>
 </div>
 
 </section>

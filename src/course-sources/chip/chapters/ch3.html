@@ -169,16 +169,31 @@
 <div class="card yellow">
 <div class="card-label">课后测验</div>
 <h3>第3章选择题</h3>
-<p><strong>1. 二极管的导通阈值电压约为？</strong><br>
-A. 0.3V　B. 0.7V　C. 1.2V　D. 5V<br><br>
-<strong>2. MOSFET 是哪种类型的器件？</strong><br>
-A. 电流控制型　B. 电压控制型　C. 光控制型　D. 温度控制型<br><br>
-<strong>3. CMOS 反相器由几个晶体管组成？</strong><br>
-A. 1个　B. 2个　C. 4个　D. 6个<br><br>
-<strong>4. FinFET 相比平面 MOSFET 的主要优势是？</strong><br>
-A. 成本更低　B. 制造更简单　C. 三面环绕栅极，控制力更强　D. 适用于所有工艺节点<br><br>
-<strong>5. GAA（Gate-All-Around）架构将栅极完全包裹什么？</strong><br>
-A. 源极　B. 漏极　C. 沟道　D. 衬底</p>
+<p><strong>1. 在深亚微米（<100nm）MOSFET中，短沟道效应（SCE）导致阈值电压Vth随沟道长度减小而降低，其核心物理机制是什么？</strong><br>
+A. 栅极电容耦合效应增强<br>
+B. 漏极电场穿透到沟道区域，降低了源极势垒（DIBL - Drain-Induced Barrier Lowering）<br>
+C. 杂质分布不均匀<br>
+D. 载流子速度饱和<br><br>
+<strong>2. CMOS工艺中，PMOS的沟道区通常需要轻掺杂以优化性能，但为何不直接将PMOS的沟道区做成与NMOS相同的掺杂浓度？</strong><br>
+A. 硼原子在硅中扩散系数较高，轻掺杂可控制短沟道效应<br>
+B. 轻掺杂PMOS的空穴迁移率更稳定<br>
+C. 重掺杂会导致PMOS的阈值电压绝对值过大，且空穴迁移率对掺杂更敏感，轻掺杂可提升驱动电流<br>
+D. 制造工艺限制<br><br>
+<strong>3. 在MOSFET的I-V特性中，当VDS增加至VDS > VGS - Vth时，器件进入饱和区，漏极电流IDS趋于饱和（不完全饱和而是略有增加），这一现象的物理来源是？</strong><br>
+A. 载流子速度饱和<br>
+B. 沟道长度调制效应（Channel Length Modulation）<br>
+C. 亚阈值电流增加<br>
+D. 漏极感应势垒降低（DIBL）<br><br>
+<strong>4. FinFET结构中，栅极三面包围沟道相比平面MOSFET的单面包围，在抑制短沟道效应方面有什么本质优势？</strong><br>
+A. 栅极与沟道之间的电容耦合面积增大，但电场控制力不变<br>
+B. 栅极电场能够更有效地穿透到沟道下方，抑制漏极电场的干扰<br>
+C. 栅极能够从三个方向对沟道施加电场控制，增强静电控制能力，减小耗尽区向沟道的延伸<br>
+D. FinFET的制造工艺更简单<br><br>
+<strong>5. 在GAA（Gate-All-Around）纳米片FET中，纳米片的宽度和数量是性能调节的关键参数。如果需要最大化驱动电流同时保持低漏电流，设计时应该如何权衡？</strong><br>
+A. 增加纳米片宽度，减小纳米片数量<br>
+B. 增加纳米片数量，减小纳米片厚度——多通道并行提供更大驱动电流，且薄纳米片可更好抑制短沟道效应<br>
+C. 最大化纳米片厚度<br>
+D. 减少纳米片宽度</p>
 </div>
 
 </section>

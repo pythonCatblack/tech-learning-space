@@ -485,16 +485,16 @@ python hy3dgen/main.py --input path/to/image.jpg --output result.glb</code></pre
 <div class="card yellow">
 <div class="card-label">课后测验</div>
 <h3>第二章选择题</h3>
-<p><strong>1. TripoSR的生成速度是？</strong><br>
-A. 5秒　B. 30秒　C. 0.5秒　D. 2秒<br><br>
-<strong>2. TRELLIS.2的PBR材质分辨率是？</strong><br>
-A. 512³　B. 768³　C. 1024³　D. 1536³<br><br>
-<strong>3. Hunyuan3D 2.1需要的最少显存是？</strong><br>
-A. 6GB　B. 8GB　C. 12GB　D. 24GB<br><br>
-<strong>4. 导出3D模型用于Web展示推荐格式是？</strong><br>
-A. OBJ　B. STL　C. GLB/GLTF　D. FBX<br><br>
-<strong>5. 旋转模型视角应该用？</strong><br>
-A. 右键拖拽　B. 左键拖拽　C. 滚轮　D. 双击</p>
+<p><strong>1. TRELLIS.2的O-Voxel稀疏体素表示在1536³分辨率下生成PBR材质资产时，其稀疏性具体体现在？</strong><br>
+A. 仅在世界空间中的表面体素进行特征存储与计算，无关区域跳过　B. 在多尺度八叉树结构中仅激活深层节点　C. 材质通道独立稀疏编码而非联合密集张量　D. 仅对高曲率区域保留高精度体素<br><br>
+<strong>2. TripoSR宣称0.5秒生成速度的实现机制最可能基于？</strong><br>
+A. 级联超分辨率与即时MLIR编译优化　B. 多视角一致性约束下的并行推理管线　C. GAN架构对扩散模型的实时蒸馏　D. 固定分辨率下的步数压缩与early exit策略<br><br>
+<strong>3. Hunyuan3D 2.1采用DiT（Diffusion Transformer）架构进行形状生成，相比传统U-Net架构的扩散模型，其Scaling特性带来的核心变化是？</strong><br>
+A. 文本-图像-3D跨模态对齐的端到端统一　B. 推理步数可从50步压缩至15步且保持质量　C. 显存占用与模型参数呈线性而非平方关系增长　D. 实现了真正意义上的text-to-3D端到端生成<br><br>
+<strong>4. 在企业级AI 3D建模工作流设计中，若日均处理量从10个增长至1000个模型，以下部署方案的综合成本-效益分析，错误的是？</strong><br>
+A. Meshy/Tripo3D在线平台的订阅费用在规模化后将超过本地部署TCO　B. TripoSR本地部署在1000模型/日时，其GPU利用率会出现显著瓶颈　C. TRELLIS.2的1536³输出在Web 3D场景下需要额外的DRACO压缩　D. Hunyuan3D 2.1的PBR材质生成会增加约40%的后处理时间<br><br>
+<strong>5. 某项目需要将AI生成的3D模型无缝集成至WebGL实时渲染管线，并要求在移动端保持30fps以上的交互流畅度。以下技术选型的权衡分析，合理的是？</strong><br>
+A. GLB格式的DRACO压缩可无损降低约80%传输量，是唯一选择　B. 1536³分辨率的PBR纹理在移动端必须降采样至512²才能保证性能　C. 3DGS（3D Gaussian Splatting）格式相比Mesh在相同质量下渲染速度更快，但不支持PBR材质　D. USDZ格式在iOS Quick Look中的兼容性优势使其成为跨平台AR最优解</p>
 </div>
 
 </section>

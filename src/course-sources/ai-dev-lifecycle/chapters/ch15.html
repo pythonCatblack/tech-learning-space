@@ -209,16 +209,16 @@ event_type枚举：'page_view', 'task_created', 'task_completed', 'login'
 <div class="card yellow">
 <div class="card-label">课后测验</div>
 <h3>第十五章选择题</h3>
-<p><strong>1. 一个好的产品指标体系应该包含什么？</strong><br>
-A. 只有业务指标　B. 业务指标、技术指标、用户行为指标　C. 只有技术指标　D. 只有用户行为指标<br><br>
-<strong>2. AI可以让非技术人员用什么方式查询数据库？</strong><br>
-A. SQL必须手写　B. 自然语言查询　C. 只能通过工程师　D. Excel表格<br><br>
-<strong>3. A/B测试中，p-value小于多少通常被认为是统计显著的？</strong><br>
-A. 0.5　B. 0.1　C. 0.05　D. 0.01<br><br>
-<strong>4. 数据脱敏的目的是什么？</strong><br>
-A. 增加数据量　B. 分析使用脱敏数据，不暴露真实用户信息　C. 删除所有数据　D. 加快查询速度<br><br>
-<strong>5. GDPR是关于什么的法规？</strong><br>
-A. 交通安全　B. 隐私保护　C. 食品安全　D. 劳动法</p>
+<p><strong>1. 在A/B测试的统计分析中，如何处理多重比较问题（Multiple Comparison Problem）？若同时进行m个假设检验，在控制家族误差率（Family-Wise Error Rate, FWER）或假发现率（False Discovery Rate, FDR）时，Bonferroni校正与 Benjamini-Hochberg 校正分别在什么场景下更适用？两种校正方法的理论基础各是什么？</strong><br>
+A. Bonferroni控制FWER（所有检验中至少一次假阳性的概率），适用于验证性场景（少量关键假设）；BH控制FDR（阳性结果中假阳性的比例），适用于探索性场景（大量候选假设）；Bonferroni使用并集上界（Union Bound）的概率不等式，BH使用有序p值的拒绝域构造，理论基础为分布的自由度调整，当m>100时BH的统计功效显著优于Bonferroni　B. 多重比较不需要校正；每个检验独立看待即可　C. 应该始终使用Bonferroni校正；FWER比FDR更严格　D. BH校正只适用于正态分布假设的检验；不具有普适性<br><br>
+<strong>2. 在用户分群分析中，如何将用户行为数据转化为可计算的嵌入表示（Embedding）？若使用Word2Vec的Skip-gram思想建模用户行为序列（如点击序列、购买序列），用户嵌入向量如何捕捉用户的兴趣相似性？该表示能否用于下游的推荐任务，其泛化能力从何而来？</strong><br>
+A. 使用Item2Vec将用户行为序列类比为句子，商品类比为单词，使用Skip-gram训练商品嵌入；用户嵌入=其行为商品的嵌入均值/加权求和；相似用户=嵌入空间中的近邻，泛化能力来自协同过滤思想——相似行为模式的商品在嵌入空间中距离更近，使用t-SNE或UMAP可视化嵌入空间验证聚类结构，同时使用嵌入向量的余弦相似度进行冷启动用户的推荐迁移　B. 用户嵌入只能使用主成分分析；Skip-gram不适用于行为序列　C. 嵌入维度越高越好；高维嵌入能捕捉更多细节　D. 用户行为无法向量化；行为是离散的无法嵌入<br><br>
+<strong>3. 在数据可视化自动生成中，如何评估可视化方案的有效性？若将可视化效果建模为"数据到感知的映射"，如何量化图表的信息传递效率？哪些认知科学理论可以指导可视化设计决策？</strong><br>
+A. 使用感知心理学理论（如Preattentive Processing、Change Blindness）和Mackinlay的Expressiveness-Pffectiveness框架；量化指标包括数据墨水比（Data-Ink Ratio）、Lie Factor（图形变化/数据变化的比率）、视觉搜索效率（使用眼动追踪评估用户找到目标信息的时间）；使用神经网络学习从数据特征到可视化配置的映射，训练数据来自人类设计师的标注，使用强化学习优化图表的信息传递效率　B. 可视化效果无法量化；只能依靠设计师主观判断　C. 图表越复杂越好；信息量越大价值越高　D. 使用文件大小衡量；文件越小可视化越高效<br><br>
+<strong>4. 在因果推断框架下，如何从观察数据中估计A/B测试的Treatment Effect（因果效应）？若用户分配到实验组/对照组是non-random（存在选择偏差），如何通过倾向得分匹配（Propensity Score Matching）或工具变量法（Instrumental Variables）来估计因果效应？这些方法各自依赖什么关键假设？</strong><br>
+A. 倾向得分匹配（PSM）假设条件独立（CIA）：给定倾向得分X，treatment assignment T与潜在结果(Y₀,Y₁)条件独立，使用匹配估计ATT=E[Y₁-Y₀|T=1]；工具变量法（IV）假设排他性限制（exclusion restriction）和相关性条件，使用两阶段最小二乘法（2SLS）估计LATE（局部平均处理效应）；PSM依赖重叠假设（overlap），IV依赖外生性假设；敏感性分析（Sensitivity Analysis）用于检验假设的稳健性，使用E-values量化未观测混杂的耐受度　B. 因果效应只能通过随机实验估计；观察数据无法估计因果效应　C. A/B测试不存在选择偏差；随机分配保证了两组可比性　D. 使用简单的差分法；因果效应=实验组均值-对照组均值即可<br><br>
+<strong>5. 在数据隐私保护中，如何形式化地定义"隐私泄露"并设计满足差分隐私（Differential Privacy）的算法？若使用机制设计（Mechanism Design）框架，隐私保护预算ε如何影响数据发布的有用性（Utility）？DP的严格定义（ε-DP或(ε,δ)-DP）中的参数如何影响隐私保证的强度？</strong><br>
+A. ε-DP定义：相邻数据集D和D'（相差一条记录），算法M满足P(M(D)∈S) ≤ e^ε · P(M(D') ∈ S)对所有可测集S成立；隐私预算ε越小隐私保护越强，但可用性越低（噪声方差与ε²成反比）；使用指数机制（Exponential Mechanism）设计满足DP的聚合算法，敏感性（Sensitivity）分析确定所需噪声规模；使用隐私会计（Privacy Accounting）跟踪累积隐私损失，Renyi差分隐私作为ε-DP的平滑替代提供更严格的组合保证，隐私预算分配策略影响整体系统的隐私-可用性权衡　B. 差分隐私需要添加大量噪声；无法在保护隐私的同时保持数据有用性　C. 隐私泄露只能事后检测；无法先验地定义　D. 使用简单的数据脱敏即可；不需要形式化的隐私定义</p>
 </div>
 
 </section>

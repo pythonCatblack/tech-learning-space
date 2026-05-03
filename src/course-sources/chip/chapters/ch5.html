@@ -109,16 +109,31 @@
 <div class="card yellow">
 <div class="card-label">课后测验</div>
 <h3>第5章选择题</h3>
-<p><strong>1. ALU 的全称是？</strong><br>
-A. 算术逻辑单元　B. 存储控制单元　C. 地址生成单元　D. 异步逻辑单元<br><br>
-<strong>2. 超前进位加法器（CLA）的主要优势是？</strong><br>
-A. 占用面积更小　B. 将串行进位变为并行计算，大幅降低延迟　C. 功耗更低　D. 设计更简单<br><br>
-<strong>3. 寄存器文件比内存（DRAM）快很多的原因不包括？</strong><br>
-A. 距离 CPU 核心更近　B. 基于 SRAM 不需要刷新　C. 支持多端口同时读写　D. 容量更大<br><br>
-<strong>4. 有限状态机（FSM）中，Moore 型与 Mealy 型的主要区别是？</strong><br>
-A. 状态数量不同　B. 输出是否仅依赖于当前状态　C. 是否有时钟　D. 使用的触发器数量不同<br><br>
-<strong>5. 存储器层次结构中，速度最快、容量最小的一层是？</strong><br>
-A. L1缓存　B. 寄存器　C. DRAM　D. L2缓存</p>
+<p><strong>1. 在32位ALU设计中，如果使用行波进位（Ripple-Carry）结构，加法器的关键路径延迟主要受什么影响？</strong><br>
+A. 全加器本身的延迟<br>
+B. 进位信号从最低位到最高位的串行传播延迟，等于32个全加器进位链的累积延迟<br>
+C. ALU选择信号的延迟<br>
+D. 操作数输入路径的延迟<br><br>
+<strong>2. 寄存器文件采用多端口SRAM实现，其目的和物理限制是什么？</strong><br>
+A. 允许多个读/写同时访问，但多端口SRAM单元面积是单端口的2-3倍，在芯片面积和性能之间存在权衡<br>
+B. 降低功耗<br>
+C. 提高良率<br>
+D. 简化设计<br><br>
+<strong>3. 在有限状态机（FSM）的硬件实现中，Mealy型状态机的输出是当前状态和输入的函数，这与Moore型相比有什么实际影响？</strong><br>
+A. Mealy型输出对输入变化响应更快，但可能产生毛刺（Glitch），时序验证更复杂<br>
+B. Moore型速度更快<br>
+C. 两者没有本质区别<br>
+D. Mealy型使用更多触发器<br><br>
+<strong>4. 在总线仲裁的轮询（Round-Robin）策略中，如果多个主设备同时请求总线，系统如何决定授权顺序？</strong><br>
+A. 固定优先级<br>
+B. 基于时间片的轮转授权，每个主设备在获得授权后移到队列末尾，保证公平性<br>
+C. 随机选择<br>
+D. 先到先得<br><br>
+<strong>5. 存储器层次结构中，L1缓存的命中（Hit）和未命中（Miss）在硬件层面如何区分？是通过比较什么来实现的？</strong><br>
+A. 比较数据本身的内容<br>
+B. 比较CPU访问的地址与缓存中存储的标签（Tag），同时检查有效位（Valid Bit）和匹配标签来确定命中或未命中<br>
+C. 比较时钟周期<br>
+D. 比较指令类型</p>
 </div>
 
 </section>

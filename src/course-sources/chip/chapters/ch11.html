@@ -126,16 +126,31 @@
 <div class="card yellow">
 <div class="card-label">课后测验</div>
 <h3>第11章选择题</h3>
-<p><strong>1. AI 推理中，90%的能耗用于什么？</strong><br>
-A. 实际矩阵乘法计算　B. 数据搬运（内存↔计算单元）　C. 控制逻辑　D. 输出结果写入内存<br><br>
-<strong>2. Taalas HC1 的"权重固化"技术把权重信息存储在哪里？</strong><br>
-A. SRAM 存储器　B. DRAM 存储器　C. 芯片的金属连线连接方式中　D. 外部 Flash<br><br>
-<strong>3. Taalas HC1 相比 GPU 能效提升约多少倍？</strong><br>
-A. 10倍　B. 50倍　C. 100倍　D. 1000倍<br><br>
-<strong>4. 权重固化 ASIC 的主要局限是？</strong><br>
-A. 功耗太高　B. 精度过高无法商用　C. 芯片制造完成后模型权重无法更改　D. 只能使用在最先进工艺<br><br>
-<strong>5. Taalas HC1 使用的计算精度约为多少 bit？</strong><br>
-A. 4-6bit　B. 8-10bit　C. 16bit　D. 32bit</p>
+<p><strong>1. 在典型的GPU AI推理中，数据搬运能耗占总能耗的90%。请从物理和架构层面分析：为什么"内存墙"（Memory Wall）问题是AI加速器的本质瓶颈，而不是计算单元速度不足？</strong><br>
+A. 计算单元速度已经足够快<br>
+B. 从DRAM读取1bit数据的能耗是芯片内部计算1bit的100-1000倍，且AI推理的数据局部性差（权重无法复用），导致内存带宽需求远超过实际带宽，GPU计算单元90%时间在等待数据<br>
+C. GPU设计缺陷<br>
+D. AI模型太大<br><br>
+<strong>2. Taalas HC1的权重固化技术使用模拟计算（基尔霍夫定律）完成矩阵乘法。请分析：模拟计算相比数字计算在精度和可靠性上的根本挑战是什么？</strong><br>
+A. 模拟计算太快<br>
+B. 模拟计算精度受工艺偏差（Process Variation）、热噪声（Thermal Noise）和温度漂移（Temperature Drift）影响显著，导致计算结果与理论值偏离，而数字计算通过阈值判定具有极强的抗噪声能力<br>
+C. 模拟电路功耗更高<br>
+D. 数字电路更复杂<br><br>
+<strong>3. 权重固化ASIC（如Taalas HC1）的制造需要完整的流片流程，且每种模型需要独立掩模版设计。请分析：为什么这种方案对小模型（<10M参数）比大模型更可行？</strong><br>
+A. 小模型芯片面积小，良率高<br>
+B. 小模型的芯片面积更小（可能<10mm²），单芯片成本显著降低，且掩模版成本可在更小出货量下摊薄，使得总拥有成本（TCO）可行<br>
+C. 小模型不需要固化<br>
+D. 大模型无法固化<br><br>
+<strong>4. 在权重固化ASIC中，权重值到金属连线连接方式的映射过程中，量化（Quantization）为什么是必须的？</strong><br>
+A. 降低计算复杂度<br>
+B. 连续浮点权重值必须量化为离散的整数值（如INT8范围-128到+127），才能用有限的金属连线状态（连接/断开/差分）来表示，否则需要无穷多的连线状态<br>
+C. 减少功耗<br>
+D. 提高速度<br><br>
+<strong>5. Taalas的商业模式是"Chip-as-a-Service"（芯片即服务）而非直接销售芯片。请分析：这种商业模式如何解决了固化ASIC的核心商业挑战——高NRE（Non-Recurring Engineering）成本和模型不可更新性？</strong><br>
+A. 降低服务费用<br>
+B. 客户无需承担高昂的流片成本和设计风险，而是按芯片使用量付费；同时通过为多个客户共享设计成本来分摊NRE，且模型更新通过重新流片实现但成本由服务订阅模式承担<br>
+C. 加快交付速度<br>
+D. 提高良率</p>
 </div>
 
 </section>

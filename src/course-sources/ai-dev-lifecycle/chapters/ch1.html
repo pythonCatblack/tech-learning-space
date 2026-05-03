@@ -99,16 +99,16 @@
 <div class="card yellow">
 <div class="card-label">课后测验</div>
 <h3>第一章选择题</h3>
-<p><strong>1. AI-Augmented Development的核心概念是什么？</strong><br>
-A. 用AI完全替代程序员开发　B. AI贯穿产品全生命周期增强开发效率　C. 只在编码环节使用AI　D. AI独立完成所有开发任务<br><br>
-<strong>2. AI AGENT的核心能力可以用什么四环来概括？</strong><br>
-A. 输入-处理-输出-存储　B. 感知-规划-执行-反馈　C. 学习-推理-决策-行动　D. 接收-分析-生成-展示<br><br>
-<strong>3. 全球首个AI程序员Devin由哪家公司推出？</strong><br>
-A. OpenAI　B. Anthropic　C. Cognition AI　D. Microsoft<br><br>
-<strong>4. 截至2026年，SWE-bench基准测试SOTA已达多少？</strong><br>
-A. 50%　B. 65%　C. 80.9%　D. 95%<br><br>
-<strong>5. 根据Gartner预测，到哪一年企业软件工程师将普遍使用AI助手？</strong><br>
-A. 2025年　B. 2026年　C. 2027年　D. 2028年</p>
+<p><strong>1. 在LLM推理优化中，KV Cache机制主要用于解决什么问题？其数学本质是什么？</strong><br>
+A. 减少显存占用；通过缓存已计算的Key-Value矩阵避免重复计算　B. 加快解码速度；通过并行化处理多个token　C. 降低内存带宽；通过压缩激活值　D. 提升模型精度；通过保留更多上下文信息<br><br>
+<strong>2. Speculative Decoding的核心思想是使用什么来加速自回归生成？其理论加速比上界受什么因素制约？</strong><br>
+A. 小模型预测+大模型验证；预测接受率与draft model质量　B. 批量并行生成；token之间独立性假设　C. 知识蒸馏；teacher model的蒸馏温度　D. 缓存已生成token；context length限制<br><br>
+<strong>3. 在Agent系统的Pareto优化框架中，若将推理成本、响应延迟、能力质量分别作为优化目标，Agent系统的Pareto前沿通常呈现什么形态？如何在工程实践中选择合适的部署点？</strong><br>
+A. 凸形前沿；选择边际收益最大的点　B. 非凸前沿；需要多目标进化算法求解　C. 线性前沿；选择成本最低的点　D. 凹形前沿；选择质量最高的点<br><br>
+<strong>4. AI-Augmented Development中，如何理解"感知-规划-执行-反馈"四环与强化学习中agent-environment交互框架的内在联系？这种联系对设计更高效的AI Agent有什么启示？</strong><br>
+A. 两者都是马尔可夫决策过程；启示在于将环境反馈建模为reward signal　B. 两者都是感知动作循环；启示在于使用model-based planning增强规划能力　C. 两者都是开环控制；启示在于减少对反馈的依赖　D. 两者都遵循贪心策略；启示在于使用lookahead机制<br><br>
+<strong>5. 在多智能体协作系统中，若每个Agent具有不同的能力域和资源消耗，如何设计任务分配算法使得全局效用最大？该问题可以规约为哪种经典组合优化问题？</strong><br>
+A. 任务分配规约为最大流问题；使用Edmonds-Karp算法求解　B. 任务分配规约为带约束的组合拍卖问题；使用VCG机制设计激励兼容的分配方案　C. 任务分配规约为二分图匹配；使用Hungarian算法求得最优分配　D. 任务分配规约为旅行商问题；使用贪心近似算法</p>
 </div>
 
 </section>

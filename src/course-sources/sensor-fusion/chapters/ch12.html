@@ -117,34 +117,28 @@ rosbag play uli_ground_truth.bag</code><br><br>
 <div class="card yellow">
 <div class="card-label">课后测验</div>
 <h3>第12章选择题</h3>
-<p><strong>1. Lidar-视觉融合中，最常用的融合层次是？</strong><br>
-A. 原始数据层<br>
-B. 特征层<br>
-C. 决策层<br>
-D. 应用层<br><br>
+<p><strong>1. 在Lidar-视觉特征层融合中，Lidar提供几何约束（边缘点/平面点），相机提供纹理和语义信息。请分析：当Lidar点云稀疏（如16线Lidar）和相机高分辨率（4K）融合时，在特征层融合的精度瓶颈是什么？为什么说单纯增加Lidar线数不一定能提升融合精度？</strong><br>
+A. 精度瓶颈在于Lidar点的稀疏性与图像像素密度的不匹配——特征层融合时需要将Lidar特征与图像特征建立对应关系，当Lidar空间分辨率不足时，可靠的特征匹配数量受限；增加Lidar线数只能改善空间采样密度，但最终融合精度仍受限于两个传感器中最差的那个的信息量（就像木桶原理）<br>
+B. Lidar线数越多越好<br>
+C. 融合精度与Lidar线数无关<br>
+D. 相机分辨率不影响融合<br><br>
 
-<strong>2. LIO-SAM的因子图中，不包含以下哪个因子？</strong><br>
-A. IMU预积分因子<br>
-B. GPS因子<br>
-C. 视觉特征因子<br>
-D. Lidar里程计因子<br><br>
+<strong>2. LOAM/LIO-SAM的边缘点匹配中，残差函数为点到线的距离。请分析：这个残差函数的梯度与Lidar运动估计误差之间的数学关系。为什么边缘点匹配在面对平行边缘（如墙面）时会退化为欠定问题？</strong><br>
+A. 边缘点残差梯度方向沿边缘法平面；当存在两条平行等距边缘时，沿两条边缘法线方向的梯度分量相同——运动估计沿平行方向的偏移无法被边缘点约束区分，导致信息矩阵奇异性（信息不足方向），优化求解器可能在该方向产生较大误差<br>
+B. 边缘点匹配不存在退化问题<br>
+C. 平行边缘是最容易的场景<br>
+D. 残差梯度与运动误差无关<br><br>
 
-<strong>3. LOAM/LIO-SAM中，边缘点匹配使用什么距离？</strong><br>
-A. 欧氏距离<br>
-B. 点到线的距离<br>
-C. 马氏距离<br>
-D. 曼哈顿距离<br><br>
+<strong>3. Scan Context回环检测中，使用余弦相似度比较两帧的描述子。请分析：为什么余弦相似度对点云的旋转（角度偏移）敏感？Scan Context的循环对齐（circular shift）操作如何处理这个问题？这个对齐过程的计算复杂度是多少？</strong><br>
+A. 同一地点顺时针扫描和不同时刻扫描的Scan Context描述子在行方向有循环位移，位移量等于扫描角度偏移；余弦相似度对这种行偏移敏感——相同内容但行不对齐会得到低相似度；循环对齐需要遍历所有可能的位移量（O(N×M)，N为扇区数），找到使相似度最大的位移；复杂度O(N²)，实际中通过FFT加速到O(N log N)<br>
+B. Scan Context对旋转不敏感<br>
+C. 循环对齐不需要计算<br>
+D. 余弦相似度不受偏移影响<br><br>
 
-<strong>4. Scan Context主要用于什么？</strong><br>
-A. 深度估计<br>
-B. Lidar回环检测<br>
-C. 目标跟踪<br>
-D. 语义分割<br><br>
-
-<strong>5. LVI-SAM与LIO-SAM的主要区别是什么？</strong><br>
-A. LVI-SAM不支持GPS<br>
-B. LVI-SAM增加了视觉因子<br>
-C. LVI-SAM不支持IMU<br>
-D. LVI-SAM使用不同的SLAM算法</p></div>
+<strong>4. 在LVI-SAM中，Lidar-IMU紧耦合和Visual-IMU紧耦合通过什么机制实现一致性约束？如果Lidar里程计和视觉里程计对同一时刻的无人机位姿给出不一致的估计，系统如何检测和处理这种不一致？</strong><br>
+A. LVI-SAM通过因子图中的"互观测因子"（Cross-modality factors）约束——Lidar里程计的位姿估计和视觉里程计的位姿估计在相同时间节点上存在一致性约束；检测机制：计算两个子系统输出位姿的Mahalanobis距离，超过阈值时降低对应因子的权重（或标记为异常），使优化自动在两个估计之间做最优折中<br>
+B. LVI-SAM没有一致性约束<br>
+C. 两个子系统总是完全一致<br>
+D. 不一致时直接抛弃视觉</p></div>
 
 </section>
