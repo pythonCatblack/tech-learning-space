@@ -3,6 +3,18 @@ import { groupChapters, type CourseChapter, type CourseDefinition } from '../typ
 
 const chapters: CourseChapter[] = [
   {
+    id: '0',
+    title: '术语表与快速参考',
+    navLabel: '附录 术语表',
+    summary: 'AI 3D建模与实体生产专业术语速查',
+    readTime: '速查参考',
+    icon: '🔤',
+    badgeClass: 's0',
+    groupId: 'appendix',
+    groupLabel: '附录',
+    sourceFile: 'appendix-glossary.html',
+  },
+  {
     id: '1',
     title: 'AI 3D技术概述与课程导入',
     navLabel: 'Ch1 AI 3D技术概述',

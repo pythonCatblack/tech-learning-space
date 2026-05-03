@@ -499,6 +499,9 @@ pre.code-block-dark {
 .card.red {
   border-left: 4px solid var(--red);
 }
+.card.yellow {
+  border-left: 4px solid #f59e0b;
+}
 
 .card-label {
   font-size: 10px;
