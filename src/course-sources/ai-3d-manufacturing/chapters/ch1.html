@@ -1,0 +1,242 @@
+<section id="ch1">
+<div class="hero">
+<div class="chapter-tag">Chapter 1 · 基础入门篇</div>
+<h1>AI 3D技术概述与课程导入</h1>
+<p class="sub">建立AI 3D建模的整体认知框架，理解技术趋势与工具生态</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约45分钟阅读</span>
+<span class="hero-meta-item">🎯 入门级</span>
+</div>
+</div>
+
+<p class="lead">你是否曾想过，只需要用文字描述一个想法，就能生成一个可以打印出来的3D模型？AI技术正在让这一切成为现实。本章将带你了解AI在3D建模领域的最新发展支势干，掌握主流工具，为后续学习打下坚实基础。</p>
+
+<h2 class="section-h2">1.1 为什么AI正在颠覆3D建模行业</h2>
+
+<p class="p">传统3D建模是一项高度专业化的技能，需要数年时间才能掌握。从事游戏设计的专业人士可能需要数年时间学习Maya、3ds Max、Blender等专业软件。但现在，AI正在彻底改变这一格局。</p>
+
+<div class="callout callout-info">
+<div class="callout-icon">ℹ️</div>
+<div class="callout-text"><strong>行业变革：</strong>2024年被认为是"AI 3D建模元年"。多家公司推出了基于AI的3D生成工具，将原本需要数周才能完成的工作压缩到几分钟。</div>
+</div>
+
+<div class="stats">
+<div class="stat">
+<div class="stat-val">85%</div>
+<div class="stat-lbl">传统建模时间可被AI缩短</div>
+</div>
+<div class="stat">
+<div class="stat-val">10x</div>
+<div class="stat-lbl">初学者学习曲线优化</div>
+</div>
+<div class="stat">
+<div class="stat-val">$242亿</div>
+<div class="stat-lbl">2025年全球3D打印市场规模</div>
+</div>
+</div>
+
+<h2 class="section-h2">1.2 AI在3D建模领域的应用现状</h2>
+
+<p class="p">AI 3D建模技术主要分为几个方向：</p>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">📝</div>
+<h4>文本转3D</h4>
+<p>通过自然语言描述生成3D模型，如"一个红色的复古汽车模型"</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🖼️</div>
+<h4>图片转3D</h4>
+<p>从单张图片或多个角度的图片生成3D模型</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">✏️</div>
+<h4>草图转3D</h4>
+<p>将手绘草图转换为精细的3D模型</p>
+</div>
+<div="card-sm">
+<div class="card-sm-icon">🔄</div>
+<h4>2D转3D</h4>
+<p>将2D设计稿快速转换为可编辑的3D模型</p>
+</div>
+</div>
+
+<h2 class="section-h2">1.3 主流AI 3D建模工具对比</h2>
+
+<p class="p">以下是2025-2026年最主流的AI 3D建模工具详细对比，涵盖开源模型与商业平台：</p>
+
+<h3 class="section-h3">1.3.1 开源模型（免费、可本地部署）</h3>
+
+<table class="tbl">
+<thead><tr><th>模型名称</th><th>发布方</th><th>核心能力</th><th>生成速度</th><th>开源许可</th></tr></thead>
+<tbody>
+<tr><td class="hl"><strong>TRELLIS.2</strong></td><td>微软</td><td>40亿参数，O-Voxel稀疏体素结构，生成1536³ PBR纹理资产</td><td>3-10秒</td><td>MIT许可</td></tr>
+<tr><td class="hl"><strong>TripoSR</strong></td><td>Stability AI + VAST</td><td>0.5秒单图生成高质量3D模型，支持商业化</td><td>0.5秒</td><td>MIT许可</td></tr>
+<tr><td class="hl"><strong>Hunyuan3D 2.1</strong></td><td>腾讯</td><td>文本/图片双输入，PBR纹理合成，FlashVDM加速，支持3DGS格式导出</td><td>1-30秒</td><td>免费可商用</td></tr>
+<tr><td class="hl"><strong>InstantMesh</strong></td><td>Tencent ARC</td><td>稀疏视图大型重建模型，10秒完成图片转3D网格</td><td>约10秒</td><td>开源</td></tr>
+<tr><td class="hl"><strong>混元3D世界模型</strong></td><td>腾讯</td><td>业界首个开源可漫游3D世界生成，支持文字/图片/视频输入</td><td>数分钟</td><td>开源</td></tr>
+<tr><td class="hl"><strong>Seed3D 2.0</strong></td><td>字节跳动</td><td>几何精度和材质质量SOTA，支持3Dgs/Mesh导出</td><td>快速</td><td>API付费</td></tr>
+</tbody>
+</table>
+
+<h3 class="section-h3">1.3.2 在线平台（易用、适合初学者）</h3>
+
+<table class="tbl">
+<thead><tr><th>工具名称</th><th>核心能力</th><th>学习曲线</th><th>适用场景</th><th>成本</th></tr></thead>
+<tbody>
+<tr><td class="hl"><strong>Meshy</strong></td><td>文本/图片转3D，AI辅助建模，材质生成，拥有600万+用户</td><td>⭐ 非常简单</td><td>快速概念建模、产品原型</td><td>免费额度/付费订阅制</td></tr>
+<tr><td class="hl"><strong>Tripo3D</strong></td><td>AI一键生成可编辑3D模型，支持多种导出格式，服务300万+开发者</td><td>⭐ 简单</td><td>游戏资产、电商展示</td><td>免费额度/付费订阅制</td></tr>
+<tr><td class="hl"><strong>Spline</strong></td><td>实时协作3D设计，AI生成功能，内置渲染</td><td>⭐⭐ 中等</td><td>UI 3D设计、Web 3D</td><td>免费版/付费版</td></tr>
+<tr><td class="hl"><strong>Kaedim</strong></td><td>AI辅助建模，图片转3D，材质贴图</td><td>⭐ 简单</td><td>游戏资产、影视道具</td><td>付费订阅制</td></tr>
+<tr><td class="hl"><strong>Masterpiece Studio</strong></td><td>AI生成3D角色，动画绑定，骨骼系统，与NVIDIA合作</td><td>⭐⭐ 较简单</td><td>游戏角色、虚拟主播</td><td>免费额度/付费版</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-info">
+<div class="callout-icon">ℹ️</div>
+<div class="callout-text"><strong>开源模型 vs 在线平台：</strong>开源模型（如TRELLIS.2、TripoSR）完全免费、可本地部署、适合有技术背景的用户；在线平台（如Meshy、Tripo3D）操作简单、无需配置、适合零基础初学者。建议初学者从在线平台开始，掌握基础后再使用开源模型。</div>
+</div>
+
+<div class="callout callout-warn">
+<div class="callout-icon">⚠️</div>
+<div class="callout-text"><strong>工具选择建议：</strong>零基础初学者建议从Meshy或Tripo3D开始，界面友好且有免费额度。有一定基础后推荐部署TripoSR（0.5秒极速生成）或TRELLIS.2（最高质量PBR材质）。</div>
+</div>
+
+<h2 class="section-h2">1.4 硬件与软件环境配置</h2>
+
+<h3 class="section-h3">1.4.1 最低配置要求</h3>
+
+<table class="tbl">
+<thead><tr><th>组件</th><th>最低配置</th><th>推荐配置</th></tr></thead>
+<tbody>
+<tr><td>处理器</td><td>Intel Core i5 / AMD Ryzen 5</td><td>Intel Core i7 / AMD Ryzen 7</td></tr>
+<tr><td>内存</td><td>8GB RAM</td><td>16GB RAM</td></tr>
+<tr><td>显卡</td><td>NVIDIA GTX 1060 4GB</td><td>NVIDIA RTX 3060 8GB</td></tr>
+<tr><td>存储</td><td>256GB SSD</td><td>512GB SSD</td></tr>
+<tr><td>操作系统</td><td>Windows 10/macOS 11</td><td>Windows 11/macOS 13</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-info">
+<div class="callout-icon">ℹ️</div>
+<div class="callout-text"><strong>跨平台提示：</strong>所有推荐工具均支持Windows和macOS系统。macOS用户建议使用M1/M2/M3芯片版本以获得更好的AI计算性能。</div>
+</div>
+
+<h3 class="section-h3">1.4.2 浏览器要求</h3>
+
+<p class="p">基于Web的AI 3D工具（如Spline、Meshy）推荐使用以下浏览器：</p>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🌐</div>
+<h4>Google Chrome</h4>
+<p>推荐版本 120+</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🌐</div>
+<h4>Microsoft Edge</h4>
+<p>推荐版本 120+</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🌐</div>
+<h4>Firefox</h4>
+<p>推荐版本 121+</p>
+</div>
+</div>
+
+<h2 class="section-h2">1.5 课程学习路径与项目概览</h2>
+
+<p class="p">本课程分为三大模块，共8个章节：</p>
+
+<div class="flow">
+<div class="flow-box">
+<div class="flow-box-title">基础入门篇</div>
+<div class="flow-box-desc">Ch1-Ch3<br>技术基础与工具入门</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">核心技能篇</div>
+<div class="flow-box-desc">Ch4-Ch6<br>材质、渲染、生产工艺</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">项目实战篇</div>
+<div class="flow-box-desc">Ch7-Ch8<br>综合项目与毕业设计</div>
+</div>
+</div>
+
+<h3 class="section-h3">课程配套项目</h3>
+
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>阶段性项目一：创意摆件设计</h4>
+<p>使用AI工具设计一个家居装饰摆件，完成建模、材质、渲染全流程</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>阶段性项目二：实用工具建模</h4>
+<p>设计一个具有实用功能的小工具，如手机支架或钥匙扣</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>毕业项目：定制化产品设计</h4>
+<p>完成从概念构思、AI建模、渲染展示到实体生产的全流程项目</p>
+</div>
+</div>
+</div>
+
+<h2 class="section-h2">1.6 常见问题与解决方案</h2>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">❓</div>
+<h4>我没有3D建模基础能学吗？</h4>
+<p>完全可以。本课程专为零基础学习者设计，AI工具大大降低了学习门槛。</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">❓</div>
+<h4>需要购买昂贵的软件吗？</h4>
+<p>不需要。本课程推荐的工具都有免费额度或免费版本，完全可以完成全部学习内容。</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">❓</div>
+<h4>没有3D打印机怎么办？</h4>
+<p>许多城市有3D打印服务可以在线下单。如果没有，也可以选择项目的渲染输出作为最终成果。</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">❓</div>
+<h4>Mac和Windows有区别吗？</h4>
+<p>核心功能基本一致。部分专业工具在Windows平台功能更全，但入门学习两者差别不大。</p>
+</div>
+</div>
+
+<h2 class="section-h2">1.7 本章小结</h2>
+
+<div class="hlbox">
+<div class="hlbox-title">📚 核心要点</div>
+<ol>
+<li>AI正在彻底改变3D建模行业，将传统数周的工作压缩到几分钟</li>
+<li>2025-2026年最强开源模型包括TRELLIS.2（40亿参数/PBR材质）、TripoSR（0.5秒极速）、Hunyuan3D 2.1（腾讯/PBR纹理合成）</li>
+<li>初学者建议从Meshy或Tripo3D在线平台开始，掌握基础后使用开源模型</li>
+<li>最低配置要求为8GB内存、GTX 1060显卡，可满足基础学习需求</li>
+<li>课程通过3个阶段性项目和1个毕业项目，确保掌握全流程技能</li>
+</ol>
+</div>
+
+<div class="card green">
+<div class="card-label">课后练习</div>
+<h3>第一章技能测试</h3>
+<p><strong>1. 理论考核：</strong>简述AI在3D建模领域的4种主要应用方向（文本转3D、图片转3D等）<br>
+<strong>2. 工具调研：</strong>访问Meshy和Tripo3D官网，分别完成注册并体验基础功能<br>
+<strong>3. 开源模型探索：</strong>访问Microsoft TRELLIS.2或TripoSR的GitHub页面，了解开源模型的部署方式<br>
+<strong>4. 环境检查：</strong>确认电脑配置是否满足最低要求，记录当前硬件信息</p>
+</div>
+
+</section>

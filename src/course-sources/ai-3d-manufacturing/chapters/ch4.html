@@ -1,0 +1,237 @@
+<section id="ch4">
+<div class="hero">
+<div class="chapter-tag">Chapter 4 · 核心技能篇</div>
+<h1>材质与纹理处理技术</h1>
+<p class="sub">掌握材质库使用、AI纹理生成、纹理映射与坐标调整</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约40分钟阅读</span>
+<span class="hero-meta-item">🎨 材质处理</span>
+</div>
+</div>
+
+<p class="lead">材质和纹理是让3D模型具有真实感和美感的关键。本章将带你了解如何选择和应用材质，如何使用AI生成纹理，以及如何处理纹理映射中的常见问题。</p>
+
+<h2 class="section-h2">4.1 材质基础概念</h2>
+
+<h3 class="section-h3">4.1.1 PBR材质简介</h3>
+
+<p class="p">PBR（Physically Based Rendering，基于物理的渲染）材质是现代3D图形学的主流标准，它通过模拟光线与物体表面的真实物理交互来呈现材质效果。</p>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🔴</div>
+<h4>Albedo（反照率）</h4>
+<p>材质的本色，不包含光照和阴影信息</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🌊</div>
+<h4>Roughness（粗糙度）</h4>
+<p>表面光滑或粗糙的程度，影响反光清晰度</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🪞</div>
+<h4>Metallic（金属度）</h4>
+<p>表面金属特性的强弱</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📐</div>
+<h4>Normal（法线）</h4>
+<p>表面微观凹凸细节的贴图</p>
+</div>
+</div>
+
+<h3 class="section-h3">4.1.2 常见材质类型</h3>
+
+<table class="tbl">
+<thead><tr><th>材质类型</th><th>特征</th><th>应用场景</th></tr></thead>
+<tbody>
+<tr><td>金属</td><td>高反射，低粗糙度有清晰反光</td><td>工具、机械零件、装饰品</td></tr>
+<tr><td>塑料</td><td>中等反射，可为漫反射或半光泽</td><td>日常用品、电子产品外壳</td></tr>
+<tr><td>木材</td><td>纹理明显，低光泽</td><td>家具、工艺品</td></tr>
+<tr><td>玻璃</td><td>透明或半透明，高折射率</td><td>容器、窗户、装饰品</td></tr>
+<tr><td>织物</td><td>强烈漫反射，可见纤维纹理</td><td>服装、软体家具</td></tr>
+</tbody>
+</table>
+
+<h2 class="section-h2">4.2 材质库选择与管理</h2>
+
+<h3 class="section-h3">4.2.1 主流免费材质库</h3>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🆓</div>
+<h4>Poly Haven</h4>
+<p>提供高质量PBR材质，完全免费可商用</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🆓</div>
+<h4>3D Textures</h4>
+<p>提供 seamless（无缝）纹理贴图</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🆓</div>
+<h4>Texture Ninja</h4>
+<p>免费高分辨率纹理资源</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">💰</div>
+<h4>Poliigon</h4>
+<p>专业级材质库，有免费额度</p>
+</div>
+</div>
+
+<h3 class="section-h3">4.2.2 材质选择原则</h3>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 材质选择检查清单</div>
+<pre><code>选择材质时应考虑：
+□ 材质是否与模型用途匹配？
+□ 分辨率是否满足需求？（展示用需要高分辨率）
+□ 是否有合适的大小和比例？
+□ 是否包含完整的PBR通道？
+□ 许可协议是否允许商用？</code></pre>
+</div>
+
+<h2 class="section-h2">4.3 AI生成纹理技术</h2>
+
+<h3 class="section-h3">4.3.1 AI纹理生成工具</h3>
+
+<table class="tbl">
+<thead><tr><th>工具</th><th>功能</th><th>特点</th></tr></thead>
+<tbody>
+<tr><td><strong>Material Maker</strong></td><td>程序化材质生成</td><td>完全免费开源，节点式编辑</td></tr>
+<tr><td><strong>Substance Sampler</strong></td><td>AI智能材质采样</td><td>从图片自动生成PBR材质</td></tr>
+<tr><td><strong>Adobe Substance 3D</strong></td><td>专业材质设计</td><td>AI降噪、智能修补</td></tr>
+<tr><td><strong>Meshy</strong></td><td>内置材质生成</td><td>与模型生成一体化</td></tr>
+</tbody>
+</table>
+
+<h3 class="section-h3">4.3.2 Material Maker基础操作</h3>
+
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>界面认识</h4>
+<p>左侧是预设库，中间是节点编辑器，右侧是预览窗口</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>创建基础材质</h4>
+<p>从预设库拖拽一个材质到节点编辑器作为起点</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>调整参数</h4>
+<p>修改颜色、粗糙度、纹理缩放等参数</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div>
+<h4>导出材质</h4>
+<p>导出为Substance格式或图片格式</p>
+</div>
+</div>
+</div>
+
+<h2 class="section-h2">4.4 纹理映射与坐标调整</h2>
+
+<h3 class="section-h3">4.4.1 UV展开基础</h3>
+
+<p class="p">UV展开是将3D模型的表面映射到2D平面的过程，这是应用纹理的前提。</p>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 UV展开术语解释</div>
+<pre><code>UV坐标：
+- U和V代表2D平面的两个轴（区别于3D的X/Y/Z）
+- 每个顶点都有一个UV坐标，决定纹理上每一点的位置
+
+UV岛：
+- 模型上相连的面在UV空间中形成岛状区域
+- 合理排列UV岛可以提高纹理利用率
+
+接缝处理：
+- 接缝是模型上UV被切割开的边
+- 合理放置接缝可以减少纹理变形</code></pre>
+</div>
+
+<h3 class="section-h3">4.4.2 常见UV问题及解决</h3>
+
+<table class="tbl">
+<thead><tr><th>问题</th><th>原因</th><th>解决方案</th></tr></thead>
+<tbody>
+<tr><td>纹理拉伸</td><td>UV面积与实际面积差异大</td><td>重新展开UV，调整密度</td></tr>
+<tr><td>纹理重复感强</td><td>UV坐标太小，纹理被过度缩放</td><td>调整纹理平铺参数</td></tr>
+<tr><td>贴图模糊</td><td>UV分辨率不足</td><td>使用更高分辨率纹理</td></tr>
+<tr><td>接缝明显</td><td>接缝处法线或颜色不连续</td><td>调整接缝位置或使用过渡处理</td></tr>
+</tbody>
+</table>
+
+<h2 class="section-h2">4.5 视觉效果优化</h2>
+
+<h3 class="section-h3">4.5.1 材质协调原则</h3>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🎨</div>
+<h4>色彩协调</h4>
+<p>一个模型不宜超过3种主要颜色</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">✨</div>
+<h4>质感统一</h4>
+<p>相关联的部件使用相近的材质属性</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">💡</div>
+<h4>光泽对比</h4>
+<p>适当的光泽对比可以增加层次感</p>
+</div>
+</div>
+
+<h3 class="section-h3">4.5.2 渲染预览设置</h3>
+
+<p class="p">在正式渲染前，使用实时预览检查材质效果：</p>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 预览检查清单</div>
+<pre><code>□ 材质颜色是否符合设计意图？
+□ 粗糙度设置是否合理？（反光效果）
+□ 金属度设置是否正确？
+□ 纹理是否有明显的拉伸或变形？
+□ 多个视角下材质效果是否一致？
+□ 在不同光照条件下效果是否合理？</code></pre>
+</div>
+
+<h2 class="section-h2">4.6 本章小结</h2>
+
+<div class="hlbox">
+<div class="hlbox-title">📚 核心要点</div>
+<ol>
+<li>PBR材质包含Albedo、Roughness、Metallic、Normal等关键通道</li>
+<li>Material Maker是免费开源的AI纹理生成工具</li>
+<li>Poly Haven是最推荐的免费PBR材质库</li>
+<li>UV展开是纹理应用的基础，需掌握基本操作</li>
+<li>材质选择应考虑用途、分辨率、许可等因素</li>
+<li>视觉效果优化应遵循色彩协调、质感统一原则</li>
+</ol>
+</div>
+
+<div class="card green">
+<div class="card-label">课后练习</div>
+<h3>第四章技能测试</h3>
+<p><strong>实操任务：</strong>为第三章设计的收纳盒模型应用材质<br>
+<strong>要求：</strong><br>
+1. 选择或生成适合塑料材质（白色，哑光）<br>
+2. 使用Poly Haven或Material Maker创建或选择材质<br>
+3. 完成UV展开并应用材质<br>
+4. 渲染2-3张不同角度的效果图<br>
+<strong>评估标准：</strong>材质选择合理性30%、UV处理正确性30%、渲染效果40%</p>
+</div>
+
+</section>

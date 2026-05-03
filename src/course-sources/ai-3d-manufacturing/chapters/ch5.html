@@ -1,0 +1,215 @@
+<section id="ch5">
+<div class="hero">
+<div class="chapter-tag">Chapter 5 · 核心技能篇</div>
+<h1>渲染技术与输出设置</h1>
+<p class="sub">学习渲染引擎选择、光照设置、参数优化与多格式输出</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约45分钟阅读</span>
+<span class="hero-meta-item">💡 渲染技术</span>
+</div>
+</div>
+
+<p class="lead">渲染是将3D模型转化为精美图像或动画的关键步骤。本章将介绍主流渲染引擎的特性，教你如何设置光照、调整渲染参数，以及如何输出适合不同用途的文件格式。</p>
+
+<h2 class="section-h2">5.1 渲染引擎概述与选择</h2>
+
+<h3 class="section-h3">5.1.1 渲染类型对比</h3>
+
+<table class="tbl">
+<thead><tr><th>类型</th><th>原理</th><th>速度</th><th>质量</th><th>适用场景</th></tr></thead>
+<tbody>
+<tr><td><strong>实时渲染</strong></td><td>GPU实时计算</td><td>极快</td><td>中等</td><td>游戏、Web 3D、交互展示</td></tr>
+<tr><td><strong>离线渲染</strong></td><td>CPU/GPU逐步计算</td><td>慢</td><td>极高</td><td>产品渲染、影视动画</td></tr>
+<tr><td><strong>云渲染</strong></td><td>远程服务器渲染</td><td>中等</td><td>高</td><td>大批量生产、高质量需求</td></tr>
+</tbody>
+</table>
+
+<h3 class="section-h3">5.1.2 主流渲染工具推荐</h3>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">☁️</div>
+<h4>Meshy内置渲染</h4>
+<p>集成在建模工具中，即时预览效果好</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🎨</div>
+<h4>Spline渲染</h4>
+<p>Web端实时渲染，支持PBR材质</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🖥️</div>
+<h4>Blender Cycles</h4>
+<p>开源强大，路径追踪渲染器，最新版本4.3</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">☁️</div>
+<h4>Renderbus瑞云渲染</h4>
+<p>云渲染平台，服务200万+用户，支持Maya/Blender/C4D</p>
+</div>
+</div>
+
+<h2 class="section-h2">5.2 光照与阴影设置</h2>
+
+<h3 class="section-h3">5.2.1 三点照明基础</h3>
+
+<p class="p">三点照明是产品渲染中最常用的光照方案：</p>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 三点照明设置</div>
+<pre><code>主光源（Key Light）：
+- 位置：与相机约成45度角，高于模型
+- 作用：提供主要照明，决定整体亮度
+- 设置：强度1.0，色温5500K（日光）
+
+补光源（Fill Light）：
+- 位置：相机另一侧，约45度角
+- 作用：填充主光源产生的阴影
+- 设置：强度0.3-0.5，色温与主光源相近
+
+轮廓光（Rim/Back Light）：
+- 位置：模型后方，凸出模型轮廓
+- 作用：分离主体与背景
+- 设置：强度0.5-0.8，可使用暖色调</code></pre>
+</div>
+
+<h3 class="section-h3">5.2.2 环境光与HDRI</h3>
+
+<p class="p">HDRI（High Dynamic Range Image）可以提供真实的环境光照效果：</p>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🌅</div>
+<h4>HDRI来源</h4>
+<p>Poly Haven、HDRI Haven提供免费HDRI</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">⚙️</div>
+<h4>HDRI调整</h4>
+<p>旋转角度、强度、模糊度可调节</p>
+</div>
+</div>
+
+<h2 class="section-h2">5.3 渲染参数优化</h2>
+
+<h3 class="section-h3">5.3.1 关键参数详解</h3>
+
+<table class="tbl">
+<thead><tr><th>参数</th><th>说明</th><th>优化建议</th></tr></thead>
+<tbody>
+<tr><td>分辨率</td><td>输出图像的像素尺寸</td><td>根据用途选择：预览1080p，展示2K-4K，印刷4K+</td></tr>
+<tr><td>采样数</td><td>光线追踪精度</td><td>质量要求越高，采样数越高（64-512）</td></tr>
+<tr><td>降噪</td><td>减少噪点</td><td>AI降噪可以在低采样下获得干净图像</td></tr>
+<tr><td>光照缓存</td><td>全局光照精度</td><td>复杂场景需提高光照缓存精度</td></tr>
+</tbody>
+</table>
+
+<h3 class="section-h3">5.3.2 渲染质量vs速度平衡</h3>
+
+<div class="flow">
+<div class="flow-box">
+<div class="flow-box-title">快速预览</div>
+<div class="flow-box-desc">低分辨率<br>低采样数<br>开启降噪</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">标准输出</div>
+<div class="flow-box-desc">1080p-2K<br>中等采样<br>AI降噪</div>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box">
+<div class="flow-box-title">高质量</div>
+<div class="flow-box-desc">4K+分辨率<br>高采样数<br>精细调整</div>
+</div>
+</div>
+
+<h2 class="section-h2">5.4 多格式输出设置</h2>
+
+<h3 class="section-h3">5.4.1 常见3D格式对比</h3>
+
+<table class="tbl">
+<thead><tr><th>格式</th><th>特点</th><th>适用场景</th></tr></thead>
+<tbody>
+<tr><td><strong>GLB/GLTF</strong></td><td>紧凑、支持材质动画、Web原生</td><td>Web展示、AR/VR、游戏</td></tr>
+<tr><td><strong>FBX</strong></td><td>通用性强、支持动画和骨骼</td><td>游戏引擎、DCC软件互导</td></tr>
+<tr><td><strong>OBJ</strong></td><td>简单可靠、只支持网格</td><td>通用交换、3D打印</td></tr>
+<tr><td><strong>STL</strong></td><td>3D打印专用、只含网格</td><td>3D打印、CNC加工</td></tr>
+<tr><td><strong>USD/USDZ</strong></td><td>皮克斯标准、适合苹果生态</td><td>AR Quick Look、影视</td></tr>
+</tbody>
+</table>
+
+<h3 class="section-h3">5.4.2 图像格式选择</h3>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🖼️</div>
+<h4>PNG</h4>
+<p>无损压缩，支持透明背景，适合展示用</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📷</div>
+<h4>JPEG</h4>
+<p>有损压缩，文件小，适合网络分享</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🔴</div>
+<h4>EXR/HDR</h4>
+<p>32位高动态范围，用于后期合成</p>
+</div>
+</div>
+
+<h2 class="section-h2">5.5 渲染质量评估</h2>
+
+<h3 class="section-h3">5.5.1 评估维度</h3>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 渲染质量检查清单</div>
+<pre><code>□ 整体曝光是否正确？高光和阴影是否有细节？
+□ 材质质感是否真实？反光是否符合物理规律？
+□ 阴影边缘是否自然？硬阴影还是软阴影？
+□ 有无噪点或闪烁？
+□ 景深效果是否自然（如果使用了DOF）？
+□ 色彩是否协调？白平衡是否正确？
+□ 有无明显的锯齿或贴图错误？</code></pre>
+</div>
+
+<h3 class="section-h3">5.5.2 常见问题及解决</h3>
+
+<table class="tbl">
+<thead><tr><th>问题</th><th>原因</th><th>解决方案</th></tr></thead>
+<tbody>
+<tr><td>整体过曝</td><td>光照过强/曝光参数过高</td><td>降低光源强度或曝光值</td></tr>
+<tr><td>阴影过黑</td><td>补光不足</td><td>增加fill light或提高环境光</td></tr>
+<tr><td>材质发暗</td><td>金属度/粗糙度设置不当</td><td>检查PBR参数</td></tr>
+<tr><td>噪点过多</td><td>采样数不足</td><td>提高采样或开启降噪</td></tr>
+</tbody>
+</table>
+
+<h2 class="section-h2">5.6 本章小结</h2>
+
+<div class="hlbox">
+<div class="hlbox-title">📚 核心要点</div>
+<ol>
+<li>实时渲染适合交互展示，离线渲染适合高质量静态图</li>
+<li>三点照明（主光+补光+轮廓光）是产品渲染基础</li>
+<li>HDRI可以提供真实的环境光照效果</li>
+<li>渲染参数需在质量与速度间平衡</li>
+<li>GLB/GLTF是Web 3D最佳格式，STL是3D打印专用格式</li>
+<li>渲染后应从曝光、材质、阴影、噪点等维度评估质量</li>
+</ol>
+</div>
+
+<div class="card green">
+<div class="card-label">课后练习</div>
+<h3>第五章技能测试</h3>
+<p><strong>实操任务：</strong>为第三章设计的收纳盒模型进行渲染输出<br>
+<strong>要求：</strong><br>
+1. 使用三点照明设置灯光<br>
+2. 选择合适的HDRI环境<br>
+3. 渲染4张不同角度的产品展示图<br>
+4. 输出一张透明背景的PNG主图<br>
+5. 导出GLB格式用于Web展示<br>
+<strong>评估标准：</strong>灯光设置合理性30%、渲染质量40%、格式正确性30%</p>
+</div>
+
+</section>

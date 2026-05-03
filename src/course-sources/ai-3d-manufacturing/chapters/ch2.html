@@ -1,0 +1,417 @@
+<section id="ch2">
+<div class="hero">
+<div class="chapter-tag">Chapter 2 · 基础入门篇</div>
+<h1>AI 3D建模工具实操入门</h1>
+<p class="sub">掌握主流AI 3D建模工具的基本操作与核心功能</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约50分钟阅读</span>
+<span class="hero-meta-item">🛠️ 工具实操</span>
+</div>
+</div>
+
+<p class="lead">本章将通过详细的分步指导，带您实际掌握从在线平台（Meshy、Tripo3D）到开源模型（TripoSR、TRELLIS.2）的完整AI 3D建模工具链。您将学会从界面布局到模型生成的完整操作流程。</p>
+
+<h2 class="section-h2">2.1 Meshy界面布局与核心功能</h2>
+
+<h3 class="section-h3">2.1.1 界面概览</h3>
+
+<p class="p">Meshy是一款基于浏览器的AI 3D建模工具，其界面主要分为以下几个区域：</p>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 界面布局说明</div>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│  顶部导航栏：Logo、方案选择、导出按钮、用户信息    │
+├────────────┬────────────────────────────────────────┤
+│            │                                        │
+│  左侧工具栏 │         中央画布区域                   │
+│  - 文本生成  │         (3D模型预览与交互)            │
+│  - 图片生成  │                                        │
+│  - 历史记录  │                                        │
+│            │                                        │
+├────────────┴────────────────────────────────────────┤
+│  底部属性面板：材质、微调、渲染设置                 │
+└─────────────────────────────────────────────────────┘</code></pre>
+</div>
+
+<h3 class="section-h3">2.1.2 文本转3D模型操作流程</h3>
+
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>步骤1：进入文本生成模式</h4>
+<p>点击左侧工具栏的"Text to 3D"按钮，进入文本生成模式。</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>步骤2：输入描述文本</h4>
+<p>在文本框中输入您想要生成的3D模型描述。建议使用英文描述以获得最佳效果。</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>步骤3：调整生成参数</h4>
+<p>设置模型风格（通用/卡通/写实）、分辨率、是否包含纹理等参数。</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div>
+<h4>步骤4：生成与预览</h4>
+<p>点击"Generate"按钮，等待AI生成模型。生成完成后可以在画布区域旋转、缩放预览。</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">5</div>
+<div>
+<h4>步骤5：导出模型</h4>
+<p>满意后点击"Export"按钮，选择导出格式（GLB/FBX/OBJ等）。</p>
+</div>
+</div>
+</div>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 提示词示例</div>
+<pre><code>推荐使用的英文描述格式：
+
+基础描述：
+"a cute robot toy with round head and big eyes"
+
+详细描述：
+"a vintage wooden bookshelf, 1 meter tall, with 4 shelves,
+brown oak wood texture, classic design"
+
+包含材质：
+"a red ceramic coffee mug with white interior,
+glossy finish, handle on the right side"</code></pre>
+</div>
+
+<h3 class="section-h3">2.1.3 图片转3D模型操作流程</h3>
+
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>步骤1：进入图片生成模式</h4>
+<p>点击左侧工具栏的"Image to 3D"按钮。</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>步骤2：上传参考图片</h4>
+<p>点击上传按钮，选择一张清晰的产品图片或设计图。建议使用多角度图片（3-5张）以获得更好的生成效果。</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>步骤3：设置参数</h4>
+<p>选择生成模式（快速/精细）、是否自动补全背面等。</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div>
+<h4>步骤4：生成与编辑</h4>
+<p>生成完成后可以对模型进行局部编辑，如调整特定区域的结构或材质。</p>
+</div>
+</div>
+</div>
+
+<h2 class="section-h2">2.2 Tripo3D界面布局与核心功能</h2>
+
+<h3 class="section-h3">2.2.1 Tripo3D主要特点</h3>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">⚡</div>
+<h4>快速生成</h4>
+<p>平均30秒内完成模型生成</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🎨</div>
+<h4>自动材质</h4>
+<p>AI自动生成PBR材质</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📦</div>
+<h4>多种格式</h4>
+<p>支持导出主流3D格式</p>
+</div>
+</div>
+
+<h3 class="section-h3">2.2.2 Tripo3D操作流程</h3>
+
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>注册与登录</h4>
+<p>访问Tripo3D官网，使用邮箱或Google账号注册登录。</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>选择生成模式</h4>
+<p>首页提供"Create from Text"和"Create from Image"两个主要入口。</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>输入内容</h4>
+<p>文本模式：输入详细的物体描述（推荐英文）<br>
+图片模式：上传参考图片</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div>
+<h4>等待生成</h4>
+<p>显示生成进度条，通常30秒-2分钟完成。</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">5</div>
+<div>
+<h4>后处理与导出</h4>
+<p>生成完成后可进行简单的编辑调整，然后导出。</p>
+</div>
+</div>
+</div>
+
+<h2 class="section-h2">2.3 开源模型实操：TripoSR</h2>
+
+<p class="p">TripoSR是由Stability AI与VAST联合开发的开源模型，0.5秒即可从单张图片生成高质量3D模型，完全免费可商用。</p>
+
+<h3 class="section-h3">2.3.1 TripoSR部署方式</h3>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">☁️</div>
+<h4>云端体验</h4>
+<p>通过HyperAI、OpenBayes等平台在线体验，无需本地部署</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">💻</div>
+<h4>本地部署</h4>
+<p>从GitHub克隆代码，自行配置Python环境运行</p>
+</div>
+</div>
+
+<h3 class="section-h3">2.3.2 云端使用流程（推荐）</h3>
+
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>访问在线Demo</h4>
+<p>访问HyperAI官网的TripoSR教程页面，或在OpenBayes上搜索"TripoSR"</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>克隆教程</h4>
+<p>点击"克隆"将教程复制到自己的容器中</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>上传图片</h4>
+<p>在Demo界面上传单张产品图片</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div>
+<h4>生成与下载</h4>
+<p>等待约0.5-2秒生成完成，下载GLB/OBJ格式模型</p>
+</div>
+</div>
+</div>
+
+<h3 class="section-h3">2.3.3 本地部署命令</h3>
+
+<div class="hlbox">
+<div class="hlbox-title">💻 TripoSR本地部署代码</div>
+<pre><code># 克隆仓库
+git clone https://github.com/VAST-AI-Research/TripoSR.git
+cd TripoSR
+
+# 创建虚拟环境
+conda create -n trisr python=3.10
+conda activate trisr
+
+# 安装依赖
+pip install torch torchvision torchaudio
+pip install -r requirements.txt
+
+# 运行推理
+python demo.py --input path/to/your/image.jpg --output result.glb</code></pre>
+</div>
+
+<h2 class="section-h2">2.4 开源模型实操：TRELLIS.2</h2>
+
+<p class="p">TRELLIS.2是微软发布的40亿参数开源3D生成模型，生成高达1536³分辨率的PBR纹理资产，质量业界领先。</p>
+
+<h3 class="section-h3">2.4.1 TRELLIS.2核心特点</h3>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🎯</div>
+<h4>高保真材质</h4>
+<p>O-Voxel稀疏体素结构，生成完整PBR材质</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">⚡</div>
+<h4>高效生成</h4>
+<p>3-10秒完成高质量模型生成</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🆓</div>
+<h4>MIT许可</h4>
+<p>免费可商用，代码权重完全开放</p>
+</div>
+</div>
+
+<h3 class="section-h3">2.4.2 TRELLIS.2云端使用</h3>
+
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>访问项目页面</h4>
+<p>访问 microsoft.github.io/TRELLIS 或 GitHub项目页面</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>选择Demo</h4>
+<p>使用官方提供的在线Demo体验</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>上传图片</h4>
+<p>上传清晰的产品图片或设计图</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div>
+<h4>调整参数</h4>
+<p>设置分辨率（512/1024/1536）和采样步数</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">5</div>
+<div>
+<h4>导出模型</h4>
+<p>生成完成后导出为GLB等格式</p>
+</div>
+</div>
+</div>
+
+<h2 class="section-h2">2.6 常用快捷键与操作技巧</h2>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 3D画布通用快捷键</div>
+<pre><code>鼠标操作：
+- 左键拖拽：旋转模型视角
+- 右键拖拽：平移视角
+- 滚轮：缩放模型大小
+- Shift + 左键：快速旋转
+
+键盘快捷键：
+- Space：重置视角到初始位置
+- Delete/Backspace：删除选中对象
+- Ctrl + Z：撤销操作
+- Ctrl + S：保存项目
+- Ctrl + C/V：复制/粘贴
+
+视角快捷键：
+- 数字键1：正视图
+- 数字键3：右视图
+- 数字键7：俯视图
+- 数字键0：等轴测图</code></pre>
+</div>
+
+<h2 class="section-h2">2.7 模型精度控制与优化技巧</h2>
+
+<h3 class="section-h3">2.7.1 影响模型精度的因素</h3>
+
+<table class="tbl">
+<thead><tr><th>因素</th><th>高精度效果</th><th>低精度效果</th></tr></thead>
+<tbody>
+<tr><td>多边形数量</td><td>细节丰富，曲面平滑</td><td>棱角分明，面状感明显</td></tr>
+<tr><td>纹理分辨率</td><td>细节清晰，质感真实</td><td>模糊，像素化明显</td></tr>
+<tr><td>UV展开质量</td><td>贴图对齐准确，无拉伸</td><td>贴图错位，变形明显</td></tr>
+</tbody>
+</table>
+
+<h3 class="section-h3">2.7.2 优化建议</h3>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">✅</div>
+<h4>合理选择精度</h4>
+<p>屏幕展示用低精度即可；3D打印根据打印机精度调整</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">✅</div>
+<h4>减少不必要的细节</h4>
+<p>远处物体可用简化模型，近处物体才需要高精度</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">✅</div>
+<h4>使用LOD技术</h4>
+<p>同一物体准备多个精度版本，根据需要切换</p>
+</div>
+</div>
+
+<h2 class="section-h2">2.8 常见问题诊断与解决</h2>
+
+<table class="tbl">
+<thead><tr><th>问题现象</th><th>可能原因</th><th>解决方案</th></tr></thead>
+<tbody>
+<tr><td>生成失败</td><td>网络连接问题/描述不符合物理规律</td><td>检查网络，重试；简化描述词</td></tr>
+<tr><td>模型变形</td><td>输入图片质量低/物体被遮挡</td><td>使用清晰无遮挡的图片</td></tr>
+<tr><td>多边形过多</td><td>AI生成精度过高</td><td>使用减面工具优化</td></tr>
+<tr><td>纹理错位</td><td>UV展开问题</td><td>重新烘焙或手动调整UV</td></tr>
+<tr><td>导出格式不支持</td><td>工具不支持该格式</td><td>转换为支持的中间格式如OBJ</td></tr>
+</tbody>
+</table>
+
+<h2 class="section-h2">2.9 本章小结</h2>
+
+<div class="hlbox">
+<div class="hlbox-title">📚 核心要点</div>
+<ol>
+<li>Meshy和Tripo3D适合零基础入门，界面直观易上手</li>
+<li>TripoSR是最快的开源模型（0.5秒），适合本地部署</li>
+<li>TRELLIS.2提供最高质量的PBR材质（1536³分辨率）</li>
+<li>文本描述推荐使用英文，并包含详细的尺寸、材质信息</li>
+<li>掌握3D画布操作快捷键可大幅提升工作效率</li>
+<li>根据用途合理选择模型精度，平衡质量与性能</li>
+</ol>
+</div>
+
+<div class="card green">
+<div class="card-label">课后练习</div>
+<h3>第二章技能测试</h3>
+<p><strong>实操任务1：</strong>使用Meshy文本转3D功能，生成一个"棕色木质书架，高度1米，4层搁板"模型，并导出为GLB格式<br>
+<strong>实操任务2：</strong>使用Tripo3D图片转3D功能，上传一张产品图片生成3D模型<br>
+<strong>实操任务3（选做）：</strong>在HyperAI或OpenBayes上体验TripoSR，上传图片测试0.5秒生成效果<br>
+<strong>思考题：</strong>对比在线平台（Meshy/Tripo3D）和开源模型（TripoSR/TRELLIS.2）的优缺点，分析各适用场景</p>
+</div>
+
+</section>

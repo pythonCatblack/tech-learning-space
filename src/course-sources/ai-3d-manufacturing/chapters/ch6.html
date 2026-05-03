@@ -1,0 +1,281 @@
+<section id="ch6">
+<div class="hero">
+<div class="chapter-tag">Chapter 6 · 核心技能篇</div>
+<h1>实体生产工艺实践</h1>
+<p class="sub">3D打印、CNC加工、注塑成型的原理与实操流程</p>
+<div class="hero-meta">
+<span class="hero-meta-item">📖 约50分钟阅读</span>
+<span class="hero-meta-item">🏭 生产工艺</span>
+</div>
+</div>
+
+<p class="lead">3D模型只有转化为实体物件才能真正发挥价值。本章将详细介绍3D打印技术、CNC加工和注塑成型三大生产工艺，帮助你根据不同需求选择最合适的生产方式。</p>
+
+<h2 class="section-h2">6.1 3D打印技术详解</h2>
+
+<h3 class="section-h3">6.1.1 主流3D打印技术对比</h3>
+
+<table class="tbl">
+<thead><tr><th>技术</th><th>原理</th><th>材料</th><th>精度</th><th>速度</th><th>成本</th></tr></thead>
+<tbody>
+<tr><td><strong>FDM（熔融沉积）</strong></td><td>塑料线材加热挤出</td><td>PLA、ABS、PETG</td><td>0.1-0.3mm</td><td>慢</td><td>低</td></tr>
+<tr><td><strong>SLA（光固化）</strong></td><td>激光固化光敏树脂</td><td>UV树脂</td><td>0.025-0.1mm</td><td>中等</td><td>中</td></tr>
+<tr><td><strong>SLS（粉末烧结）</strong></td><td>激光烧结粉末材料</td><td>尼龙、金属粉末</td><td>0.1-0.2mm</td><td>中等</td><td>高</td></tr>
+<tr><td><strong>DLP（数字光投影）</strong></td><td>投影固化光敏树脂</td><td>UV树脂</td><td>0.025-0.1mm</td><td>快</td><td>中</td></tr>
+</tbody>
+</table>
+
+<h3 class="section-h3">6.1.2 FDM 3D打印详解</h3>
+
+<p class="p">FDM是最适合初学者的3D打印技术：</p>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🟢</div>
+<h4>PLA（聚乳酸）</h4>
+<p>最常用，易打印，环保，低温要求</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🟡</div>
+<h4>ABS（工程塑料）</h4>
+<p>强度高，耐热，需加热床</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🔵</div>
+<h4>PETG（PET改性的）</h4>
+<p>兼具PLA易用性和ABS强度</p>
+</div>
+</div>
+
+<h3 class="section-h3">6.1.3 打印参数设置</h3>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 关键打印参数</div>
+<pre><code>层高（Layer Height）：
+- 0.2mm：标准质量，速度快
+- 0.1mm：高质量，表面更光滑
+- 0.05mm：精细打印，打印时间长
+
+填充率（Infill）：
+- 0-20%：仅展示用，空心结构
+- 40-60%：平衡强度和材料用量
+- 80-100%：需要高强度的功能件
+
+打印速度：
+- 40-60mm/s：标准速度
+- 20-30mm/s：高精度打印
+- 80-100mm/s：快速打印，降低精度
+
+支撑结构：
+- 需要时选择"自动"或"接触"
+- 接触点越小越容易去除</code></pre>
+</div>
+
+<h2 class="section-h2">6.2 切片软件操作</h2>
+
+<h3 class="section-h3">6.2.1 主流切片软件</h3>
+
+<table class="tbl">
+<thead><tr><th>软件</th><th>特点</th><th>价格</th><th>推荐场景</th></tr></thead>
+<tbody>
+<tr><td><strong>PrusaSlicer</strong></td><td>功能丰富，开源免费，最新版本2.4+</td><td>免费</td><td>最佳综合选择</td></tr>
+<tr><td><strong>Cura</strong></td><td>用户最多社区大</td><td>免费</td><td>初学者入门</td></tr>
+<tr><td><strong>Bambu Studio</strong></td><td>切片速度快，现代化UI</td><td>免费</td><td>有Bambu打印机</td></tr>
+<tr><td><strong>OrcaSlicer</strong></td><td>高级功能强</td><td>免费</td><td>高级用户</td></tr>
+</tbody>
+</table>
+
+<h3 class="section-h3">6.2.2 切片流程</h3>
+
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>
+<h4>导入模型</h4>
+<p>将STL/OBJ文件导入切片软件</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div>
+<h4>调整方向</h4>
+<p>旋转模型至最佳打印方向，减少支撑使用</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div>
+<h4>设置参数</h4>
+<p>选择材料、层高、填充率、速度等</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div>
+<h4>添加支撑</h4>
+<p>必要时手动添加或调整支撑</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">5</div>
+<div>
+<h4>切片预览</h4>
+<p>检查打印路径，估算时间</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">6</div>
+<div>
+<h4>导出G-code</h4>
+<p>保存到SD卡或直接传输到打印机</p>
+</div>
+</div>
+</div>
+
+<h2 class="section-h2">6.3 后处理工艺</h2>
+
+<h3 class="section-h3">6.3.1 去除支撑和打磨</h3>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🔧</div>
+<h4>去除支撑</h4>
+<p>使用钳子或刮刀小心去除支撑结构</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📄</div>
+<h4>打磨</h4>
+<p>从粗砂纸到细砂纸渐进打磨</p>
+</div>
+</div>
+
+<h3 class="section-h3">6.3.2 表面处理与上色</h3>
+
+<table class="tbl">
+<thead><tr><th>工艺</th><th>方法</th><th>效果</th></tr></thead>
+<tbody>
+<tr><td>喷漆</td><td>气泵+喷笔/自喷漆</td><td>均匀、光滑</td></tr>
+<tr><td>浸染</td><td>PLA浸入染色剂</td><td>渗透内部染色</td></tr>
+<tr><td>水贴</td><td>水转印贴纸</td><td>复杂图案</td></tr>
+<tr><td>环氧涂层</td><td>环氧树脂涂刷</td><td>高光泽保护</td></tr>
+</tbody>
+</table>
+
+<h2 class="section-h2">6.4 CNC加工简介</h2>
+
+<h3 class="section-h3">6.4.1 CNC加工原理</h3>
+
+<p class="p">CNC（Computer Numerical Control）加工是通过数控机床切削原材料来制造零件：</p>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🪚</div>
+<h4>切削加工</h4>
+<p>通过旋转刀具切削原材料</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">📐</div>
+<h4>材料</h4>
+<p>木材、金属、塑料、复合材料</p>
+</div>
+</div>
+
+<h3 class="section-h3">6.4.2 设计注意事项</h3>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 CNC加工设计要点</div>
+<pre><code>最小细节：
+- 刀具直径限制最小细节尺寸
+- 典型最小细节：3-5mm
+
+拔模角度：
+- 需要拔模角度（通常2-5度）以便脱模
+
+壁厚：
+- 建议最小壁厚：2-3mm
+- 薄壁件容易变形
+
+刀具轨迹：
+- 考虑刀具可达性
+- 深腔需要长刀具或分步加工</code></pre>
+</div>
+
+<h2 class="section-h2">6.5 注塑成型简介</h2>
+
+<h3 class="section-h3">6.5.1 注塑原理</h3>
+
+<p class="p">注塑成型是将熔融塑料注入模具腔体，冷却后形成零件的大批量生产工艺。</p>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">📦</div>
+<h4>批量生产</h4>
+<p>适合大批量（1000件以上）</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">💰</div>
+<h4>模具成本</h4><p>模具开发周期长、费用高</p>
+</div>
+</div>
+
+<h3 class="section-h3">6.5.2 设计要点</h3>
+
+<div class="hlbox">
+<div class="hlbox-title">💡 注塑件设计要点</div>
+<pre><code>壁厚均匀：
+- 避免厚薄差异造成缩水痕
+- 建议壁厚：1.5-3mm
+
+圆角过渡：
+- 所有尖角应使用圆角
+- 最小圆角：壁厚的1/3
+
+拔模角度：
+- 必须有拔模角度（1-2度）
+- 抛光面需要更大角度
+
+加强筋设计：
+- 使用加强筋增强而非增加壁厚
+- 加强筋厚度：主壁厚的50-60%</code></pre>
+</div>
+
+<h2 class="section-h2">6.6 生产方式选择指南</h2>
+
+<table class="tbl">
+<thead><tr><th>场景</th><th>推荐方式</th><th>原因</th></tr></thead>
+<tbody>
+<tr><td>原型验证（1-10件）</td><td>FDM 3D打印</td><td>成本低、周期短</td></tr>
+<tr><td>小批量（10-100件）</td><td>SLA 3D打印</td><td>精度高、表面光滑</td></tr>
+<tr><td>中批量（100-1000件）</td><td>CNC加工</td><td>材料选择广、精度高</td></tr>
+<tr><td>大批量（1000件+）</td><td>注塑成型</td><td>单件成本最低</td></tr>
+</tbody>
+</table>
+
+<h2 class="section-h2">6.7 本章小结</h2>
+
+<div class="hlbox">
+<div class="hlbox-title">📚 核心要点</div>
+<ol>
+<li>FDM最适合初学者，材料便宜、设备简单</li>
+<li>SLA/DLP适合需要高表面质量的精细件</li>
+<li>切片软件是关键工具，PrusaSlicer是最佳综合选择</li>
+<li>后处理包括去支撑、打磨、上色等工艺</li>
+<li>设计时需考虑生产工艺的限制因素</li>
+<li>生产方式选择应根据批量数量和精度要求决定</li>
+</ol>
+</div>
+
+<div class="card green">
+<div class="card-label">课后练习</div>
+<h3>第六章技能测试</h3>
+<p><strong>实操任务：</strong>将第三章设计的收纳盒进行3D打印制作<br>
+<strong>要求：</strong><br>
+1. 使用PrusaSlicer进行切片处理<br>
+2. 设置合理的打印参数（层高、填充率）<br>
+3. 分析是否需要支撑结构<br>
+4. 预估打印时间和材料用量<br>
+5. 制定后处理方案<br>
+<strong>评估标准：</strong>参数设置合理性40%、支撑分析正确性20%、后处理方案完整性40%</p>
+</div>
+
+</section>
