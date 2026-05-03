@@ -116,8 +116,7 @@ export const ai3DManufacturingCourse: CourseDefinition = {
   slug: 'ai-3d-manufacturing',
   title: 'AI 3D建模与实体生产完全指南',
   subtitle: '从0开始利用AI技术设计制作3D模型并实现实体生产',
-  description:
-    '零基础学习者能够系统掌握AI 3D建模技能，从创意构思到实体生产全流程覆盖。',
+  description: '零基础学习者能够系统掌握AI 3D建模技能，从创意构思到实体生产全流程覆盖。',
   icon: '🎨',
   sourceRoot: path.resolve(process.cwd(), 'src/course-sources/ai-3d-manufacturing/chapters'),
   storageKey: 'ai-3d-manufacturing-course-progress',
