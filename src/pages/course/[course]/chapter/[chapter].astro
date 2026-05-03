@@ -3,7 +3,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import CourseLayout from '../../../../layouts/CourseLayout.astro';
 import RawHtml from '../../../../components/RawHtml.astro';
+import MediaContent from '../../../../components/MediaContent';
+import TableOfContents from '../../../../components/TableOfContents';
 import { getCourseBySlug, courses } from '../../../../courses';
+import { extractToc } from '../../../../lib/toc';
+import { transformMediaEmbeds } from '../../../../lib/media';
 
 export async function getStaticPaths() {
   return courses.flatMap((course) =>
@@ -20,6 +24,46 @@ const { course, chapter } = Astro.props as {
 };
 const htmlPath = path.join(course.sourceRoot, chapter.sourceFile);
 const rawHtml = fs.readFileSync(htmlPath, 'utf-8');
+
+// Transform media embeds in HTML (extract placeholders for React hydration)
+const { transformedHtml, mediaEmbeds } = transformMediaEmbeds(rawHtml);
+const hasMediaEmbeds = mediaEmbeds.length > 0;
+
+// Extract TOC from HTML
+const tocItems = extractToc(transformedHtml);
+
+// Add IDs to headings in HTML for anchor links
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/[^\w一-鿿-]/g, '') // Keep alphanumeric, Chinese chars, and hyphens
+    .replace(/--+/g, '-') // Replace multiple hyphens with single
+    .replace(/^-+|-+$/g, ''); // Trim hyphens from start/end
+}
+
+function extractText(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .trim();
+}
+
+let processedHtml = transformedHtml;
+// Add IDs to h2.section-h2 and h3.section-h3
+processedHtml = processedHtml.replace(
+  /<(h[23])\s+class="section-h[23]">([\s\S]*?)<\/\1>/gi,
+  (match, tag, content) => {
+    const text = extractText(content);
+    const id = slugify(text);
+    return `<${tag} class="section-h${tag === 'h2' ? '2' : '3'}" id="${id}">${content}</${tag}>`;
+  }
+);
+
 const currentIndex = course.chapters.findIndex((item) => item.id === chapter.id);
 const previousChapter = currentIndex > 0 ? course.chapters[currentIndex - 1] : undefined;
 const nextChapter =
@@ -40,7 +84,15 @@ const nextChapter =
     </div>
   </section>
 
-  <RawHtml html={rawHtml} />
+  <div class="chapter-toc-wrapper">
+    <TableOfContents client:load items={tocItems} />
+  </div>
+
+  {hasMediaEmbeds ? (
+    <MediaContent client:load html={processedHtml} mediaEmbeds={mediaEmbeds} />
+  ) : (
+    <RawHtml html={processedHtml} />
+  )}
 
   <div class="nav-foot">
     {

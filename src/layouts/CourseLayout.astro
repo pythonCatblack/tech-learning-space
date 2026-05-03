@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import ReadingProgressIsland from '../components/ReadingProgressIsland';
+import Search from '../components/Search';
 import type { CourseDefinition } from '../courses/types';
 
 interface Props {
@@ -79,6 +80,10 @@ function chapterHref(chapterId: string) {
                   {course.subtitle}
                 </div>
               </div>
+            </div>
+
+            <div class="sidebar-search-container">
+              <Search client:load />
             </div>
 
             <div class="sidebar-search">
