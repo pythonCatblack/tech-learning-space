@@ -219,6 +219,20 @@ A. 使用感知心理学理论（如Preattentive Processing、Change Blindness�
 A. 倾向得分匹配（PSM）假设条件独立（CIA）：给定倾向得分X，treatment assignment T与潜在结果(Y₀,Y₁)条件独立，使用匹配估计ATT=E[Y₁-Y₀|T=1]；工具变量法（IV）假设排他性限制（exclusion restriction）和相关性条件，使用两阶段最小二乘法（2SLS）估计LATE（局部平均处理效应）；PSM依赖重叠假设（overlap），IV依赖外生性假设；敏感性分析（Sensitivity Analysis）用于检验假设的稳健性，使用E-values量化未观测混杂的耐受度　B. 因果效应只能通过随机实验估计；观察数据无法估计因果效应　C. A/B测试不存在选择偏差；随机分配保证了两组可比性　D. 使用简单的差分法；因果效应=实验组均值-对照组均值即可<br><br>
 <strong>5. 在数据隐私保护中，如何形式化地定义"隐私泄露"并设计满足差分隐私（Differential Privacy）的算法？若使用机制设计（Mechanism Design）框架，隐私保护预算ε如何影响数据发布的有用性（Utility）？DP的严格定义（ε-DP或(ε,δ)-DP）中的参数如何影响隐私保证的强度？</strong><br>
 A. ε-DP定义：相邻数据集D和D'（相差一条记录），算法M满足P(M(D)∈S) ≤ e^ε · P(M(D') ∈ S)对所有可测集S成立；隐私预算ε越小隐私保护越强，但可用性越低（噪声方差与ε²成反比）；使用指数机制（Exponential Mechanism）设计满足DP的聚合算法，敏感性（Sensitivity）分析确定所需噪声规模；使用隐私会计（Privacy Accounting）跟踪累积隐私损失，Renyi差分隐私作为ε-DP的平滑替代提供更严格的组合保证，隐私预算分配策略影响整体系统的隐私-可用性权衡　B. 差分隐私需要添加大量噪声；无法在保护隐私的同时保持数据有用性　C. 隐私泄露只能事后检测；无法先验地定义　D. 使用简单的数据脱敏即可；不需要形式化的隐私定义</p>
+<details class="quiz-answer">
+<summary>参考答案</summary>
+<div>
+<p><strong>答案：1.A　2.A　3.A　4.A　5.A</strong></p>
+<p><strong>解析：</strong></p>
+<ol style="font-size:0.9em; color:#666;">
+<li>Bonferroni控制FWER（所有检验中至少一次假阳性的概率），适用于验证性场景。BH控制FDR（阳性结果中假阳性的比例），适用于探索性场景。BH使用有序p值的拒绝域构造，m>100时功效显著优于Bonferroni。</li>
+<li>使用Item2Vec将用户行为序列类比为句子，商品类比为单词，使用Skip-gram训练商品嵌入。用户嵌入=其行为商品的嵌入均值/加权求和，泛化能力来自协同过滤思想——相似行为模式的商品在嵌入空间中距离更近。</li>
+<li>使用感知心理学理论（Preattentive Processing、Change Blindness）和Mackinlay的Expressiveness-Effectiveness框架。量化指标包括数据墨水比（Data-Ink Ratio）、Lie Factor、视觉搜索效率。神经网络学习从数据特征到可视化配置的映射。</li>
+<li>PSM假设条件独立（CIA），使用匹配估计ATT=E[Y₁-Y₀|T=1]。IV假设排他性限制和相关性条件，使用2SLS估计LATE。敏感性分析（E-values）用于检验假设的稳健性。</li>
+<li>ε-DP定义：相邻数据集D和D'，算法M满足P(M(D)∈S) ≤ e^ε · P(M(D') ∈ S)。隐私预算ε越小保护越强，但可用性越低。Renyi差分隐私提供更严格的组合保证。</li>
+</ol>
+</div>
+</details>
 </div>
 
 </section>

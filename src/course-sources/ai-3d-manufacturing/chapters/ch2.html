@@ -495,6 +495,20 @@ A. 文本-图像-3D跨模态对齐的端到端统一　B. 推理步数可从50�
 A. Meshy/Tripo3D在线平台的订阅费用在规模化后将超过本地部署TCO　B. TripoSR本地部署在1000模型/日时，其GPU利用率会出现显著瓶颈　C. TRELLIS.2的1536³输出在Web 3D场景下需要额外的DRACO压缩　D. Hunyuan3D 2.1的PBR材质生成会增加约40%的后处理时间<br><br>
 <strong>5. 某项目需要将AI生成的3D模型无缝集成至WebGL实时渲染管线，并要求在移动端保持30fps以上的交互流畅度。以下技术选型的权衡分析，合理的是？</strong><br>
 A. GLB格式的DRACO压缩可无损降低约80%传输量，是唯一选择　B. 1536³分辨率的PBR纹理在移动端必须降采样至512²才能保证性能　C. 3DGS（3D Gaussian Splatting）格式相比Mesh在相同质量下渲染速度更快，但不支持PBR材质　D. USDZ格式在iOS Quick Look中的兼容性优势使其成为跨平台AR最优解</p>
+<details class="quiz-answer">
+<summary>参考答案</summary>
+<div>
+<p><strong>答案：1.C　2.D　3.C　4.C　5.B</strong></p>
+<p><strong>解析：</strong></p>
+<ol style="font-size:0.9em; color:#666;">
+<li>TRELLIS.2的O-Voxel稀疏体素在1536³分辨率下仅对表面体素进行特征存储，无关区域跳过，实现稀疏性。</li>
+<li>TripoSR的0.5秒生成速度源于固定分辨率下的步数压缩与early exit策略，而非复杂架构。</li>
+<li>Hunyuan3D 2.1的DiT架构使显存占用与模型参数呈线性而非平方关系，便于Scaling。</li>
+<li>Hunyuan3D的PBR材质生成确实增加约40%后处理时间，这是质量与效率的权衡。</li>
+<li>1536³分辨率的PBR纹理在移动端必须降采样至512²才能保证30fps以上的渲染性能。</li>
+</ol>
+</div>
+</details>
 </div>
 
 </section>

@@ -331,6 +331,19 @@ A. 多目标优化：max (CTR, CVR, NPS) subject to 推荐延迟约束P99<200ms�
 A. 协作Agent问题可以建模为随即博弈（Stochastic Game）；计算一般随即博弈的纳什均衡是PPAD-complete问题（属于narrow complexity class），在多Agent系统中通常使用虚拟博弈（Fictitious Play）或强化学习近似求解均衡策略；当Agent数量增加时，均衡计算复杂度指数爆炸，实际中使用均值场博弈（Mean Field Game）近似，将多Agent交互简化为Agent与"平均场"的交互，将复杂度从O(n²)降低到O(1)，同时使用注意力机制（Attention）建模Agent间的依赖关系而不显式计算均衡　B. 纳什均衡总是存在且唯一；可以直接通过迭代求解　C. Agent协作不存在博弈；完全合作场景下所有Agent目标一致，只需优化联合效用　D. 纳什均衡是多项式时间可解的；可以使用线性规划求解<br><br>
 <strong>4. 在AI-TaskManager的综合实战中，如何将课程所学的全周期AI赋能方法论整合为统一的优化框架？若将"开发效率"、"产品质量"、"团队协作"建模为该框架的三个核心维度，如何使用多目标优化理论分析三个维度之间的权衡关系，并找到项目的最优工作流程配置？</strong><br>
 A. 使用多目标优化框架：max (开发效率, 产品质量, 团队协作) subject to 资源约束（人力、时间、预算）；使用Pareto优化分析三个维度的非支配关系，识别不同配置下的Pareto前沿点，使用层次分析过程（AHP）确定三维度权重，通过敏感性分析检验权重变化对最优配置的影响，使用数据驱动的方法从历史项目数据学习维度间的相关结构（如相关分析显示产品质量与团队协作强正相关(r=0.78)，与开发效率中等负相关(r=-0.45)），为项目配置优化提供定量依据，同时使用What-if分析模拟不同资源配置场景的结果分布，支持项目经理的鲁棒决策　B. 三个维度不存在权衡；最佳配置同时优化三个目标达到全局最优　C. 只关注开发效率；质量和协作是开发的自然结果　D. 权衡分析是定性的；无法量化</p>
+<details class="quiz-answer">
+<summary>参考答案</summary>
+<div>
+<p><strong>答案：1.A　2.A　3.A　4.A</strong></p>
+<p><strong>解析：</strong></p>
+<ol style="font-size:0.9em; color:#666;">
+<li>状态=用户当前上下文，动作=推荐列表排序，奖励=即时反馈+延迟反馈（次日留存）。使用Actor-Critic架构，熵正则化鼓励探索避免过早收敛到次优策略，用户生命周期价值（LTV）作为辅助奖励信号。</li>
+<li>多目标优化max (CTR, CVR, NPS) subject to 推荐延迟约束P99<200ms。帕累托前沿使用NSGA-II或MOEA/D算法搜索，解的形态通常是非凸的。参考点方法从帕累托前沿选择运营指标。</li>
+<li>协作Agent问题建模为随即博弈（Stochastic Game）。计算一般随即博弈的纳什均衡是PPAD-complete问题。均值场博弈（Mean Field Game）将复杂度从O(n²)降低到O(1)。</li>
+<li>使用多目标优化框架max (开发效率, 产品质量, 团队协作) subject to 资源约束。Pareto优化分析非支配关系，AHP确定三维度权重。数据驱动方法学习维度间相关结构，What-if分析支持项目经理的鲁棒决策。</li>
+</ol>
+</div>
+</details>
 </div>
 
 </section>

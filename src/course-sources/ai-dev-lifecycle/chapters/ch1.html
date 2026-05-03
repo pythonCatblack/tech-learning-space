@@ -109,6 +109,20 @@ A. 凸形前沿；选择边际收益最大的点　B. 非凸前沿；需要多�
 A. 两者都是马尔可夫决策过程；启示在于将环境反馈建模为reward signal　B. 两者都是感知动作循环；启示在于使用model-based planning增强规划能力　C. 两者都是开环控制；启示在于减少对反馈的依赖　D. 两者都遵循贪心策略；启示在于使用lookahead机制<br><br>
 <strong>5. 在多智能体协作系统中，若每个Agent具有不同的能力域和资源消耗，如何设计任务分配算法使得全局效用最大？该问题可以规约为哪种经典组合优化问题？</strong><br>
 A. 任务分配规约为最大流问题；使用Edmonds-Karp算法求解　B. 任务分配规约为带约束的组合拍卖问题；使用VCG机制设计激励兼容的分配方案　C. 任务分配规约为二分图匹配；使用Hungarian算法求得最优分配　D. 任务分配规约为旅行商问题；使用贪心近似算法</p>
+<details class="quiz-answer">
+<summary>参考答案</summary>
+<div>
+<p><strong>答案：1.A　2.A　3.B　4.B　5.B</strong></p>
+<p><strong>解析：</strong></p>
+<ol style="font-size:0.9em; color:#666;">
+<li>KV Cache的数学本质是通过缓存已计算的Key-Value矩阵，将自回归解码过程中的冗余计算从O(n²)降低到O(n)，每次只需计算新token的KV而不必重新计算所有历史token的注意力分数。</li>
+<li>Speculative Decoding的理论加速比上界受预测接受率与draft model质量的制约。当draft model预测准确率越高，大模型验证通过的token越多，加速效果越显著，理论加速比可达1/(1-p)，其中p为接受率。</li>
+<li>Agent系统的Pareto前沿通常呈非凸形态，需要使用多目标进化算法（如NSGA-II）求解。工程实践中通过加权求和法或参考点法从Pareto前沿选取部署点。</li>
+<li>"感知-规划-执行-反馈"四环与强化学习中agent-environment交互框架的内在联系在于两者都是感知动作循环，启示在于使用model-based planning增强规划能力。</li>
+<li>该问题可规约为带约束的组合拍卖问题，使用VCG（Vickrey-Clarke-Groves）机制能实现激励兼容的最优分配，保证每个Agent真实报告其能力与成本。</li>
+</ol>
+</div>
+</details>
 </div>
 
 </section>

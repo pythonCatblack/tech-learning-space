@@ -259,6 +259,20 @@ A. Demographic Parity要求P(Ŷ=1|A=0)=P(Ŷ=1|A=1)，Equalized Odds要求P(Ŷ=1|
 A. Shapley值源于n人合作博弈中收益分配的公平性公理；形式化定义为φᵢ(v)=∑_{S⊆N\{i}}|S|!(n-|S|-1)!/n![v(S∪{i})-v(S)]；效率性（∑φᵢ=v(N)）保证解释值之和等于模型输出，对称性保证对称玩家的解释值相同，线性性保证可加性约束，虚拟性（Dummy）保证不贡献玩家的解释值为零；指数复杂度O(2^n)通过采样估计（Monte Carlo SHAP）、线性时间解析解（Linear SHAP）、树结构特殊算法（Tree SHAP使用嵌入传播在O(TLD²)时间复杂度内精确计算）等近似方法缓解；对于线性模型和树模型，Shapley值可闭式求解；对于深度学习模型，使用Gradient SHAP或Deep SHAP近似　B. Shapley值没有公理化基础；只是经验公式　C. Shapley值无法近似；必须精确计算才能保证解释可靠性　D. SHAP只适用于树模型；不适用于神经网络<br><br>
 <strong>5. 差分隐私的组合性质（Composition Theorem）如何保证复杂查询的隐私预算管理？若执行k个εᵢ-差分隐私机制，组合后的隐私保证是什么？如何在隐私预算与查询效用之间进行帕累托优化，确定每个查询的最优εᵢ分配？</strong><br>
 A. 顺序组合定理（Sequential Composition）：k个εᵢ-DP机制组合后满足(∑εᵢ)-DP；高级组合定理（Advanced Composition）提供更紧的边界：在隐私预算ε和失败概率δ固定时，k次组合的隐私消耗为O(ε√{k log(1/δ)})；帕累托优化问题：max∑Utility_i(εᵢ) subject to ∑εᵢ≤ε_total，使用KKT条件求解最优预算分配，Utility_i(ε)是效用函数（如方差减少量），体现边际效用递减规律；实际中使用隐私会计工具（如Google's DP Library）跟踪累积隐私损失，支持自适应查询选择和预算重分配策略　B. 隐私预算随查询数量线性增长；无法优化　C. 所有查询应该使用相同的隐私预算；均等分配最优　D. 差分隐私不具有组合性质；每次查询独立满足隐私保证</p>
+<details class="quiz-answer">
+<summary>参考答案</summary>
+<div>
+<p><strong>答案：1.A　2.A　3.A　4.A　5.A</strong></p>
+<p><strong>解析：</strong></p>
+<ol style="font-size:0.9em; color:#666;">
+<li>使用最大似然估计（MLE）学习奖励函数参数。样本复杂度O(ε^{-2})达到ε近似，偏好标注的一致性假设（Coherent Preferences）是关键前提。重要性采样减少人类标注偏差，互信息正则化鼓励奖励函数学习有意义的人类价值观表示。</li>
+<li>Constitutional AI使用多阶段训练，监督学习阶段学习"宪法合规"响应模式，强化学习阶段使用AI反馈代替人类反馈。约束通过Pareto优化整合到奖励函数中，先验知识可直接注入而非从数据中隐式学习。</li>
+<li>Demographic Parity、Equalized Odds、Calibration之间通常冲突（如满足Demographic Parity可能违反Equalized Odds）。使用Pareto前沿可视化公平性-性能权衡，对抗训练（Adversarial Debiasing）学习公平性表示。</li>
+<li>Shapley值φᵢ(v)=∑_{S⊆N\{i}}|S|!(n-|S|-1)!/n![v(S∪{i})-v(S)]。效率性保证解释值之和等于模型输出，对称性、线性性、虚拟性保证唯一性。指数复杂度O(2^n)通过Monte Carlo SHAP采样、Tree SHAP等近似算法缓解。</li>
+<li>顺序组合定理：k个εᵢ-DP机制组合后满足(∑εᵢ)-DP。高级组合定理在隐私预算ε和失败概率δ固定时，k次组合的隐私消耗为O(ε√{k log(1/δ)})。帕累托优化max∑Utility_i(εᵢ) subject to ∑εᵢ≤ε_total。</li>
+</ol>
+</div>
+</details>
 </div>
 
 </section>

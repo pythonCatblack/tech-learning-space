@@ -253,6 +253,20 @@ A. 全流程使用TRELLIS.2本地部署，确保最高质量　B. 快速验证�
 A. 生成速度与模型完整性的trade-off　B. 本地部署灵活性与云端计算资源弹性的矛盾　C. 参数规模与推理效率的Scaling Law瓶颈　D. MIT许可与商业变现模式的冲突<br><br>
 <strong>5. 某研究团队计划基于扩散模型构建自定义3D生成管线，需在模型质量与部署成本间取得平衡。以下硬件配置与模型选择的综合分析，正确的是？</strong><br>
 A. RTX 3060（8GB）可流畅运行TRELLIS.2全部功能　B. 12GB显存是Hunyuan3D 2.1推理的绝对最低要求　C. TripoSR的0.5秒速度优势在批量生成场景下被MQoR指标稀释　D. 在线平台的免部署优势在日均100+模型需求时会转化为显著成本劣势</p>
+<details class="quiz-answer">
+<summary>参考答案</summary>
+<div>
+<p><strong>答案：1.A　2.B　3.C　4.C　5.D</strong></p>
+<p><strong>解析：</strong></p>
+<ol style="font-size:0.9em; color:#666;">
+<li>O-Voxel通过SC-VAE 16倍压缩实现内存效率，稀疏索引是主要计算开销</li>
+<li>扩散模型从2D向3D的跨模态迁移是2024年关键技术突破</li>
+<li>概念阶段用Meshy(快速)，精细模型用InstantMesh(高质量)，符合企业工作流</li>
+<li>参数规模与推理效率的Scaling Law是核心技术矛盾</li>
+<li>12GB是Hunyuan3D 2.1最低要求；100+模型/日时在线平台成本劣势明显</li>
+</ol>
+</div>
+</details>
 </div>
 
 </section>
