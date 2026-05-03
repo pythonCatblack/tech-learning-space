@@ -321,6 +321,73 @@ python demo.py --input path/to/your/image.jpg --output result.glb</code></pre>
 </div>
 </div>
 
+<h2 class="section-h2">2.5 开源模型实操：Hunyuan3D 2.1</h2>
+
+<p class="p">Hunyuan3D 2.1是腾讯混元团队发布的开源3D生成模型，包含Hunyuan3D-DiT（形状生成）和Hunyuan3D-Paint（纹理合成）两大核心模块，支持PBR材质生成，免费可商用。</p>
+
+<h3 class="section-h3">2.5.1 Hunyuan3D 2.1核心特点</h3>
+
+<div class="card-grid">
+<div class="card-sm">
+<div class="card-sm-icon">🎨</div>
+<h4>PBR材质</h4>
+<p>端到端生成Production-Ready PBR材质，支持直接导入Blender使用</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">⚡</div>
+<h4>高效生成</h4>
+<p>15步采样即可完成高质量模型，3-30秒生成速度</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🆓</div>
+<h4>开源免费</h4>
+<p>GitHub开源，支持本地部署，代码权重完全开放</p>
+</div>
+<div class="card-sm">
+<div class="card-sm-icon">🖥️</div>
+<h4>Blender集成</h4>
+<p>支持导出为GLB/OBJ格式，兼容Blender 4.4+</p>
+</div>
+</div>
+
+<h3 class="section-h3">2.5.2 Hunyuan3D 2.1本地部署</h3>
+
+<div class="hlbox">
+<div class="hlbox-title">💻 Hunyuan3D 2.1本地部署代码</div>
+<pre><code># 克隆仓库
+git clone https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1.git
+cd Hunyuan3D-2.1
+
+# 创建虚拟环境（推荐Python 3.11）
+conda create -n hunyuan3d python=3.11
+conda activate hunyuan3d
+
+# 安装PyTorch（需要CUDA 12.4+）
+pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu124
+
+# 安装依赖
+pip install -r requirements.txt
+
+# 运行推理（需要12GB+显存）
+python hy3dgen/main.py --input path/to/image.jpg --output result.glb</code></pre>
+</div>
+
+<h3 class="section-h3">2.5.3 硬件要求与优化</h3>
+
+<table class="tbl">
+<thead><tr><th>配置级别</th><th>显存要求</th><th>生成速度</th><th>适用场景</th></tr></thead>
+<tbody>
+<tr><td>最低配置</td><td>12GB</td><td>约30秒</td><td>RTX 3060/4060</td></tr>
+<tr><td>推荐配置</td><td>16-24GB</td><td>约15-20秒</td><td>RTX 4070/4080</td></tr>
+<tr><td>高性能配置</td><td>24GB+</td><td>约10秒</td><td>RTX 4090/A100</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-info">
+<div class="callout-icon">ℹ️</div>
+<div class="callout-text"><strong>提示：</strong>Hunyuan3D 2.1需要NVIDIA显卡且显存≥12GB。如本地硬件不满足要求，可使用腾讯云GPU服务器或Colab进行体验。</div>
+</div>
+
 <h2 class="section-h2">2.6 常用快捷键与操作技巧</h2>
 
 <div class="hlbox">
