@@ -1,89 +1,146 @@
 <section id="ch13">
-<!-- 内容更新时间：2026-05-03 -->
-<div class="hero">
-<div class="chapter-tag">Chapter 13 · AI Engineering</div>
-<h1>第十三章：低代码/无代码AI平台——快速构建AI应用</h1>
-<p class="sub">学习如何使用低代码/无代码平台快速构建AI应用，降低AI开发门槛</p>
-<div class="hero-meta">
-<span class="hero-meta-item">📖 25分钟</span>
-</div>
-</div>
+  <!-- 内容更新时间：2026-05-03 -->
+  <div class="hero">
+    <div class="chapter-tag">Chapter 13 · AI Engineering</div>
+    <h1>第十三章：低代码/无代码AI平台——快速构建AI应用</h1>
+    <p class="sub">学习如何使用低代码/无代码平台快速构建AI应用，降低AI开发门槛</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">📖 25分钟</span>
+    </div>
+  </div>
 
-<p class="lead">低代码平台（Low-Code/No-Code，LCNC）已经存在多年，但AI的加入让它进入了新阶段。过去，低代码平台主要用于简化"重复性编程"；现在，AI使能平台可以简化"创意到原型"的距离，让非技术人员也能构建AI应用。</p>
+  <p class="lead">
+    低代码平台（Low-Code/No-Code，LCNC）已经存在多年，但AI的加入让它进入了新阶段。过去，低代码平台主要用于简化"重复性编程"；现在，AI使能平台可以简化"创意到原型"的距离，让非技术人员也能构建AI应用。
+  </p>
 
-<h2 class="section-h2">13.1 低代码/无代码平台的演进</h2>
+  <h2 class="section-h2">13.1 低代码/无代码平台的演进</h2>
 
-<p class="p">低代码AI平台正在 democratize AI，让更多人能构建AI应用。平台从最初的可视化编程工具，发展为集成了AutoML、模型训练、部署的一站式AI开发环境。</p>
+  <p class="p">
+    低代码AI平台正在 democratize
+    AI，让更多人能构建AI应用。平台从最初的可视化编程工具，发展为集成了AutoML、模型训练、部署的一站式AI开发环境。
+  </p>
 
-<h2 class="section-h2">13.2 主流低代码AI平台概览</h2>
+  <h2 class="section-h2">13.2 主流低代码AI平台概览</h2>
 
-<table class="tbl">
-<thead><tr><th>平台</th><th>类型</th><th>AI能力</th><th>适用场景</th><th>最新动态</th></tr></thead>
-<tbody>
-<tr><td><strong>Dataiku</strong></td><td>企业AI平台</td><td>AutoML、数据处理、MLOps、可视化流水线</td><td>企业数据分析</td><td>企业级治理和团队协作</td></tr>
-<tr><td><strong>Vertex AI</strong> (Google)</td><td>ML平台</td><td>AutoML、Vertex AI Studio、Agent Builder、200+AI模型</td><td>GCP集成企业</td><td>2025年更名为Gemini Enterprise Agent Platform</td></tr>
-<tr><td><strong>Azure ML</strong></td><td>企业ML平台</td><td>Designer、AutoML、Responsible AI仪表板</td><td>微软生态企业</td><td>SDK v1于2025年3月废弃，2026年6月停止支持</td></tr>
-<tr><td><strong>AWS SageMaker</strong></td><td>端到端ML平台</td><td>SageMaker Canvas、Autopilot、Ground Truth</td><td>AWS生态企业</td><td>No-code ML和AutoML持续增强</td></tr>
-<tr><td><strong>Bubble</strong></td><td>应用开发</td><td>AI插件集成</td><td>快速Web应用原型</td><td>无代码Web应用市场领导者</td></tr>
-<tr><td><strong>Power Apps</strong></td><td>应用开发</td><td>AI Builder、自动化</td><td>企业内部工具</td><td>微软LCNC生态核心产品</td></tr>
-<tr><td><strong>Dify</strong></td><td>LLM应用</td><td>可视化编排、API部署、RAG流水线</td><td>AI应用快速落地</td><td>开源LLM应用平台增长迅速</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>平台</th>
+        <th>类型</th>
+        <th>AI能力</th>
+        <th>适用场景</th>
+        <th>最新动态</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Dataiku</strong></td>
+        <td>企业AI平台</td>
+        <td>AutoML、数据处理、MLOps、可视化流水线</td>
+        <td>企业数据分析</td>
+        <td>企业级治理和团队协作</td>
+      </tr>
+      <tr>
+        <td><strong>Vertex AI</strong> (Google)</td>
+        <td>ML平台</td>
+        <td>AutoML、Vertex AI Studio、Agent Builder、200+AI模型</td>
+        <td>GCP集成企业</td>
+        <td>2025年更名为Gemini Enterprise Agent Platform</td>
+      </tr>
+      <tr>
+        <td><strong>Azure ML</strong></td>
+        <td>企业ML平台</td>
+        <td>Designer、AutoML、Responsible AI仪表板</td>
+        <td>微软生态企业</td>
+        <td>SDK v1于2025年3月废弃，2026年6月停止支持</td>
+      </tr>
+      <tr>
+        <td><strong>AWS SageMaker</strong></td>
+        <td>端到端ML平台</td>
+        <td>SageMaker Canvas、Autopilot、Ground Truth</td>
+        <td>AWS生态企业</td>
+        <td>No-code ML和AutoML持续增强</td>
+      </tr>
+      <tr>
+        <td><strong>Bubble</strong></td>
+        <td>应用开发</td>
+        <td>AI插件集成</td>
+        <td>快速Web应用原型</td>
+        <td>无代码Web应用市场领导者</td>
+      </tr>
+      <tr>
+        <td><strong>Power Apps</strong></td>
+        <td>应用开发</td>
+        <td>AI Builder、自动化</td>
+        <td>企业内部工具</td>
+        <td>微软LCNC生态核心产品</td>
+      </tr>
+      <tr>
+        <td><strong>Dify</strong></td>
+        <td>LLM应用</td>
+        <td>可视化编排、API部署、RAG流水线</td>
+        <td>AI应用快速落地</td>
+        <td>开源LLM应用平台增长迅速</td>
+      </tr>
+    </tbody>
+  </table>
 
-<h2 class="section-h2">13.3 Dataiku实战：构建推荐系统</h2>
+  <h2 class="section-h2">13.3 Dataiku实战：构建推荐系统</h2>
 
-<p class="p">Dataiku是一个端到端的数据科学平台，适合构建企业级AI应用。</p>
+  <p class="p">Dataiku是一个端到端的数据科学平台，适合构建企业级AI应用。</p>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 实战：使用Dataiku构建任务推荐系统</div>
-<p>假设我们要为AI-TaskManager构建智能任务推荐功能：根据用户的历史任务完成模式，推荐最可能完成的任务。</p>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">💡 实战：使用Dataiku构建任务推荐系统</div>
+    <p>
+      假设我们要为AI-TaskManager构建智能任务推荐功能：根据用户的历史任务完成模式，推荐最可能完成的任务。
+    </p>
+  </div>
 
-<p class="p">使用Dataiku的工作流：</p>
+  <p class="p">使用Dataiku的工作流：</p>
 
-<div class="steps">
-<div class="step">
-<div class="step-num">1</div>
-<div>
-<h4>数据准备</h4>
-<p>连接PostgreSQL，加载历史任务数据</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">2</div>
-<div>
-<h4>特征工程</h4>
-<p>提取用户特征（擅长领域、完成速度）、任务特征（类型、难度）、上下文特征（时间、项目）</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">3</div>
-<div>
-<h4>模型训练</h4>
-<p>使用AutoML选择最优推荐算法</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">4</div>
-<div>
-<h4>评估优化</h4>
-<p>A/B测试验证推荐效果</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">5</div>
-<div>
-<h4>部署上线</h4>
-<p>一键部署为API服务</p>
-</div>
-</div>
-</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>数据准备</h4>
+        <p>连接PostgreSQL，加载历史任务数据</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>特征工程</h4>
+        <p>提取用户特征（擅长领域、完成速度）、任务特征（类型、难度）、上下文特征（时间、项目）</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>模型训练</h4>
+        <p>使用AutoML选择最优推荐算法</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>评估优化</h4>
+        <p>A/B测试验证推荐效果</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>部署上线</h4>
+        <p>一键部署为API服务</p>
+      </div>
+    </div>
+  </div>
 
-<h2 class="section-h2">13.4 Vertex AI AutoML实战</h2>
+  <h2 class="section-h2">13.4 Vertex AI AutoML实战</h2>
 
-<p class="p">对于深度学习任务，Vertex AI的AutoML能力可以大大降低门槛。</p>
+  <p class="p">对于深度学习任务，Vertex AI的AutoML能力可以大大降低门槛。</p>
 
-<pre><code>提示词：
+  <pre><code>提示词：
 "我想使用Google Vertex AI的AutoML Tables构建一个任务优先级预测模型。
 
 场景：
@@ -102,16 +159,16 @@
 4. 如何评估模型效果
 5. 如何部署为预测API"</code></pre>
 
-<h2 class="section-h2">13.5 LangFlow：LLM应用可视化编排</h2>
+  <h2 class="section-h2">13.5 LangFlow：LLM应用可视化编排</h2>
 
-<p class="p">LangFlow是一个开源的LLM应用可视化编排工具，可以用拖拽方式构建复杂的AI工作流。</p>
+  <p class="p">LangFlow是一个开源的LLM应用可视化编排工具，可以用拖拽方式构建复杂的AI工作流。</p>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 实战：构建任务分析Agent</div>
-<p>使用LangFlow构建一个任务分析Agent：输入任务描述 → AI自动分析 → 输出任务分解建议。</p>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">💡 实战：构建任务分析Agent</div>
+    <p>使用LangFlow构建一个任务分析Agent：输入任务描述 → AI自动分析 → 输出任务分解建议。</p>
+  </div>
 
-<pre><code>LangFlow组件：
+  <pre><code>LangFlow组件：
 1. ChatInput（用户输入）
 2. PromptTemplate（提示词模板）
 3. OpenAIModel（GPT-4模型）
@@ -121,116 +178,173 @@
 连接关系：
 ChatInput → PromptTemplate → OpenAIModel → Parser → ChatOutput</code></pre>
 
-<h2 class="section-h2">13.6 何时用LCNC，何时写代码</h2>
+  <h2 class="section-h2">13.6 何时用LCNC，何时写代码</h2>
 
-<p class="p">低代码平台不是银弹，有其适用场景：</p>
+  <p class="p">低代码平台不是银弹，有其适用场景：</p>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">✓</div>
-<h4>适合使用LCNC的场景</h4>
-<p>快速原型验证（1-2周内需要MVP）<br>非核心功能（如内部工具、简单报表）<br>团队缺乏AI/ML专业人才<br>数据处理流程相对标准</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">⚠</div>
-<h4>需要写代码的场景</h4>
-<p>核心竞争壁垒的AI功能<br>需要深度定制的模型架构<br>超大规模数据处理（成本敏感）<br>实时性要求极高的场景</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">✓</div>
+      <h4>适合使用LCNC的场景</h4>
+      <p>
+        快速原型验证（1-2周内需要MVP）<br />非核心功能（如内部工具、简单报表）<br />团队缺乏AI/ML专业人才<br />数据处理流程相对标准
+      </p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⚠</div>
+      <h4>需要写代码的场景</h4>
+      <p>
+        核心竞争壁垒的AI功能<br />需要深度定制的模型架构<br />超大规模数据处理（成本敏感）<br />实时性要求极高的场景
+      </p>
+    </div>
+  </div>
 
-<h2 class="section-h2">13.7 混合架构策略</h2>
+  <h2 class="section-h2">13.7 混合架构策略</h2>
 
-<p class="p">最佳实践往往是混合架构：核心AI能力自研，通用能力外购。</p>
+  <p class="p">最佳实践往往是混合架构：核心AI能力自研，通用能力外购。</p>
 
-<div class="flow">
-<div class="flow-box">
-<div class="flow-box-title">前端应用</div>
-<div class="flow-box-desc">自研/SaaS</div>
-</div>
-<div class="flow-arrow">→</div>
-<div class="flow-box">
-<div class="flow-box-title">业务逻辑层</div>
-<div class="flow-box-desc">自研</div>
-</div>
-<div class="flow-arrow">→</div>
-<div class="flow-box">
-<div class="flow-box-title">AI能力层</div>
-<div class="flow-box-desc">核心自研 + 通用外购</div>
-</div>
-<div class="flow-arrow">→</div>
-<div class="flow-box">
-<div class="flow-box-title">数据层</div>
-<div class="flow-box-desc">标准数据库/仓库</div>
-</div>
-</div>
+  <div class="flow">
+    <div class="flow-box">
+      <div class="flow-box-title">前端应用</div>
+      <div class="flow-box-desc">自研/SaaS</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">业务逻辑层</div>
+      <div class="flow-box-desc">自研</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">AI能力层</div>
+      <div class="flow-box-desc">核心自研 + 通用外购</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">数据层</div>
+      <div class="flow-box-desc">标准数据库/仓库</div>
+    </div>
+  </div>
 
-<h2 class="section-h2">13.8 本章小结</h2>
+  <h2 class="section-h2">13.8 本章小结</h2>
 
-<div class="steps">
-<div class="step">
-<div class="step-num">1</div>
-<div>
-<h4>LCNC democratize AI</h4>
-<p>低代码AI平台正在 democratize AI，让更多人能构建AI应用</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">2</div>
-<div>
-<h4>平台选择</h4>
-<p>Dataiku适合企业级数据分析，Vertex AI适合GCP生态</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">3</div>
-<div>
-<h4>LangFlow应用</h4>
-<p>LangFlow适合LLM应用的可视化原型</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">4</div>
-<div>
-<h4>技术选型</h4>
-<p>选择LCNC还是自研取决于场景：原型用LCNC，核心能力自研</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">5</div>
-<div>
-<h4>混合架构</h4>
-<p>混合架构是大型项目的最佳实践</p>
-</div>
-</div>
-</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>LCNC democratize AI</h4>
+        <p>低代码AI平台正在 democratize AI，让更多人能构建AI应用</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>平台选择</h4>
+        <p>Dataiku适合企业级数据分析，Vertex AI适合GCP生态</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>LangFlow应用</h4>
+        <p>LangFlow适合LLM应用的可视化原型</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>技术选型</h4>
+        <p>选择LCNC还是自研取决于场景：原型用LCNC，核心能力自研</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>混合架构</h4>
+        <p>混合架构是大型项目的最佳实践</p>
+      </div>
+    </div>
+  </div>
 
-<div class="card yellow">
-<div class="card-label">课后测验</div>
-<h3>第十三章选择题</h3>
-<p><strong>1. 在低代码平台中，如何形式化地定义"平台能力"与"用户表达力"之间的边界？若将用户意图建模为从自然语言到程序代码的映射函数f: Intent → Program，平台能力边界对应什么数学概念？当用户意图超出平台表达能力时，如何设计坦白的错误消息而非误导性的结果？</strong><br>
-A. 平台表达能力边界=程序语言的正则集合（Regular Languages）vs图灵完备语言；超出边界的意图无法被平台表示，错误消息应明确指出"此功能需要自定义代码扩展"，同时提供平台内等效近似方案供用户选择；使用意图分类器预先判断用户意图是否在平台能力范围内　B. 平台能力边界无法定义；任何功能都可以通过平台实现　C. 平台能力边界是固定的；不会随用户使用而变化　D. 超出边界时应自动转为人工处理；无需设计错误消息<br><br>
-<strong>2. Dataiku等平台中的AutoML pipeline如何平衡自动化与专家控制？若将模型选择超参数调优建模为贝叶斯优化问题，如何设计获得函数（Acquisition Function）使得优化过程在探索（未测试的参数区域）与利用（已知好的参数区域）之间取得平衡，同时考虑调优时间成本约束？</strong><br>
-A. 使用贝叶斯优化+成本约束的获得函数：UCB-weighted，其中成本项惩罚高延迟的评估（如大型数据集上的训练），同时使用学习型获得函数（ Learned Acquisition）通过历史调优数据预测不同参数配置的成功率；early stopping机制在验证集性能停滞时终止低效训练，平衡自动化与专家干预需求　B. 应该完全自动化；专家不应该干预AutoML过程　C. 应该完全由专家控制；AutoML只是辅助工具　D. 获得函数应该固定不变；不随问题规模变化<br><br>
-<strong>3. LangFlow的LLM应用可视化编排如何处理多步骤推理链（Chain of Thought）中的状态传播与错误累积？若将Agent的思考过程建模为状态机，每个步骤的输出作为下一轮的输入，如何设计状态验证机制使得Agent能够检测并从中间步骤的错误中恢复？</strong><br>
-A. 使用状态机+检查点机制；在每个思考步骤后插入验证节点（Verification Node），检查当前状态是否满足约束（如输出格式、类型检查），若验证失败则回滚到上一个检查点并触发重规划（Re-planning）；使用策树（Decision Tree）学习何时应该回滚而非继续，同时使用强化学习让Agent学习从错误恢复的策略　B. Agent应该一次完成所有推理；不需要状态验证　C. 错误无法恢复；只能重新开始整个推理过程　D. 状态传播无法处理；LangFlow不支持多步骤推理<br><br>
-<strong>4. 在LCNC vs 自研的技术选型决策中，如何量化"灵活性损失"与"开发成本节约"之间的权衡？若将技术选型建模为多属性效用理论（MAUT）问题，属性、效用函数和权重分别是什么？如何根据组织的战略目标（创新速度 vs 成本控制 vs 差异化）确定最优的平台策略？</strong><br>
-A. 属性=开发速度、成本、灵活性、可控性、差异化潜力；效用函数通过历史项目数据学习（回归分析得到属性值到效用的映射），权重由组织战略决定（创新型组织赋予差异化更高的权重，成本敏感型组织赋予成本更高的权重）；使用加权效用总和进行多属性决策，输出各方案的效用排序，同时进行敏感性分析检验权重变化对排序的影响　B. 灵活性损失无法量化；只能定性描述　C. 应该始终选择自研；LCNC平台永远不是最优选择　D. 应该始终选择LCNC；自研成本太高<br><br>
-<strong>5. 在混合架构策略中，如何决定哪些AI能力应该自研，哪些应该外购？若将AI能力建模为核心竞争力（Core Competency）与通用能力（Commodity），如何使用组织能力矩阵（Capability Matrix）进行战略定位分析？该矩阵的行、列、单元格分别代表什么？如何从中推导出"构建 vs 购买 vs 合作"的决策建议？</strong><br>
-A. 矩阵行=AI能力维度（感知、推理、决策、执行等），列=能力成熟度级别（基础、进阶、高级），单元格=(该能力当前的组织水平 vs 市场平均水平)；位于"高组织水平+低市场水平"的象限=核心差异化能力应自研，"低组织水平+高市场水平"的象限=通用能力应外购，"双低"象限=考虑合作或授权；使用波士顿矩阵类似框架进行战略分类，同时评估能力获取的时间紧迫性和组织学习曲线</p>
-<details class="quiz-answer">
-<summary>参考答案</summary>
-<div>
-<p><strong>答案：1.A　2.A　3.A　4.A　5.A</strong></p>
-<p><strong>解析：</strong></p>
-<ol style="font-size:0.9em; color:#666;">
-<li>平台表达能力边界对应程序语言的正则集合（Regular Languages）vs图灵完备语言。意图分类器预先判断用户意图是否在平台能力范围内，超出边界时明确指出需要自定义代码扩展。</li>
-<li>使用贝叶斯优化+成本约束的获得函数UCB-weighted，成本项惩罚高延迟评估。early stopping机制在验证集性能停滞时终止低效训练，平衡自动化与专家干预需求。</li>
-<li>使用状态机+检查点机制，验证节点检查当前状态是否满足约束。验证失败则回滚到上一个检查点并触发重规划。策树学习何时应该回滚，强化学习让Agent学习从错误恢复的策略。</li>
-<li>属性=开发速度、成本、灵活性、可控性、差异化潜力。效用函数通过历史项目数据学习，权重由组织战略决定。加权效用总和进行多属性决策，敏感性分析检验权重变化对排序的影响。</li>
-<li>矩阵行=AI能力维度，列=能力成熟度级别，单元格=(组织水平 vs 市场平均水平)。高组织水平+低市场水平=核心差异化能力自研，低组织水平+高市场水平=通用能力外购，波士顿矩阵框架进行战略分类。</li>
-</ol>
-</div>
-</details>
-</div>
-
+  <div class="card yellow">
+    <div class="card-label">课后测验</div>
+    <h3>第十三章选择题</h3>
+    <p>
+      <strong
+        >1.
+        在低代码平台中，如何形式化地定义"平台能力"与"用户表达力"之间的边界？若将用户意图建模为从自然语言到程序代码的映射函数f:
+        Intent →
+        Program，平台能力边界对应什么数学概念？当用户意图超出平台表达能力时，如何设计坦白的错误消息而非误导性的结果？</strong
+      ><br />
+      A. 超出边界时应自动转为人工处理；无需设计错误消息　B.
+      平台能力边界是固定的；不会随用户使用而变化　C.
+      平台能力边界无法定义；任何功能都可以通过平台实现　D.
+      平台表达能力边界=程序语言的正则集合（Regular
+      Languages）vs图灵完备语言；超出边界的意图无法被平台表示，错误消息应明确指出"此功能需要自定义代码扩展"，同时提供平台内等效近似方案供用户选择；使用意图分类器预先判断用户意图是否在平台能力范围内<br /><br />
+      <strong
+        >2. Dataiku等平台中的AutoML
+        pipeline如何平衡自动化与专家控制？若将模型选择超参数调优建模为贝叶斯优化问题，如何设计获得函数（Acquisition
+        Function）使得优化过程在探索（未测试的参数区域）与利用（已知好的参数区域）之间取得平衡，同时考虑调优时间成本约束？</strong
+      ><br />
+      A. 获得函数应该固定不变；不随问题规模变化　B. 应该完全由专家控制；AutoML只是辅助工具　C.
+      应该完全自动化；专家不应该干预AutoML过程　D.
+      使用贝叶斯优化+成本约束的获得函数：UCB-weighted，其中成本项惩罚高延迟的评估（如大型数据集上的训练），同时使用学习型获得函数（
+      Learned Acquisition）通过历史调优数据预测不同参数配置的成功率；early
+      stopping机制在验证集性能停滞时终止低效训练，平衡自动化与专家干预需求<br /><br />
+      <strong
+        >3. LangFlow的LLM应用可视化编排如何处理多步骤推理链（Chain of
+        Thought）中的状态传播与错误累积？若将Agent的思考过程建模为状态机，每个步骤的输出作为下一轮的输入，如何设计状态验证机制使得Agent能够检测并从中间步骤的错误中恢复？</strong
+      ><br />
+      A. 状态传播无法处理；LangFlow不支持多步骤推理　B. 错误无法恢复；只能重新开始整个推理过程　C.
+      Agent应该一次完成所有推理；不需要状态验证　D.
+      使用状态机+检查点机制；在每个思考步骤后插入验证节点（Verification
+      Node），检查当前状态是否满足约束（如输出格式、类型检查），若验证失败则回滚到上一个检查点并触发重规划（Re-planning）；使用策树（Decision
+      Tree）学习何时应该回滚而非继续，同时使用强化学习让Agent学习从错误恢复的策略<br /><br />
+      <strong
+        >4. 在LCNC vs
+        自研的技术选型决策中，如何量化"灵活性损失"与"开发成本节约"之间的权衡？若将技术选型建模为多属性效用理论（MAUT）问题，属性、效用函数和权重分别是什么？如何根据组织的战略目标（创新速度
+        vs 成本控制 vs 差异化）确定最优的平台策略？</strong
+      ><br />
+      A. 应该始终选择LCNC；自研成本太高　B. 应该始终选择自研；LCNC平台永远不是最优选择　C.
+      灵活性损失无法量化；只能定性描述　D.
+      属性=开发速度、成本、灵活性、可控性、差异化潜力；效用函数通过历史项目数据学习（回归分析得到属性值到效用的映射），权重由组织战略决定（创新型组织赋予差异化更高的权重，成本敏感型组织赋予成本更高的权重）；使用加权效用总和进行多属性决策，输出各方案的效用排序，同时进行敏感性分析检验权重变化对排序的影响<br /><br />
+      <strong
+        >5.
+        在混合架构策略中，如何决定哪些AI能力应该自研，哪些应该外购？若将AI能力建模为核心竞争力（Core
+        Competency）与通用能力（Commodity），如何使用组织能力矩阵（Capability
+        Matrix）进行战略定位分析？该矩阵的行、列、单元格分别代表什么？如何从中推导出"构建 vs 购买 vs
+        合作"的决策建议？</strong
+      ><br />
+      A.
+      矩阵行=AI能力维度（感知、推理、决策、执行等），列=能力成熟度级别（基础、进阶、高级），单元格=(该能力当前的组织水平
+      vs
+      市场平均水平)；位于"高组织水平+低市场水平"的象限=核心差异化能力应自研，"低组织水平+高市场水平"的象限=通用能力应外购，"双低"象限=考虑合作或授权；使用波士顿矩阵类似框架进行战略分类，同时评估能力获取的时间紧迫性和组织学习曲线
+    </p>
+    <details class="quiz-answer">
+      <summary>参考答案</summary>
+      <div>
+        <p><strong>答案：1.D　2.A　3.D　4.C　5.A</strong></p>
+        <p><strong>解析：</strong></p>
+        <ol style="font-size: 0.9em; color: #666">
+          <li>
+            平台表达能力边界对应程序语言的正则集合（Regular
+            Languages）vs图灵完备语言。意图分类器预先判断用户意图是否在平台能力范围内，超出边界时明确指出需要自定义代码扩展。
+          </li>
+          <li>
+            使用贝叶斯优化+成本约束的获得函数UCB-weighted，成本项惩罚高延迟评估。early
+            stopping机制在验证集性能停滞时终止低效训练，平衡自动化与专家干预需求。
+          </li>
+          <li>
+            使用状态机+检查点机制，验证节点检查当前状态是否满足约束。验证失败则回滚到上一个检查点并触发重规划。策树学习何时应该回滚，强化学习让Agent学习从错误恢复的策略。
+          </li>
+          <li>
+            属性=开发速度、成本、灵活性、可控性、差异化潜力。效用函数通过历史项目数据学习，权重由组织战略决定。加权效用总和进行多属性决策，敏感性分析检验权重变化对排序的影响。
+          </li>
+          <li>
+            矩阵行=AI能力维度，列=能力成熟度级别，单元格=(组织水平 vs
+            市场平均水平)。高组织水平+低市场水平=核心差异化能力自研，低组织水平+高市场水平=通用能力外购，波士顿矩阵框架进行战略分类。
+          </li>
+        </ol>
+      </div>
+    </details>
+  </div>
 </section>

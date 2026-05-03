@@ -1,26 +1,29 @@
 <section id="ch2">
-<!-- 内容更新时间：2026-05-03 -->
-<div class="hero">
-<div class="chapter-tag">Chapter 2 · 基础入门篇</div>
-<h1>AI 3D建模工具实操入门</h1>
-<p class="sub">掌握主流AI 3D建模工具的基本操作与核心功能</p>
-<div class="hero-meta">
-<span class="hero-meta-item">📖 约50分钟阅读</span>
-<span class="hero-meta-item">🛠️ 工具实操</span>
-</div>
-</div>
+  <!-- 内容更新时间：2026-05-03 -->
+  <div class="hero">
+    <div class="chapter-tag">Chapter 2 · 基础入门篇</div>
+    <h1>AI 3D建模工具实操入门</h1>
+    <p class="sub">掌握主流AI 3D建模工具的基本操作与核心功能</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">📖 约50分钟阅读</span>
+      <span class="hero-meta-item">🛠️ 工具实操</span>
+    </div>
+  </div>
 
-<p class="lead">本章将通过详细的分步指导，带您实际掌握从在线平台（Meshy、Tripo3D）到开源模型（TripoSR、TRELLIS.2）的完整AI 3D建模工具链。您将学会从界面布局到模型生成的完整操作流程。</p>
+  <p class="lead">
+    本章将通过详细的分步指导，带您实际掌握从在线平台（Meshy、Tripo3D）到开源模型（TripoSR、TRELLIS.2）的完整AI
+    3D建模工具链。您将学会从界面布局到模型生成的完整操作流程。
+  </p>
 
-<h2 class="section-h2">2.1 Meshy界面布局与核心功能</h2>
+  <h2 class="section-h2">2.1 Meshy界面布局与核心功能</h2>
 
-<h3 class="section-h3">2.1.1 界面概览</h3>
+  <h3 class="section-h3">2.1.1 界面概览</h3>
 
-<p class="p">Meshy是一款基于浏览器的AI 3D建模工具，其界面主要分为以下几个区域：</p>
+  <p class="p">Meshy是一款基于浏览器的AI 3D建模工具，其界面主要分为以下几个区域：</p>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 界面布局说明</div>
-<pre><code>┌─────────────────────────────────────────────────────┐
+  <div class="hlbox">
+    <div class="hlbox-title">💡 界面布局说明</div>
+    <pre><code>┌─────────────────────────────────────────────────────┐
 │  顶部导航栏：Logo、方案选择、导出按钮、用户信息    │
 ├────────────┬────────────────────────────────────────┤
 │            │                                        │
@@ -32,51 +35,51 @@
 ├────────────┴────────────────────────────────────────┤
 │  底部属性面板：材质、微调、渲染设置                 │
 └─────────────────────────────────────────────────────┘</code></pre>
-</div>
+  </div>
 
-<h3 class="section-h3">2.1.2 文本转3D模型操作流程</h3>
+  <h3 class="section-h3">2.1.2 文本转3D模型操作流程</h3>
 
-<div class="steps">
-<div class="step">
-<div class="step-num">1</div>
-<div>
-<h4>步骤1：进入文本生成模式</h4>
-<p>点击左侧工具栏的"Text to 3D"按钮，进入文本生成模式。</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">2</div>
-<div>
-<h4>步骤2：输入描述文本</h4>
-<p>在文本框中输入您想要生成的3D模型描述。建议使用英文描述以获得最佳效果。</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">3</div>
-<div>
-<h4>步骤3：调整生成参数</h4>
-<p>设置模型风格（通用/卡通/写实）、分辨率、是否包含纹理等参数。</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">4</div>
-<div>
-<h4>步骤4：生成与预览</h4>
-<p>点击"Generate"按钮，等待AI生成模型。生成完成后可以在画布区域旋转、缩放预览。</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">5</div>
-<div>
-<h4>步骤5：导出模型</h4>
-<p>满意后点击"Export"按钮，选择导出格式（GLB/FBX/OBJ等）。</p>
-</div>
-</div>
-</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>步骤1：进入文本生成模式</h4>
+        <p>点击左侧工具栏的"Text to 3D"按钮，进入文本生成模式。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>步骤2：输入描述文本</h4>
+        <p>在文本框中输入您想要生成的3D模型描述。建议使用英文描述以获得最佳效果。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>步骤3：调整生成参数</h4>
+        <p>设置模型风格（通用/卡通/写实）、分辨率、是否包含纹理等参数。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>步骤4：生成与预览</h4>
+        <p>点击"Generate"按钮，等待AI生成模型。生成完成后可以在画布区域旋转、缩放预览。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>步骤5：导出模型</h4>
+        <p>满意后点击"Export"按钮，选择导出格式（GLB/FBX/OBJ等）。</p>
+      </div>
+    </div>
+  </div>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 提示词示例</div>
-<pre><code>推荐使用的英文描述格式：
+  <div class="hlbox">
+    <div class="hlbox-title">💡 提示词示例</div>
+    <pre><code>推荐使用的英文描述格式：
 
 基础描述：
 "a cute robot toy with round head and big eyes"
@@ -88,161 +91,168 @@ brown oak wood texture, classic design"
 包含材质：
 "a red ceramic coffee mug with white interior,
 glossy finish, handle on the right side"</code></pre>
-</div>
+  </div>
 
-<h3 class="section-h3">2.1.3 图片转3D模型操作流程</h3>
+  <h3 class="section-h3">2.1.3 图片转3D模型操作流程</h3>
 
-<div class="steps">
-<div class="step">
-<div class="step-num">1</div>
-<div>
-<h4>步骤1：进入图片生成模式</h4>
-<p>点击左侧工具栏的"Image to 3D"按钮。</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">2</div>
-<div>
-<h4>步骤2：上传参考图片</h4>
-<p>点击上传按钮，选择一张清晰的产品图片或设计图。建议使用多角度图片（3-5张）以获得更好的生成效果。</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">3</div>
-<div>
-<h4>步骤3：设置参数</h4>
-<p>选择生成模式（快速/精细）、是否自动补全背面等。</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">4</div>
-<div>
-<h4>步骤4：生成与编辑</h4>
-<p>生成完成后可以对模型进行局部编辑，如调整特定区域的结构或材质。</p>
-</div>
-</div>
-</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>步骤1：进入图片生成模式</h4>
+        <p>点击左侧工具栏的"Image to 3D"按钮。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>步骤2：上传参考图片</h4>
+        <p>
+          点击上传按钮，选择一张清晰的产品图片或设计图。建议使用多角度图片（3-5张）以获得更好的生成效果。
+        </p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>步骤3：设置参数</h4>
+        <p>选择生成模式（快速/精细）、是否自动补全背面等。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>步骤4：生成与编辑</h4>
+        <p>生成完成后可以对模型进行局部编辑，如调整特定区域的结构或材质。</p>
+      </div>
+    </div>
+  </div>
 
-<h2 class="section-h2">2.2 Tripo3D界面布局与核心功能</h2>
+  <h2 class="section-h2">2.2 Tripo3D界面布局与核心功能</h2>
 
-<h3 class="section-h3">2.2.1 Tripo3D主要特点</h3>
+  <h3 class="section-h3">2.2.1 Tripo3D主要特点</h3>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">⚡</div>
-<h4>快速生成</h4>
-<p>平均30秒内完成模型生成</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🎨</div>
-<h4>自动材质</h4>
-<p>AI自动生成PBR材质</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">📦</div>
-<h4>多种格式</h4>
-<p>支持导出主流3D格式</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">⚡</div>
+      <h4>快速生成</h4>
+      <p>平均30秒内完成模型生成</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🎨</div>
+      <h4>自动材质</h4>
+      <p>AI自动生成PBR材质</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📦</div>
+      <h4>多种格式</h4>
+      <p>支持导出主流3D格式</p>
+    </div>
+  </div>
 
-<h3 class="section-h3">2.2.2 Tripo3D操作流程</h3>
+  <h3 class="section-h3">2.2.2 Tripo3D操作流程</h3>
 
-<div class="steps">
-<div class="step">
-<div class="step-num">1</div>
-<div>
-<h4>注册与登录</h4>
-<p>访问Tripo3D官网，使用邮箱或Google账号注册登录。</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">2</div>
-<div>
-<h4>选择生成模式</h4>
-<p>首页提供"Create from Text"和"Create from Image"两个主要入口。</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">3</div>
-<div>
-<h4>输入内容</h4>
-<p>文本模式：输入详细的物体描述（推荐英文）<br>
-图片模式：上传参考图片</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">4</div>
-<div>
-<h4>等待生成</h4>
-<p>显示生成进度条，通常30秒-2分钟完成。</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">5</div>
-<div>
-<h4>后处理与导出</h4>
-<p>生成完成后可进行简单的编辑调整，然后导出。</p>
-</div>
-</div>
-</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>注册与登录</h4>
+        <p>访问Tripo3D官网，使用邮箱或Google账号注册登录。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>选择生成模式</h4>
+        <p>首页提供"Create from Text"和"Create from Image"两个主要入口。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>输入内容</h4>
+        <p>
+          文本模式：输入详细的物体描述（推荐英文）<br />
+          图片模式：上传参考图片
+        </p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>等待生成</h4>
+        <p>显示生成进度条，通常30秒-2分钟完成。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>后处理与导出</h4>
+        <p>生成完成后可进行简单的编辑调整，然后导出。</p>
+      </div>
+    </div>
+  </div>
 
-<h2 class="section-h2">2.3 开源模型实操：TripoSR</h2>
+  <h2 class="section-h2">2.3 开源模型实操：TripoSR</h2>
 
-<p class="p">TripoSR是由Stability AI与VAST联合开发的开源模型，0.5秒即可从单张图片生成高质量3D模型，完全免费可商用。</p>
+  <p class="p">
+    TripoSR是由Stability
+    AI与VAST联合开发的开源模型，0.5秒即可从单张图片生成高质量3D模型，完全免费可商用。
+  </p>
 
-<h3 class="section-h3">2.3.1 TripoSR部署方式</h3>
+  <h3 class="section-h3">2.3.1 TripoSR部署方式</h3>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">☁️</div>
-<h4>云端体验</h4>
-<p>通过HyperAI、OpenBayes等平台在线体验，无需本地部署</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">💻</div>
-<h4>本地部署</h4>
-<p>从GitHub克隆代码，自行配置Python环境运行</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">☁️</div>
+      <h4>云端体验</h4>
+      <p>通过HyperAI、OpenBayes等平台在线体验，无需本地部署</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">💻</div>
+      <h4>本地部署</h4>
+      <p>从GitHub克隆代码，自行配置Python环境运行</p>
+    </div>
+  </div>
 
-<h3 class="section-h3">2.3.2 云端使用流程（推荐）</h3>
+  <h3 class="section-h3">2.3.2 云端使用流程（推荐）</h3>
 
-<div class="steps">
-<div class="step">
-<div class="step-num">1</div>
-<div>
-<h4>访问在线Demo</h4>
-<p>访问HyperAI官网的TripoSR教程页面，或在OpenBayes上搜索"TripoSR"</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">2</div>
-<div>
-<h4>克隆教程</h4>
-<p>点击"克隆"将教程复制到自己的容器中</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">3</div>
-<div>
-<h4>上传图片</h4>
-<p>在Demo界面上传单张产品图片</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">4</div>
-<div>
-<h4>生成与下载</h4>
-<p>等待约0.5-2秒生成完成，下载GLB/OBJ格式模型</p>
-</div>
-</div>
-</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>访问在线Demo</h4>
+        <p>访问HyperAI官网的TripoSR教程页面，或在OpenBayes上搜索"TripoSR"</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>克隆教程</h4>
+        <p>点击"克隆"将教程复制到自己的容器中</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>上传图片</h4>
+        <p>在Demo界面上传单张产品图片</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>生成与下载</h4>
+        <p>等待约0.5-2秒生成完成，下载GLB/OBJ格式模型</p>
+      </div>
+    </div>
+  </div>
 
-<h3 class="section-h3">2.3.3 本地部署命令</h3>
+  <h3 class="section-h3">2.3.3 本地部署命令</h3>
 
-<div class="hlbox">
-<div class="hlbox-title">💻 TripoSR本地部署代码</div>
-<pre><code># 克隆仓库
+  <div class="hlbox">
+    <div class="hlbox-title">💻 TripoSR本地部署代码</div>
+    <pre><code># 克隆仓库
 git clone https://github.com/VAST-AI-Research/TripoSR.git
 cd TripoSR
 
@@ -256,106 +266,111 @@ pip install -r requirements.txt
 
 # 运行推理
 python demo.py --input path/to/your/image.jpg --output result.glb</code></pre>
-</div>
+  </div>
 
-<h2 class="section-h2">2.4 开源模型实操：TRELLIS.2</h2>
+  <h2 class="section-h2">2.4 开源模型实操：TRELLIS.2</h2>
 
-<p class="p">TRELLIS.2是微软发布的40亿参数开源3D生成模型，生成高达1536³分辨率的PBR纹理资产，质量业界领先。</p>
+  <p class="p">
+    TRELLIS.2是微软发布的40亿参数开源3D生成模型，生成高达1536³分辨率的PBR纹理资产，质量业界领先。
+  </p>
 
-<h3 class="section-h3">2.4.1 TRELLIS.2核心特点</h3>
+  <h3 class="section-h3">2.4.1 TRELLIS.2核心特点</h3>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">🎯</div>
-<h4>高保真材质</h4>
-<p>O-Voxel稀疏体素结构，生成完整PBR材质</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">⚡</div>
-<h4>高效生成</h4>
-<p>3-10秒完成高质量模型生成</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🆓</div>
-<h4>MIT许可</h4>
-<p>免费可商用，代码权重完全开放</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🎯</div>
+      <h4>高保真材质</h4>
+      <p>O-Voxel稀疏体素结构，生成完整PBR材质</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⚡</div>
+      <h4>高效生成</h4>
+      <p>3-10秒完成高质量模型生成</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🆓</div>
+      <h4>MIT许可</h4>
+      <p>免费可商用，代码权重完全开放</p>
+    </div>
+  </div>
 
-<h3 class="section-h3">2.4.2 TRELLIS.2云端使用</h3>
+  <h3 class="section-h3">2.4.2 TRELLIS.2云端使用</h3>
 
-<div class="steps">
-<div class="step">
-<div class="step-num">1</div>
-<div>
-<h4>访问项目页面</h4>
-<p>访问 microsoft.github.io/TRELLIS 或 GitHub项目页面</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">2</div>
-<div>
-<h4>选择Demo</h4>
-<p>使用官方提供的在线Demo体验</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">3</div>
-<div>
-<h4>上传图片</h4>
-<p>上传清晰的产品图片或设计图</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">4</div>
-<div>
-<h4>调整参数</h4>
-<p>设置分辨率（512/1024/1536）和采样步数</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">5</div>
-<div>
-<h4>导出模型</h4>
-<p>生成完成后导出为GLB等格式</p>
-</div>
-</div>
-</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>访问项目页面</h4>
+        <p>访问 microsoft.github.io/TRELLIS 或 GitHub项目页面</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>选择Demo</h4>
+        <p>使用官方提供的在线Demo体验</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>上传图片</h4>
+        <p>上传清晰的产品图片或设计图</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>调整参数</h4>
+        <p>设置分辨率（512/1024/1536）和采样步数</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>导出模型</h4>
+        <p>生成完成后导出为GLB等格式</p>
+      </div>
+    </div>
+  </div>
 
-<h2 class="section-h2">2.5 开源模型实操：Hunyuan3D 2.1</h2>
+  <h2 class="section-h2">2.5 开源模型实操：Hunyuan3D 2.1</h2>
 
-<p class="p">Hunyuan3D 2.1是腾讯混元团队发布的开源3D生成模型，包含Hunyuan3D-DiT（形状生成）和Hunyuan3D-Paint（纹理合成）两大核心模块，支持PBR材质生成，免费可商用。</p>
+  <p class="p">
+    Hunyuan3D
+    2.1是腾讯混元团队发布的开源3D生成模型，包含Hunyuan3D-DiT（形状生成）和Hunyuan3D-Paint（纹理合成）两大核心模块，支持PBR材质生成，免费可商用。
+  </p>
 
-<h3 class="section-h3">2.5.1 Hunyuan3D 2.1核心特点</h3>
+  <h3 class="section-h3">2.5.1 Hunyuan3D 2.1核心特点</h3>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">🎨</div>
-<h4>PBR材质</h4>
-<p>端到端生成Production-Ready PBR材质，支持直接导入Blender使用</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">⚡</div>
-<h4>高效生成</h4>
-<p>15步采样即可完成高质量模型，3-30秒生成速度</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🆓</div>
-<h4>开源免费</h4>
-<p>GitHub开源，支持本地部署，代码权重完全开放</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🖥️</div>
-<h4>Blender集成</h4>
-<p>支持导出为GLB/OBJ格式，兼容Blender 4.4+</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🎨</div>
+      <h4>PBR材质</h4>
+      <p>端到端生成Production-Ready PBR材质，支持直接导入Blender使用</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⚡</div>
+      <h4>高效生成</h4>
+      <p>15步采样即可完成高质量模型，3-30秒生成速度</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🆓</div>
+      <h4>开源免费</h4>
+      <p>GitHub开源，支持本地部署，代码权重完全开放</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🖥️</div>
+      <h4>Blender集成</h4>
+      <p>支持导出为GLB/OBJ格式，兼容Blender 4.4+</p>
+    </div>
+  </div>
 
-<h3 class="section-h3">2.5.2 Hunyuan3D 2.1本地部署</h3>
+  <h3 class="section-h3">2.5.2 Hunyuan3D 2.1本地部署</h3>
 
-<div class="hlbox">
-<div class="hlbox-title">💻 Hunyuan3D 2.1本地部署代码</div>
-<pre><code># 克隆仓库
+  <div class="hlbox">
+    <div class="hlbox-title">💻 Hunyuan3D 2.1本地部署代码</div>
+    <pre><code># 克隆仓库
 git clone https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1.git
 cd Hunyuan3D-2.1
 
@@ -371,29 +386,54 @@ pip install -r requirements.txt
 
 # 运行推理（需要12GB+显存）
 python hy3dgen/main.py --input path/to/image.jpg --output result.glb</code></pre>
-</div>
+  </div>
 
-<h3 class="section-h3">2.5.3 硬件要求与优化</h3>
+  <h3 class="section-h3">2.5.3 硬件要求与优化</h3>
 
-<table class="tbl">
-<thead><tr><th>配置级别</th><th>显存要求</th><th>生成速度</th><th>适用场景</th></tr></thead>
-<tbody>
-<tr><td>最低配置</td><td>12GB</td><td>约30秒</td><td>RTX 3060/4060</td></tr>
-<tr><td>推荐配置</td><td>16-24GB</td><td>约15-20秒</td><td>RTX 4070/4080</td></tr>
-<tr><td>高性能配置</td><td>24GB+</td><td>约10秒</td><td>RTX 4090/A100</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>配置级别</th>
+        <th>显存要求</th>
+        <th>生成速度</th>
+        <th>适用场景</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>最低配置</td>
+        <td>12GB</td>
+        <td>约30秒</td>
+        <td>RTX 3060/4060</td>
+      </tr>
+      <tr>
+        <td>推荐配置</td>
+        <td>16-24GB</td>
+        <td>约15-20秒</td>
+        <td>RTX 4070/4080</td>
+      </tr>
+      <tr>
+        <td>高性能配置</td>
+        <td>24GB+</td>
+        <td>约10秒</td>
+        <td>RTX 4090/A100</td>
+      </tr>
+    </tbody>
+  </table>
 
-<div class="callout callout-info">
-<div class="callout-icon">ℹ️</div>
-<div class="callout-text"><strong>提示：</strong>Hunyuan3D 2.1需要NVIDIA显卡且显存≥12GB。如本地硬件不满足要求，可使用腾讯云GPU服务器或Colab进行体验。</div>
-</div>
+  <div class="callout callout-info">
+    <div class="callout-icon">ℹ️</div>
+    <div class="callout-text">
+      <strong>提示：</strong>Hunyuan3D
+      2.1需要NVIDIA显卡且显存≥12GB。如本地硬件不满足要求，可使用腾讯云GPU服务器或Colab进行体验。
+    </div>
+  </div>
 
-<h2 class="section-h2">2.6 常用快捷键与操作技巧</h2>
+  <h2 class="section-h2">2.6 常用快捷键与操作技巧</h2>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 3D画布通用快捷键</div>
-<pre><code>鼠标操作：
+  <div class="hlbox">
+    <div class="hlbox-title">💡 3D画布通用快捷键</div>
+    <pre><code>鼠标操作：
 - 左键拖拽：旋转模型视角
 - 右键拖拽：平移视角
 - 滚轮：缩放模型大小
@@ -411,104 +451,177 @@ python hy3dgen/main.py --input path/to/image.jpg --output result.glb</code></pre
 - 数字键3：右视图
 - 数字键7：俯视图
 - 数字键0：等轴测图</code></pre>
-</div>
+  </div>
 
-<h2 class="section-h2">2.7 模型精度控制与优化技巧</h2>
+  <h2 class="section-h2">2.7 模型精度控制与优化技巧</h2>
 
-<h3 class="section-h3">2.7.1 影响模型精度的因素</h3>
+  <h3 class="section-h3">2.7.1 影响模型精度的因素</h3>
 
-<table class="tbl">
-<thead><tr><th>因素</th><th>高精度效果</th><th>低精度效果</th></tr></thead>
-<tbody>
-<tr><td>多边形数量</td><td>细节丰富，曲面平滑</td><td>棱角分明，面状感明显</td></tr>
-<tr><td>纹理分辨率</td><td>细节清晰，质感真实</td><td>模糊，像素化明显</td></tr>
-<tr><td>UV展开质量</td><td>贴图对齐准确，无拉伸</td><td>贴图错位，变形明显</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>因素</th>
+        <th>高精度效果</th>
+        <th>低精度效果</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>多边形数量</td>
+        <td>细节丰富，曲面平滑</td>
+        <td>棱角分明，面状感明显</td>
+      </tr>
+      <tr>
+        <td>纹理分辨率</td>
+        <td>细节清晰，质感真实</td>
+        <td>模糊，像素化明显</td>
+      </tr>
+      <tr>
+        <td>UV展开质量</td>
+        <td>贴图对齐准确，无拉伸</td>
+        <td>贴图错位，变形明显</td>
+      </tr>
+    </tbody>
+  </table>
 
-<h3 class="section-h3">2.7.2 优化建议</h3>
+  <h3 class="section-h3">2.7.2 优化建议</h3>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">✅</div>
-<h4>合理选择精度</h4>
-<p>屏幕展示用低精度即可；3D打印根据打印机精度调整</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">✅</div>
-<h4>减少不必要的细节</h4>
-<p>远处物体可用简化模型，近处物体才需要高精度</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">✅</div>
-<h4>使用LOD技术</h4>
-<p>同一物体准备多个精度版本，根据需要切换</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">✅</div>
+      <h4>合理选择精度</h4>
+      <p>屏幕展示用低精度即可；3D打印根据打印机精度调整</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">✅</div>
+      <h4>减少不必要的细节</h4>
+      <p>远处物体可用简化模型，近处物体才需要高精度</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">✅</div>
+      <h4>使用LOD技术</h4>
+      <p>同一物体准备多个精度版本，根据需要切换</p>
+    </div>
+  </div>
 
-<h2 class="section-h2">2.8 常见问题诊断与解决</h2>
+  <h2 class="section-h2">2.8 常见问题诊断与解决</h2>
 
-<table class="tbl">
-<thead><tr><th>问题现象</th><th>可能原因</th><th>解决方案</th></tr></thead>
-<tbody>
-<tr><td>生成失败</td><td>网络连接问题/描述不符合物理规律</td><td>检查网络，重试；简化描述词</td></tr>
-<tr><td>模型变形</td><td>输入图片质量低/物体被遮挡</td><td>使用清晰无遮挡的图片</td></tr>
-<tr><td>多边形过多</td><td>AI生成精度过高</td><td>使用减面工具优化</td></tr>
-<tr><td>纹理错位</td><td>UV展开问题</td><td>重新烘焙或手动调整UV</td></tr>
-<tr><td>导出格式不支持</td><td>工具不支持该格式</td><td>转换为支持的中间格式如OBJ</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>问题现象</th>
+        <th>可能原因</th>
+        <th>解决方案</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>生成失败</td>
+        <td>网络连接问题/描述不符合物理规律</td>
+        <td>检查网络，重试；简化描述词</td>
+      </tr>
+      <tr>
+        <td>模型变形</td>
+        <td>输入图片质量低/物体被遮挡</td>
+        <td>使用清晰无遮挡的图片</td>
+      </tr>
+      <tr>
+        <td>多边形过多</td>
+        <td>AI生成精度过高</td>
+        <td>使用减面工具优化</td>
+      </tr>
+      <tr>
+        <td>纹理错位</td>
+        <td>UV展开问题</td>
+        <td>重新烘焙或手动调整UV</td>
+      </tr>
+      <tr>
+        <td>导出格式不支持</td>
+        <td>工具不支持该格式</td>
+        <td>转换为支持的中间格式如OBJ</td>
+      </tr>
+    </tbody>
+  </table>
 
-<h2 class="section-h2">2.9 本章小结</h2>
+  <h2 class="section-h2">2.9 本章小结</h2>
 
-<div class="hlbox">
-<div class="hlbox-title">📚 核心要点</div>
-<ol>
-<li>Meshy和Tripo3D适合零基础入门，界面直观易上手</li>
-<li>TripoSR是最快的开源模型（0.5秒），适合本地部署</li>
-<li>TRELLIS.2提供最高质量的PBR材质（1536³分辨率）</li>
-<li>文本描述推荐使用英文，并包含详细的尺寸、材质信息</li>
-<li>掌握3D画布操作快捷键可大幅提升工作效率</li>
-<li>根据用途合理选择模型精度，平衡质量与性能</li>
-</ol>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">📚 核心要点</div>
+    <ol>
+      <li>Meshy和Tripo3D适合零基础入门，界面直观易上手</li>
+      <li>TripoSR是最快的开源模型（0.5秒），适合本地部署</li>
+      <li>TRELLIS.2提供最高质量的PBR材质（1536³分辨率）</li>
+      <li>文本描述推荐使用英文，并包含详细的尺寸、材质信息</li>
+      <li>掌握3D画布操作快捷键可大幅提升工作效率</li>
+      <li>根据用途合理选择模型精度，平衡质量与性能</li>
+    </ol>
+  </div>
 
-<div class="card green">
-<div class="card-label">课后练习</div>
-<h3>第二章技能测试</h3>
-<p><strong>实操任务1：</strong>使用Meshy文本转3D功能，生成一个"棕色木质书架，高度1米，4层搁板"模型，并导出为GLB格式<br>
-<strong>实操任务2：</strong>使用Tripo3D图片转3D功能，上传一张产品图片生成3D模型<br>
-<strong>实操任务3（选做）：</strong>在HyperAI或OpenBayes上体验TripoSR，上传图片测试0.5秒生成效果<br>
-<strong>思考题：</strong>对比在线平台（Meshy/Tripo3D）和开源模型（TripoSR/TRELLIS.2）的优缺点，分析各适用场景</p>
-</div>
+  <div class="card green">
+    <div class="card-label">课后练习</div>
+    <h3>第二章技能测试</h3>
+    <p>
+      <strong>实操任务1：</strong
+      >使用Meshy文本转3D功能，生成一个"棕色木质书架，高度1米，4层搁板"模型，并导出为GLB格式<br />
+      <strong>实操任务2：</strong>使用Tripo3D图片转3D功能，上传一张产品图片生成3D模型<br />
+      <strong>实操任务3（选做）：</strong
+      >在HyperAI或OpenBayes上体验TripoSR，上传图片测试0.5秒生成效果<br />
+      <strong>思考题：</strong
+      >对比在线平台（Meshy/Tripo3D）和开源模型（TripoSR/TRELLIS.2）的优缺点，分析各适用场景
+    </p>
+  </div>
 
-<div class="card yellow">
-<div class="card-label">课后测验</div>
-<h3>第二章选择题</h3>
-<p><strong>1. TRELLIS.2的O-Voxel稀疏体素表示在1536³分辨率下生成PBR材质资产时，其稀疏性具体体现在？</strong><br>
-A. 仅在世界空间中的表面体素进行特征存储与计算，无关区域跳过　B. 在多尺度八叉树结构中仅激活深层节点　C. 材质通道独立稀疏编码而非联合密集张量　D. 仅对高曲率区域保留高精度体素<br><br>
-<strong>2. TripoSR宣称0.5秒生成速度的实现机制最可能基于？</strong><br>
-A. 级联超分辨率与即时MLIR编译优化　B. 多视角一致性约束下的并行推理管线　C. GAN架构对扩散模型的实时蒸馏　D. 固定分辨率下的步数压缩与early exit策略<br><br>
-<strong>3. Hunyuan3D 2.1采用DiT（Diffusion Transformer）架构进行形状生成，相比传统U-Net架构的扩散模型，其Scaling特性带来的核心变化是？</strong><br>
-A. 文本-图像-3D跨模态对齐的端到端统一　B. 推理步数可从50步压缩至15步且保持质量　C. 显存占用与模型参数呈线性而非平方关系增长　D. 实现了真正意义上的text-to-3D端到端生成<br><br>
-<strong>4. 在企业级AI 3D建模工作流设计中，若日均处理量从10个增长至1000个模型，以下部署方案的综合成本-效益分析，错误的是？</strong><br>
-A. Meshy/Tripo3D在线平台的订阅费用在规模化后将超过本地部署TCO　B. TripoSR本地部署在1000模型/日时，其GPU利用率会出现显著瓶颈　C. TRELLIS.2的1536³输出在Web 3D场景下需要额外的DRACO压缩　D. Hunyuan3D 2.1的PBR材质生成会增加约40%的后处理时间<br><br>
-<strong>5. 某项目需要将AI生成的3D模型无缝集成至WebGL实时渲染管线，并要求在移动端保持30fps以上的交互流畅度。以下技术选型的权衡分析，合理的是？</strong><br>
-A. GLB格式的DRACO压缩可无损降低约80%传输量，是唯一选择　B. 1536³分辨率的PBR纹理在移动端必须降采样至512²才能保证性能　C. 3DGS（3D Gaussian Splatting）格式相比Mesh在相同质量下渲染速度更快，但不支持PBR材质　D. USDZ格式在iOS Quick Look中的兼容性优势使其成为跨平台AR最优解</p>
-<details class="quiz-answer">
-<summary>参考答案</summary>
-<div>
-<p><strong>答案：1.C　2.D　3.C　4.C　5.B</strong></p>
-<p><strong>解析：</strong></p>
-<ol style="font-size:0.9em; color:#666;">
-<li>TRELLIS.2的O-Voxel稀疏体素在1536³分辨率下仅对表面体素进行特征存储，无关区域跳过，实现稀疏性。</li>
-<li>TripoSR的0.5秒生成速度源于固定分辨率下的步数压缩与early exit策略，而非复杂架构。</li>
-<li>Hunyuan3D 2.1的DiT架构使显存占用与模型参数呈线性而非平方关系，便于Scaling。</li>
-<li>Hunyuan3D的PBR材质生成确实增加约40%后处理时间，这是质量与效率的权衡。</li>
-<li>1536³分辨率的PBR纹理在移动端必须降采样至512²才能保证30fps以上的渲染性能。</li>
-</ol>
-</div>
-</details>
-</div>
-
+  <div class="card yellow">
+    <div class="card-label">课后测验</div>
+    <h3>第二章选择题</h3>
+    <p>
+      <strong
+        >1.
+        TRELLIS.2的O-Voxel稀疏体素表示在1536³分辨率下生成PBR材质资产时，其稀疏性具体体现在？</strong
+      ><br />
+      A. 仅在世界空间中的表面体素进行特征存储与计算，无关区域跳过　B.
+      在多尺度八叉树结构中仅激活深层节点　C. 材质通道独立稀疏编码而非联合密集张量　D.
+      仅对高曲率区域保留高精度体素<br /><br />
+      <strong>2. TripoSR宣称0.5秒生成速度的实现机制最可能基于？</strong><br />
+      A. 级联超分辨率与即时MLIR编译优化　B. 多视角一致性约束下的并行推理管线　C.
+      GAN架构对扩散模型的实时蒸馏　D. 固定分辨率下的步数压缩与early exit策略<br /><br />
+      <strong
+        >3. Hunyuan3D 2.1采用DiT（Diffusion
+        Transformer）架构进行形状生成，相比传统U-Net架构的扩散模型，其Scaling特性带来的核心变化是？</strong
+      ><br />
+      A. 文本-图像-3D跨模态对齐的端到端统一　B. 推理步数可从50步压缩至15步且保持质量　C.
+      显存占用与模型参数呈线性而非平方关系增长　D. 实现了真正意义上的text-to-3D端到端生成<br /><br />
+      <strong
+        >4. 在企业级AI
+        3D建模工作流设计中，若日均处理量从10个增长至1000个模型，以下部署方案的综合成本-效益分析，错误的是？</strong
+      ><br />
+      A. Meshy/Tripo3D在线平台的订阅费用在规模化后将超过本地部署TCO　B.
+      TripoSR本地部署在1000模型/日时，其GPU利用率会出现显著瓶颈　C. TRELLIS.2的1536³输出在Web
+      3D场景下需要额外的DRACO压缩　D. Hunyuan3D 2.1的PBR材质生成会增加约40%的后处理时间<br /><br />
+      <strong
+        >5.
+        某项目需要将AI生成的3D模型无缝集成至WebGL实时渲染管线，并要求在移动端保持30fps以上的交互流畅度。以下技术选型的权衡分析，合理的是？</strong
+      ><br />
+      A. GLB格式的DRACO压缩可无损降低约80%传输量，是唯一选择　B.
+      1536³分辨率的PBR纹理在移动端必须降采样至512²才能保证性能　C. 3DGS（3D Gaussian
+      Splatting）格式相比Mesh在相同质量下渲染速度更快，但不支持PBR材质　D. USDZ格式在iOS Quick
+      Look中的兼容性优势使其成为跨平台AR最优解
+    </p>
+    <details class="quiz-answer">
+      <summary>参考答案</summary>
+      <div>
+        <p><strong>答案：1.C　2.D　3.C　4.C　5.B</strong></p>
+        <p><strong>解析：</strong></p>
+        <ol style="font-size: 0.9em; color: #666">
+          <li>
+            TRELLIS.2的O-Voxel稀疏体素在1536³分辨率下仅对表面体素进行特征存储，无关区域跳过，实现稀疏性。
+          </li>
+          <li>TripoSR的0.5秒生成速度源于固定分辨率下的步数压缩与early exit策略，而非复杂架构。</li>
+          <li>Hunyuan3D 2.1的DiT架构使显存占用与模型参数呈线性而非平方关系，便于Scaling。</li>
+          <li>Hunyuan3D的PBR材质生成确实增加约40%后处理时间，这是质量与效率的权衡。</li>
+          <li>1536³分辨率的PBR纹理在移动端必须降采样至512²才能保证30fps以上的渲染性能。</li>
+        </ol>
+      </div>
+    </details>
+  </div>
 </section>

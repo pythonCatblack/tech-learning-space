@@ -1,64 +1,92 @@
 <section id="ch5">
-<!-- 内容更新时间：2026-05-03 -->
-<div class="hero">
-<div class="chapter-tag">Chapter 5 · 核心技能篇</div>
-<h1>渲染技术与输出设置</h1>
-<p class="sub">学习渲染引擎选择、光照设置、参数优化与多格式输出</p>
-<div class="hero-meta">
-<span class="hero-meta-item">📖 约45分钟阅读</span>
-<span class="hero-meta-item">💡 渲染技术</span>
-</div>
-</div>
+  <!-- 内容更新时间：2026-05-03 -->
+  <div class="hero">
+    <div class="chapter-tag">Chapter 5 · 核心技能篇</div>
+    <h1>渲染技术与输出设置</h1>
+    <p class="sub">学习渲染引擎选择、光照设置、参数优化与多格式输出</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">📖 约45分钟阅读</span>
+      <span class="hero-meta-item">💡 渲染技术</span>
+    </div>
+  </div>
 
-<p class="lead">渲染是将3D模型转化为精美图像或动画的关键步骤。本章将介绍主流渲染引擎的特性，教你如何设置光照、调整渲染参数，以及如何输出适合不同用途的文件格式。</p>
+  <p class="lead">
+    渲染是将3D模型转化为精美图像或动画的关键步骤。本章将介绍主流渲染引擎的特性，教你如何设置光照、调整渲染参数，以及如何输出适合不同用途的文件格式。
+  </p>
 
-<h2 class="section-h2">5.1 渲染引擎概述与选择</h2>
+  <h2 class="section-h2">5.1 渲染引擎概述与选择</h2>
 
-<h3 class="section-h3">5.1.1 渲染类型对比</h3>
+  <h3 class="section-h3">5.1.1 渲染类型对比</h3>
 
-<table class="tbl">
-<thead><tr><th>类型</th><th>原理</th><th>速度</th><th>质量</th><th>适用场景</th></tr></thead>
-<tbody>
-<tr><td><strong>实时渲染</strong></td><td>GPU实时计算</td><td>极快</td><td>中等</td><td>游戏、Web 3D、交互展示</td></tr>
-<tr><td><strong>离线渲染</strong></td><td>CPU/GPU逐步计算</td><td>慢</td><td>极高</td><td>产品渲染、影视动画</td></tr>
-<tr><td><strong>云渲染</strong></td><td>远程服务器渲染</td><td>中等</td><td>高</td><td>大批量生产、高质量需求</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>类型</th>
+        <th>原理</th>
+        <th>速度</th>
+        <th>质量</th>
+        <th>适用场景</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>实时渲染</strong></td>
+        <td>GPU实时计算</td>
+        <td>极快</td>
+        <td>中等</td>
+        <td>游戏、Web 3D、交互展示</td>
+      </tr>
+      <tr>
+        <td><strong>离线渲染</strong></td>
+        <td>CPU/GPU逐步计算</td>
+        <td>慢</td>
+        <td>极高</td>
+        <td>产品渲染、影视动画</td>
+      </tr>
+      <tr>
+        <td><strong>云渲染</strong></td>
+        <td>远程服务器渲染</td>
+        <td>中等</td>
+        <td>高</td>
+        <td>大批量生产、高质量需求</td>
+      </tr>
+    </tbody>
+  </table>
 
-<h3 class="section-h3">5.1.2 主流渲染工具推荐</h3>
+  <h3 class="section-h3">5.1.2 主流渲染工具推荐</h3>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">☁️</div>
-<h4>Meshy内置渲染</h4>
-<p>集成在建模工具中，即时预览效果好</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🎨</div>
-<h4>Spline渲染</h4>
-<p>Web端实时渲染，支持PBR材质</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🖥️</div>
-<h4>Blender Cycles</h4>
-<p>开源强大，路径追踪渲染器，最新稳定版4.4（4.3 LTS于2024年11月发布）</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">☁️</div>
-<h4>Renderbus瑞云渲染</h4>
-<p>云渲染平台，服务200万+用户，支持Maya/Blender/C4D</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">☁️</div>
+      <h4>Meshy内置渲染</h4>
+      <p>集成在建模工具中，即时预览效果好</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🎨</div>
+      <h4>Spline渲染</h4>
+      <p>Web端实时渲染，支持PBR材质</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🖥️</div>
+      <h4>Blender Cycles</h4>
+      <p>开源强大，路径追踪渲染器，最新稳定版4.4（4.3 LTS于2024年11月发布）</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">☁️</div>
+      <h4>Renderbus瑞云渲染</h4>
+      <p>云渲染平台，服务200万+用户，支持Maya/Blender/C4D</p>
+    </div>
+  </div>
 
-<h2 class="section-h2">5.2 光照与阴影设置</h2>
+  <h2 class="section-h2">5.2 光照与阴影设置</h2>
 
-<h3 class="section-h3">5.2.1 三点照明基础</h3>
+  <h3 class="section-h3">5.2.1 三点照明基础</h3>
 
-<p class="p">三点照明是产品渲染中最常用的光照方案：</p>
+  <p class="p">三点照明是产品渲染中最常用的光照方案：</p>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 三点照明设置</div>
-<pre><code>主光源（Key Light）：
+  <div class="hlbox">
+    <div class="hlbox-title">💡 三点照明设置</div>
+    <pre><code>主光源（Key Light）：
 - 位置：与相机约成45度角，高于模型
 - 作用：提供主要照明，决定整体亮度
 - 设置：强度1.0，色温5500K（日光）
@@ -72,174 +100,278 @@
 - 位置：模型后方，凸出模型轮廓
 - 作用：分离主体与背景
 - 设置：强度0.5-0.8，可使用暖色调</code></pre>
-</div>
+  </div>
 
-<h3 class="section-h3">5.2.2 环境光与HDRI</h3>
+  <h3 class="section-h3">5.2.2 环境光与HDRI</h3>
 
-<p class="p">HDRI（High Dynamic Range Image）可以提供真实的环境光照效果：</p>
+  <p class="p">HDRI（High Dynamic Range Image）可以提供真实的环境光照效果：</p>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">🌅</div>
-<h4>HDRI来源</h4>
-<p>Poly Haven、HDRI Haven提供免费HDRI</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">⚙️</div>
-<h4>HDRI调整</h4>
-<p>旋转角度、强度、模糊度可调节</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🌅</div>
+      <h4>HDRI来源</h4>
+      <p>Poly Haven、HDRI Haven提供免费HDRI</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⚙️</div>
+      <h4>HDRI调整</h4>
+      <p>旋转角度、强度、模糊度可调节</p>
+    </div>
+  </div>
 
-<h2 class="section-h2">5.3 渲染参数优化</h2>
+  <h2 class="section-h2">5.3 渲染参数优化</h2>
 
-<h3 class="section-h3">5.3.1 关键参数详解</h3>
+  <h3 class="section-h3">5.3.1 关键参数详解</h3>
 
-<table class="tbl">
-<thead><tr><th>参数</th><th>说明</th><th>优化建议</th></tr></thead>
-<tbody>
-<tr><td>分辨率</td><td>输出图像的像素尺寸</td><td>根据用途选择：预览1080p，展示2K-4K，印刷4K+</td></tr>
-<tr><td>采样数</td><td>光线追踪精度</td><td>质量要求越高，采样数越高（64-512）</td></tr>
-<tr><td>降噪</td><td>减少噪点</td><td>AI降噪可以在低采样下获得干净图像</td></tr>
-<tr><td>光照缓存</td><td>全局光照精度</td><td>复杂场景需提高光照缓存精度</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>参数</th>
+        <th>说明</th>
+        <th>优化建议</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>分辨率</td>
+        <td>输出图像的像素尺寸</td>
+        <td>根据用途选择：预览1080p，展示2K-4K，印刷4K+</td>
+      </tr>
+      <tr>
+        <td>采样数</td>
+        <td>光线追踪精度</td>
+        <td>质量要求越高，采样数越高（64-512）</td>
+      </tr>
+      <tr>
+        <td>降噪</td>
+        <td>减少噪点</td>
+        <td>AI降噪可以在低采样下获得干净图像</td>
+      </tr>
+      <tr>
+        <td>光照缓存</td>
+        <td>全局光照精度</td>
+        <td>复杂场景需提高光照缓存精度</td>
+      </tr>
+    </tbody>
+  </table>
 
-<h3 class="section-h3">5.3.2 渲染质量vs速度平衡</h3>
+  <h3 class="section-h3">5.3.2 渲染质量vs速度平衡</h3>
 
-<div class="flow">
-<div class="flow-box">
-<div class="flow-box-title">快速预览</div>
-<div class="flow-box-desc">低分辨率<br>低采样数<br>开启降噪</div>
-</div>
-<div class="flow-arrow">→</div>
-<div class="flow-box">
-<div class="flow-box-title">标准输出</div>
-<div class="flow-box-desc">1080p-2K<br>中等采样<br>AI降噪</div>
-</div>
-<div class="flow-arrow">→</div>
-<div class="flow-box">
-<div class="flow-box-title">高质量</div>
-<div class="flow-box-desc">4K+分辨率<br>高采样数<br>精细调整</div>
-</div>
-</div>
+  <div class="flow">
+    <div class="flow-box">
+      <div class="flow-box-title">快速预览</div>
+      <div class="flow-box-desc">低分辨率<br />低采样数<br />开启降噪</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">标准输出</div>
+      <div class="flow-box-desc">1080p-2K<br />中等采样<br />AI降噪</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">高质量</div>
+      <div class="flow-box-desc">4K+分辨率<br />高采样数<br />精细调整</div>
+    </div>
+  </div>
 
-<h2 class="section-h2">5.4 多格式输出设置</h2>
+  <h2 class="section-h2">5.4 多格式输出设置</h2>
 
-<h3 class="section-h3">5.4.1 常见3D格式对比</h3>
+  <h3 class="section-h3">5.4.1 常见3D格式对比</h3>
 
-<table class="tbl">
-<thead><tr><th>格式</th><th>特点</th><th>适用场景</th></tr></thead>
-<tbody>
-<tr><td><strong>GLB/GLTF</strong></td><td>紧凑、支持材质动画、Web原生</td><td>Web展示、AR/VR、游戏</td></tr>
-<tr><td><strong>FBX</strong></td><td>通用性强、支持动画和骨骼</td><td>游戏引擎、DCC软件互导</td></tr>
-<tr><td><strong>OBJ</strong></td><td>简单可靠、只支持网格</td><td>通用交换、3D打印</td></tr>
-<tr><td><strong>STL</strong></td><td>3D打印专用、只含网格</td><td>3D打印、CNC加工</td></tr>
-<tr><td><strong>USD/USDZ</strong></td><td>皮克斯标准、适合苹果生态</td><td>AR Quick Look、影视</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>格式</th>
+        <th>特点</th>
+        <th>适用场景</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>GLB/GLTF</strong></td>
+        <td>紧凑、支持材质动画、Web原生</td>
+        <td>Web展示、AR/VR、游戏</td>
+      </tr>
+      <tr>
+        <td><strong>FBX</strong></td>
+        <td>通用性强、支持动画和骨骼</td>
+        <td>游戏引擎、DCC软件互导</td>
+      </tr>
+      <tr>
+        <td><strong>OBJ</strong></td>
+        <td>简单可靠、只支持网格</td>
+        <td>通用交换、3D打印</td>
+      </tr>
+      <tr>
+        <td><strong>STL</strong></td>
+        <td>3D打印专用、只含网格</td>
+        <td>3D打印、CNC加工</td>
+      </tr>
+      <tr>
+        <td><strong>USD/USDZ</strong></td>
+        <td>皮克斯标准、适合苹果生态</td>
+        <td>AR Quick Look、影视</td>
+      </tr>
+    </tbody>
+  </table>
 
-<h3 class="section-h3">5.4.2 图像格式选择</h3>
+  <h3 class="section-h3">5.4.2 图像格式选择</h3>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">🖼️</div>
-<h4>PNG</h4>
-<p>无损压缩，支持透明背景，适合展示用</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">📷</div>
-<h4>JPEG</h4>
-<p>有损压缩，文件小，适合网络分享</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🔴</div>
-<h4>EXR/HDR</h4>
-<p>32位高动态范围，用于后期合成</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🖼️</div>
+      <h4>PNG</h4>
+      <p>无损压缩，支持透明背景，适合展示用</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📷</div>
+      <h4>JPEG</h4>
+      <p>有损压缩，文件小，适合网络分享</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔴</div>
+      <h4>EXR/HDR</h4>
+      <p>32位高动态范围，用于后期合成</p>
+    </div>
+  </div>
 
-<h2 class="section-h2">5.5 渲染质量评估</h2>
+  <h2 class="section-h2">5.5 渲染质量评估</h2>
 
-<h3 class="section-h3">5.5.1 评估维度</h3>
+  <h3 class="section-h3">5.5.1 评估维度</h3>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 渲染质量检查清单</div>
-<pre><code>□ 整体曝光是否正确？高光和阴影是否有细节？
+  <div class="hlbox">
+    <div class="hlbox-title">💡 渲染质量检查清单</div>
+    <pre><code>□ 整体曝光是否正确？高光和阴影是否有细节？
 □ 材质质感是否真实？反光是否符合物理规律？
 □ 阴影边缘是否自然？硬阴影还是软阴影？
 □ 有无噪点或闪烁？
 □ 景深效果是否自然（如果使用了DOF）？
 □ 色彩是否协调？白平衡是否正确？
 □ 有无明显的锯齿或贴图错误？</code></pre>
-</div>
+  </div>
 
-<h3 class="section-h3">5.5.2 常见问题及解决</h3>
+  <h3 class="section-h3">5.5.2 常见问题及解决</h3>
 
-<table class="tbl">
-<thead><tr><th>问题</th><th>原因</th><th>解决方案</th></tr></thead>
-<tbody>
-<tr><td>整体过曝</td><td>光照过强/曝光参数过高</td><td>降低光源强度或曝光值</td></tr>
-<tr><td>阴影过黑</td><td>补光不足</td><td>增加fill light或提高环境光</td></tr>
-<tr><td>材质发暗</td><td>金属度/粗糙度设置不当</td><td>检查PBR参数</td></tr>
-<tr><td>噪点过多</td><td>采样数不足</td><td>提高采样或开启降噪</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>问题</th>
+        <th>原因</th>
+        <th>解决方案</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>整体过曝</td>
+        <td>光照过强/曝光参数过高</td>
+        <td>降低光源强度或曝光值</td>
+      </tr>
+      <tr>
+        <td>阴影过黑</td>
+        <td>补光不足</td>
+        <td>增加fill light或提高环境光</td>
+      </tr>
+      <tr>
+        <td>材质发暗</td>
+        <td>金属度/粗糙度设置不当</td>
+        <td>检查PBR参数</td>
+      </tr>
+      <tr>
+        <td>噪点过多</td>
+        <td>采样数不足</td>
+        <td>提高采样或开启降噪</td>
+      </tr>
+    </tbody>
+  </table>
 
-<h2 class="section-h2">5.6 本章小结</h2>
+  <h2 class="section-h2">5.6 本章小结</h2>
 
-<div class="hlbox">
-<div class="hlbox-title">📚 核心要点</div>
-<ol>
-<li>实时渲染适合交互展示，离线渲染适合高质量静态图</li>
-<li>三点照明（主光+补光+轮廓光）是产品渲染基础</li>
-<li>HDRI可以提供真实的环境光照效果</li>
-<li>渲染参数需在质量与速度间平衡</li>
-<li>GLB/GLTF是Web 3D最佳格式，STL是3D打印专用格式</li>
-<li>渲染后应从曝光、材质、阴影、噪点等维度评估质量</li>
-</ol>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">📚 核心要点</div>
+    <ol>
+      <li>实时渲染适合交互展示，离线渲染适合高质量静态图</li>
+      <li>三点照明（主光+补光+轮廓光）是产品渲染基础</li>
+      <li>HDRI可以提供真实的环境光照效果</li>
+      <li>渲染参数需在质量与速度间平衡</li>
+      <li>GLB/GLTF是Web 3D最佳格式，STL是3D打印专用格式</li>
+      <li>渲染后应从曝光、材质、阴影、噪点等维度评估质量</li>
+    </ol>
+  </div>
 
-<div class="card green">
-<div class="card-label">课后练习</div>
-<h3>第五章技能测试</h3>
-<p><strong>实操任务：</strong>为第三章设计的收纳盒模型进行渲染输出<br>
-<strong>要求：</strong><br>
-1. 使用三点照明设置灯光<br>
-2. 选择合适的HDRI环境<br>
-3. 渲染4张不同角度的产品展示图<br>
-4. 输出一张透明背景的PNG主图<br>
-5. 导出GLB格式用于Web展示<br>
-<strong>评估标准：</strong>灯光设置合理性30%、渲染质量40%、格式正确性30%</p>
-</div>
+  <div class="card green">
+    <div class="card-label">课后练习</div>
+    <h3>第五章技能测试</h3>
+    <p>
+      <strong>实操任务：</strong>为第三章设计的收纳盒模型进行渲染输出<br />
+      <strong>要求：</strong><br />
+      1. 使用三点照明设置灯光<br />
+      2. 选择合适的HDRI环境<br />
+      3. 渲染4张不同角度的产品展示图<br />
+      4. 输出一张透明背景的PNG主图<br />
+      5. 导出GLB格式用于Web展示<br />
+      <strong>评估标准：</strong>灯光设置合理性30%、渲染质量40%、格式正确性30%
+    </p>
+  </div>
 
-<div class="card yellow">
-<div class="card-label">课后测验</div>
-<h3>第五章选择题</h3>
-<p><strong>1. Blender Cycles作为路径追踪渲染器，其实质是基于Monte Carlo积分的光线传输模拟。在实际生产中，当采样数（samples）从64增至512时，噪点减少的边际效益呈对数衰减。以下关于采样策略的优化分析，正确的是？</strong><br>
-A. AI降噪器（如Intel Open Image Denoise）的引入可使采样数降至16而不损失可接受的视觉质量　B. 在交互式预览阶段，应使用路径追踪而非光栅化，因为前者可实现实时降噪　C. 采样数的最优值与场景复杂度无关，仅取决于输出分辨率　D. Cycles的BPT（双向路径追踪）相比SPM（单通道路径追踪）在室内场景中收敛更快<br><br>
-<strong>2. HDRI（High Dynamic Range Image）在渲染中的作用不仅是环境光照，还涉及颜色空间与动态范围的映射。以下关于HDRI使用中的关键技术问题，分析正确的是？</strong><br>
-A. HDRI的亮度值通常以EV（曝光值）为单位存储，需要通过线性化才能用于物理渲染　B. Poly Haven提供的HDRI已进行色调映射，可直接用于游戏引擎的移动平均光照计算　C. 在室内场景中，使用HDRI作为主光源时，其角度范围应覆盖可见天空弧度　D. HDRI的反射球（reflection sphere）与辐射球（irradiance sphere）在球谐函数展开时收敛阶数相同<br><br>
-<strong>3. 在Web 3D展示场景中，GLB/GLTF格式的选定涉及渲染管线兼容性、传输效率与视觉保真度的综合权衡。以下分析中，错误的是？</strong><br>
-A. GLB将二进制数据嵌入GLTF JSON中，避免了外部文件依赖，简化了CDN分发　B. GLTF 2.0的PBR扩展（PBR_COMMON）相比1.0的材质定义增加了金属度/粗糙度工作流支持　C. 在移动端WebGL 2.0环境下，GLB的DRACO压缩解压是CPU瓶颈而非GPU瓶颈　D. GLB导出时嵌入的KHR_meshquantization扩展可用于优化GPU顶点处理效率<br><br>
-<strong>4. 三点照明设计中，主光源（Key Light）的45度布置不仅是美学传统，更有其光学物理依据。该角度下主光源与相机形成的几何关系主要影响？</strong><br>
-A. 镜面反射（高光）在观察者视角的可见性，以及阴影落在模型侧面的比例分配　B. 漫反射分量的空间分布均匀性，与相机视角无关　C. 环境光遮蔽（AO）的计算精度，因为光线追踪角度会影响遮蔽判断　D. 材质的双向反射分布函数（BRDF）的漫反射分量响应<br><br>
-<strong>5. 在渲染参数优化中，"渲染质量与速度呈负相关"是线性假设的简化描述。某项目需要在渲染质量（以感知质量指标PSNR衡量）与渲染时间之间寻找帕累托最优解。以下参数组合策略的效率分析，正确的是？</strong><br>
-A. 使用NVIDIA Omniverse RTX渲染器时，启用DLSS 3.0可在同质量下获得4倍加速，因此采样数不再是瓶颈　B. 在云渲染平台（如Renderbus）上，时间成本与实例数量的关系在达到某临界点后从线性转为平方增长　C. 降噪器（denoiser）的引入会在减少噪点的同时引入高频细节损失，该trade-off在AI降噪中尤为明显　D. 分辨率缩放（resolution scaling）与采样数调整在降低渲染时间上具有等价效果</p>
-<details class="quiz-answer">
-<summary>参考答案</summary>
-<div>
-<p><strong>答案：1.B　2.C　3.C　4.A　5.D</strong></p>
-<p><strong>解析：</strong></p>
-<ol style="font-size:0.9em; color:#666;">
-<li>AI降噪器（如Intel Open Image Denoise）可使采样数降至16而不损失可接受的视觉质量。</li>
-<li>HDRI作为主光源时，其角度范围应覆盖可见天空弧度以获得自然的环境光照。</li>
-<li>GLTF 2.0的PBR扩展相比1.0增加了金属度/粗糙度工作流支持，这是格式演进的重要改进。</li>
-<li>45度主光源布置主要影响镜面反射（高光）在观察者视角的可见性以及阴影分配比例。</li>
-<li>降噪器在减少噪点的同时确实会引入高频细节损失，该trade-off在AI降噪中尤为明显。</li>
-</ol>
-</div>
-</details>
-</div>
-
+  <div class="card yellow">
+    <div class="card-label">课后测验</div>
+    <h3>第五章选择题</h3>
+    <p>
+      <strong
+        >1. Blender Cycles作为路径追踪渲染器，其实质是基于Monte
+        Carlo积分的光线传输模拟。在实际生产中，当采样数（samples）从64增至512时，噪点减少的边际效益呈对数衰减。以下关于采样策略的优化分析，正确的是？</strong
+      ><br />
+      A. AI降噪器（如Intel Open Image Denoise）的引入可使采样数降至16而不损失可接受的视觉质量　B.
+      在交互式预览阶段，应使用路径追踪而非光栅化，因为前者可实现实时降噪　C.
+      采样数的最优值与场景复杂度无关，仅取决于输出分辨率　D.
+      Cycles的BPT（双向路径追踪）相比SPM（单通道路径追踪）在室内场景中收敛更快<br /><br />
+      <strong
+        >2. HDRI（High Dynamic Range
+        Image）在渲染中的作用不仅是环境光照，还涉及颜色空间与动态范围的映射。以下关于HDRI使用中的关键技术问题，分析正确的是？</strong
+      ><br />
+      A. HDRI的亮度值通常以EV（曝光值）为单位存储，需要通过线性化才能用于物理渲染　B. Poly
+      Haven提供的HDRI已进行色调映射，可直接用于游戏引擎的移动平均光照计算　C.
+      在室内场景中，使用HDRI作为主光源时，其角度范围应覆盖可见天空弧度　D. HDRI的反射球（reflection
+      sphere）与辐射球（irradiance sphere）在球谐函数展开时收敛阶数相同<br /><br />
+      <strong
+        >3. 在Web
+        3D展示场景中，GLB/GLTF格式的选定涉及渲染管线兼容性、传输效率与视觉保真度的综合权衡。以下分析中，错误的是？</strong
+      ><br />
+      A. GLB将二进制数据嵌入GLTF JSON中，避免了外部文件依赖，简化了CDN分发　B. GLTF
+      2.0的PBR扩展（PBR_COMMON）相比1.0的材质定义增加了金属度/粗糙度工作流支持　C. 在移动端WebGL
+      2.0环境下，GLB的DRACO压缩解压是CPU瓶颈而非GPU瓶颈　D.
+      GLB导出时嵌入的KHR_meshquantization扩展可用于优化GPU顶点处理效率<br /><br />
+      <strong
+        >4. 三点照明设计中，主光源（Key
+        Light）的45度布置不仅是美学传统，更有其光学物理依据。该角度下主光源与相机形成的几何关系主要影响？</strong
+      ><br />
+      A. 镜面反射（高光）在观察者视角的可见性，以及阴影落在模型侧面的比例分配　B.
+      漫反射分量的空间分布均匀性，与相机视角无关　C.
+      环境光遮蔽（AO）的计算精度，因为光线追踪角度会影响遮蔽判断　D.
+      材质的双向反射分布函数（BRDF）的漫反射分量响应<br /><br />
+      <strong
+        >5.
+        在渲染参数优化中，"渲染质量与速度呈负相关"是线性假设的简化描述。某项目需要在渲染质量（以感知质量指标PSNR衡量）与渲染时间之间寻找帕累托最优解。以下参数组合策略的效率分析，正确的是？</strong
+      ><br />
+      A. 使用NVIDIA Omniverse RTX渲染器时，启用DLSS
+      3.0可在同质量下获得4倍加速，因此采样数不再是瓶颈　B.
+      在云渲染平台（如Renderbus）上，时间成本与实例数量的关系在达到某临界点后从线性转为平方增长　C.
+      降噪器（denoiser）的引入会在减少噪点的同时引入高频细节损失，该trade-off在AI降噪中尤为明显　D.
+      分辨率缩放（resolution scaling）与采样数调整在降低渲染时间上具有等价效果
+    </p>
+    <details class="quiz-answer">
+      <summary>参考答案</summary>
+      <div>
+        <p><strong>答案：1.B　2.C　3.C　4.A　5.D</strong></p>
+        <p><strong>解析：</strong></p>
+        <ol style="font-size: 0.9em; color: #666">
+          <li>AI降噪器（如Intel Open Image Denoise）可使采样数降至16而不损失可接受的视觉质量。</li>
+          <li>HDRI作为主光源时，其角度范围应覆盖可见天空弧度以获得自然的环境光照。</li>
+          <li>GLTF 2.0的PBR扩展相比1.0增加了金属度/粗糙度工作流支持，这是格式演进的重要改进。</li>
+          <li>45度主光源布置主要影响镜面反射（高光）在观察者视角的可见性以及阴影分配比例。</li>
+          <li>降噪器在减少噪点的同时确实会引入高频细节损失，该trade-off在AI降噪中尤为明显。</li>
+        </ol>
+      </div>
+    </details>
+  </div>
 </section>

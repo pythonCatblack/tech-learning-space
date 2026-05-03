@@ -1,283 +1,386 @@
 <section id="ch12">
-<!-- 内容更新时间：2026-05-03 -->
-<div class="hero">
-<div class="chapter-tag">Chapter 12 · AI Development Lifecycle</div>
-<h1>智能项目管理——AI驱动的研发效能提升</h1>
-<p class="sub">AI可以从历史数据中学习，提供更准确的预测和更及时的风险预警</p>
-<div class="hero-meta">
-<span class="hero-meta-item">📖 17 min</span>
-</div>
-</div>
+  <!-- 内容更新时间：2026-05-03 -->
+  <div class="hero">
+    <div class="chapter-tag">Chapter 12 · AI Development Lifecycle</div>
+    <h1>智能项目管理——AI驱动的研发效能提升</h1>
+    <p class="sub">AI可以从历史数据中学习，提供更准确的预测和更及时的风险预警</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">📖 17 min</span>
+    </div>
+  </div>
 
-<h2 class="section-h2">12.1 传统项目管理的痛点</h2>
+  <h2 class="section-h2">12.1 传统项目管理的痛点</h2>
 
-<p class="p">软件项目管理面临诸多挑战：估算不准确、进度不透明、风险发现滞后、资源冲突难以协调。AI可以从历史数据中学习，提供更准确的预测和更及时的风险预警。</p>
+  <p class="p">
+    软件项目管理面临诸多挑战：估算不准确、进度不透明、风险发现滞后、资源冲突难以协调。AI可以从历史数据中学习，提供更准确的预测和更及时的风险预警。
+  </p>
 
-<h2 class="section-h2">12.2 工作量估算的AI辅助</h2>
+  <h2 class="section-h2">12.2 工作量估算的AI辅助</h2>
 
-<p class="p">传统估算依赖主观判断，AI可以从历史数据中发现规律。</p>
+  <p class="p">传统估算依赖主观判断，AI可以从历史数据中发现规律。</p>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 提示词示例</div>
-<p>基于团队历史项目数据，预测新项目的工作量：</p>
-<p>历史数据：</p>
-<table class="tbl">
-<thead><tr><th>项目类型</th><th>需求点数</th><th>实际工时</th><th>团队规模</th><th>工期(周)</th><th>质量</th></tr></thead>
-<tbody>
-<tr><td>CRM系统</td><td>120</td><td>480h</td><td>3人</td><td>8</td><td>良好</td></tr>
-<tr><td>电商小程序</td><td>80</td><td>320h</td><td>2人</td><td>6</td><td>优秀</td></tr>
-<tr><td>数据报表</td><td>60</td><td>180h</td><td>2人</td><td>4</td><td>良好</td></tr>
-<tr><td>内部OA</td><td>100</td><td>520h</td><td>3人</td><td>10</td><td>一般</td></tr>
-</tbody>
-</table>
-<p>新项目：</p>
-<ul>
-<li>类型：移动App</li>
-<li>预估需求点：90</li>
-<li>团队规模：3人</li>
-<li>目标工期：6周</li>
-</ul>
-<p>请预测：</p>
-<ol>
-<li>预估工时</li>
-<li>合理工期</li>
-<li>质量预期</li>
-<li>主要风险点</li>
-</ol>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">💡 提示词示例</div>
+    <p>基于团队历史项目数据，预测新项目的工作量：</p>
+    <p>历史数据：</p>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>项目类型</th>
+          <th>需求点数</th>
+          <th>实际工时</th>
+          <th>团队规模</th>
+          <th>工期(周)</th>
+          <th>质量</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CRM系统</td>
+          <td>120</td>
+          <td>480h</td>
+          <td>3人</td>
+          <td>8</td>
+          <td>良好</td>
+        </tr>
+        <tr>
+          <td>电商小程序</td>
+          <td>80</td>
+          <td>320h</td>
+          <td>2人</td>
+          <td>6</td>
+          <td>优秀</td>
+        </tr>
+        <tr>
+          <td>数据报表</td>
+          <td>60</td>
+          <td>180h</td>
+          <td>2人</td>
+          <td>4</td>
+          <td>良好</td>
+        </tr>
+        <tr>
+          <td>内部OA</td>
+          <td>100</td>
+          <td>520h</td>
+          <td>3人</td>
+          <td>10</td>
+          <td>一般</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>新项目：</p>
+    <ul>
+      <li>类型：移动App</li>
+      <li>预估需求点：90</li>
+      <li>团队规模：3人</li>
+      <li>目标工期：6周</li>
+    </ul>
+    <p>请预测：</p>
+    <ol>
+      <li>预估工时</li>
+      <li>合理工期</li>
+      <li>质量预期</li>
+      <li>主要风险点</li>
+    </ol>
+  </div>
 
-<h2 class="section-h2">12.3 Sprint健康度分析</h2>
+  <h2 class="section-h2">12.3 Sprint健康度分析</h2>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 提示词示例</div>
-<p>分析当前Sprint的健康状态：</p>
-<p>Sprint信息：</p>
-<ul>
-<li>Sprint 12，目标：完成用户模块</li>
-<li>周期：2周（当前第8天）</li>
-<li>团队：4人开发 + 1人测试</li>
-</ul>
-<p>燃尽图数据（第8天）：</p>
-<ul>
-<li>计划曲线：应该剩余约30点</li>
-<li>实际曲线：剩余约45点</li>
-<li>偏差：+15点（落后于计划）</li>
-</ul>
-<p>阻塞问题：</p>
-<ul>
-<li>Task-156：等待设计稿，已阻塞3天</li>
-<li>Task-162：第三方API对接问题，技术难点</li>
-</ul>
-<p>团队反馈：</p>
-<ul>
-<li>开发A：需求变更导致返工</li>
-<li>开发B：代码评审积压严重</li>
-</ul>
-<p>请分析：</p>
-<ol>
-<li>Sprint目标能完成吗？</li>
-<li>主要原因是什么？</li>
-<li>建议的调整措施？</li>
-<li>如何避免类似问题？</li>
-</ol>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">💡 提示词示例</div>
+    <p>分析当前Sprint的健康状态：</p>
+    <p>Sprint信息：</p>
+    <ul>
+      <li>Sprint 12，目标：完成用户模块</li>
+      <li>周期：2周（当前第8天）</li>
+      <li>团队：4人开发 + 1人测试</li>
+    </ul>
+    <p>燃尽图数据（第8天）：</p>
+    <ul>
+      <li>计划曲线：应该剩余约30点</li>
+      <li>实际曲线：剩余约45点</li>
+      <li>偏差：+15点（落后于计划）</li>
+    </ul>
+    <p>阻塞问题：</p>
+    <ul>
+      <li>Task-156：等待设计稿，已阻塞3天</li>
+      <li>Task-162：第三方API对接问题，技术难点</li>
+    </ul>
+    <p>团队反馈：</p>
+    <ul>
+      <li>开发A：需求变更导致返工</li>
+      <li>开发B：代码评审积压严重</li>
+    </ul>
+    <p>请分析：</p>
+    <ol>
+      <li>Sprint目标能完成吗？</li>
+      <li>主要原因是什么？</li>
+      <li>建议的调整措施？</li>
+      <li>如何避免类似问题？</li>
+    </ol>
+  </div>
 
-<h2 class="section-h2">12.4 资源冲突的AI协调</h2>
+  <h2 class="section-h2">12.4 资源冲突的AI协调</h2>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 提示词示例</div>
-<p>分析以下资源冲突并给出优化建议：</p>
-<p>项目组合（Q1）：</p>
-<table class="tbl">
-<thead><tr><th>项目</th><th>优先级</th><th>所需人力</th><th>截止日期</th></tr></thead>
-<tbody>
-<tr><td>A</td><td>P1</td><td>3人</td><td>2月底</td></tr>
-<tr><td>B</td><td>P2</td><td>2人</td><td>3月中</td></tr>
-<tr><td>C</td><td>P3</td><td>2人</td><td>3月底</td></tr>
-</tbody>
-</table>
-<p>可用资源：</p>
-<ul>
-<li>工程师总数：5人</li>
-<li>其中高级工程师：2人</li>
-<li>人员分配现状：
-  <ul>
-  <li>项目A占用：2人（含1高工）</li>
-  <li>项目B占用：1人</li>
-  <li>项目C占用：0人</li>
-  </ul>
-</li>
-</ul>
-<p>冲突点：</p>
-<ul>
-<li>项目B负责人要求2人，但只有1人可用</li>
-<li>项目C需要高级工程师，但高工都在A项目</li>
-</ul>
-<p>请分析：</p>
-<ol>
-<li>资源冲突的根本原因</li>
-<li>可能的解决方案（至少3个）</li>
-<li>推荐方案及理由</li>
-<li>对业务的影响评估</li>
-</ol>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">💡 提示词示例</div>
+    <p>分析以下资源冲突并给出优化建议：</p>
+    <p>项目组合（Q1）：</p>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>项目</th>
+          <th>优先级</th>
+          <th>所需人力</th>
+          <th>截止日期</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A</td>
+          <td>P1</td>
+          <td>3人</td>
+          <td>2月底</td>
+        </tr>
+        <tr>
+          <td>B</td>
+          <td>P2</td>
+          <td>2人</td>
+          <td>3月中</td>
+        </tr>
+        <tr>
+          <td>C</td>
+          <td>P3</td>
+          <td>2人</td>
+          <td>3月底</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>可用资源：</p>
+    <ul>
+      <li>工程师总数：5人</li>
+      <li>其中高级工程师：2人</li>
+      <li>
+        人员分配现状：
+        <ul>
+          <li>项目A占用：2人（含1高工）</li>
+          <li>项目B占用：1人</li>
+          <li>项目C占用：0人</li>
+        </ul>
+      </li>
+    </ul>
+    <p>冲突点：</p>
+    <ul>
+      <li>项目B负责人要求2人，但只有1人可用</li>
+      <li>项目C需要高级工程师，但高工都在A项目</li>
+    </ul>
+    <p>请分析：</p>
+    <ol>
+      <li>资源冲突的根本原因</li>
+      <li>可能的解决方案（至少3个）</li>
+      <li>推荐方案及理由</li>
+      <li>对业务的影响评估</li>
+    </ol>
+  </div>
 
-<h2 class="section-h2">12.5 风险预测与预警</h2>
+  <h2 class="section-h2">12.5 风险预测与预警</h2>
 
-<p class="p">AI可以从历史模式中识别潜在风险，提前预警。</p>
+  <p class="p">AI可以从历史模式中识别潜在风险，提前预警。</p>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 提示词示例</div>
-<p>作为项目风险顾问，请分析以下项目的风险状态：</p>
-<p>项目背景：</p>
-<ul>
-<li>电商平台重构项目</li>
-<li>原计划6个月，目前进入第5个月</li>
-<li>原型设计变更了3次</li>
-<li>核心团队成员1人离职</li>
-<li>关键技术方案还未最终确定</li>
-</ul>
-<p>当前状态：</p>
-<ul>
-<li>完成度约60%</li>
-<li>预算消耗约70%</li>
-<li>质量测试覆盖率仅40%</li>
-</ul>
-<p>请分析：</p>
-<ol>
-<li>列出TOP 5风险（按可能性×影响排序）</li>
-<li>对每个风险给出：
-  <ul>
-  <li>风险描述</li>
-  <li>早期预警信号</li>
-  <li>缓解措施</li>
-  </ul>
-</li>
-<li>整体项目按时交付的概率评估</li>
-<li>建议的决策点</li>
-</ol>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">💡 提示词示例</div>
+    <p>作为项目风险顾问，请分析以下项目的风险状态：</p>
+    <p>项目背景：</p>
+    <ul>
+      <li>电商平台重构项目</li>
+      <li>原计划6个月，目前进入第5个月</li>
+      <li>原型设计变更了3次</li>
+      <li>核心团队成员1人离职</li>
+      <li>关键技术方案还未最终确定</li>
+    </ul>
+    <p>当前状态：</p>
+    <ul>
+      <li>完成度约60%</li>
+      <li>预算消耗约70%</li>
+      <li>质量测试覆盖率仅40%</li>
+    </ul>
+    <p>请分析：</p>
+    <ol>
+      <li>列出TOP 5风险（按可能性×影响排序）</li>
+      <li>
+        对每个风险给出：
+        <ul>
+          <li>风险描述</li>
+          <li>早期预警信号</li>
+          <li>缓解措施</li>
+        </ul>
+      </li>
+      <li>整体项目按时交付的概率评估</li>
+      <li>建议的决策点</li>
+    </ol>
+  </div>
 
-<h2 class="section-h2">12.6 团队效能的AI分析</h2>
+  <h2 class="section-h2">12.6 团队效能的AI分析</h2>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 提示词示例</div>
-<p>分析团队开发效率及优化建议：</p>
-<p>数据来源（过去3个月）：</p>
-<ul>
-<li>平均Sprint Velocity：42点/周期</li>
-<li>代码量：人均1500行/月</li>
-<li>Bug数：线上缺陷密度0.3个/千行</li>
-<li>代码评审时间：平均4.8小时/PR</li>
-<li>技术债增加：+15%（相对于还债速度）</li>
-</ul>
-<p>个体数据：</p>
-<ul>
-<li>工程师A：velocity 45，bug密度0.2，擅长前端</li>
-<li>工程师B：velocity 38，bug密度0.4，擅长后端</li>
-<li>工程师C：velocity 50，bug密度0.5，擅长全栈</li>
-</ul>
-<p>请分析：</p>
-<ol>
-<li>团队整体效率评估</li>
-<li>个体差异原因分析</li>
-<li>技术债的影响评估</li>
-<li>优化建议（流程、技术、人员）</li>
-</ol>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">💡 提示词示例</div>
+    <p>分析团队开发效率及优化建议：</p>
+    <p>数据来源（过去3个月）：</p>
+    <ul>
+      <li>平均Sprint Velocity：42点/周期</li>
+      <li>代码量：人均1500行/月</li>
+      <li>Bug数：线上缺陷密度0.3个/千行</li>
+      <li>代码评审时间：平均4.8小时/PR</li>
+      <li>技术债增加：+15%（相对于还债速度）</li>
+    </ul>
+    <p>个体数据：</p>
+    <ul>
+      <li>工程师A：velocity 45，bug密度0.2，擅长前端</li>
+      <li>工程师B：velocity 38，bug密度0.4，擅长后端</li>
+      <li>工程师C：velocity 50，bug密度0.5，擅长全栈</li>
+    </ul>
+    <p>请分析：</p>
+    <ol>
+      <li>团队整体效率评估</li>
+      <li>个体差异原因分析</li>
+      <li>技术债的影响评估</li>
+      <li>优化建议（流程、技术、人员）</li>
+    </ol>
+  </div>
 
-<h2 class="section-h2">12.7 AI项目管理工具</h2>
+  <h2 class="section-h2">12.7 AI项目管理工具</h2>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">🔧</div>
-<h4>Jira + Atlassian Intelligence</h4>
-<p>自动生成Sprint报告、识别阻塞</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">⚡</div>
-<h4>Linear + AI</h4>
-<p>智能问题分类、关联相关issue</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">📝</div>
-<h4>Notion AI</h4>
-<p>会议纪要提取、文档生成</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🐙</div>
-<h4>GitHub Copilot for Projects</h4>
-<p>代码与任务关联分析</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🔧</div>
+      <h4>Jira + Atlassian Intelligence</h4>
+      <p>自动生成Sprint报告、识别阻塞</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⚡</div>
+      <h4>Linear + AI</h4>
+      <p>智能问题分类、关联相关issue</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📝</div>
+      <h4>Notion AI</h4>
+      <p>会议纪要提取、文档生成</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🐙</div>
+      <h4>GitHub Copilot for Projects</h4>
+      <p>代码与任务关联分析</p>
+    </div>
+  </div>
 
-<h2 class="section-h2">12.8 本章小结</h2>
+  <h2 class="section-h2">12.8 本章小结</h2>
 
-<div class="steps">
-<div class="step">
-<div class="step-num">1</div>
-<div>
-<h4>项目预测</h4>
-<p>AI可以从历史数据学习，提供更准确的项目预测</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">2</div>
-<div>
-<h4>Sprint健康度</h4>
-<p>Sprint健康度分析帮助及时发现问题并调整</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">3</div>
-<div>
-<h4>资源协调</h4>
-<p>资源冲突需要综合考虑优先级、技能、时间多维因素</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">4</div>
-<div>
-<h4>风险预警</h4>
-<p>AI风险预测能提前预警，避免问题恶化</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">5</div>
-<div>
-<h4>效能分析</h4>
-<p>团队效能分析帮助识别瓶颈和优化点</p>
-</div>
-</div>
-</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>项目预测</h4>
+        <p>AI可以从历史数据学习，提供更准确的项目预测</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>Sprint健康度</h4>
+        <p>Sprint健康度分析帮助及时发现问题并调整</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>资源协调</h4>
+        <p>资源冲突需要综合考虑优先级、技能、时间多维因素</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>风险预警</h4>
+        <p>AI风险预测能提前预警，避免问题恶化</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>效能分析</h4>
+        <p>团队效能分析帮助识别瓶颈和优化点</p>
+      </div>
+    </div>
+  </div>
 
-<div class="card yellow">
-<div class="card-label">课后测验</div>
-<h3>第十二章选择题</h3>
-<p><strong>1. 在AI辅助的工作量估算中，如何处理估算不确定性的量化与传播？若将历史项目数据建模为概率分布，新项目的估算结果如何以置信区间的形式给出，而非简单的点估计？如何让AI学会在面对不同类型的新项目时给出宽度适当的置信区间？</strong><br>
-A. 使用贝叶斯推断框架；先验分布由历史数据拟合，似然函数建模观测噪声，后验分布的均值作为点估计，标准差构成置信区间；通过学习先验分布的超参数，AI能够根据新项目特征（与历史项目的相似度）自适应调整置信区间宽度，项目越陌生置信区间越宽　B. 点估计已经足够；不确定性无法量化　C. 使用模糊逻辑；将估算表示为模糊数而非概率分布　D. 置信区间应该固定宽度；与项目无关<br><br>
-<strong>2. Sprint健康度分析中，如何将多个健康指标（燃尽图偏差、阻塞任务数、代码质量等）融合为单一的健康度评分？若这些指标之间存在复杂的非线性交互关系（如指标间的协同或拮抗效应），如何建模这种交互并学习最优的融合权重？</strong><br>
-A. 使用神经网络进行多指标融合；将原始指标作为输入，通过训练学习指标间的非线性交互，输出健康度评分；使用历史Sprint数据训练，标签由人类专家标注，使用梯度下降优化网络权重，同时使用SHAP值解释各指标对健康度的贡献度　B. 使用简单加权平均；各指标权重由专家经验确定　C. 无法融合；各指标是独立的　D. 健康度无法量化；只能定性描述<br><br>
-<strong>3. 在风险预测中，如何避免AI模型对历史模式的过拟合而无法发现"前所未有"的新型风险？若将风险发现建模为异常检测问题，如何设计算法使其对分布内（in-distribution）数据稳健的同时对分布外（out-of-distribution）数据敏感？</strong><br>
-A. 使用能量模型（Energy-Based Model）建模数据分布；在输入空间中，分布内样本的能量低，分布外样本的能量高，通过能量阈值区分正常风险模式与新型风险；同时使用对抗训练增强模型对新型风险的敏感性，使用ODIN等方法提高分布外检测的AUROC　B. 过拟合无法避免；历史数据是唯一可参考的模式　C. 新型风险无法预测；只能依靠人工识别　D. 使用保角预测（Conformal Prediction）；给出预测集的置信度而非异常分数<br><br>
-<strong>4. AI项目管理系统中，如何建模团队成员之间的协作网络并从中预测项目风险？若将团队交互建模为动态图（Dynamic Graph），节点=团队成员，边=协作关系（代码评审、任务分配等），边权重随时间演化，如何使用图神经网络（GNN）捕捉协作模式的时序演化并预测未来的协作瓶颈？</strong><br>
-A. 使用时空图卷积网络（ST-GCN）；节点特征=成员技能向量，边特征=协作强度，时间维度使用LSTM或Transformer建模演化，输出=未来时间窗口内的协作瓶颈概率；训练时使用历史多个项目的协作图序列，学习通用的协作模式并迁移到新项目预测　B. 团队协作无法建模；协作是随机的　C. 使用简单的时间序列模型；忽略协作网络结构　D. 协作瓶颈只能靠经验判断；无法预测<br><br>
-<strong>5. 在资源冲突协调中，如何将多项目资源分配建模为组合优化问题并找到帕累托最优解？若存在多个目标（项目优先级、成本、延迟）相互冲突，如何使用多目标进化算法（NSGA-II）求解资源分配问题的帕累托前沿，并让决策者能够根据偏好选择合适的解？</strong><br>
-A. 将资源分配建模为多目标优化：min(成本, 延迟) subject to 优先级约束；使用NSGA-II在资源分配空间中搜索帕累托前沿，通过非支配排序和拥挤度距离保持种群多样性；决策者通过设置权重或指定参考点从帕累托前沿选择最符合偏好的解，解的解释性由Pareto最优性保证——无法在不损害某个目标的前提下改善其他目标　B. 资源冲突无法优化；只能手动分配　C. 使用线性规划；将多目标简化为单一加权目标　D. 资源冲突是博弈问题；使用Nash均衡求解</p>
-<details class="quiz-answer">
-<summary>参考答案</summary>
-<div>
-<p><strong>答案：1.A　2.A　3.A　4.A　5.A</strong></p>
-<p><strong>解析：</strong></p>
-<ol style="font-size:0.9em; color:#666;">
-<li>使用贝叶斯推断框架，先验分布由历史数据拟合，似然函数建模观测噪声，后验分布的均值作为点估计，标准差构成置信区间。AI根据新项目特征自适应调整置信区间宽度。</li>
-<li>使用神经网络进行多指标融合，将原始指标作为输入，通过训练学习指标间的非线性交互。SHAP值解释各指标对健康度的贡献度。</li>
-<li>使用能量模型（Energy-Based Model）建模数据分布：分布内样本能量低，分布外样本能量高。对抗训练增强模型对新型风险的敏感性，ODIN等方法提高分布外检测的AUROC。</li>
-<li>使用时空图卷积网络（ST-GCN）建模协作网络的时序演化。节点特征=成员技能向量，边特征=协作强度，LSTM或Transformer建模时间演化，输出=未来协作瓶颈概率。</li>
-<li>多目标优化min(成本, 延迟) subject to 优先级约束。NSGA-II通过非支配排序和拥挤度距离保持种群多样性。决策者通过权重或参考点从Pareto前沿选择最符合偏好的解。</li>
-</ol>
-</div>
-</details>
-</div>
-
+  <div class="card yellow">
+    <div class="card-label">课后测验</div>
+    <h3>第十二章选择题</h3>
+    <p>
+      <strong
+        >1.
+        在AI辅助的工作量估算中，如何处理估算不确定性的量化与传播？若将历史项目数据建模为概率分布，新项目的估算结果如何以置信区间的形式给出，而非简单的点估计？如何让AI学会在面对不同类型的新项目时给出宽度适当的置信区间？</strong
+      ><br />
+      A. 置信区间应该固定宽度；与项目无关　B. 使用模糊逻辑；将估算表示为模糊数而非概率分布　C.
+      点估计已经足够；不确定性无法量化　D.
+      使用贝叶斯推断框架；先验分布由历史数据拟合，似然函数建模观测噪声，后验分布的均值作为点估计，标准差构成置信区间；通过学习先验分布的超参数，AI能够根据新项目特征（与历史项目的相似度）自适应调整置信区间宽度，项目越陌生置信区间越宽<br /><br />
+      <strong
+        >2.
+        Sprint健康度分析中，如何将多个健康指标（燃尽图偏差、阻塞任务数、代码质量等）融合为单一的健康度评分？若这些指标之间存在复杂的非线性交互关系（如指标间的协同或拮抗效应），如何建模这种交互并学习最优的融合权重？</strong
+      ><br />
+      A. 健康度无法量化；只能定性描述　B. 无法融合；各指标是独立的　C.
+      使用简单加权平均；各指标权重由专家经验确定　D.
+      使用神经网络进行多指标融合；将原始指标作为输入，通过训练学习指标间的非线性交互，输出健康度评分；使用历史Sprint数据训练，标签由人类专家标注，使用梯度下降优化网络权重，同时使用SHAP值解释各指标对健康度的贡献度<br /><br />
+      <strong
+        >3.
+        在风险预测中，如何避免AI模型对历史模式的过拟合而无法发现"前所未有"的新型风险？若将风险发现建模为异常检测问题，如何设计算法使其对分布内（in-distribution）数据稳健的同时对分布外（out-of-distribution）数据敏感？</strong
+      ><br />
+      A. 使用保角预测（Conformal Prediction）；给出预测集的置信度而非异常分数　B.
+      新型风险无法预测；只能依靠人工识别　C. 过拟合无法避免；历史数据是唯一可参考的模式　D.
+      使用能量模型（Energy-Based
+      Model）建模数据分布；在输入空间中，分布内样本的能量低，分布外样本的能量高，通过能量阈值区分正常风险模式与新型风险；同时使用对抗训练增强模型对新型风险的敏感性，使用ODIN等方法提高分布外检测的AUROC<br /><br />
+      <strong
+        >4.
+        AI项目管理系统中，如何建模团队成员之间的协作网络并从中预测项目风险？若将团队交互建模为动态图（Dynamic
+        Graph），节点=团队成员，边=协作关系（代码评审、任务分配等），边权重随时间演化，如何使用图神经网络（GNN）捕捉协作模式的时序演化并预测未来的协作瓶颈？</strong
+      ><br />
+      A. 协作瓶颈只能靠经验判断；无法预测　B. 使用简单的时间序列模型；忽略协作网络结构　C.
+      团队协作无法建模；协作是随机的　D.
+      使用时空图卷积网络（ST-GCN）；节点特征=成员技能向量，边特征=协作强度，时间维度使用LSTM或Transformer建模演化，输出=未来时间窗口内的协作瓶颈概率；训练时使用历史多个项目的协作图序列，学习通用的协作模式并迁移到新项目预测<br /><br />
+      <strong
+        >5.
+        在资源冲突协调中，如何将多项目资源分配建模为组合优化问题并找到帕累托最优解？若存在多个目标（项目优先级、成本、延迟）相互冲突，如何使用多目标进化算法（NSGA-II）求解资源分配问题的帕累托前沿，并让决策者能够根据偏好选择合适的解？</strong
+      ><br />
+      A. 资源冲突是博弈问题；使用Nash均衡求解　B. 使用线性规划；将多目标简化为单一加权目标　C.
+      资源冲突无法优化；只能手动分配　D. 将资源分配建模为多目标优化：min(成本, 延迟) subject to
+      优先级约束；使用NSGA-II在资源分配空间中搜索帕累托前沿，通过非支配排序和拥挤度距离保持种群多样性；决策者通过设置权重或指定参考点从帕累托前沿选择最符合偏好的解，解的解释性由Pareto最优性保证——无法在不损害某个目标的前提下改善其他目标
+    </p>
+    <details class="quiz-answer">
+      <summary>参考答案</summary>
+      <div>
+        <p><strong>答案：1.C　2.D　3.B　4.C　5.D</strong></p>
+        <p><strong>解析：</strong></p>
+        <ol style="font-size: 0.9em; color: #666">
+          <li>
+            使用贝叶斯推断框架，先验分布由历史数据拟合，似然函数建模观测噪声，后验分布的均值作为点估计，标准差构成置信区间。AI根据新项目特征自适应调整置信区间宽度。
+          </li>
+          <li>
+            使用神经网络进行多指标融合，将原始指标作为输入，通过训练学习指标间的非线性交互。SHAP值解释各指标对健康度的贡献度。
+          </li>
+          <li>
+            使用能量模型（Energy-Based
+            Model）建模数据分布：分布内样本能量低，分布外样本能量高。对抗训练增强模型对新型风险的敏感性，ODIN等方法提高分布外检测的AUROC。
+          </li>
+          <li>
+            使用时空图卷积网络（ST-GCN）建模协作网络的时序演化。节点特征=成员技能向量，边特征=协作强度，LSTM或Transformer建模时间演化，输出=未来协作瓶颈概率。
+          </li>
+          <li>
+            多目标优化min(成本, 延迟) subject to
+            优先级约束。NSGA-II通过非支配排序和拥挤度距离保持种群多样性。决策者通过权重或参考点从Pareto前沿选择最符合偏好的解。
+          </li>
+        </ol>
+      </div>
+    </details>
+  </div>
 </section>

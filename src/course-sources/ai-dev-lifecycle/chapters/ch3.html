@@ -1,29 +1,33 @@
 <section id="ch3">
-<!-- 内容更新时间：2026-05-03 -->
-<div class="hero">
-<div class="chapter-tag">Chapter 3 · AI</div>
-<h1>系统架构设计——AI辅助的架构决策</h1>
-<p class="sub">掌握AI辅助的架构选型、数据建模与ADR记录方法</p>
-<div class="hero-meta">
-<span class="hero-meta-item">📖 20 min</span>
-</div>
-</div>
+  <!-- 内容更新时间：2026-05-03 -->
+  <div class="hero">
+    <div class="chapter-tag">Chapter 3 · AI</div>
+    <h1>系统架构设计——AI辅助的架构决策</h1>
+    <p class="sub">掌握AI辅助的架构选型、数据建模与ADR记录方法</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">📖 20 min</span>
+    </div>
+  </div>
 
-<p class="lead">架构是关于"重大技术决策"的学问。这些决策一旦做出，修改成本极高：数据库选型错了要迁移，微服务拆分了想合并代价巨大，上云决策做错了可能要推倒重来。</p>
+  <p class="lead">
+    架构是关于"重大技术决策"的学问。这些决策一旦做出，修改成本极高：数据库选型错了要迁移，微服务拆分了想合并代价巨大，上云决策做错了可能要推倒重来。
+  </p>
 
-<h2 class="section-h2">3.1 架构设计的本质</h2>
+  <h2 class="section-h2">3.1 架构设计的本质</h2>
 
-<p class="p">架构设计的核心问题是<strong>权衡（Trade-off）</strong>。没有完美的架构，只有在特定约束下最合适的架构。AI的价值在于：它能快速检索和综合大量架构案例，帮助团队理解每种选择的利弊。</p>
+  <p class="p">
+    架构设计的核心问题是<strong>权衡（Trade-off）</strong>。没有完美的架构，只有在特定约束下最合适的架构。AI的价值在于：它能快速检索和综合大量架构案例，帮助团队理解每种选择的利弊。
+  </p>
 
-<h2 class="section-h2">3.2 AI辅助架构选型分析</h2>
+  <h2 class="section-h2">3.2 AI辅助架构选型分析</h2>
 
-<p class="p">当团队面临技术选型时，AI可以做"架构顾问"的角色，提供多维度的对比分析。</p>
+  <p class="p">当团队面临技术选型时，AI可以做"架构顾问"的角色，提供多维度的对比分析。</p>
 
-<p class="p">以AI-TaskManager为例，团队需要决定后端架构形式。向AI提问：</p>
+  <p class="p">以AI-TaskManager为例，团队需要决定后端架构形式。向AI提问：</p>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 提示词示例</div>
-<pre><code>提示词：
+  <div class="hlbox">
+    <div class="hlbox-title">💡 提示词示例</div>
+    <pre><code>提示词：
 "我需要为一个智能任务管理系统选择后端架构，考虑以下约束：
 - 团队规模：3人后端
 - 预期用户：1000并发
@@ -36,17 +40,21 @@
 3. Serverless架构
 
 针对每个方案，分析：适用场景、优缺点、运维复杂度、成本估算、开发效率"</code></pre>
-</div>
+  </div>
 
-<p class="p">AI的输出会包含详细的对比表格和推荐建议。团队可以在此基础上做最终决策，而不是从零开始研究。</p>
+  <p class="p">
+    AI的输出会包含详细的对比表格和推荐建议。团队可以在此基础上做最终决策，而不是从零开始研究。
+  </p>
 
-<h2 class="section-h2">3.3 常用架构模式与AI理解</h2>
+  <h2 class="section-h2">3.3 常用架构模式与AI理解</h2>
 
-<p class="p">AI能够帮助团队深入理解经典架构模式，而不仅仅是知道名字。通过"苏格拉底式提问"，AI可以帮助架构师深化对模式的理解。</p>
+  <p class="p">
+    AI能够帮助团队深入理解经典架构模式，而不仅仅是知道名字。通过"苏格拉底式提问"，AI可以帮助架构师深化对模式的理解。
+  </p>
 
-<div class="hlbox">
-<div class="hlbox-title">📝 提示词示例：理解微服务 vs 单体</div>
-<pre><code>提示词：
+  <div class="hlbox">
+    <div class="hlbox-title">📝 提示词示例：理解微服务 vs 单体</div>
+    <pre><code>提示词：
 "请解释微服务架构的核心原则，并提出10个问题来测试我对微服务的理解。
 每个问题后附答案，以便我自我检验。
 
@@ -54,35 +62,35 @@
 - 什么时候应该拆微服务？
 - 什么时候不该拆？
 - 微服务带来的额外复杂度是什么？"</code></pre>
-</div>
+  </div>
 
-<h2 class="section-h2">3.4 数据建模与API设计</h2>
+  <h2 class="section-h2">3.4 数据建模与API设计</h2>
 
-<p class="p">确定架构风格后，下一步是数据建模。AI可以辅助完成：</p>
+  <p class="p">确定架构风格后，下一步是数据建模。AI可以辅助完成：</p>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">📦</div>
-<h4>实体识别</h4>
-<p>从需求文档中提取核心名词，识别潜在实体</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🔗</div>
-<h4>关系建模</h4>
-<p>确定实体间的一对一、一对多、多对多关系</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🔌</div>
-<h4>API设计</h4>
-<p>生成RESTful API初稿，包含endpoint、HTTP方法、请求/响应结构</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">📦</div>
+      <h4>实体识别</h4>
+      <p>从需求文档中提取核心名词，识别潜在实体</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔗</div>
+      <h4>关系建模</h4>
+      <p>确定实体间的一对一、一对多、多对多关系</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔌</div>
+      <h4>API设计</h4>
+      <p>生成RESTful API初稿，包含endpoint、HTTP方法、请求/响应结构</p>
+    </div>
+  </div>
 
-<p class="p">为AI-TaskManager生成的初始数据模型：</p>
+  <p class="p">为AI-TaskManager生成的初始数据模型：</p>
 
-<div class="hlbox">
-<div class="hlbox-title">📊 数据模型</div>
-<pre><code>实体：
+  <div class="hlbox">
+    <div class="hlbox-title">📊 数据模型</div>
+    <pre><code>实体：
 - User: id, name, email, role, preferences
 - Task: id, title, description, status, priority, dueDate, createdAt, updatedAt
 - Project: id, name, description, ownerId, memberIds
@@ -94,15 +102,18 @@
 - Project N:M User (项目和用户是多对多)
 - Task N:M Tag (任务和标签是多对多)
 - Task 1:N Comment (一个任务有多条评论)</code></pre>
-</div>
+  </div>
 
-<h2 class="section-h2">3.5 架构决策记录（ADR）</h2>
+  <h2 class="section-h2">3.5 架构决策记录（ADR）</h2>
 
-<p class="p">架构决策记录（Architecture Decision Records）是团队记录重要决策的工具。AI可以辅助生成ADR模板和初始内容。</p>
+  <p class="p">
+    架构决策记录（Architecture Decision
+    Records）是团队记录重要决策的工具。AI可以辅助生成ADR模板和初始内容。
+  </p>
 
-<div class="hlbox">
-<div class="hlbox-title">📄 ADR模板</div>
-<pre><code>ADR模板：
+  <div class="hlbox">
+    <div class="hlbox-title">📄 ADR模板</div>
+    <pre><code>ADR模板：
 # ADR-001: 选择PostgreSQL作为主数据库
 
 ## 状态：已接受
@@ -126,15 +137,17 @@
 ## 替代方案考虑
 - MySQL: 功能类似，但JSON支持和事务隔离级别略逊
 - MongoDB: 文档型更灵活，但多表关联查询弱</code></pre>
-</div>
+  </div>
 
-<h2 class="section-h2">3.6 架构图绘制与文档</h2>
+  <h2 class="section-h2">3.6 架构图绘制与文档</h2>
 
-<p class="p">现代架构文档大量使用Mermaid、PlantUML等工具绘制图表。AI可以辅助生成这些图表的代码。</p>
+  <p class="p">
+    现代架构文档大量使用Mermaid、PlantUML等工具绘制图表。AI可以辅助生成这些图表的代码。
+  </p>
 
-<div class="hlbox">
-<div class="hlbox-title">🏗️ Mermaid 架构图示例</div>
-<pre><code>```mermaid
+  <div class="hlbox">
+    <div class="hlbox-title">🏗️ Mermaid 架构图示例</div>
+    <pre><code>```mermaid
 graph TB
     subgraph Client["客户端层"]
         Web[Web App]
@@ -165,56 +178,110 @@ graph TB
     AI --> MQ
     AI --> PG
 ```</code></pre>
-</div>
+  </div>
 
-<h2 class="section-h2">3.7 本章小结</h2>
+  <h2 class="section-h2">3.7 本章小结</h2>
 
-<div class="steps">
-<div class="step">
-<div class="step-num">1</div>
-<div><h4>架构设计是权衡的艺术</h4><p>AI可以帮助快速获取和分析各种方案的利弊</p></div>
-</div>
-<div class="step">
-<div class="step-num">2</div>
-<div><h4>AI辅助架构选型的价值</h4><p>在于扩大信息获取面，而非替代架构师决策</p></div>
-</div>
-<div class="step">
-<div class="step-num">3</div>
-<div><h4>数据建模和API设计</h4><p>可以借助AI快速生成初稿</p></div>
-</div>
-<div class="step">
-<div class="step-num">4</div>
-<div><h4>架构决策记录（ADR）是团队重要的知识资产</h4><p>AI可辅助生成模板</p></div>
-</div>
-</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>架构设计是权衡的艺术</h4>
+        <p>AI可以帮助快速获取和分析各种方案的利弊</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>AI辅助架构选型的价值</h4>
+        <p>在于扩大信息获取面，而非替代架构师决策</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>数据建模和API设计</h4>
+        <p>可以借助AI快速生成初稿</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>架构决策记录（ADR）是团队重要的知识资产</h4>
+        <p>AI可辅助生成模板</p>
+      </div>
+    </div>
+  </div>
 
-<div class="card yellow">
-<div class="card-label">课后测验</div>
-<h3>第三章选择题</h3>
-<p><strong>1. 在分布式系统架构中，如何形式化地定义"权衡"（Trade-off）这一概念？若将系统属性建模为多维向量，如何判断一个架构决策是否在帕累托最优前沿上？</strong><br>
-A. 权衡是多个目标函数之间的非协作博弈；帕累托最优指无法在不损害某个属性的前提下改善其他属性　B. 权衡是资源约束下的效用最大化；使用拉格朗日乘数法求解　C. 权衡是系统可用性与一致性的对立；CAP定理给出了形式化证明　D. 权衡是成本与性能的线性关系；使用线性规划求解最优解<br><br>
-<strong>2. AI辅助架构选型时，如何确保AI给出的建议不陷入局部最优？若将架构搜索建模为强化学习问题，状态空间和动作空间分别是什么？如何设计奖励函数使得AI能够探索更广泛的架构空间？</strong><br>
-A. 状态空间=当前架构配置，动作空间=架构变更操作；奖励函数需要综合考虑性能、成本、可维护性等多维度　B. 状态空间=历史决策序列，动作空间=技术栈选择；使用模仿学习从专家数据中学习　C. 状态空间=系统性能指标，动作空间=参数调优；奖励函数为单一性能指标　D. 状态空间=代码结构，动作空间=重构操作；奖励函数为代码质量评分<br><br>
-<strong>3. 在ADR（Architecture Decision Records）的形式化建模中，如何将非结构化的架构讨论转化为结构化的决策知识？若使用知识图谱表示ADR，节点和边分别是什么？如何推导架构决策之间的因果关系？</strong><br>
-A. 节点=架构元素（组件、约束、决策），边=依赖关系和因果链；使用溯因推理（Abductive Reasoning）从观察到的后果反推原因　B. 节点=文档实体，边=文本相似度；使用TF-IDF向量化后计算余弦相似度　C. 节点=时间点，边=决策时序关系；使用LSTM学习决策模式　D. 节点=代码模块，边=函数调用关系；使用静态分析提取调用图<br><br>
-<strong>4. 微服务架构的拆分边界是系统设计的核心问题。若将业务能力建模为Bounded Context，使用领域驱动设计（DDD）的聚合根概念来定义服务边界，如何保证拆分后的服务既满足低耦合又满足高内聚？该问题是否可以转化为某种图分割优化问题？</strong><br>
-A. 可以转化为图分割问题；最小割算法可以找到最优的服务拆分边界，但需要定义合理的边权重函数　B. 不可以转化；DDD的战术设计是艺术而非科学，无法形式化　C. 可以转化为聚类问题；使用K-means算法将相关业务能力聚类到同一服务　D. 可以转化为着色问题；使用图着色算法保证服务间无循环依赖<br><br>
-<strong>5. 在数据库选型时，如何在OLTP和OLAP workload之间找到最优平衡？若将工作负载特征建模为查询分布，使用多目标优化框架，PostgreSQL的MVCC机制与NewSQL系统的分布式事务协议在CAP约束下分别处于什么位置？</strong><br>
-A. PostgreSQL选择CA（高一致性和可用性，牺牲分区容错性）；NewSQL选择CP（高一致性和分区容错性，牺牲可用性）　B. PostgreSQL选择AP（高可用性和分区容错性，牺牲一致性）；NewSQL选择CA　C. 两者都选择CP；区别在于实现一致性协议的效率不同　D. 两者都选择AP；CAP定理不适用于现代分布式数据库</p>
-<details class="quiz-answer">
-<summary>参考答案</summary>
-<div>
-<p><strong>答案：1.A　2.A　3.A　4.A　5.A</strong></p>
-<p><strong>解析：</strong></p>
-<ol style="font-size:0.9em; color:#666;">
-<li>架构权衡可形式化为多目标函数之间的非协作博弈，帕累托最优指无法在不损害某个属性的前提下改善其他属性。CAP定理给出了分布式系统一致性与可用性权衡的形式化证明。</li>
-<li>将架构搜索建模为强化学习问题时，状态空间=当前架构配置（如技术栈、部署方式），动作空间=架构变更操作（如更换数据库、拆分服务）。奖励函数需要综合考虑性能、成本、可维护性等多维度。</li>
-<li>ADR的因果关系推导使用溯因推理（Abductive Reasoning）：从观察到的后果（如系统性能下降）反推可能的原因（如架构变更）。知识图谱中节点=架构元素，边=依赖关系和因果链。</li>
-<li>DDD的聚合根定义服务边界可转化为图分割优化问题。最小割算法能找到服务间依赖最小化的拆分边界，但需要设计合理的边权重函数（如耦合度）。</li>
-<li>PostgreSQL作为单节点数据库选择CA（假设不发生分区），而NewSQL系统（如Spanner、CockroachDB）选择CP，通过分布式事务协议（如Paxos/Raft）保证一致性而牺牲部分可用性。</li>
-</ol>
-</div>
-</details>
-</div>
-
+  <div class="card yellow">
+    <div class="card-label">课后测验</div>
+    <h3>第三章选择题</h3>
+    <p>
+      <strong
+        >1.
+        在分布式系统架构中，如何形式化地定义"权衡"（Trade-off）这一概念？若将系统属性建模为多维向量，如何判断一个架构决策是否在帕累托最优前沿上？</strong
+      ><br />
+      A. 权衡是成本与性能的线性关系；使用线性规划求解最优解　B.
+      权衡是系统可用性与一致性的对立；CAP定理给出了形式化证明　C.
+      权衡是资源约束下的效用最大化；使用拉格朗日乘数法求解　D.
+      权衡是多个目标函数之间的非协作博弈；帕累托最优指无法在不损害某个属性的前提下改善其他属性<br /><br />
+      <strong
+        >2.
+        AI辅助架构选型时，如何确保AI给出的建议不陷入局部最优？若将架构搜索建模为强化学习问题，状态空间和动作空间分别是什么？如何设计奖励函数使得AI能够探索更广泛的架构空间？</strong
+      ><br />
+      A. 状态空间=系统性能指标，动作空间=参数调优；奖励函数为单一性能指标　B.
+      状态空间=代码结构，动作空间=重构操作；奖励函数为代码质量评分　C.
+      状态空间=历史决策序列，动作空间=技术栈选择；使用模仿学习从专家数据中学习　D.
+      状态空间=当前架构配置，动作空间=架构变更操作；奖励函数需要综合考虑性能、成本、可维护性等多维度<br /><br />
+      <strong
+        >3. 在ADR（Architecture Decision
+        Records）的形式化建模中，如何将非结构化的架构讨论转化为结构化的决策知识？若使用知识图谱表示ADR，节点和边分别是什么？如何推导架构决策之间的因果关系？</strong
+      ><br />
+      A. 节点=架构元素（组件、约束、决策），边=依赖关系和因果链；使用溯因推理（Abductive
+      Reasoning）从观察到的后果反推原因　B. 节点=时间点，边=决策时序关系；使用LSTM学习决策模式　C.
+      节点=代码模块，边=函数调用关系；使用静态分析提取调用图　D.
+      节点=文档实体，边=文本相似度；使用TF-IDF向量化后计算余弦相似度<br /><br />
+      <strong
+        >4. 微服务架构的拆分边界是系统设计的核心问题。若将业务能力建模为Bounded
+        Context，使用领域驱动设计（DDD）的聚合根概念来定义服务边界，如何保证拆分后的服务既满足低耦合又满足高内聚？该问题是否可以转化为某种图分割优化问题？</strong
+      ><br />
+      A. 可以转化为聚类问题；使用K-means算法将相关业务能力聚类到同一服务　B.
+      可以转化为着色问题；使用图着色算法保证服务间无循环依赖　C.
+      不可以转化；DDD的战术设计是艺术而非科学，无法形式化　D.
+      可以转化为图分割问题；最小割算法可以找到最优的服务拆分边界，但需要定义合理的边权重函数<br /><br />
+      <strong
+        >5. 在数据库选型时，如何在OLTP和OLAP
+        workload之间找到最优平衡？若将工作负载特征建模为查询分布，使用多目标优化框架，PostgreSQL的MVCC机制与NewSQL系统的分布式事务协议在CAP约束下分别处于什么位置？</strong
+      ><br />
+      A. 两者都选择AP；CAP定理不适用于现代分布式数据库　B.
+      两者都选择CP；区别在于实现一致性协议的效率不同　C.
+      PostgreSQL选择AP（高可用性和分区容错性，牺牲一致性）；NewSQL选择CA　D.
+      PostgreSQL选择CA（高一致性和可用性，牺牲分区容错性）；NewSQL选择CP（高一致性和分区容错性，牺牲可用性）
+    </p>
+    <details class="quiz-answer">
+      <summary>参考答案</summary>
+      <div>
+        <p><strong>答案：1.B　2.C　3.A　4.D　5.B</strong></p>
+        <p><strong>解析：</strong></p>
+        <ol style="font-size: 0.9em; color: #666">
+          <li>
+            架构权衡可形式化为多目标函数之间的非协作博弈，帕累托最优指无法在不损害某个属性的前提下改善其他属性。CAP定理给出了分布式系统一致性与可用性权衡的形式化证明。
+          </li>
+          <li>
+            将架构搜索建模为强化学习问题时，状态空间=当前架构配置（如技术栈、部署方式），动作空间=架构变更操作（如更换数据库、拆分服务）。奖励函数需要综合考虑性能、成本、可维护性等多维度。
+          </li>
+          <li>
+            ADR的因果关系推导使用溯因推理（Abductive
+            Reasoning）：从观察到的后果（如系统性能下降）反推可能的原因（如架构变更）。知识图谱中节点=架构元素，边=依赖关系和因果链。
+          </li>
+          <li>
+            DDD的聚合根定义服务边界可转化为图分割优化问题。最小割算法能找到服务间依赖最小化的拆分边界，但需要设计合理的边权重函数（如耦合度）。
+          </li>
+          <li>
+            PostgreSQL作为单节点数据库选择CA（假设不发生分区），而NewSQL系统（如Spanner、CockroachDB）选择CP，通过分布式事务协议（如Paxos/Raft）保证一致性而牺牲部分可用性。
+          </li>
+        </ol>
+      </div>
+    </details>
+  </div>
 </section>

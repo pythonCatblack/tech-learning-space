@@ -1,43 +1,45 @@
 <section id="ch6">
-<!-- 内容更新时间：2026-05-03 -->
-<div class="hero">
-<div class="chapter-tag">Chapter 6 · AI Coding Assistants</div>
-<h1>AI编码助手实战——ChatGPT与Copilot的高效使用</h1>
-<p class="sub">掌握AI编码助手，让开发效率倍增</p>
-<div class="hero-meta">
-<span class="hero-meta-item">📚 30 min</span>
-<span class="hero-meta-item">🤖 AI Tools</span>
-</div>
-</div>
+  <!-- 内容更新时间：2026-05-03 -->
+  <div class="hero">
+    <div class="chapter-tag">Chapter 6 · AI Coding Assistants</div>
+    <h1>AI编码助手实战——ChatGPT与Copilot的高效使用</h1>
+    <p class="sub">掌握AI编码助手，让开发效率倍增</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">📚 30 min</span>
+      <span class="hero-meta-item">🤖 AI Tools</span>
+    </div>
+  </div>
 
-<p class="lead">AI编码助手不是替代程序员，而是程序员的"第二双手"。它擅长处理重复性编码任务、探索未知API、提供多角度思路。但它也需要正确的引导才能发挥最大价值。</p>
+  <p class="lead">
+    AI编码助手不是替代程序员，而是程序员的"第二双手"。它擅长处理重复性编码任务、探索未知API、提供多角度思路。但它也需要正确的引导才能发挥最大价值。
+  </p>
 
-<h2 class="section-h2">6.1 AI编码助手的定位</h2>
+  <h2 class="section-h2">6.1 AI编码助手的定位</h2>
 
-<p class="p">理解AI的能力边界是关键：</p>
+  <p class="p">理解AI的能力边界是关键：</p>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">✅</div>
-<h4>AI 擅长</h4>
-<p>模式化代码生成、代码解释与翻译、调试思路建议、文档生成</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">❌</div>
-<h4>AI 不擅长</h4>
-<p>完全替代业务理解、处理最新框架API、处理超长上下文、保证100%正确的代码</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">✅</div>
+      <h4>AI 擅长</h4>
+      <p>模式化代码生成、代码解释与翻译、调试思路建议、文档生成</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">❌</div>
+      <h4>AI 不擅长</h4>
+      <p>完全替代业务理解、处理最新框架API、处理超长上下文、保证100%正确的代码</p>
+    </div>
+  </div>
 
-<h2 class="section-h2">6.2 ChatGPT在开发中的使用模式</h2>
+  <h2 class="section-h2">6.2 ChatGPT在开发中的使用模式</h2>
 
-<h3 class="section-h3">模式一：代码解释与学习</h3>
+  <h3 class="section-h3">模式一：代码解释与学习</h3>
 
-<p class="p">遇到复杂代码时，让AI扮演"代码导师"角色：</p>
+  <p class="p">遇到复杂代码时，让AI扮演"代码导师"角色：</p>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 提示词模板</div>
-<pre><code>请解释以下代码的实现逻辑，重点关注：
+  <div class="hlbox">
+    <div class="hlbox-title">💡 提示词模板</div>
+    <pre><code>请解释以下代码的实现逻辑，重点关注：
 1. 整体流程是什么？
 2. 关键的数据结构有哪些？
 3. 可能的性能瓶颈在哪里？
@@ -59,13 +61,13 @@ function processTaskQueue(tasks: Task[]): ProcessedResult {
   }, {} as ProcessedResult);
 }
 ```</code></pre>
-</div>
+  </div>
 
-<h3 class="section-h3">模式二：代码翻译与迁移</h3>
+  <h3 class="section-h3">模式二：代码翻译与迁移</h3>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 提示词模板</div>
-<pre><code>将以下JavaScript代码转换为TypeScript，要求：
+  <div class="hlbox">
+    <div class="hlbox-title">💡 提示词模板</div>
+    <pre><code>将以下JavaScript代码转换为TypeScript，要求：
 1. 添加完整的类型定义
 2. 使用类型守卫处理边界情况
 3. 保持原有逻辑不变
@@ -85,59 +87,80 @@ function calculatePriority(task) {
   return 40 + (task.importance * 10);
 }
 ```</code></pre>
-</div>
+  </div>
 
-<h3 class="section-h3">模式三：Bug诊断与修复</h3>
+  <h3 class="section-h3">模式三：Bug诊断与修复</h3>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 提示词模板</div>
-<pre><code>我遇到了一个bug：任务列表页面加载很慢，有时需要10秒以上。
+  <div class="hlbox">
+    <div class="hlbox-title">💡 提示词模板</div>
+    <pre><code>我遇到了一个bug：任务列表页面加载很慢，有时需要10秒以上。
 错误日志显示：'Warning: Each child in a list should have a unique "key" prop.'
 
 请帮我分析：
 1. 这个警告可能导致什么问题？
 2. 可能的原因是什么？
 3. 如何修复？请给出代码示例</code></pre>
-</div>
+  </div>
 
-<h2 class="section-h2">6.3 GitHub Copilot的进阶技巧</h2>
+  <h2 class="section-h2">6.3 GitHub Copilot的进阶技巧</h2>
 
-<div class="callout callout-info">
-<div class="callout-icon">ℹ️</div>
-<div class="callout-text"><strong>重要更新：</strong>2024年10月，GitHub Copilot已支持多模型选择，包括Anthropic的Claude 3.5 Sonnet、谷歌的Gemini 1.5 Pro，以及OpenAI o1-preview和o1-mini，不再仅依赖OpenAI模型。</div>
-</div>
+  <div class="callout callout-info">
+    <div class="callout-icon">ℹ️</div>
+    <div class="callout-text">
+      <strong>重要更新：</strong>2024年10月，GitHub Copilot已支持多模型选择，包括Anthropic的Claude
+      3.5 Sonnet、谷歌的Gemini 1.5 Pro，以及OpenAI o1-preview和o1-mini，不再仅依赖OpenAI模型。
+    </div>
+  </div>
 
-<p class="p"><strong>最新定价（2025-2026）：</strong></p>
+  <p class="p"><strong>最新定价（2025-2026）：</strong></p>
 
-<table class="tbl">
-<thead><tr><th>套餐</th><th>价格</th><th>主要功能</th></tr></thead>
-<tbody>
-<tr><td class="hl">Free</td><td>免费</td><td>每月50次Agent/Chat请求，2000次补全，访问Haiku 4.5和GPT-5 mini</td></tr>
-<tr><td class="hl">Pro</td><td>$10/月</td><td>无限聊天，300次高级请求，Claude和Codex模型访问</td></tr>
-<tr><td class="hl">Pro+</td><td>$39/月</td><td>更高请求限额，云端Agent，Copilot CLI</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>套餐</th>
+        <th>价格</th>
+        <th>主要功能</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="hl">Free</td>
+        <td>免费</td>
+        <td>每月50次Agent/Chat请求，2000次补全，访问Haiku 4.5和GPT-5 mini</td>
+      </tr>
+      <tr>
+        <td class="hl">Pro</td>
+        <td>$10/月</td>
+        <td>无限聊天，300次高级请求，Claude和Codex模型访问</td>
+      </tr>
+      <tr>
+        <td class="hl">Pro+</td>
+        <td>$39/月</td>
+        <td>更高请求限额，云端Agent，Copilot CLI</td>
+      </tr>
+    </tbody>
+  </table>
 
-<div class="stats">
-<div class="stat">
-<div class="stat-val">2000万+</div>
-<div class="stat-lbl">Copilot 用户（2025.7）</div>
-</div>
-<div class="stat">
-<div class="stat-val">1.5亿</div>
-<div class="stat-lbl">GitHub 开发者用户</div>
-</div>
-<div class="stat">
-<div class="stat-val">25%</div>
-<div class="stat-lbl">Google 新代码由AI编写</div>
-</div>
-</div>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val">2000万+</div>
+      <div class="stat-lbl">Copilot 用户（2025.7）</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">1.5亿</div>
+      <div class="stat-lbl">GitHub 开发者用户</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">25%</div>
+      <div class="stat-lbl">Google 新代码由AI编写</div>
+    </div>
+  </div>
 
-<h3 class="section-h3">技巧一：上下文感知补全</h3>
+  <h3 class="section-h3">技巧一：上下文感知补全</h3>
 
-<p class="p">在代码中增加注释和类型定义，Copilot能更准确地理解你的意图。</p>
+  <p class="p">在代码中增加注释和类型定义，Copilot能更准确地理解你的意图。</p>
 
-<pre><code>// 定义清晰的数据结构
+  <pre><code>// 定义清晰的数据结构
 interface Task {
   id: string;
   title: string;
@@ -155,121 +178,144 @@ async function getExecutionOrder(tasks: Task[]): Promise&lt;Task[]&gt; {
   // Copilot 会自动补全这个函数的实现
 }</code></pre>
 
-<h3 class="section-h3">技巧二：函数级生成</h3>
+  <h3 class="section-h3">技巧二：函数级生成</h3>
 
-<p class="p">在函数签名后换行，输入简洁注释，按Tab等待Copilot生成。</p>
+  <p class="p">在函数签名后换行，输入简洁注释，按Tab等待Copilot生成。</p>
 
-<pre><code>// 生成智能排序比较函数
+  <pre><code>// 生成智能排序比较函数
 const compareTasks = (a: Task, b: Task): number => {
   // Copilot 会建议基于优先级和截止日期的比较逻辑
 };</code></pre>
 
-<h3 class="section-h3">技巧三：自然语言转正则</h3>
+  <h3 class="section-h3">技巧三：自然语言转正则</h3>
 
-<pre><code>// 用户名：字母数字下划线，3-20位
+  <pre><code>// 用户名：字母数字下划线，3-20位
 // 邮箱：标准邮箱格式
 // 手机号：中国大陆手机号
 // Copilot 会生成对应的正则表达式</code></pre>
 
-<h2 class="section-h2">6.4 Cursor IDE的特殊能力</h2>
+  <h2 class="section-h2">6.4 Cursor IDE的特殊能力</h2>
 
-<p class="p">Cursor是一个深度集成AI的IDE，采用AI-First设计理念，相比VS Code + Copilot有独特优势：</p>
+  <p class="p">
+    Cursor是一个深度集成AI的IDE，采用AI-First设计理念，相比VS Code + Copilot有独特优势：
+  </p>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">💬</div>
-<h4>Chat模式</h4>
-<p>选中代码片段，直接与AI对话讨论</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🎭</div>
-<h4>Composer模式</h4>
-<p>AI可以在整个项目中创建/修改多个文件</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">✅</div>
-<h4>Apply功能</h4>
-<p>AI生成的代码可以直接应用并预览diff</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🤖</div>
-<h4>多模型支持</h4>
-<p>内置Claude 3.5、GPT-4等多个模型选择</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">⌨️</div>
-<h4>Cursor CLI</h4>
-<p>终端版AI编程工具，与Claude Code竞争</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">💬</div>
+      <h4>Chat模式</h4>
+      <p>选中代码片段，直接与AI对话讨论</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🎭</div>
+      <h4>Composer模式</h4>
+      <p>AI可以在整个项目中创建/修改多个文件</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">✅</div>
+      <h4>Apply功能</h4>
+      <p>AI生成的代码可以直接应用并预览diff</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🤖</div>
+      <h4>多模型支持</h4>
+      <p>内置Claude 3.5、GPT-4等多个模型选择</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⌨️</div>
+      <h4>Cursor CLI</h4>
+      <p>终端版AI编程工具，与Claude Code竞争</p>
+    </div>
+  </div>
 
-<p class="p"><strong>最新定价：</strong></p>
+  <p class="p"><strong>最新定价：</strong></p>
 
-<table class="tbl">
-<thead><tr><th>套餐</th><th>价格</th><th>功能</th></tr></thead>
-<tbody>
-<tr><td class="hl">Free</td><td>免费</td><td>有限请求数，基础功能</td></tr>
-<tr><td class="hl">Pro</td><td>$20/月</td><td>无限请求，优先模型访问</td></tr>
-<tr><td class="hl">Business</td><td>$40/月</td><td>团队功能，SSO，更高限额</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>套餐</th>
+        <th>价格</th>
+        <th>功能</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="hl">Free</td>
+        <td>免费</td>
+        <td>有限请求数，基础功能</td>
+      </tr>
+      <tr>
+        <td class="hl">Pro</td>
+        <td>$20/月</td>
+        <td>无限请求，优先模型访问</td>
+      </tr>
+      <tr>
+        <td class="hl">Business</td>
+        <td>$40/月</td>
+        <td>团队功能，SSO，更高限额</td>
+      </tr>
+    </tbody>
+  </table>
 
-<div class="stats">
-<div class="stat">
-<div class="stat-val">$10亿+</div>
-<div class="stat-lbl">Cursor ARR（2025年11月）</div>
-</div>
-<div class="stat">
-<div class="stat-val">$293亿</div>
-<div class="stat-lbl">估值</div>
-</div>
-<div class="stat">
-<div class="stat-val">~100</div>
-<div class="stat-lbl">工程师数量</div>
-</div>
-</div>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val">$10亿+</div>
+      <div class="stat-lbl">Cursor ARR（2025年11月）</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">$293亿</div>
+      <div class="stat-lbl">估值</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">~100</div>
+      <div class="stat-lbl">工程师数量</div>
+    </div>
+  </div>
 
-<div class="callout callout-info">
-<div class="callout-icon">ℹ️</div>
-<div class="callout-text"><strong>Claude Code：</strong>Anthropic于2025年推出的命令行编程工具，与Cursor直接竞争。支持Windows原生运行（无需WSL）、会话恢复、命令历史搜索等功能。</div>
-</div>
+  <div class="callout callout-info">
+    <div class="callout-icon">ℹ️</div>
+    <div class="callout-text">
+      <strong>Claude Code：</strong
+      >Anthropic于2025年推出的命令行编程工具，与Cursor直接竞争。支持Windows原生运行（无需WSL）、会话恢复、命令历史搜索等功能。
+    </div>
+  </div>
 
-<h2 class="section-h2">6.5 Prompt Engineering for Code</h2>
+  <h2 class="section-h2">6.5 Prompt Engineering for Code</h2>
 
-<p class="p">好的Prompt是获得高质量AI代码的关键。</p>
+  <p class="p">好的Prompt是获得高质量AI代码的关键。</p>
 
-<p class="p"><strong>GREENS原则：</strong></p>
+  <p class="p"><strong>GREENS原则：</strong></p>
 
-<div class="flow">
-<div class="flow-box">
-<div class="flow-box-title">G</div>
-<div class="flow-box-desc">Goal 目标<br/>明确告诉AI要做什么</div>
-</div>
-<div class="flow-arrow">→</div>
-<div class="flow-box">
-<div class="flow-box-title">R</div>
-<div class="flow-box-desc">Role 角色<br/>设定AI扮演的角色</div>
-</div>
-<div class="flow-arrow">→</div>
-<div class="flow-box">
-<div class="flow-box-title">E</div>
-<div class="flow-box-desc">Engineering context<br/>提供足够的代码上下文</div>
-</div>
-<div class="flow-arrow">→</div>
-<div class="flow-box">
-<div class="flow-box-title">N</div>
-<div class="flow-box-desc">Constraints 约束<br/>说明限制和边界</div>
-</div>
-<div class="flow-arrow">→</div>
-<div class="flow-box">
-<div class="flow-box-title">S</div>
-<div class="flow-box-desc">Style 风格<br/>指定代码风格要求</div>
-</div>
-</div>
+  <div class="flow">
+    <div class="flow-box">
+      <div class="flow-box-title">G</div>
+      <div class="flow-box-desc">Goal 目标<br />明确告诉AI要做什么</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">R</div>
+      <div class="flow-box-desc">Role 角色<br />设定AI扮演的角色</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">E</div>
+      <div class="flow-box-desc">Engineering context<br />提供足够的代码上下文</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">N</div>
+      <div class="flow-box-desc">Constraints 约束<br />说明限制和边界</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="flow-box-title">S</div>
+      <div class="flow-box-desc">Style 风格<br />指定代码风格要求</div>
+    </div>
+  </div>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 GREENS原则示例</div>
-<pre><code>提示词示例：
+  <div class="hlbox">
+    <div class="hlbox-title">💡 GREENS原则示例</div>
+    <pre><code>提示词示例：
 "作为TypeScript专家（Role），请帮我实现一个任务过滤函数（Goal）。
 
 上下文：
@@ -288,73 +334,118 @@ const compareTasks = (a: Task, b: Task): number => {
 - 遵循airbnb编码规范
 
 请提供完整实现和单元测试。"</code></pre>
-</div>
+  </div>
 
-<h2 class="section-h2">6.6 常见陷阱与规避</h2>
+  <h2 class="section-h2">6.6 常见陷阱与规避</h2>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">⚠️</div>
-<h4>过度依赖</h4>
-<p>不假思索接受AI建议，应先理解再使用</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🔄</div>
-<h4>上下文丢失</h4>
-<p>长对话中AI可能遗忘早期上下文，注意清理和补充</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">📅</div>
-<h4>知识截止</h4>
-<p>AI知识有截止日期，新框架/库可能不了解</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🔒</div>
-<h4>安全风险</h4>
-<p>AI可能生成包含安全漏洞的代码（如SQL注入），必须审查</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">⚠️</div>
+      <h4>过度依赖</h4>
+      <p>不假思索接受AI建议，应先理解再使用</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔄</div>
+      <h4>上下文丢失</h4>
+      <p>长对话中AI可能遗忘早期上下文，注意清理和补充</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📅</div>
+      <h4>知识截止</h4>
+      <p>AI知识有截止日期，新框架/库可能不了解</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔒</div>
+      <h4>安全风险</h4>
+      <p>AI可能生成包含安全漏洞的代码（如SQL注入），必须审查</p>
+    </div>
+  </div>
 
-<h2 class="section-h2">6.7 本章小结</h2>
+  <h2 class="section-h2">6.7 本章小结</h2>
 
-<div class="hlbox">
-<div class="hlbox-title">📚 核心要点</div>
-<ol>
-<li>AI编码助手是程序员的效率工具，不是替代品</li>
-<li>ChatGPT适合代码解释、翻译、Bug诊断等多场景</li>
-<li>GitHub Copilot擅长上下文感知的实时补全</li>
-<li>GREENS原则能帮助写出高质量的AI生成Prompt</li>
-<li>保持批判性思维，审查AI生成的每一行代码</li>
-</ol>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">📚 核心要点</div>
+    <ol>
+      <li>AI编码助手是程序员的效率工具，不是替代品</li>
+      <li>ChatGPT适合代码解释、翻译、Bug诊断等多场景</li>
+      <li>GitHub Copilot擅长上下文感知的实时补全</li>
+      <li>GREENS原则能帮助写出高质量的AI生成Prompt</li>
+      <li>保持批判性思维，审查AI生成的每一行代码</li>
+    </ol>
+  </div>
 
-<div class="card yellow">
-<div class="card-label">课后测验</div>
-<h3>第六章选择题</h3>
-<p><strong>1. 在GREENS原则的数学形式化中，如何将"Goal"建模为优化目标函数？若Prompt给定的约束条件构成一个可行域F，如何定义Prompt生成代码的质量度量Q(p, c)使得寻找最优Prompt成为一个约束优化问题？</strong><br>
-A. Q(p, c) = α·语义相似度(p, c) + β·执行正确性(c) - γ·约束违反度(p, c)；使用拉格朗日松弛求解　B. Q(p, c) = 语义相似度(p, c) × 执行正确性(c)；使用坐标下降法求解　C. Q(p, c) = 执行正确性(c)；忽略语义相似度，仅关注代码能否运行　D. Q(p, c) = 约束满足度(p, c)；使用贪心算法求解<br><br>
-<strong>2. GitHub Copilot的多模型路由机制如何决定将请求发送至哪个底层模型？若将模型选择建模为Contextual Bandit问题，如何设计奖励函数使得系统能够学习在何种上下文特征下选择哪个模型能获得最佳效果？</strong><br>
-A. 奖励函数R = α·响应质量 + β·响应延迟 - γ·API成本；使用Thompson Sampling从模型性能后验分布中采样决策　B. 奖励函数R = 响应质量；忽略延迟和成本，使用UCB算法平衡探索与利用　C. 奖励函数R = 成本节约额；始终选择最便宜的模型　D. 奖励函数R = 响应延迟的负数；始终选择响应最快的模型<br><br>
-<strong>3. Cursor的Composer模式如何实现跨文件的代码生成一致性？若将项目代码库建模为上下文图，上下文节点之间的边上应该赋予什么权重来表示信息传递的可靠性？如何设计采样策略使得AI生成的代码片段在整个项目中保持一致？</strong><br>
-A. 边权重=文件间的import依赖强度+语义相似度；使用beam search在上下文中选择最相关的路径生成代码　B. 边权重=文件大小；使用Dijkstra算法找到最重要的文件　C. 边权重=修改时间；使用BFS遍历所有文件　D. 边权重=随机初始化；使用蒙特卡洛采样生成代码<br><br>
-<strong>4. AI编码助手的上下文窗口限制如何影响生成代码的质量？若将上下文窗口建模为有限的记忆容量，使用认知科学中的工作记忆模型，如何解释AI在处理长上下文时的"健忘"现象？这种现象如何通过工程手段缓解？</strong><br>
-A. 工作记忆容量限制导致远处信息被遗忘；使用KV Cache和层次化记忆检索可以缓解，同时采用信息重要性加权的注意力机制　B. 上下文窗口是无限的；AI可以完美记住所有历史信息　C. "健忘"是由于模型参数量不足；增大模型规模即可解决　D. "健忘"是随机现象；无法工程手段干预<br><br>
-<strong>5. 在GitHub Copilot的Agent模式中，如何设计Agent的规划算法使得代码生成任务能够在有限推理步骤内完成？若将代码生成任务建模为部分可观测马尔可夫决策过程（POMDP），观察空间、状态空间和动作空间分别是什么？</strong><br>
-A. 观察=当前代码上下文，状态=代码生成的隐含进度，动作=选择生成的下一个token；使用POMDP求解器计算最优策略　B. 观察=用户Prompt，状态=用户意图，动作=生成整个代码文件；使用贪心策略生成代码　C. 观察=光标位置，状态=编辑器状态，动作=移动光标；使用强化学习训练编辑器控制策略　D. 观察=语法树，状态=抽象语法树，动作=修改语法节点；使用树搜索算法求解</p>
-<details class="quiz-answer">
-<summary>参考答案</summary>
-<div>
-<p><strong>答案：1.A　2.A　3.A　4.A　5.A</strong></p>
-<p><strong>解析：</strong></p>
-<ol style="font-size:0.9em; color:#666;">
-<li>Prompt生成代码的质量度量Q(p,c)=α·语义相似度+β·执行正确性-γ·约束违反度。使用拉格朗日松弛将约束优化转化为无约束优化问题求解。</li>
-<li>奖励函数R=α·响应质量+β·响应延迟-γ·API成本。Thompson Sampling从模型性能后验分布中采样决策，能平衡探索与利用，是多臂老虎机问题的有效求解方法。</li>
-<li>边权重=文件间的import依赖强度+语义相似度。Beam search在上下文中选择最相关的路径生成代码，能保持跨文件代码生成的一致性。</li>
-<li>工作记忆容量限制导致远处信息被遗忘。KV Cache缓存历史注意力键值对，层次化记忆检索按重要性加权，两种技术共同缓解长上下文处理中的"健忘"问题。</li>
-<li>POMDP建模：观察=当前代码上下文（如已生成的token序列），状态=代码生成的隐含进度（如目标函数的完成度），动作=选择生成的下一个token。POMDP求解器计算最优策略。</li>
-</ol>
-</div>
-</details>
-</div>
-
+  <div class="card yellow">
+    <div class="card-label">课后测验</div>
+    <h3>第六章选择题</h3>
+    <p>
+      <strong
+        >1.
+        在GREENS原则的数学形式化中，如何将"Goal"建模为优化目标函数？若Prompt给定的约束条件构成一个可行域F，如何定义Prompt生成代码的质量度量Q(p,
+        c)使得寻找最优Prompt成为一个约束优化问题？</strong
+      ><br />
+      A. Q(p, c) = 约束满足度(p, c)；使用贪心算法求解　B. Q(p, c) =
+      执行正确性(c)；忽略语义相似度，仅关注代码能否运行　C. Q(p, c) = 语义相似度(p, c) ×
+      执行正确性(c)；使用坐标下降法求解　D. Q(p, c) = α·语义相似度(p, c) + β·执行正确性(c) -
+      γ·约束违反度(p, c)；使用拉格朗日松弛求解<br /><br />
+      <strong
+        >2. GitHub
+        Copilot的多模型路由机制如何决定将请求发送至哪个底层模型？若将模型选择建模为Contextual
+        Bandit问题，如何设计奖励函数使得系统能够学习在何种上下文特征下选择哪个模型能获得最佳效果？</strong
+      ><br />
+      A. 奖励函数R = 响应延迟的负数；始终选择响应最快的模型　B. 奖励函数R =
+      成本节约额；始终选择最便宜的模型　C. 奖励函数R =
+      响应质量；忽略延迟和成本，使用UCB算法平衡探索与利用　D. 奖励函数R = α·响应质量 + β·响应延迟 -
+      γ·API成本；使用Thompson Sampling从模型性能后验分布中采样决策<br /><br />
+      <strong
+        >3.
+        Cursor的Composer模式如何实现跨文件的代码生成一致性？若将项目代码库建模为上下文图，上下文节点之间的边上应该赋予什么权重来表示信息传递的可靠性？如何设计采样策略使得AI生成的代码片段在整个项目中保持一致？</strong
+      ><br />
+      A. 边权重=随机初始化；使用蒙特卡洛采样生成代码　B. 边权重=修改时间；使用BFS遍历所有文件　C.
+      边权重=文件大小；使用Dijkstra算法找到最重要的文件　D.
+      边权重=文件间的import依赖强度+语义相似度；使用beam search在上下文中选择最相关的路径生成代码<br /><br />
+      <strong
+        >4.
+        AI编码助手的上下文窗口限制如何影响生成代码的质量？若将上下文窗口建模为有限的记忆容量，使用认知科学中的工作记忆模型，如何解释AI在处理长上下文时的"健忘"现象？这种现象如何通过工程手段缓解？</strong
+      ><br />
+      A. "健忘"是随机现象；无法工程手段干预　B. 上下文窗口是无限的；AI可以完美记住所有历史信息　C.
+      "健忘"是由于模型参数量不足；增大模型规模即可解决　D.
+      工作记忆容量限制导致远处信息被遗忘；使用KV
+      Cache和层次化记忆检索可以缓解，同时采用信息重要性加权的注意力机制<br /><br />
+      <strong
+        >5. 在GitHub
+        Copilot的Agent模式中，如何设计Agent的规划算法使得代码生成任务能够在有限推理步骤内完成？若将代码生成任务建模为部分可观测马尔可夫决策过程（POMDP），观察空间、状态空间和动作空间分别是什么？</strong
+      ><br />
+      A. 观察=语法树，状态=抽象语法树，动作=修改语法节点；使用树搜索算法求解　B.
+      观察=光标位置，状态=编辑器状态，动作=移动光标；使用强化学习训练编辑器控制策略　C.
+      观察=用户Prompt，状态=用户意图，动作=生成整个代码文件；使用贪心策略生成代码　D.
+      观察=当前代码上下文，状态=代码生成的隐含进度，动作=选择生成的下一个token；使用POMDP求解器计算最优策略
+    </p>
+    <details class="quiz-answer">
+      <summary>参考答案</summary>
+      <div>
+        <p><strong>答案：1.D　2.B　3.C　4.A　5.D</strong></p>
+        <p><strong>解析：</strong></p>
+        <ol style="font-size: 0.9em; color: #666">
+          <li>
+            Prompt生成代码的质量度量Q(p,c)=α·语义相似度+β·执行正确性-γ·约束违反度。使用拉格朗日松弛将约束优化转化为无约束优化问题求解。
+          </li>
+          <li>
+            奖励函数R=α·响应质量+β·响应延迟-γ·API成本。Thompson
+            Sampling从模型性能后验分布中采样决策，能平衡探索与利用，是多臂老虎机问题的有效求解方法。
+          </li>
+          <li>
+            边权重=文件间的import依赖强度+语义相似度。Beam
+            search在上下文中选择最相关的路径生成代码，能保持跨文件代码生成的一致性。
+          </li>
+          <li>
+            工作记忆容量限制导致远处信息被遗忘。KV
+            Cache缓存历史注意力键值对，层次化记忆检索按重要性加权，两种技术共同缓解长上下文处理中的"健忘"问题。
+          </li>
+          <li>
+            POMDP建模：观察=当前代码上下文（如已生成的token序列），状态=代码生成的隐含进度（如目标函数的完成度），动作=选择生成的下一个token。POMDP求解器计算最优策略。
+          </li>
+        </ol>
+      </div>
+    </details>
+  </div>
 </section>

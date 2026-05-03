@@ -1,38 +1,46 @@
 <section id="ch16">
-<!-- 内容更新时间：2026-05-03 -->
-<div class="hero">
-<div class="chapter-tag">Chapter 16 · AI Engineering</div>
-<h1>第十六章：AI伦理与治理——负责任的AI开发实践</h1>
-<p class="sub">探讨AI开发中的伦理问题，理解AI治理框架，保护用户隐私</p>
-<div class="hero-meta">
-<span class="hero-meta-item">📖 30分钟</span>
-</div>
-</div>
+  <!-- 内容更新时间：2026-05-03 -->
+  <div class="hero">
+    <div class="chapter-tag">Chapter 16 · AI Engineering</div>
+    <h1>第十六章：AI伦理与治理——负责任的AI开发实践</h1>
+    <p class="sub">探讨AI开发中的伦理问题，理解AI治理框架，保护用户隐私</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">📖 30分钟</span>
+    </div>
+  </div>
 
-<p class="lead">AI系统正在做越来越多的人类决策：贷款审批、简历筛选、医疗诊断、刑事司法辅助。这些决策直接影响人们的生活。如果AI系统存在偏见、歧视或透明度问题，将造成严重的社会后果。</p>
+  <p class="lead">
+    AI系统正在做越来越多的人类决策：贷款审批、简历筛选、医疗诊断、刑事司法辅助。这些决策直接影响人们的生活。如果AI系统存在偏见、歧视或透明度问题，将造成严重的社会后果。
+  </p>
 
-<p class="p">作为开发者，我们不仅是技术的实现者，也是技术伦理的守护者。在开发AI应用时，需要主动考虑公平性、透明度、可解释性、隐私保护等问题。</p>
+  <p class="p">
+    作为开发者，我们不仅是技术的实现者，也是技术伦理的守护者。在开发AI应用时，需要主动考虑公平性、透明度、可解释性、隐私保护等问题。
+  </p>
 
-<h2 class="section-h2">16.1 常见AI伦理问题</h2>
+  <h2 class="section-h2">16.1 常见AI伦理问题</h2>
 
-<div class="hlbox">
-<div class="hlbox-title">⚠️ 偏见与歧视</div>
-<p>AI从历史数据中学习，如果历史数据存在偏见，AI会放大这些偏见。例如：招聘AI系统可能歧视女性候选人（因为历史录用数据以男性为主）、贷款审批AI可能对少数族裔有偏见、面部识别系统对不同种族识别准确率差异巨大。</p>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">⚠️ 偏见与歧视</div>
+    <p>
+      AI从历史数据中学习，如果历史数据存在偏见，AI会放大这些偏见。例如：招聘AI系统可能歧视女性候选人（因为历史录用数据以男性为主）、贷款审批AI可能对少数族裔有偏见、面部识别系统对不同种族识别准确率差异巨大。
+    </p>
+  </div>
 
-<div class="hlbox">
-<div class="hlbox-title">🔍 缺乏透明度</div>
-<p>深度学习模型是"黑箱"，很难解释为什么做出某个决策。这在需要问责的场景（如医疗诊断、金融风控）是个大问题。</p>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">🔍 缺乏透明度</div>
+    <p>
+      深度学习模型是"黑箱"，很难解释为什么做出某个决策。这在需要问责的场景（如医疗诊断、金融风控）是个大问题。
+    </p>
+  </div>
 
-<div class="hlbox">
-<div class="hlbox-title">🔐 隐私侵犯</div>
-<p>AI系统需要大量数据训练，可能侵犯用户隐私。模型可能"记住"训练数据，在推理时泄露敏感信息。</p>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">🔐 隐私侵犯</div>
+    <p>AI系统需要大量数据训练，可能侵犯用户隐私。模型可能"记住"训练数据，在推理时泄露敏感信息。</p>
+  </div>
 
-<h2 class="section-h2">16.2 AI公平性检测与修复</h2>
+  <h2 class="section-h2">16.2 AI公平性检测与修复</h2>
 
-<pre><code>提示词：
+  <pre><code>提示词：
 "作为AI伦理专家，请审查以下招聘筛选AI系统的公平性问题：
 
 系统描述：
@@ -52,11 +60,11 @@
 4. 如何修复/缓解这些偏见？
 5. 上线前应该做什么测试？"</code></pre>
 
-<h2 class="section-h2">16.3 可解释AI（XAI）</h2>
+  <h2 class="section-h2">16.3 可解释AI（XAI）</h2>
 
-<p class="p">可解释AI（Explainable AI，XAI）旨在让AI决策过程更透明。</p>
+  <p class="p">可解释AI（Explainable AI，XAI）旨在让AI决策过程更透明。</p>
 
-<pre><code>提示词：
+  <pre><code>提示词：
 "解释以下AI决策过程：
 
 场景：AI贷款审批系统拒绝了贷款申请
@@ -76,77 +84,189 @@
 3. 如果申请人想提高批准概率，应该怎么做？
 4. 这个解释是否足够清晰？为什么？"</code></pre>
 
-<h2 class="section-h2">16.4 AI治理框架</h2>
+  <h2 class="section-h2">16.4 AI治理框架</h2>
 
-<p class="p">企业需要建立AI治理框架来确保AI系统的负责任使用。</p>
+  <p class="p">企业需要建立AI治理框架来确保AI系统的负责任使用。</p>
 
-<div class="hlbox">
-<div class="hlbox-title">📜 欧盟AI法案（EU AI Act）</div>
-<p>欧盟《人工智能法案》（Regulation (EU) 2024/1689）于2024年8月1日正式生效，是全球首部综合性人工智能法律框架，包含180个序言、113条条款和13个附件。</p>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">📜 欧盟AI法案（EU AI Act）</div>
+    <p>
+      欧盟《人工智能法案》（Regulation (EU)
+      2024/1689）于2024年8月1日正式生效，是全球首部综合性人工智能法律框架，包含180个序言、113条条款和13个附件。
+    </p>
+  </div>
 
-<table class="tbl">
-<thead><tr><th>风险等级</th><th>应用示例</th><th>要求</th><th>生效时间</th></tr></thead>
-<tbody>
-<tr><td class="hl">禁止类风险</td><td>社会评分、实时人脸识别（公共场所）、基于神经操控的AI</td><td>完全禁止</td><td>2025年2月2日</td></tr>
-<tr><td class="hl">高风险</td><td>招聘筛选、信贷审批、医疗设备、教育评估、关键基础设施</td><td>CE认证、技术文档、人类监督、风险管理系统</td><td>2026年8月2日</td></tr>
-<tr><td>有限风险</td><td>聊天机器人、深fake、情感识别系统</td><td>透明度义务</td><td>2026年8月2日</td></tr>
-<tr><td>最小风险</td><td>垃圾邮件过滤、推荐系统、视频游戏AI</td><td>自愿行为准则</td><td>2026年8月2日</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>风险等级</th>
+        <th>应用示例</th>
+        <th>要求</th>
+        <th>生效时间</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="hl">禁止类风险</td>
+        <td>社会评分、实时人脸识别（公共场所）、基于神经操控的AI</td>
+        <td>完全禁止</td>
+        <td>2025年2月2日</td>
+      </tr>
+      <tr>
+        <td class="hl">高风险</td>
+        <td>招聘筛选、信贷审批、医疗设备、教育评估、关键基础设施</td>
+        <td>CE认证、技术文档、人类监督、风险管理系统</td>
+        <td>2026年8月2日</td>
+      </tr>
+      <tr>
+        <td>有限风险</td>
+        <td>聊天机器人、深fake、情感识别系统</td>
+        <td>透明度义务</td>
+        <td>2026年8月2日</td>
+      </tr>
+      <tr>
+        <td>最小风险</td>
+        <td>垃圾邮件过滤、推荐系统、视频游戏AI</td>
+        <td>自愿行为准则</td>
+        <td>2026年8月2日</td>
+      </tr>
+    </tbody>
+  </table>
 
-<div class="callout callout-warn">
-<div class="callout-icon">⚠</div>
-<div class="callout-text"><strong>罚款标准：</strong>禁止类违规最高罚款全球年营业额的7%；高风险违规3%；信息错误1.5%</div>
-</div>
+  <div class="callout callout-warn">
+    <div class="callout-icon">⚠</div>
+    <div class="callout-text">
+      <strong>罚款标准：</strong>禁止类违规最高罚款全球年营业额的7%；高风险违规3%；信息错误1.5%
+    </div>
+  </div>
 
-<h3 class="section-h3">其他主要AI法规</h3>
+  <h3 class="section-h3">其他主要AI法规</h3>
 
-<table class="tbl">
-<thead><tr><th>法规</th><th>地区</th><th>发布时间</th><th>特点</th></tr></thead>
-<tbody>
-<tr><td><strong>NIST AI RMF</strong></td><td>美国</td><td>2023年1月</td><td>自愿性框架，四大核心功能：Govern、Map、Measure、Manage</td></tr>
-<tr><td><strong>美国AI行政令</strong></td><td>美国</td><td>2023年10月</td><td>要求开发者共享安全测试结果，建立AI安全标准</td></tr>
-<tr><td><strong>中国生成式AI法规</strong></td><td>中国</td><td>2023年8月</td><td>要求合法数据来源、反映社会主义核心价值观</td></tr>
-<tr><td><strong>ISO/IEC 42001</strong></td><td>国际</td><td>2023年12月</td><td>首个AI管理系统国际标准，可认证</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>法规</th>
+        <th>地区</th>
+        <th>发布时间</th>
+        <th>特点</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>NIST AI RMF</strong></td>
+        <td>美国</td>
+        <td>2023年1月</td>
+        <td>自愿性框架，四大核心功能：Govern、Map、Measure、Manage</td>
+      </tr>
+      <tr>
+        <td><strong>美国AI行政令</strong></td>
+        <td>美国</td>
+        <td>2023年10月</td>
+        <td>要求开发者共享安全测试结果，建立AI安全标准</td>
+      </tr>
+      <tr>
+        <td><strong>中国生成式AI法规</strong></td>
+        <td>中国</td>
+        <td>2023年8月</td>
+        <td>要求合法数据来源、反映社会主义核心价值观</td>
+      </tr>
+      <tr>
+        <td><strong>ISO/IEC 42001</strong></td>
+        <td>国际</td>
+        <td>2023年12月</td>
+        <td>首个AI管理系统国际标准，可认证</td>
+      </tr>
+    </tbody>
+  </table>
 
-<h2 class="section-h2">16.5 数据隐私保护与隐私计算技术</h2>
+  <h2 class="section-h2">16.5 数据隐私保护与隐私计算技术</h2>
 
-<table class="tbl">
-<thead><tr><th>技术</th><th>核心原理</th><th>主流工具</th></tr></thead>
-<tbody>
-<tr><td class="hl"><strong>差分隐私</strong></td><td>在数据中添加校准噪声，保护个体隐私同时保留统计特性</td><td>Microsoft SmartNoise、Google DP Library、OpenDP、PyDP</td></tr>
-<tr><td class="hl"><strong>联邦学习</strong></td><td>数据不出本地，仅共享模型梯度更新</td><td>TensorFlow Federated、PySyft、FATE、Flower</td></tr>
-<tr><td class="hl"><strong>同态加密</strong></td><td>在加密数据上直接计算，无需解密</td><td>Microsoft SEAL、PALISADE、HELIB、OpenFHE</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>技术</th>
+        <th>核心原理</th>
+        <th>主流工具</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="hl"><strong>差分隐私</strong></td>
+        <td>在数据中添加校准噪声，保护个体隐私同时保留统计特性</td>
+        <td>Microsoft SmartNoise、Google DP Library、OpenDP、PyDP</td>
+      </tr>
+      <tr>
+        <td class="hl"><strong>联邦学习</strong></td>
+        <td>数据不出本地，仅共享模型梯度更新</td>
+        <td>TensorFlow Federated、PySyft、FATE、Flower</td>
+      </tr>
+      <tr>
+        <td class="hl"><strong>同态加密</strong></td>
+        <td>在加密数据上直接计算，无需解密</td>
+        <td>Microsoft SEAL、PALISADE、HELIB、OpenFHE</td>
+      </tr>
+    </tbody>
+  </table>
 
-<h3 class="section-h3">AI公平性与偏见检测工具</h3>
+  <h3 class="section-h3">AI公平性与偏见检测工具</h3>
 
-<table class="tbl">
-<thead><tr><th>工具</th><th>提供商</th><th>核心能力</th></tr></thead>
-<tbody>
-<tr><td><strong>AI Fairness 360</strong></td><td>IBM</td><td>70+公平性指标，偏见缓解算法（预处理/处理中/后处理）</td></tr>
-<tr><td><strong>What-If Tool</strong></td><td>Google</td><td>可视化调查、子群性能比较、反事实分析</td></tr>
-<tr><td><strong>Fairlearn</strong></td><td>Microsoft</td><td>公平性评估、scikit-learn集成、阈值优化器</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>工具</th>
+        <th>提供商</th>
+        <th>核心能力</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>AI Fairness 360</strong></td>
+        <td>IBM</td>
+        <td>70+公平性指标，偏见缓解算法（预处理/处理中/后处理）</td>
+      </tr>
+      <tr>
+        <td><strong>What-If Tool</strong></td>
+        <td>Google</td>
+        <td>可视化调查、子群性能比较、反事实分析</td>
+      </tr>
+      <tr>
+        <td><strong>Fairlearn</strong></td>
+        <td>Microsoft</td>
+        <td>公平性评估、scikit-learn集成、阈值优化器</td>
+      </tr>
+    </tbody>
+  </table>
 
-<h3 class="section-h3">可解释AI（XAI）工具</h3>
+  <h3 class="section-h3">可解释AI（XAI）工具</h3>
 
-<table class="tbl">
-<thead><tr><th>工具</th><th>核心能力</th></tr></thead>
-<tbody>
-<tr><td><strong>SHAP</strong></td><td>基于博弈论的Shapley值，特征归因，一致性保证</td></tr>
-<tr><td><strong>LIME</strong></td><td>局部代理模型，模型无关解释</td></tr>
-<tr><td><strong>AI Explainability 360</strong></td><td>14+可解释性算法，多种解释类型</td></tr>
-<tr><td><strong>Captum</strong></td><td>PyTorch原生，神经网络解释</td></tr>
-</tbody>
-</table>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>工具</th>
+        <th>核心能力</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>SHAP</strong></td>
+        <td>基于博弈论的Shapley值，特征归因，一致性保证</td>
+      </tr>
+      <tr>
+        <td><strong>LIME</strong></td>
+        <td>局部代理模型，模型无关解释</td>
+      </tr>
+      <tr>
+        <td><strong>AI Explainability 360</strong></td>
+        <td>14+可解释性算法，多种解释类型</td>
+      </tr>
+      <tr>
+        <td><strong>Captum</strong></td>
+        <td>PyTorch原生，神经网络解释</td>
+      </tr>
+    </tbody>
+  </table>
 
-<pre><code>提示词：
+  <pre><code>提示词：
 "为一个AI任务管理系统设计隐私保护方案：
 
 系统功能：
@@ -166,113 +286,178 @@
 4. 用户权利保障机制（访问权、删除权）
 5. 数据保留和删除策略"</code></pre>
 
-<h2 class="section-h2">16.6 AI安全最佳实践</h2>
+  <h2 class="section-h2">16.6 AI安全最佳实践</h2>
 
-<div class="steps">
-<div class="step">
-<div class="step-num">1</div>
-<div>
-<h4>对抗性测试</h4>
-<p>模拟攻击测试AI系统的鲁棒性</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">2</div>
-<div>
-<h4>输入验证</h4>
-<p>防止恶意输入诱导错误输出</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">3</div>
-<div>
-<h4>模型版本控制</h4>
-<p>记录每次模型变更，便于审计回滚</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">4</div>
-<div>
-<h4>人工审核</h4>
-<p>对高风险决策保持人工干预能力</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">5</div>
-<div>
-<h4>持续监控</h4>
-<p>部署后持续监控模型性能和公平性</p>
-</div>
-</div>
-</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>对抗性测试</h4>
+        <p>模拟攻击测试AI系统的鲁棒性</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>输入验证</h4>
+        <p>防止恶意输入诱导错误输出</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>模型版本控制</h4>
+        <p>记录每次模型变更，便于审计回滚</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>人工审核</h4>
+        <p>对高风险决策保持人工干预能力</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>持续监控</h4>
+        <p>部署后持续监控模型性能和公平性</p>
+      </div>
+    </div>
+  </div>
 
-<h2 class="section-h2">16.7 本章小结</h2>
+  <h2 class="section-h2">16.7 本章小结</h2>
 
-<div class="steps">
-<div class="step">
-<div class="step-num">1</div>
-<div>
-<h4>AI伦理重要性</h4>
-<p>AI伦理问题是AI开发中不可回避的重要议题</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">2</div>
-<div>
-<h4>偏见检测</h4>
-<p>偏见可能来自训练数据，需要主动检测和修复</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">3</div>
-<div>
-<h4>可解释性</h4>
-<p>可解释AI让决策过程更透明，便于问责</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">4</div>
-<div>
-<h4>治理框架</h4>
-<p>AI治理框架帮助企业规范AI的使用</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">5</div>
-<div>
-<h4>隐私技术</h4>
-<p>隐私保护技术（差分隐私、联邦学习）是保护用户数据的重要手段</p>
-</div>
-</div>
-</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>AI伦理重要性</h4>
+        <p>AI伦理问题是AI开发中不可回避的重要议题</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>偏见检测</h4>
+        <p>偏见可能来自训练数据，需要主动检测和修复</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>可解释性</h4>
+        <p>可解释AI让决策过程更透明，便于问责</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>治理框架</h4>
+        <p>AI治理框架帮助企业规范AI的使用</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>隐私技术</h4>
+        <p>隐私保护技术（差分隐私、联邦学习）是保护用户数据的重要手段</p>
+      </div>
+    </div>
+  </div>
 
-<div class="card yellow">
-<div class="card-label">课后测验</div>
-<h3>第十六章选择题</h3>
-<p><strong>1. 在RLHF（Reinforcement Learning from Human Feedback）中，如何形式化地定义"人类偏好"的数学模型？若使用Bradley-Terry模型建模偏好概率P(x₁≻x₂)=σ(r(x₁)-r(x₂))，其中r是隐含的奖励函数，如何从有限的人类偏好标注数据中学习r的参数？该学习问题的收敛性和样本复杂度各是什么？</strong><br>
-A. 使用最大似然估计（MLE）学习奖励函数参数；目标函数=∑_{(x₁,x₂)∈D} log P(x₁≻x₂)，使用梯度上升优化；理论分析表明，样本复杂度O(ε^{-2})达到ε近似，偏好标注的一致性假设（Coherent Preferences，即偏好关系可传递）是关键前提，若假设不满足则模型无法收敛；使用重要性采样（Importance Sampling）减少人类标注偏差，使用互信息正则化鼓励奖励函数学习有意义的人类价值观表示　B. 人类偏好无法数学建模；偏好是主观的　C. 偏好学习是分类问题；使用交叉熵损失函数即可　D. 偏好数据越多越好；没有样本复杂度上界<br><br>
-<strong>2. Constitutional AI（CACI）的形式化框架是什么？若将"宪法"建模为约束集合C={c₁,c₂,...,cₖ}，每个约束cᵢ定义了模型输出应满足的属性，如何使用约束优化框架将RLHF中的奖励最大化问题转化为约束满足问题？该方法与直接RL优化的区别是什么？</strong><br>
-A. Constitutional AI使用多阶段训练：监督学习阶段让模型学习生成"宪法合规"响应的模式，强化学习阶段使用AI反馈（AI-Alignment）代替人类反馈，约束通过Pareto优化整合到奖励函数中；区别于直接RL直接优化未约束的奖励，Constitutional AI通过约束满足显式编码价值观，先验知识可直接注入而非从数据中隐式学习，使用拉格朗日松弛处理软约束，约束违反度作为惩罚项加入奖励函数保证输出满足宪法要求　B. Constitutional AI是提示工程；不需要形式化框架　C. 约束无法整合到RL框架中；必须使用规则后处理　D. Constitutional AI与RLHF完全等价；只是名字不同<br><br>
-<strong>3. 在AI公平性检测中，如何定义和量化"歧视"（Discrimination）？若将公平性建模为某种统计约束（如 demographic parity、equalized odds、calibration），这些约束之间在什么条件下是相容的，在什么条件下是冲突的？如何使用多目标优化框架分析不同公平性定义之间的权衡？</strong><br>
-A. Demographic Parity要求P(Ŷ=1|A=0)=P(Ŷ=1|A=1)，Equalized Odds要求P(Ŷ=1|Y=y,A=a)=P(Ŷ=1|Y=y,A=a')，Calibration要求P(Y=1|Ŷ=1,A)=P(Y=1|Ŷ=1)；公平性约束之间通常冲突（如满足Demographic Parity可能违反Equalized Odds），使用Pareto前沿可视化公平性-性能权衡，允许决策者在公平性约束集合中选择满足特定应用的偏好解；使用对抗训练（Adversarial Debiasing）学习公平性表示，使用OptTrans实现Pareto最优的公平性约束组合　B. 公平性只有一个定义；歧视是客观存在的　C. 公平性与性能无关；模型可以同时达到最优公平性和最优性能　D. 公平性无法量化；只能通过法律定义<br><br>
-<strong>4. 在SHAP（SHapley Additive exPlanations）的理论分析中，Shapley值如何从合作博弈论（Cooperative Game Theory）推导而来？Shapley值的公理化定义（效率性、对称性、线性性、虚拟性）如何保证解释的唯一性？计算Shapley值的指数级复杂度如何通过近似算法（如Kernel SHAP、Tree SHAP）得到缓解？</strong><br>
-A. Shapley值源于n人合作博弈中收益分配的公平性公理；形式化定义为φᵢ(v)=∑_{S⊆N\{i}}|S|!(n-|S|-1)!/n![v(S∪{i})-v(S)]；效率性（∑φᵢ=v(N)）保证解释值之和等于模型输出，对称性保证对称玩家的解释值相同，线性性保证可加性约束，虚拟性（Dummy）保证不贡献玩家的解释值为零；指数复杂度O(2^n)通过采样估计（Monte Carlo SHAP）、线性时间解析解（Linear SHAP）、树结构特殊算法（Tree SHAP使用嵌入传播在O(TLD²)时间复杂度内精确计算）等近似方法缓解；对于线性模型和树模型，Shapley值可闭式求解；对于深度学习模型，使用Gradient SHAP或Deep SHAP近似　B. Shapley值没有公理化基础；只是经验公式　C. Shapley值无法近似；必须精确计算才能保证解释可靠性　D. SHAP只适用于树模型；不适用于神经网络<br><br>
-<strong>5. 差分隐私的组合性质（Composition Theorem）如何保证复杂查询的隐私预算管理？若执行k个εᵢ-差分隐私机制，组合后的隐私保证是什么？如何在隐私预算与查询效用之间进行帕累托优化，确定每个查询的最优εᵢ分配？</strong><br>
-A. 顺序组合定理（Sequential Composition）：k个εᵢ-DP机制组合后满足(∑εᵢ)-DP；高级组合定理（Advanced Composition）提供更紧的边界：在隐私预算ε和失败概率δ固定时，k次组合的隐私消耗为O(ε√{k log(1/δ)})；帕累托优化问题：max∑Utility_i(εᵢ) subject to ∑εᵢ≤ε_total，使用KKT条件求解最优预算分配，Utility_i(ε)是效用函数（如方差减少量），体现边际效用递减规律；实际中使用隐私会计工具（如Google's DP Library）跟踪累积隐私损失，支持自适应查询选择和预算重分配策略　B. 隐私预算随查询数量线性增长；无法优化　C. 所有查询应该使用相同的隐私预算；均等分配最优　D. 差分隐私不具有组合性质；每次查询独立满足隐私保证</p>
-<details class="quiz-answer">
-<summary>参考答案</summary>
-<div>
-<p><strong>答案：1.A　2.A　3.A　4.A　5.A</strong></p>
-<p><strong>解析：</strong></p>
-<ol style="font-size:0.9em; color:#666;">
-<li>使用最大似然估计（MLE）学习奖励函数参数。样本复杂度O(ε^{-2})达到ε近似，偏好标注的一致性假设（Coherent Preferences）是关键前提。重要性采样减少人类标注偏差，互信息正则化鼓励奖励函数学习有意义的人类价值观表示。</li>
-<li>Constitutional AI使用多阶段训练，监督学习阶段学习"宪法合规"响应模式，强化学习阶段使用AI反馈代替人类反馈。约束通过Pareto优化整合到奖励函数中，先验知识可直接注入而非从数据中隐式学习。</li>
-<li>Demographic Parity、Equalized Odds、Calibration之间通常冲突（如满足Demographic Parity可能违反Equalized Odds）。使用Pareto前沿可视化公平性-性能权衡，对抗训练（Adversarial Debiasing）学习公平性表示。</li>
-<li>Shapley值φᵢ(v)=∑_{S⊆N\{i}}|S|!(n-|S|-1)!/n![v(S∪{i})-v(S)]。效率性保证解释值之和等于模型输出，对称性、线性性、虚拟性保证唯一性。指数复杂度O(2^n)通过Monte Carlo SHAP采样、Tree SHAP等近似算法缓解。</li>
-<li>顺序组合定理：k个εᵢ-DP机制组合后满足(∑εᵢ)-DP。高级组合定理在隐私预算ε和失败概率δ固定时，k次组合的隐私消耗为O(ε√{k log(1/δ)})。帕累托优化max∑Utility_i(εᵢ) subject to ∑εᵢ≤ε_total。</li>
-</ol>
-</div>
-</details>
-</div>
-
+  <div class="card yellow">
+    <div class="card-label">课后测验</div>
+    <h3>第十六章选择题</h3>
+    <p>
+      <strong
+        >1. 在RLHF（Reinforcement Learning from Human
+        Feedback）中，如何形式化地定义"人类偏好"的数学模型？若使用Bradley-Terry模型建模偏好概率P(x₁≻x₂)=σ(r(x₁)-r(x₂))，其中r是隐含的奖励函数，如何从有限的人类偏好标注数据中学习r的参数？该学习问题的收敛性和样本复杂度各是什么？</strong
+      ><br />
+      A. 偏好数据越多越好；没有样本复杂度上界　B. 偏好学习是分类问题；使用交叉熵损失函数即可　C.
+      人类偏好无法数学建模；偏好是主观的　D.
+      使用最大似然估计（MLE）学习奖励函数参数；目标函数=∑_{(x₁,x₂)∈D} log
+      P(x₁≻x₂)，使用梯度上升优化；理论分析表明，样本复杂度O(ε^{-2})达到ε近似，偏好标注的一致性假设（Coherent
+      Preferences，即偏好关系可传递）是关键前提，若假设不满足则模型无法收敛；使用重要性采样（Importance
+      Sampling）减少人类标注偏差，使用互信息正则化鼓励奖励函数学习有意义的人类价值观表示<br /><br />
+      <strong
+        >2. Constitutional
+        AI（CACI）的形式化框架是什么？若将"宪法"建模为约束集合C={c₁,c₂,...,cₖ}，每个约束cᵢ定义了模型输出应满足的属性，如何使用约束优化框架将RLHF中的奖励最大化问题转化为约束满足问题？该方法与直接RL优化的区别是什么？</strong
+      ><br />
+      A. Constitutional AI与RLHF完全等价；只是名字不同　B.
+      约束无法整合到RL框架中；必须使用规则后处理　C. Constitutional
+      AI是提示工程；不需要形式化框架　D. Constitutional
+      AI使用多阶段训练：监督学习阶段让模型学习生成"宪法合规"响应的模式，强化学习阶段使用AI反馈（AI-Alignment）代替人类反馈，约束通过Pareto优化整合到奖励函数中；区别于直接RL直接优化未约束的奖励，Constitutional
+      AI通过约束满足显式编码价值观，先验知识可直接注入而非从数据中隐式学习，使用拉格朗日松弛处理软约束，约束违反度作为惩罚项加入奖励函数保证输出满足宪法要求<br /><br />
+      <strong
+        >3.
+        在AI公平性检测中，如何定义和量化"歧视"（Discrimination）？若将公平性建模为某种统计约束（如
+        demographic parity、equalized
+        odds、calibration），这些约束之间在什么条件下是相容的，在什么条件下是冲突的？如何使用多目标优化框架分析不同公平性定义之间的权衡？</strong
+      ><br />
+      A. 公平性无法量化；只能通过法律定义　B.
+      公平性与性能无关；模型可以同时达到最优公平性和最优性能　C.
+      公平性只有一个定义；歧视是客观存在的　D. Demographic
+      Parity要求P(Ŷ=1|A=0)=P(Ŷ=1|A=1)，Equalized
+      Odds要求P(Ŷ=1|Y=y,A=a)=P(Ŷ=1|Y=y,A=a')，Calibration要求P(Y=1|Ŷ=1,A)=P(Y=1|Ŷ=1)；公平性约束之间通常冲突（如满足Demographic
+      Parity可能违反Equalized
+      Odds），使用Pareto前沿可视化公平性-性能权衡，允许决策者在公平性约束集合中选择满足特定应用的偏好解；使用对抗训练（Adversarial
+      Debiasing）学习公平性表示，使用OptTrans实现Pareto最优的公平性约束组合<br /><br />
+      <strong
+        >4. 在SHAP（SHapley Additive
+        exPlanations）的理论分析中，Shapley值如何从合作博弈论（Cooperative Game
+        Theory）推导而来？Shapley值的公理化定义（效率性、对称性、线性性、虚拟性）如何保证解释的唯一性？计算Shapley值的指数级复杂度如何通过近似算法（如Kernel
+        SHAP、Tree SHAP）得到缓解？</strong
+      ><br />
+      A. SHAP只适用于树模型；不适用于神经网络　B.
+      Shapley值无法近似；必须精确计算才能保证解释可靠性　C.
+      Shapley值没有公理化基础；只是经验公式　D.
+      Shapley值源于n人合作博弈中收益分配的公平性公理；形式化定义为φᵢ(v)=∑_{S⊆N\{i}}|S|!(n-|S|-1)!/n![v(S∪{i})-v(S)]；效率性（∑φᵢ=v(N)）保证解释值之和等于模型输出，对称性保证对称玩家的解释值相同，线性性保证可加性约束，虚拟性（Dummy）保证不贡献玩家的解释值为零；指数复杂度O(2^n)通过采样估计（Monte
+      Carlo SHAP）、线性时间解析解（Linear SHAP）、树结构特殊算法（Tree
+      SHAP使用嵌入传播在O(TLD²)时间复杂度内精确计算）等近似方法缓解；对于线性模型和树模型，Shapley值可闭式求解；对于深度学习模型，使用Gradient
+      SHAP或Deep SHAP近似<br /><br />
+      <strong
+        >5. 差分隐私的组合性质（Composition
+        Theorem）如何保证复杂查询的隐私预算管理？若执行k个εᵢ-差分隐私机制，组合后的隐私保证是什么？如何在隐私预算与查询效用之间进行帕累托优化，确定每个查询的最优εᵢ分配？</strong
+      ><br />
+      A. 差分隐私不具有组合性质；每次查询独立满足隐私保证　B.
+      所有查询应该使用相同的隐私预算；均等分配最优　C. 隐私预算随查询数量线性增长；无法优化　D.
+      顺序组合定理（Sequential Composition）：k个εᵢ-DP机制组合后满足(∑εᵢ)-DP；高级组合定理（Advanced
+      Composition）提供更紧的边界：在隐私预算ε和失败概率δ固定时，k次组合的隐私消耗为O(ε√{k
+      log(1/δ)})；帕累托优化问题：max∑Utility_i(εᵢ) subject to
+      ∑εᵢ≤ε_total，使用KKT条件求解最优预算分配，Utility_i(ε)是效用函数（如方差减少量），体现边际效用递减规律；实际中使用隐私会计工具（如Google's
+      DP Library）跟踪累积隐私损失，支持自适应查询选择和预算重分配策略
+    </p>
+    <details class="quiz-answer">
+      <summary>参考答案</summary>
+      <div>
+        <p><strong>答案：1.D　2.C　3.D　4.B　5.D</strong></p>
+        <p><strong>解析：</strong></p>
+        <ol style="font-size: 0.9em; color: #666">
+          <li>
+            使用最大似然估计（MLE）学习奖励函数参数。样本复杂度O(ε^{-2})达到ε近似，偏好标注的一致性假设（Coherent
+            Preferences）是关键前提。重要性采样减少人类标注偏差，互信息正则化鼓励奖励函数学习有意义的人类价值观表示。
+          </li>
+          <li>
+            Constitutional
+            AI使用多阶段训练，监督学习阶段学习"宪法合规"响应模式，强化学习阶段使用AI反馈代替人类反馈。约束通过Pareto优化整合到奖励函数中，先验知识可直接注入而非从数据中隐式学习。
+          </li>
+          <li>
+            Demographic Parity、Equalized Odds、Calibration之间通常冲突（如满足Demographic
+            Parity可能违反Equalized
+            Odds）。使用Pareto前沿可视化公平性-性能权衡，对抗训练（Adversarial
+            Debiasing）学习公平性表示。
+          </li>
+          <li>
+            Shapley值φᵢ(v)=∑_{S⊆N\{i}}|S|!(n-|S|-1)!/n![v(S∪{i})-v(S)]。效率性保证解释值之和等于模型输出，对称性、线性性、虚拟性保证唯一性。指数复杂度O(2^n)通过Monte
+            Carlo SHAP采样、Tree SHAP等近似算法缓解。
+          </li>
+          <li>
+            顺序组合定理：k个εᵢ-DP机制组合后满足(∑εᵢ)-DP。高级组合定理在隐私预算ε和失败概率δ固定时，k次组合的隐私消耗为O(ε√{k
+            log(1/δ)})。帕累托优化max∑Utility_i(εᵢ) subject to ∑εᵢ≤ε_total。
+          </li>
+        </ol>
+      </div>
+    </details>
+  </div>
 </section>

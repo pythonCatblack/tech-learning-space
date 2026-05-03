@@ -1,36 +1,47 @@
 <section id="ch14">
-<!-- 内容更新时间：2026-05-03 -->
-<div class="hero">
-<div class="chapter-tag">Chapter 14 · AI Engineering</div>
-<h1>第十四章：AI驱动的运维智能化——从监控到自愈</h1>
-<p class="sub">探索AIOps如何改变传统运维模式，实现智能化监控与自动故障恢复</p>
-<div class="hero-meta">
-<span class="hero-meta-item">📖 25分钟</span>
-</div>
-</div>
+  <!-- 内容更新时间：2026-05-03 -->
+  <div class="hero">
+    <div class="chapter-tag">Chapter 14 · AI Engineering</div>
+    <h1>第十四章：AI驱动的运维智能化——从监控到自愈</h1>
+    <p class="sub">探索AIOps如何改变传统运维模式，实现智能化监控与自动故障恢复</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">📖 25分钟</span>
+    </div>
+  </div>
 
-<p class="lead">AIOps（Artificial Intelligence for IT Operations）是将AI应用于IT运维的实践。它不是要替代运维工程师，而是让工程师从繁琐的监控告警中解放出来，专注于更有价值的工作。</p>
+  <p class="lead">
+    AIOps（Artificial Intelligence for IT
+    Operations）是将AI应用于IT运维的实践。它不是要替代运维工程师，而是让工程师从繁琐的监控告警中解放出来，专注于更有价值的工作。
+  </p>
 
-<div class="callout callout-info">
-<div class="callout-icon">ℹ</div>
-<div class="callout-text"><strong>传统运维困境：</strong>告警疲劳（大量告警淹没真正问题）、问题定位困难（分布式系统日志分散）、被动响应（等问题发生了才知道）</div>
-</div>
+  <div class="callout callout-info">
+    <div class="callout-icon">ℹ</div>
+    <div class="callout-text">
+      <strong>传统运维困境：</strong
+      >告警疲劳（大量告警淹没真正问题）、问题定位困难（分布式系统日志分散）、被动响应（等问题发生了才知道）
+    </div>
+  </div>
 
-<div class="callout callout-good">
-<div class="callout-icon">✓</div>
-<div class="callout-text"><strong>AIOps改变：</strong>智能告警（减少噪音）、自动根因分析（快速定位）、预测性维护（预防问题发生）</div>
-</div>
+  <div class="callout callout-good">
+    <div class="callout-icon">✓</div>
+    <div class="callout-text">
+      <strong>AIOps改变：</strong
+      >智能告警（减少噪音）、自动根因分析（快速定位）、预测性维护（预防问题发生）
+    </div>
+  </div>
 
-<h2 class="section-h2">14.1 智能告警与异常检测</h2>
+  <h2 class="section-h2">14.1 智能告警与异常检测</h2>
 
-<p class="p">传统阈值告警的痛点：固定阈值无法适应业务周期性变化、误报率高、无法检测未知异常模式。</p>
+  <p class="p">
+    传统阈值告警的痛点：固定阈值无法适应业务周期性变化、误报率高、无法检测未知异常模式。
+  </p>
 
-<div class="hlbox">
-<div class="hlbox-title">💡 AI异常检测的思路</div>
-<p>学习系统的"正常模式"，当行为偏离正常时告警。这种方法可以发现传统阈值无法检测的异常。</p>
-</div>
+  <div class="hlbox">
+    <div class="hlbox-title">💡 AI异常检测的思路</div>
+    <p>学习系统的"正常模式"，当行为偏离正常时告警。这种方法可以发现传统阈值无法检测的异常。</p>
+  </div>
 
-<pre><code>提示词：
+  <pre><code>提示词：
 "作为AIOps专家，请设计一个智能告警系统：
 
 系统背景：
@@ -50,11 +61,11 @@
 4. 优先级评估模型
 5. 实施路线图"</code></pre>
 
-<h2 class="section-h2">14.2 日志分析与模式识别</h2>
+  <h2 class="section-h2">14.2 日志分析与模式识别</h2>
 
-<p class="p">在分布式系统中，日志分散在多个服务节点。AI可以从海量日志中识别模式、发现异常。</p>
+  <p class="p">在分布式系统中，日志分散在多个服务节点。AI可以从海量日志中识别模式、发现异常。</p>
 
-<pre><code>提示词：
+  <pre><code>提示词：
 "分析以下日志序列，使用AI识别异常模式：
 
 日志样本（过去1小时）：
@@ -75,11 +86,13 @@
 3. 根本原因是什么？
 4. 如何预防类似问题？"</code></pre>
 
-<h2 class="section-h2">14.3 根因分析的AI方法</h2>
+  <h2 class="section-h2">14.3 根因分析的AI方法</h2>
 
-<p class="p">根因分析（Root Cause Analysis）是运维中最耗时的任务之一。AI可以通过因果推断快速定位问题。</p>
+  <p class="p">
+    根因分析（Root Cause Analysis）是运维中最耗时的任务之一。AI可以通过因果推断快速定位问题。
+  </p>
 
-<pre><code>提示词：
+  <pre><code>提示词：
 "作为SRE专家，请使用因果分析方法来诊断以下系统故障：
 
 故障现象：
@@ -104,11 +117,11 @@
 4. 最终根因结论
 5. 修复步骤和预防措施"</code></pre>
 
-<h2 class="section-h2">14.4 预测性维护</h2>
+  <h2 class="section-h2">14.4 预测性维护</h2>
 
-<p class="p">AI不仅可以检测当前异常，还能预测未来问题。</p>
+  <p class="p">AI不仅可以检测当前异常，还能预测未来问题。</p>
 
-<pre><code>提示词：
+  <pre><code>提示词：
 "基于以下历史监控数据，预测未来的资源需求和潜在问题：
 
 过去6个月数据（月度平均）：
@@ -132,130 +145,184 @@
 3. 推荐的扩容方案
 4. 潜在风险点"</code></pre>
 
-<h2 class="section-h2">14.5 自愈系统的设计</h2>
+  <h2 class="section-h2">14.5 自愈系统的设计</h2>
 
-<p class="p">自愈系统（Self-Healing）是指系统能自动检测并修复常见问题，无需人工干预。</p>
+  <p class="p">自愈系统（Self-Healing）是指系统能自动检测并修复常见问题，无需人工干预。</p>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">🔄</div>
-<h4>服务无响应</h4>
-<p>检测：连续3次健康检查失败<br>动作：重启服务实例<br>验证：健康检查恢复后继续监控</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🧠</div>
-<h4>内存泄漏</h4>
-<p>检测：内存使用率持续高于90%超过10分钟<br>动作：触发优雅重启<br>验证：重启后内存恢复正常</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🗄️</div>
-<h4>数据库连接池耗尽</h4>
-<p>检测：连接超时错误连续出现<br>动作：清空连接池，重新建立连接<br>验证：执行测试查询确认恢复</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">⚡</div>
-<h4>异常流量</h4>
-<p>检测：流量突增超过历史平均300%<br>动作：启动限流，发送告警<br>验证：流量恢复到正常范围后解除限流</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🔄</div>
+      <h4>服务无响应</h4>
+      <p>检测：连续3次健康检查失败<br />动作：重启服务实例<br />验证：健康检查恢复后继续监控</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🧠</div>
+      <h4>内存泄漏</h4>
+      <p>
+        检测：内存使用率持续高于90%超过10分钟<br />动作：触发优雅重启<br />验证：重启后内存恢复正常
+      </p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🗄️</div>
+      <h4>数据库连接池耗尽</h4>
+      <p>
+        检测：连接超时错误连续出现<br />动作：清空连接池，重新建立连接<br />验证：执行测试查询确认恢复
+      </p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">⚡</div>
+      <h4>异常流量</h4>
+      <p>
+        检测：流量突增超过历史平均300%<br />动作：启动限流，发送告警<br />验证：流量恢复到正常范围后解除限流
+      </p>
+    </div>
+  </div>
 
-<h2 class="section-h2">14.6 主流AIOps平台</h2>
+  <h2 class="section-h2">14.6 主流AIOps平台</h2>
 
-<div class="card-grid">
-<div class="card-sm">
-<div class="card-sm-icon">🐕</div>
-<h4>Datadog AI Ops</h4>
-<p>一体化监控平台，集成AI异常检测</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">📊</div>
-<h4>Grafana LGTM</h4>
-<p>开源监控栈+Loki+Prometheus+Tempo</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🔔</div>
-<h4>PagerDuty AI</h4>
-<p>告警聚合+事件智能化</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">🔍</div>
-<h4>Splunk AI</h4>
-<p>日志分析+机器学习</p>
-</div>
-<div class="card-sm">
-<div class="card-sm-icon">☁️</div>
-<h4>Azure Monitor</h4>
-<p>微软云原生AIOps方案</p>
-</div>
-</div>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div class="card-sm-icon">🐕</div>
+      <h4>Datadog AI Ops</h4>
+      <p>一体化监控平台，集成AI异常检测</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">📊</div>
+      <h4>Grafana LGTM</h4>
+      <p>开源监控栈+Loki+Prometheus+Tempo</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔔</div>
+      <h4>PagerDuty AI</h4>
+      <p>告警聚合+事件智能化</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">🔍</div>
+      <h4>Splunk AI</h4>
+      <p>日志分析+机器学习</p>
+    </div>
+    <div class="card-sm">
+      <div class="card-sm-icon">☁️</div>
+      <h4>Azure Monitor</h4>
+      <p>微软云原生AIOps方案</p>
+    </div>
+  </div>
 
-<h2 class="section-h2">14.7 本章小结</h2>
+  <h2 class="section-h2">14.7 本章小结</h2>
 
-<div class="steps">
-<div class="step">
-<div class="step-num">1</div>
-<div>
-<h4>主动预防</h4>
-<p>AIOps让运维从被动响应走向主动预防</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">2</div>
-<div>
-<h4>智能告警</h4>
-<p>智能告警显著降低告警噪音，提高响应效率</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">3</div>
-<div>
-<h4>日志分析</h4>
-<p>AI日志分析能快速定位根因，减少MTTR</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">4</div>
-<div>
-<h4>预测性维护</h4>
-<p>预测性维护避免问题发生，优化资源使用</p>
-</div>
-</div>
-<div class="step">
-<div class="step-num">5</div>
-<div>
-<h4>自愈系统</h4>
-<p>自愈系统是运维自动化的终极目标</p>
-</div>
-</div>
-</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>主动预防</h4>
+        <p>AIOps让运维从被动响应走向主动预防</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>智能告警</h4>
+        <p>智能告警显著降低告警噪音，提高响应效率</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>日志分析</h4>
+        <p>AI日志分析能快速定位根因，减少MTTR</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>预测性维护</h4>
+        <p>预测性维护避免问题发生，优化资源使用</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>自愈系统</h4>
+        <p>自愈系统是运维自动化的终极目标</p>
+      </div>
+    </div>
+  </div>
 
-<div class="card yellow">
-<div class="card-label">课后测验</div>
-<h3>第十四章选择题</h3>
-<p><strong>1. 在AIOps的异常检测中，如何形式化地定义"正常模式"并处理其时变性？若将系统正常行为建模为多元高斯分布N(μ, Σ)，其中μ是均值向量，Σ是协方差矩阵，当数据分布随时间发生概念漂移（Concept Drift）时，如何在线更新分布参数而不产生误报？哪种自适应算法适合处理这种非平稳环境？</strong><br>
-A. 使用指数加权移动平均（EWMA）在线更新μ和Σ，近期数据赋予更高权重；使用Page-Hinkley测试检测均值漂移，触发参数重置；同时使用CUSUM控制图检测累积偏移，在线学习的计算复杂度为O(d²)，适合高维时序数据，ADWIN算法作为替代可在变点检测和估计精度间取得更好平衡　B. 正常模式是固定的；一旦确定就不会变化　C. 使用批处理重新训练模型；在线更新会导致概念漂移问题的恶化　D. 无法定义正常模式；异常只能由人工定义<br><br>
-<strong>2. 在自愈系统的决策逻辑中，如何将"是否触发自愈动作"建模为序贯决策问题？若环境状态空间S包含系统健康指标和外部负载因素，动作用户满意=-C(重启)触发自愈的成本，自愈成功的概率P(success|s, a)，如何定义最优策略π*(s)使得长期期望损失最小？该问题是POMDP还是MDP？</strong><br>
-A. 该问题是MDP（状态完全可观测）；使用策略迭代或价值迭代求解最优策略，贝尔曼方程为V(s)=min_a[C(a)+γ∑P(s'|s,a)V(s')]；自愈策略π*(s)在预期自愈收益超过成本时触发，阈值由折扣因子γ和成功概率P决定，同时考虑历史执行效果作为策略调整依据　B. 该问题是POMDP；部分可观测，只能使用基于信念状态的启发式方法　C. 自愈决策是规则驱动的；无需强化学习　D. 应该始终触发自愈；不触发可能造成更大损失<br><br>
-<strong>3. 在根因分析的因果推断中，如何区分"故障传播"与"虚假相关"？若系统组件建模为有向无环图（DAG），边表示故障传播方向，如何使用Do-calculus（Pearl的因果推理框架）识别真正的根因？当存在多个可能的根因时，如何量化每个根因的"责任"程度？</strong><br>
-A. 使用因果贝叶斯网络+反事实推理：计算因果效应P(故障|do(根因))与观测效应P(故障|观察)的差异，责任归因（Responsible Attribution）使用概率差或比例公式量化每个根因的贡献度；使用PC算法从观测数据中学习DAG结构，使用do-calculus的识别算法判断哪些因果效应是可识别的，不可识别的情况下提供边界估计　B. 相关性高的组件就是根因；使用Pearson相关系数排序即可　C. 根因分析是确定性问题；每个故障都有唯一根因　D. 无法进行因果推断；只能使用相关性分析<br><br>
-<strong>4. AIOps平台如何处理告警风暴（Alert Storm）问题？若将告警流建模为泊松过程N(t)，告警聚合决策建模为随机过程，如何设计算法在有限认知带宽下最大化有效信息获取？该问题是否可以建模为分布式传感器的信息融合问题？</strong><br>
-A. 使用分布式信息融合框架：每个监控源作为传感器，告警作为观测，使用Dempster-Shafer证据理论融合多源信息，计算每个告警的信息增益（Information Gain），优先处理高信息量的告警；同时使用基于注意力的图神经网络聚合相关告警，使用信息瓶颈（Information Bottleneck）理论确定最优聚合粒度，在告警压缩率和信息保留率间取得平衡　B. 所有告警应该被同等处理；不应有优先级区分　C. 告警风暴无法处理；只能扩大人工处理能力　D. 使用简单的阈值过滤；低于阈值的告警直接丢弃<br><br>
-<strong>5. 在预测性维护中，如何将设备故障预测建模为生存分析（Survival Analysis）问题？若设备运行时间T服从某种分布，如何使用Cox比例风险模型（Cox Proportional Hazards Model）建模设备故障的风险函数h(t|X)，其中X是设备特征向量？如何评估模型的预测能力并确定最优的维护触发时间？</strong><br>
-A. Cox模型风险函数：h(t|X)=h₀(t)·exp(β'X)，其中h₀(t)是基准风险函数，β是系数向量；使用偏似然估计（Partial Likelihood）训练模型，Concordance Index（C-index）评估模型区分度；维护触发时间T*由风险阈值决定，当预测风险超过阈值时触发预防性维护，优化目标=最小化维护总成本（预防成本+故障后维修成本），使用Monte Carlo模拟确定最优阈值　B. 故障无法预测；只能等故障发生后维修　C. 使用简单的线性回归；时间作为自变量预测故障概率　D. 生存分析只适用于医疗领域；不适用于工程系统</p>
-<details class="quiz-answer">
-<summary>参考答案</summary>
-<div>
-<p><strong>答案：1.A　2.A　3.A　4.A　5.A</strong></p>
-<p><strong>解析：</strong></p>
-<ol style="font-size:0.9em; color:#666;">
-<li>使用EWMA在线更新μ和Σ，Page-Hinkley测试检测均值漂移触发参数重置。CUSUM控制图检测累积偏移，ADWIN算法在变点检测和估计精度间取得平衡。</li>
-<li>该问题是MDP（状态完全可观测），贝尔曼方程V(s)=min_a[C(a)+γ∑P(s'|s,a)V(s')]。自愈策略在预期自愈收益超过成本时触发，阈值由折扣因子γ和成功概率P决定。</li>
-<li>使用因果贝叶斯网络+反事实推理，计算因果效应P(故障|do(根因))与观测效应P(故障|观察)的差异。责任归因使用概率差或比例公式量化每个根因的贡献度。</li>
-<li>使用分布式信息融合框架，Dempster-Shafer证据理论融合多源信息，计算每个告警的信息增益。基于注意力的GNN聚合相关告警，信息瓶颈理论确定最优聚合粒度。</li>
-<li>Cox模型风险函数h(t|X)=h₀(t)·exp(β'X)，偏似然估计训练模型，C-index评估区分度。维护触发时间由风险阈值决定，优化目标=最小化预防成本+故障后维修成本。</li>
-</ol>
-</div>
-</details>
-</div>
-
+  <div class="card yellow">
+    <div class="card-label">课后测验</div>
+    <h3>第十四章选择题</h3>
+    <p>
+      <strong
+        >1.
+        在AIOps的异常检测中，如何形式化地定义"正常模式"并处理其时变性？若将系统正常行为建模为多元高斯分布N(μ,
+        Σ)，其中μ是均值向量，Σ是协方差矩阵，当数据分布随时间发生概念漂移（Concept
+        Drift）时，如何在线更新分布参数而不产生误报？哪种自适应算法适合处理这种非平稳环境？</strong
+      ><br />
+      A. 无法定义正常模式；异常只能由人工定义　B.
+      使用批处理重新训练模型；在线更新会导致概念漂移问题的恶化　C.
+      正常模式是固定的；一旦确定就不会变化　D.
+      使用指数加权移动平均（EWMA）在线更新μ和Σ，近期数据赋予更高权重；使用Page-Hinkley测试检测均值漂移，触发参数重置；同时使用CUSUM控制图检测累积偏移，在线学习的计算复杂度为O(d²)，适合高维时序数据，ADWIN算法作为替代可在变点检测和估计精度间取得更好平衡<br /><br />
+      <strong
+        >2.
+        在自愈系统的决策逻辑中，如何将"是否触发自愈动作"建模为序贯决策问题？若环境状态空间S包含系统健康指标和外部负载因素，动作用户满意=-C(重启)触发自愈的成本，自愈成功的概率P(success|s,
+        a)，如何定义最优策略π*(s)使得长期期望损失最小？该问题是POMDP还是MDP？</strong
+      ><br />
+      A. 应该始终触发自愈；不触发可能造成更大损失　B. 自愈决策是规则驱动的；无需强化学习　C.
+      该问题是POMDP；部分可观测，只能使用基于信念状态的启发式方法　D.
+      该问题是MDP（状态完全可观测）；使用策略迭代或价值迭代求解最优策略，贝尔曼方程为V(s)=min_a[C(a)+γ∑P(s'|s,a)V(s')]；自愈策略π*(s)在预期自愈收益超过成本时触发，阈值由折扣因子γ和成功概率P决定，同时考虑历史执行效果作为策略调整依据<br /><br />
+      <strong
+        >3.
+        在根因分析的因果推断中，如何区分"故障传播"与"虚假相关"？若系统组件建模为有向无环图（DAG），边表示故障传播方向，如何使用Do-calculus（Pearl的因果推理框架）识别真正的根因？当存在多个可能的根因时，如何量化每个根因的"责任"程度？</strong
+      ><br />
+      A. 无法进行因果推断；只能使用相关性分析　B. 根因分析是确定性问题；每个故障都有唯一根因　C.
+      相关性高的组件就是根因；使用Pearson相关系数排序即可　D.
+      使用因果贝叶斯网络+反事实推理：计算因果效应P(故障|do(根因))与观测效应P(故障|观察)的差异，责任归因（Responsible
+      Attribution）使用概率差或比例公式量化每个根因的贡献度；使用PC算法从观测数据中学习DAG结构，使用do-calculus的识别算法判断哪些因果效应是可识别的，不可识别的情况下提供边界估计<br /><br />
+      <strong
+        >4. AIOps平台如何处理告警风暴（Alert
+        Storm）问题？若将告警流建模为泊松过程N(t)，告警聚合决策建模为随机过程，如何设计算法在有限认知带宽下最大化有效信息获取？该问题是否可以建模为分布式传感器的信息融合问题？</strong
+      ><br />
+      A. 使用简单的阈值过滤；低于阈值的告警直接丢弃　B. 告警风暴无法处理；只能扩大人工处理能力　C.
+      所有告警应该被同等处理；不应有优先级区分　D.
+      使用分布式信息融合框架：每个监控源作为传感器，告警作为观测，使用Dempster-Shafer证据理论融合多源信息，计算每个告警的信息增益（Information
+      Gain），优先处理高信息量的告警；同时使用基于注意力的图神经网络聚合相关告警，使用信息瓶颈（Information
+      Bottleneck）理论确定最优聚合粒度，在告警压缩率和信息保留率间取得平衡<br /><br />
+      <strong
+        >5. 在预测性维护中，如何将设备故障预测建模为生存分析（Survival
+        Analysis）问题？若设备运行时间T服从某种分布，如何使用Cox比例风险模型（Cox Proportional
+        Hazards
+        Model）建模设备故障的风险函数h(t|X)，其中X是设备特征向量？如何评估模型的预测能力并确定最优的维护触发时间？</strong
+      ><br />
+      A. 生存分析只适用于医疗领域；不适用于工程系统　B.
+      使用简单的线性回归；时间作为自变量预测故障概率　C. 故障无法预测；只能等故障发生后维修　D.
+      Cox模型风险函数：h(t|X)=h₀(t)·exp(β'X)，其中h₀(t)是基准风险函数，β是系数向量；使用偏似然估计（Partial
+      Likelihood）训练模型，Concordance
+      Index（C-index）评估模型区分度；维护触发时间T*由风险阈值决定，当预测风险超过阈值时触发预防性维护，优化目标=最小化维护总成本（预防成本+故障后维修成本），使用Monte
+      Carlo模拟确定最优阈值
+    </p>
+    <details class="quiz-answer">
+      <summary>参考答案</summary>
+      <div>
+        <p><strong>答案：1.D　2.A　3.C　4.B　5.D</strong></p>
+        <p><strong>解析：</strong></p>
+        <ol style="font-size: 0.9em; color: #666">
+          <li>
+            使用EWMA在线更新μ和Σ，Page-Hinkley测试检测均值漂移触发参数重置。CUSUM控制图检测累积偏移，ADWIN算法在变点检测和估计精度间取得平衡。
+          </li>
+          <li>
+            该问题是MDP（状态完全可观测），贝尔曼方程V(s)=min_a[C(a)+γ∑P(s'|s,a)V(s')]。自愈策略在预期自愈收益超过成本时触发，阈值由折扣因子γ和成功概率P决定。
+          </li>
+          <li>
+            使用因果贝叶斯网络+反事实推理，计算因果效应P(故障|do(根因))与观测效应P(故障|观察)的差异。责任归因使用概率差或比例公式量化每个根因的贡献度。
+          </li>
+          <li>
+            使用分布式信息融合框架，Dempster-Shafer证据理论融合多源信息，计算每个告警的信息增益。基于注意力的GNN聚合相关告警，信息瓶颈理论确定最优聚合粒度。
+          </li>
+          <li>
+            Cox模型风险函数h(t|X)=h₀(t)·exp(β'X)，偏似然估计训练模型，C-index评估区分度。维护触发时间由风险阈值决定，优化目标=最小化预防成本+故障后维修成本。
+          </li>
+        </ol>
+      </div>
+    </details>
+  </div>
 </section>
